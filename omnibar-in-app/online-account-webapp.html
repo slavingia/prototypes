@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Online Account | Internal Revenue Service</title>
+<style>
+  :root{
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
+    --teal:#00687d; --infobar:#e1f3f8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);
+    font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  .gov{background:#f0f0f0;font-size:12.5px;padding:6px 0}
+  .gov .wrap{display:flex;align-items:center;gap:8px}
+  .gov a{font-size:12.5px}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:30px;letter-spacing:.5px}
+  .logo .seal{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--irs-blue);display:grid;place-items:center;font-size:15px;font-weight:800}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 16px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+  .caret{font-size:11px}
+
+  nav.tabs{background:var(--irs-navy)}
+  nav.tabs .wrap{display:flex}
+  nav.tabs button{background:transparent;border:0;color:#fff;font-size:15px;font-family:inherit;padding:14px 18px;cursor:pointer;white-space:nowrap}
+  nav.tabs button:hover{background:rgba(255,255,255,.08)}
+  nav.tabs button.active{background:#fff;color:var(--irs-navy);font-weight:700}
+
+  h1.welcome{font-size:40px;font-weight:800;margin:26px 0 14px}
+
+  /* ---------------- OMNI BAR (the addition) ---------------- */
+  .omni-band{margin:0 0 30px;position:relative;z-index:30}
+  .omni-kicker{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--irs-blue);margin:0 0 8px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .omni-kicker .new{background:var(--irs-blue);color:#fff;border-radius:6px;padding:1px 8px;font-size:11px;letter-spacing:.06em}
+  .omni-input-wrap{display:flex;align-items:center;background:#fff;border:2px solid var(--irs-blue);border-radius:14px;padding:2px 6px 2px 16px;box-shadow:0 10px 34px rgba(0,40,90,.14)}
+  .omni-input-wrap:focus-within{outline:3px solid rgba(0,76,151,.25)}
+  .omni-input-wrap svg{width:22px;height:22px;fill:var(--irs-blue);flex:0 0 22px}
+  #omni{flex:1;border:0;outline:0;font-size:19px;padding:15px 12px;background:transparent;color:var(--ink);font-family:inherit}
+  #omni::placeholder{color:#8a99a8}
+  .clearbtn{border:0;background:#eef3f9;color:var(--muted);width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:15px}
+  .results{position:absolute;left:0;right:0;margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,40,90,.20);overflow:hidden}
+  .res-head{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;padding:12px 16px 6px}
+  .opt{display:flex;gap:13px;align-items:flex-start;padding:12px 16px;cursor:pointer;border-top:1px solid #f0f4f8}
+  .opt:first-of-type{border-top:0}
+  .opt.active{background:#e7f0fa}
+  .opt .oicon{width:36px;height:36px;border-radius:10px;flex:0 0 36px;display:grid;place-items:center;font-size:13px;font-weight:800;letter-spacing:.02em}
+  .opt .otitle{font-size:15.5px;font-weight:700;margin:0}
+  .opt .oplain{font-size:13px;color:var(--muted);margin:2px 0 0}
+  .opt .answer{margin-top:7px;background:#f5f9fd;border:1px solid #dce8f4;border-radius:9px;padding:7px 11px;font-size:13.5px}
+  .opt .answer .big{font-size:18px;font-weight:800;color:var(--irs-blue)}
+  .opt .route{font-size:10.5px;color:#9aa7b5;font-family:ui-monospace,Menlo,monospace;margin-top:6px}
+  .opt .kbd{margin-left:auto;font-size:11px;color:#aeb9c5;align-self:center}
+  .matchwhy{display:inline-block;font-size:10.5px;font-weight:700;color:var(--irs-blue);background:#e7f0fa;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+  .opt.ext .oicon{border-radius:50%}
+  .opt .ext-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:var(--teal);background:#e3f1f4;border-radius:6px;padding:2px 8px;margin-top:7px}
+  .empty{padding:20px 16px;color:var(--muted);font-size:14px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  .card{border:1px solid var(--line);padding:24px}
+  .card h2{font-size:22px;font-weight:800;margin:0 0 18px}
+
+  /* ---------------- CLASSIC HOME GRID (status / payments / notifications / records) ---------------- */
+  .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-bottom:60px}
+  .home-grid .col{display:flex;flex-direction:column;gap:24px}
+  .card .lead-link{font-size:16px;margin:16px 0 4px}
+  .card .lead-link:first-of-type{margin-top:0}
+  .card .muted-body{font-size:14px;color:var(--muted);margin:0}
+  .card hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+  .card ul{margin:8px 0 16px;padding-left:22px}
+  .card li{margin:7px 0;font-size:15px}
+  @media(max-width:780px){.home-grid{grid-template-columns:1fr}}
+
+  /* ---------------- PERSONA MODULE (status + by tax year) ---------------- */
+  .persona-module{margin-bottom:24px}
+  .pm-top{display:flex;gap:28px;align-items:stretch}
+  .pm-status{flex:1;min-width:0}
+  .pm-owed{flex:0 0 270px;border-left:1px solid var(--line);padding-left:28px}
+  .pm-owed .owed-label{margin-top:0}
+  .pm-div{border:0;border-top:1px solid var(--line);margin:24px 0 20px}
+
+  /* ---------------- ONBOARDING ---------------- */
+  .setup-card{border:1px solid var(--line);border-radius:12px;padding:16px 22px;margin-bottom:60px;display:flex;align-items:center;gap:16px;background:#f5f9fd;border-color:#cfe0f4}
+  .setup-card.done{background:#fff;border-color:var(--line)}
+  .setup-card .si{width:38px;height:38px;border-radius:10px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px;flex:0 0 38px}
+  .setup-card.done .si{background:var(--green)}
+  .setup-card .st{font-weight:700;font-size:15.5px}
+  .setup-card .sb{font-size:13.5px;color:var(--muted);margin-top:2px}
+  .setup-card .grow{flex:1;min-width:0}
+  .setup-card .btn{margin:0;padding:10px 16px;font-size:14px}
+  .ob-overlay{position:fixed;inset:0;background:rgba(0,21,46,.55);z-index:80;display:grid;place-items:center;padding:18px}
+  .ob-overlay[hidden]{display:none}
+  .ob-dialog{background:#fff;border-radius:16px;width:560px;max-width:100%;max-height:calc(100vh - 36px);overflow-y:auto;box-shadow:0 30px 80px rgba(0,20,50,.4);display:flex;flex-direction:column}
+  .ob-head{display:flex;align-items:center;justify-content:space-between;padding:16px 22px 0}
+  .ob-dots{display:flex;gap:7px}
+  .ob-dots span{width:9px;height:9px;border-radius:50%;background:#d6dee8}
+  .ob-dots span.on{background:var(--irs-blue)}
+  .ob-skip{border:0;background:none;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
+  .ob-body{padding:10px 26px 4px}
+  .ob-body h2{font-size:23px;font-weight:800;margin:12px 0 8px}
+  .ob-body p.lead{font-size:15px;color:var(--muted);margin:0 0 16px}
+  .ob-hero{width:54px;height:54px;border-radius:14px;background:#e7f0fa;color:var(--irs-blue);display:grid;place-items:center;font-size:15px;font-weight:800;margin-top:18px}
+  .ob-now{background:#fef6e0;border:1px solid #f0dca0;border-radius:9px;padding:9px 12px;font-size:13.5px;margin:0 0 14px}
+  .ob-list{margin:0 0 8px;padding:0;list-style:none}
+  .ob-list li{display:flex;gap:12px;align-items:flex-start;margin:13px 0;font-size:14.5px}
+  .ob-list .li{width:32px;height:32px;border-radius:9px;flex:0 0 32px;display:grid;place-items:center;font-size:10.5px;font-weight:800;color:#fff}
+  .ob-list b{display:block}
+  .ob-list span.d{color:var(--muted);font-size:13px}
+  .pref{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin:10px 0}
+  .pref .pt{flex:1;min-width:0}
+  .pref b{font-size:14.5px}
+  .pref .pd{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .pref.sub{margin-left:26px}
+  .switch{position:relative;width:46px;height:26px;flex:0 0 46px}
+  .switch input{opacity:0;width:0;height:0;position:absolute}
+  .switch .sl{position:absolute;inset:0;background:#c2cbd6;border-radius:999px;transition:.15s;cursor:pointer}
+  .switch .sl:before{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .switch input:checked+.sl{background:var(--green)}
+  .switch input:checked+.sl:before{transform:translateX(20px)}
+  .switch input:focus-visible+.sl{outline:3px solid rgba(0,76,151,.35)}
+  .ob-note{font-size:12px;color:var(--muted);font-style:italic;margin:10px 0 0}
+  .ob-summary{margin:6px 0 0;padding:0;list-style:none}
+  .ob-summary li{display:flex;gap:10px;align-items:center;margin:10px 0;font-size:14.5px}
+  .ob-summary .ok{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;flex:0 0 22px;background:var(--green)}
+  .ob-summary .off{background:#c2cbd6}
+  .ob-foot{display:flex;justify-content:space-between;align-items:center;padding:16px 26px 22px;margin-top:6px}
+  .ob-back{border:0;background:none;color:var(--link);font-family:inherit;font-size:14.5px;cursor:pointer;text-decoration:underline}
+  .ob-back[hidden]{visibility:hidden;display:block}
+  .ob-foot .btn{margin:0}
+
+  .infobar{background:var(--infobar);border-left:5px solid var(--irs-blue);padding:18px 18px 16px;display:flex;gap:12px}
+  .infobar.alert{background:#faeded;border-left-color:var(--red)}
+  .infobar.warn{background:#fef6e0;border-left-color:var(--amber)}
+  .infobar.ok{background:#ecf3ec;border-left-color:var(--green)}
+  .infobar .circle{width:22px;height:22px;border-radius:50%;background:#1b1b1b;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex:0 0 22px}
+  .infobar.alert .circle{background:var(--red)} .infobar.warn .circle{background:var(--amber)} .infobar.ok .circle{background:var(--green)}
+  .infobar h3{margin:0 0 6px;font-size:19px;font-weight:800;line-height:1.25}
+  .infobar p{margin:0;font-size:15.5px}
+
+  .owed-label{font-weight:700;margin:22px 0 0;font-size:15.5px}
+  .owed-date{font-size:14px;margin:0}
+  .owed{font-size:34px;font-weight:800;margin:6px 0 8px}
+  .owed.pos{color:var(--red)}
+  .btn{display:inline-block;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:15px;font-weight:700;padding:13px 20px;text-decoration:none;cursor:pointer;margin-bottom:14px}
+  .btn:hover{background:#003a73}
+  .stacklinks a{display:block;margin:10px 0;font-size:16px}
+
+  .persona-hud{position:fixed;left:18px;bottom:18px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.15);padding:12px 14px;font-size:13px;z-index:60;min-width:210px}
+  .persona-hud .row{display:flex;align-items:center;gap:9px}
+  .persona-hud .dot{width:26px;height:26px;border-radius:50%;color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px}
+  .persona-hud .nm{font-weight:700}.persona-hud .sc{color:var(--muted);font-size:11.5px}
+  .persona-hud .keys{margin-top:9px;border-top:1px solid var(--line);padding-top:8px;color:var(--muted);font-size:11.5px;line-height:1.7}
+  .persona-hud kbd{background:#eef1f5;border:1px solid #ccd4dd;border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-family:ui-monospace,Menlo,monospace;font-size:11px}
+  /* ---------------- TAX-YEAR TIMELINE ---------------- */
+  .timeline{margin-bottom:60px}
+  .metric-toggle{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:16px}
+  .metric-toggle button{background:#fff;border:0;font-family:inherit;font-size:14px;padding:9px 16px;cursor:pointer;color:var(--ink);border-left:1px solid var(--line)}
+  .metric-toggle button:first-child{border-left:0}
+  .metric-toggle button.active{background:var(--irs-blue);color:#fff;font-weight:700}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .chart{display:flex;align-items:flex-end;gap:10px;height:220px;border-bottom:2px solid var(--line);padding-top:26px}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .bar-col button{appearance:none;background:none;border:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;cursor:pointer;font-family:inherit;padding:0;border-radius:6px}
+  .bar-col button:focus-visible{outline:3px solid rgba(0,76,151,.4);outline-offset:2px}
+  .bar-val{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px;white-space:nowrap}
+  .bar{width:62%;max-width:46px;min-height:3px;border-radius:4px 4px 0 0;transition:height .25s,filter .15s}
+  .bar.stack{display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+  .seg{width:100%}
+  .seg.after{background:#cfe0f4}
+  .seg.tax{background:var(--irs-blue)}
+  .bar-col button:hover .bar{filter:brightness(1.08)}
+  .bar-col[aria-selected="true"] .bar{outline:2px solid var(--ink);outline-offset:1px}
+  .bar-yr{font-size:12px;margin-top:8px;color:var(--muted)}
+  .bar-col[aria-selected="true"] .bar-yr{color:var(--ink);font-weight:700}
+  .bar-dot{width:8px;height:8px;border-radius:50%;margin-top:5px}
+  .tl-detail{margin-top:22px;border:1px solid var(--line);border-radius:10px;padding:18px;background:#fafcfe}
+  .tl-detail .dhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .tl-detail h3{margin:0;font-size:20px;font-weight:800}
+  .tl-chip{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;color:#fff}
+  .tl-stats{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:14px}
+  .tl-stats .k{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+  .tl-stats .v{font-size:18px;font-weight:800;margin-top:2px}
+  .tl-actions a{margin-right:18px;font-size:15px}
+  .tl-hint{color:var(--muted);font-size:14px}
+  .tl-note{font-size:12px;color:var(--muted);margin:14px 0 0;font-style:italic}
+
+  /* ---------------- INBOX (email-style) + tab badge ---------------- */
+  nav.tabs button .tabbadge{background:var(--red);color:#fff;border-radius:999px;font-size:11px;font-weight:800;padding:0 7px;margin-left:7px;display:inline-block;min-width:18px;text-align:center;line-height:18px;vertical-align:middle}
+  .inbox{margin-bottom:60px}
+  .inbox-layout{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:10px;overflow:hidden;min-height:480px}
+  .inbox-list{flex:0 0 300px;min-width:0;border-right:1px solid var(--line);overflow-y:auto;max-height:600px;background:#fafcfe}
+  .inbox-item{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 14px;cursor:pointer;font-family:inherit}
+  .inbox-item:hover{background:#f0f5fb}
+  .inbox-item.active{background:#e7f0fa}
+  .inbox-item .ih{display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .inbox-item .isender{font-size:14px;color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .inbox-item.unread .isender{font-weight:800}
+  .inbox-item .idate{font-size:11.5px;color:var(--muted);white-space:nowrap;flex:0 0 auto}
+  .inbox-item .isub{font-size:13px;color:var(--ink);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px;justify-content:space-between}
+  .inbox-item.unread .isub{font-weight:700}
+  .inbox-item .isnip{font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cb{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 6px;border-radius:5px;white-space:nowrap}
+  .cb.irs{background:#e7f0fa;color:var(--irs-blue)} .cb.taxpro{background:#efe9f7;color:var(--violet)}
+  .udot{width:9px;height:9px;border-radius:50%;background:var(--irs-blue);flex:0 0 9px}
+  .inbox-thread{flex:1;min-width:0;padding:18px;display:flex;flex-direction:column}
+  .inbox-thread .thread{flex:1;overflow-y:auto;max-height:440px}
+  .auth-banner{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px}
+  .auth-banner.active{background:#ecf3ec;border-color:#bcdcc6}
+  .auth-banner.pending{background:#fef6e0;border-color:#f0dca0}
+  .auth-banner .at{font-weight:700;margin-bottom:3px}
+  .auth-banner .ascope{color:var(--muted)}
+  .thread{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+  .msg{max-width:80%;padding:11px 14px;border-radius:14px;font-size:14.5px;line-height:1.45}
+  .msg .meta{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .msg.irs{align-self:flex-start;background:#eef3f9;border:1px solid #dce6f1;border-bottom-left-radius:4px}
+  .msg.irs .meta{color:var(--irs-blue)}
+  .msg.pro{align-self:flex-start;background:#efe9f7;border:1px solid #ddd0ef;border-bottom-left-radius:4px}
+  .msg.pro .meta{color:var(--violet)}
+  .msg.you{align-self:flex-end;background:var(--irs-blue);color:#fff;border-bottom-right-radius:4px}
+  .msg.you .meta{color:#cfe0f4}
+  .rec{align-self:center;display:flex;gap:10px;align-items:center;background:#f4f7fb;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12.5px;max-width:94%}
+  .rec .ri{width:30px;height:30px;border-radius:8px;flex:0 0 30px;display:grid;place-items:center;font-size:9.5px;font-weight:800;color:#fff}
+  .rec .rl{font-weight:700;color:var(--ink)} .rec .rd{color:var(--muted)} .rec .rt{color:#9aa7b5;margin-left:6px;white-space:nowrap}
+  .compose{display:flex;gap:10px;align-items:flex-end}
+  .compose textarea{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-family:inherit;font-size:14.5px;resize:vertical;min-height:46px}
+  .compose textarea:focus{outline:2px solid rgba(0,76,151,.3);border-color:var(--irs-blue)}
+  .compose .btn{margin-bottom:0}
+  .msg-note{font-size:12px;color:var(--muted);margin:12px 0 0;font-style:italic}
+
+  /* ---------------- LIVE CHAT WIDGET ---------------- */
+  .chat-fab{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--irs-blue);color:#fff;border:0;border-radius:999px;padding:14px 22px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(0,40,90,.3)}
+  .chat-fab:hover{background:#003a73}
+  /* ---------------- COMPOSE ATTACHMENTS ---------------- */
+  .pending{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px}
+  .pending:empty{margin:0}
+  .pchip{display:inline-flex;align-items:center;gap:6px;background:#eef3f9;border:1px solid #dce6f1;border-radius:999px;padding:4px 10px;font-size:12.5px}
+  .pchip button{border:0;background:none;cursor:pointer;color:var(--muted);font-size:14px;padding:0;line-height:1}
+  .compose .attach{border:1px solid var(--line);background:#fff;border-radius:10px;width:46px;height:46px;cursor:pointer;display:grid;place-items:center;flex:0 0 46px;align-self:flex-end}
+  .compose .attach:hover{background:#eef3f9}
+  .compose .attach svg{width:20px;height:20px;fill:var(--muted)}
+  .inbox-new{display:block;width:calc(100% - 20px);margin:10px;padding:10px;background:var(--irs-blue);color:#fff;border:0;border-radius:9px;font-weight:700;font-family:inherit;font-size:14px;cursor:pointer}
+  .inbox-new:hover{background:#003a73}
+  @media(max-width:780px){.pm-top{flex-direction:column;gap:18px}.pm-owed{flex-basis:auto;border-left:0;padding-left:0}.setup-card{flex-direction:column;align-items:flex-start}.inbox-layout{flex-direction:column}.inbox-list{flex-basis:auto;width:100%;max-height:240px}}
+</style>
+</head>
+<body>
+  <div class="gov"><div class="wrap"><span>An official website of the United States Government</span><a>Here's how you know <span class="caret">⌄</span></a></div></div>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal">IRS</span><span>IRS</span></div>
+    <div class="util">
+      <a id="lang">English <span class="caret">⌄</span></a>
+      <a><span data-i18n="profile">Profile</span></a>
+      <a data-i18n="help">Help</a>
+      <a href="irsgov-homepage.html"><span data-i18n="logout">Logout</span></a>
+    </div>
+  </div></div>
+
+  <nav class="tabs"><div class="wrap" id="tabs"></div></nav>
+
+  <main class="wrap">
+    <h1 class="welcome" id="welcome">Welcome</h1>
+
+    <!-- ===== THE ADDITION: omni bar ===== -->
+    <div class="omni-band">
+      <p class="omni-kicker"><span class="new">New</span> <span id="omniKicker">What do you need to do today?</span></p>
+      <label class="sr-only" for="omni">Search your IRS account</label>
+      <div class="omni-input-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10a5 5 0 1110 0 5 5 0 01-10 0z"/></svg>
+        <input id="omni" type="text" role="combobox" aria-expanded="false" aria-controls="listbox" aria-autocomplete="list" autocomplete="off">
+        <button class="clearbtn" id="clear" aria-label="Clear" hidden>&times;</button>
+      </div>
+      <div class="results" id="results" hidden>
+        <div class="res-head" id="reshead"></div>
+        <div id="listbox" role="listbox" aria-label="Results"></div>
+      </div>
+      <span class="sr-only" id="live" aria-live="polite"></span>
+    </div>
+
+    <div id="view-home">
+    <!-- ===== classic IRS Online Account layout (status / payments / notifications / records) ===== -->
+    <div class="home-grid">
+      <div class="col">
+        <!-- Account status -->
+        <section class="card">
+          <h2 data-i18n="accountStatus">Account status</h2>
+          <div class="infobar" id="statusbar">
+            <span class="circle" id="statusicon">i</span>
+            <div><h3 id="statustitle"></h3><p id="statusbody"></p></div>
+          </div>
+          <p class="owed-label" id="owedLabel">Total amount owed</p>
+          <p class="owed-date" id="owedDate"></p>
+          <p class="owed" id="owed"></p>
+          <div class="stacklinks"><a data-i18n="viewBalance">View balance details</a></div>
+        </section>
+        <!-- Payments -->
+        <section class="card">
+          <h2 data-i18n="payments">Payments</h2>
+          <a class="btn" id="payCta" data-i18n="makePayment">Make a payment</a>
+          <div class="stacklinks">
+            <a data-i18n="paymentOptions">View payment options</a>
+            <a data-i18n="paymentActivity">View payment activity</a>
+          </div>
+        </section>
+      </div>
+      <div class="col">
+        <!-- Notifications -->
+        <section class="card">
+          <h2 data-i18n="notifications">Notifications</h2>
+          <p class="lead-link"><a data-i18n="emailNotifTitle">Turn on email notifications</a></p>
+          <p class="muted-body" data-i18n="emailNotifBody"></p>
+          <hr>
+          <p class="lead-link"><a data-i18n="paperlessTitle">Go paperless for certain IRS notices</a></p>
+          <p class="muted-body" data-i18n="paperlessBody"></p>
+        </section>
+        <!-- Records -->
+        <section class="card">
+          <h2 data-i18n="records">Records</h2>
+          <p class="lead-link"><a data-i18n="viewTaxRecords">View tax records</a> <span data-i18n="recordsFor">for:</span></p>
+          <ul>
+            <li data-i18n="rec1"></li>
+            <li data-i18n="rec2"></li>
+            <li data-i18n="rec3"></li>
+            <li data-i18n="rec4"></li>
+          </ul>
+          <p class="lead-link"><a data-i18n="viewNotices">View notices and letters</a> <span data-i18n="noticesFor">for correspondence from the IRS</span></p>
+          <p class="lead-link"><a data-i18n="viewAuth">View authorizations</a> <span data-i18n="authFor">for online requests from tax professionals</span></p>
+        </section>
+      </div>
+    </div>
+
+    <!-- tax-year timeline kept (hidden) so renderTimeline() stays wired and is easy to restore -->
+    <div hidden aria-hidden="true">
+      <div class="metric-toggle" id="metricToggle" role="tablist" aria-label="Chart metric"></div>
+      <div class="legend" id="tlLegend"></div>
+      <div class="chart" id="tlChart" role="group"></div>
+      <div class="tl-detail" id="tlDetail"></div>
+      <table class="sr-only" id="tlTable"></table>
+    </div>
+    <div id="setupCard" hidden></div>
+    </div><!-- /view-home -->
+
+    <!-- ===== Inbox (secure messages, email-style) ===== -->
+    <div id="view-inbox" hidden>
+      <section class="card inbox">
+        <h2 data-i18n="messagingTitle">Secure messages</h2>
+        <div class="inbox-layout">
+          <div class="inbox-list" id="inboxList" aria-label="Inbox"></div>
+          <div class="inbox-thread">
+            <div id="authBanner"></div>
+            <div class="thread" id="msgThread" role="log" aria-label="Secure message thread"></div>
+            <div class="pending" id="msgPending"></div>
+            <div class="compose">
+              <label class="sr-only" for="msgInput" id="msgComposeLabel">Write a secure message</label>
+              <button class="attach" id="msgAttach" aria-label="Attach a document"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 6.75v9.54a4.5 4.5 0 11-9 0V5.25a3 3 0 016 0v10.5a1.5 1.5 0 11-3 0V6.75H9v9a3 3 0 006 0V5.25a4.5 4.5 0 00-9 0v11.04a6 6 0 0012 0V6.75z"/></svg></button>
+              <input type="file" id="msgFile" multiple hidden>
+              <textarea id="msgInput" rows="2"></textarea>
+              <button class="btn" id="msgSend" data-i18n="msgSend">Send</button>
+            </div>
+            <p class="msg-note" data-i18n="msgNote"></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="persona-hud" aria-hidden="true" hidden>
+    <div class="row"><span class="dot" id="hudDot"></span><div><div class="nm" id="hudName"></div><div class="sc" id="hudScenario"></div></div></div>
+    <div class="keys">Switch taxpayer <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> · cycle <kbd>←</kbd><kbd>→</kbd> · search <kbd>/</kbd></div>
+  </div>
+
+  <!-- ===== chat button: routes to secure messages ===== -->
+  <button class="chat-fab" id="chatFab" hidden>Chat</button>
+
+  <!-- ===== onboarding wizard ===== -->
+  <div class="ob-overlay" id="obOverlay" hidden>
+    <div class="ob-dialog" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+      <div class="ob-head"><div class="ob-dots" id="obDots"></div><button class="ob-skip" id="obSkip"></button></div>
+      <div class="ob-body" id="obBody"></div>
+      <div class="ob-foot"><button class="ob-back" id="obBack"></button><button class="btn" id="obNext"></button></div>
+    </div>
+  </div>
+
+<script>
+/* ---------- i18n ---------- */
+const I18N={
+  en:{tabs:["Account home","Account balance","Payments ⌄","Tax records","Notices and letters","Authorizations","Inbox"],
+    profile:"Profile",help:"Help",logout:"Logout",lang:"English",welcome:"Welcome",
+    accountStatus:"Account status",payments:"Payments",makePayment:"Make a payment",paymentOptions:"View payment options",
+    paymentActivity:"View payment activity",viewBalance:"View balance details",owedLabel:"Total amount owed",
+    notifications:"Notifications",emailNotifTitle:"Turn on email notifications",
+    emailNotifBody:"Sign up to receive email notifications when the IRS issues new notices for your account.",
+    paperlessTitle:"Go paperless for certain IRS notices",paperlessBody:"Set your profile preferences to receive IRS notices online.",
+    records:"Records",viewTaxRecords:"View tax records",recordsFor:"for:",
+    rec1:"Key information from your most recent tax return",rec2:"Advance Child Tax Credit filing information",
+    rec3:"Economic Impact Payment filing information",rec4:"Downloadable tax records",
+    viewNotices:"View notices and letters",noticesFor:"for correspondence from the IRS",viewAuth:"View authorizations",authFor:"for online requests from tax professionals",
+    kicker:"What do you need to do today?",placeholder:'Try “code”, “can\'t pay”, “CP523”, or “pay 200”…',suggest:"Suggestions for you",best:"Best matches",none:"No matches",reveal:"Reveal",noResults:q=>`Nothing matched “${q}”. Try “owe”, “refund”, or “letter”.`},
+  es:{tabs:["Inicio de la cuenta","Saldo de la cuenta","Pagos ⌄","Registros tributarios","Avisos y cartas","Autorizaciones","Buzón"],
+    profile:"Perfil",help:"Ayuda",logout:"Salir",lang:"Español",welcome:"Bienvenida",
+    accountStatus:"Estado de la cuenta",payments:"Pagos",makePayment:"Hacer un pago",paymentOptions:"Ver opciones de pago",
+    paymentActivity:"Ver actividad de pagos",viewBalance:"Ver detalles del saldo",owedLabel:"Cantidad total adeudada",
+    notifications:"Notificaciones",emailNotifTitle:"Activar notificaciones por correo",
+    emailNotifBody:"Regístrese para recibir notificaciones cuando el IRS emita nuevos avisos en su cuenta.",
+    paperlessTitle:"Reciba ciertos avisos del IRS sin papel",paperlessBody:"Configure sus preferencias para recibir avisos en línea.",
+    records:"Registros",viewTaxRecords:"Ver registros tributarios",recordsFor:"para:",
+    rec1:"Información clave de su declaración más reciente",rec2:"Información del Crédito Tributario por Hijos adelantado",
+    rec3:"Información del Pago de Impacto Económico",rec4:"Registros tributarios descargables",
+    viewNotices:"Ver avisos y cartas",noticesFor:"para correspondencia del IRS",viewAuth:"Ver autorizaciones",authFor:"para solicitudes de profesionales de impuestos",
+    kicker:"¿Qué necesita hacer hoy?",placeholder:'Escriba “código”, “no puedo pagar”, “CP521” o “pagar 150”…',suggest:"Sugerencias para usted",best:"Mejores resultados",none:"Sin resultados",reveal:"Mostrar",noResults:q=>`Nada coincide con “${q}”. Pruebe “saldo”, “reembolso” o “carta”.`}
+};
+Object.assign(I18N.en,{timelineTitle:"Your account by tax year",metricIncome:"Income & tax",metricBalance:"Balance owed",metricAgi:"AGI (income)",metricTaxPaid:"Tax paid",afterTax:"After-tax income",effRate:"Effective rate",balanceLbl:"Balance",agiLbl:"AGI",taxPaidLbl:"Tax paid",noticesLbl:"Notices",transcriptLbl:"Transcript",payThisYear:"Pay this year's balance",viewTranscript:"View transcript",selectYearHint:"Select a year above to see its details.",yearWord:"Tax year",noAction:"No action needed.",timelineNote:"Illustrative concept. Annie's per-year balances and statuses are from captured data; AGI and tax-paid figures are synthetic for layout.",
+  messagingTitle:"Secure messages",msgSend:"Send",msgPlaceholder:"Write a secure message…",msgYou:"You",msgIrs:"IRS",msgNow:"Just now",msgComposeLabel:"Write a secure message",msgNote:"Secure two-way messaging — in this prototype, replies are not actually sent.",
+  taxProBadge:"Tax pro",irsBadge:"IRS",authActive:"Authorization active",authPending:"Authorization pending",authScope:"Access",authGranted:"Granted",authExpires:"Expires",revoke:"Revoke access"});
+Object.assign(I18N.es,{timelineTitle:"Su cuenta por año tributario",metricIncome:"Ingresos e impuesto",metricBalance:"Saldo pendiente",metricAgi:"AGI (ingresos)",metricTaxPaid:"Impuesto pagado",afterTax:"Ingreso después de impuestos",effRate:"Tasa efectiva",balanceLbl:"Saldo",agiLbl:"AGI",taxPaidLbl:"Impuesto pagado",noticesLbl:"Avisos",transcriptLbl:"Transcripción",payThisYear:"Pagar el saldo de este año",viewTranscript:"Ver transcripción",selectYearHint:"Seleccione un año para ver los detalles.",yearWord:"Año tributario",noAction:"No se requiere acción.",timelineNote:"Concepto ilustrativo. Los saldos y estados anuales de Annie provienen de datos capturados; las cifras de AGI e impuesto pagado son sintéticas.",
+  messagingTitle:"Mensajes seguros",msgSend:"Enviar",msgPlaceholder:"Escriba un mensaje seguro…",msgYou:"Usted",msgIrs:"IRS",msgNow:"Ahora",msgComposeLabel:"Escriba un mensaje seguro",msgNote:"Mensajería segura bidireccional — en este prototipo, las respuestas no se envían realmente.",
+  taxProBadge:"Profesional",irsBadge:"IRS",authActive:"Autorización activa",authPending:"Autorización pendiente",authScope:"Acceso",authGranted:"Otorgada",authExpires:"Vence",revoke:"Revocar acceso"});
+Object.assign(I18N.en,{chatFab:"Chat",attachDoc:"Attach a document",docUploaded:"Document uploaded",removeAttach:"Remove",
+  newMsg:"New message",newSubject:"New conversation",irsName:"Internal Revenue Service"});
+Object.assign(I18N.es,{chatFab:"Chat",attachDoc:"Adjuntar un documento",docUploaded:"Documento subido",removeAttach:"Quitar",
+  newMsg:"Nuevo mensaje",newSubject:"Nueva conversación",irsName:"Servicio de Impuestos Internos"});
+Object.assign(I18N.en,{
+  obSkip:"Skip for now",obBack:"Back",obNext:"Continue",obStart:"Get started",obFinish:"Go to my account",
+  obWelcomeTitle:n=>`Welcome, ${n} — let's set up your account`,
+  obWelcomeLead:"One minute, three choices. You can change any of this later in Profile.",
+  obNow:(code,txt)=>`Right now on your account: <b>${code}</b> — ${txt}`,
+  obFeat1:"Secure messages & document upload",obFeat1d:"Write to us and send files from your Inbox — no mail, no fax.",
+  obFeat2:"Ask for anything",obFeat2d:"The search bar understands plain language: “can't pay”, “CP523”, “pay 200”.",
+  obFeat3:"Know the moment something changes",obFeat3d:"Email alerts and paperless notices — choose them on the next screens.",
+  obNotifTitle:"How should we reach you?",
+  obNotifLead:"We'll email you when something needs your attention. Never amounts or details — just a heads-up and a secure link to sign in.",
+  obEmail:"Email notifications",obEmailTo:e=>`To ${e}`,
+  obTypeNotice:"A new notice or letter is available",obTypeNoticeD:"The most important one — never miss a deadline buried in the mail.",
+  obTypeRefund:"Your refund is issued",obTypeRefundD:"Know it's on the way without checking back.",
+  obTypePayment:"A payment posts to your account",obTypePaymentD:"Confirmation that your payment was applied.",
+  obPaperTitle:"Go paperless?",
+  obPaperLead:"Get eligible IRS notices in your Inbox here instead of by mail. Faster, searchable, and they never get lost.",
+  obPaper:"Paperless notices",obPaperD:"Applies to eligible notices. You can switch back anytime.",
+  obPaperNote:"Some notices are legally required to also arrive by mail.",
+  obDoneTitle:"You're all set",
+  obDoneLead:"Here's what we saved. Change any of it in Profile › Notification settings.",
+  obSumEmail:"Email notifications",obSumPaper:"Paperless notices",obSumOn:"On",obSumOff:"Off",
+  setupTitle:"Finish setting up your account",
+  setupBody:"Choose how we reach you and go paperless — about a minute.",
+  setupCta:"Continue setup",
+  setupDoneTitle:"Account setup complete",
+  setupDoneBody:"Email notifications and paperless preferences are saved.",
+  setupManage:"Review settings"});
+Object.assign(I18N.es,{
+  obSkip:"Omitir por ahora",obBack:"Atrás",obNext:"Continuar",obStart:"Comenzar",obFinish:"Ir a mi cuenta",
+  obWelcomeTitle:n=>`Bienvenida, ${n} — configuremos su cuenta`,
+  obWelcomeLead:"Un minuto, tres decisiones. Puede cambiarlas luego en Perfil.",
+  obNow:(code,txt)=>`Ahora en su cuenta: <b>${code}</b> — ${txt}`,
+  obFeat1:"Mensajes seguros y subir documentos",obFeat1d:"Escríbanos y envíe archivos desde su Buzón — sin correo postal ni fax.",
+  obFeat2:"Pida lo que necesite",obFeat2d:"La búsqueda entiende lenguaje natural: “no puedo pagar”, “CP521”, “pagar 150”.",
+  obFeat3:"Entérese al instante",obFeat3d:"Alertas por correo y avisos sin papel — elíjalos en las próximas pantallas.",
+  obNotifTitle:"¿Cómo le avisamos?",
+  obNotifLead:"Le enviaremos un correo cuando algo requiera su atención. Nunca montos ni detalles — solo un aviso y un enlace seguro.",
+  obEmail:"Notificaciones por correo",obEmailTo:e=>`A ${e}`,
+  obTypeNotice:"Hay un aviso o carta nueva",obTypeNoticeD:"La más importante — no pierda una fecha límite en el correo postal.",
+  obTypeRefund:"Su reembolso fue emitido",obTypeRefundD:"Sepa que viene en camino sin tener que revisar.",
+  obTypePayment:"Un pago se aplicó a su cuenta",obTypePaymentD:"Confirmación de que su pago fue aplicado.",
+  obPaperTitle:"¿Sin papel?",
+  obPaperLead:"Reciba avisos elegibles del IRS en su Buzón en lugar del correo postal. Más rápido y nunca se pierden.",
+  obPaper:"Avisos sin papel",obPaperD:"Aplica a avisos elegibles. Puede volver atrás cuando quiera.",
+  obPaperNote:"Algunos avisos deben llegar también por correo postal por ley.",
+  obDoneTitle:"Todo listo",
+  obDoneLead:"Esto es lo que guardamos. Cámbielo en Perfil › Configuración de notificaciones.",
+  obSumEmail:"Notificaciones por correo",obSumPaper:"Avisos sin papel",obSumOn:"Activado",obSumOff:"Desactivado",
+  setupTitle:"Termine de configurar su cuenta",
+  setupBody:"Elija cómo le avisamos y reciba avisos sin papel — un minuto.",
+  setupCta:"Continuar configuración",
+  setupDoneTitle:"Configuración completa",
+  setupDoneBody:"Sus preferencias de notificaciones y sin papel están guardadas.",
+  setupManage:"Revisar configuración"});
+
+/* ---------- Personas ---------- */
+const PERSONAS={
+  "1":{key:"annie",name:"Annie Authson",color:"#b50909",lang:"en",scenario:"Defaulted plan · lien",email:"a.authson••@gmail.com",
+    owed:"$1,432,768.00",owedPos:true,owedDate:"as of June 9, 2026",balanceDue:1432768,
+    hasIpPin:true,ipPin:"••• ••3",refund:null,plan:"defaulted",nextPay:null,banks:["Jenkins Saving ••1201"],topNotice:{code:"CP523",txt:"You defaulted on your payment plan"},
+    status:{tone:"alert",icon:"!",title:"Your payment plan has defaulted",body:'You defaulted on your installment agreement (Notice CP523). Reinstate now to avoid enforced collection. <a>Read more</a>'},
+    suggest:["plan","balance","notices","pay"],
+    years:[
+      {year:2011,status:"balanceDue",balance:1395467.82,agi:54000,taxPaid:0,notices:1,transcript:false},
+      {year:2013,status:"balanceDue",balance:9504.05,agi:48000,taxPaid:1200,notices:0,transcript:false},
+      {year:2015,status:"balanceDue",balance:168.03,agi:51000,taxPaid:8200,notices:1,transcript:true},
+      {year:2016,status:"balanceDue",balance:8974.82,agi:55000,taxPaid:3000,notices:3,transcript:true},
+      {year:2017,status:"balanceDue",balance:8658.08,agi:57000,taxPaid:3500,notices:2,transcript:true},
+      {year:2018,status:"balanceDue",balance:6993.02,agi:60000,taxPaid:4000,notices:2,transcript:true},
+      {year:2019,status:"notAvailable",balance:0,agi:0,taxPaid:0,notices:1,transcript:false},
+      {year:2024,status:"notAvailable",balance:0,agi:0,taxPaid:0,notices:5,transcript:false}
+    ],
+    conversations:[
+      {id:"irs",title:"Internal Revenue Service",type:"irs",subject:"Installment agreement",unread:1,items:[
+        {kind:"event",ev:"letter",label:"Letter sent",detail:"CP523 — Intent to terminate your installment agreement",date:"Jun 1, 2026"},
+        {kind:"msg",from:"irs",body:"Our records show your installment agreement is in default. Reply here with questions, or reinstate it online.",date:"Jun 2, 2026"},
+        {kind:"msg",from:"you",body:"I missed a payment after a job change. Can I reinstate without paying the full balance at once?",date:"Jun 3, 2026"},
+        {kind:"event",ev:"payment",label:"Payment received",detail:"$150.00 from Jenkins Saving ••1201",date:"Jun 4, 2026"},
+        {kind:"msg",from:"irs",body:"Thanks — that payment was applied. You can request reinstatement and resume monthly payments; a reinstatement fee may apply.",date:"Jun 4, 2026"}
+      ]},
+      {id:"pro",title:"Maria Lopez, CPA",type:"taxpro",subject:"Power of attorney",unread:0,auth:{status:"active",scope:"View account & respond to notices",granted:"Mar 12, 2026",expires:"Dec 31, 2027"},items:[
+        {kind:"event",ev:"auth",label:"Authorization granted",detail:"Form 2848 (Power of Attorney) — Maria Lopez, CPA",date:"Mar 12, 2026"},
+        {kind:"msg",from:"pro",body:"Hi Annie — I can see the CP523. I'll draft a reinstatement request and walk you through it.",date:"Mar 13, 2026"},
+        {kind:"msg",from:"you",body:"Thank you Maria, that would be a huge help.",date:"Mar 13, 2026"}
+      ]}
+    ]},
+  "2":{key:"benjamin",name:"Benjamin Compliant",color:"#1a7f4b",lang:"en",scenario:"Compliant · refund under review",email:"b.compliant••@outlook.com",
+    owed:"$0.00",owedPos:false,owedDate:"as of June 9, 2026",balanceDue:0,
+    hasIpPin:false,refund:{status:"Under review",txt:"2024 refund being reviewed (CP05) · ~60 days"},plan:"none",nextPay:null,banks:[],topNotice:{code:"CP05",txt:"Your refund is under review"},
+    status:{tone:"ok",icon:"i",title:"Your refund is being reviewed",body:'We\'re reviewing your 2024 refund (Notice CP05). No action is needed — typical wait is about 60 days. <a>Read more</a>'},
+    suggest:["refund","transcripts","balance"],
+    years:[
+      {year:2020,status:"paid",balance:0,agi:72000,taxPaid:9800,notices:0,transcript:true},
+      {year:2021,status:"paid",balance:0,agi:81000,taxPaid:11200,notices:0,transcript:true},
+      {year:2022,status:"paid",balance:0,agi:89000,taxPaid:12600,notices:0,transcript:true},
+      {year:2023,status:"paid",balance:0,agi:94000,taxPaid:13400,notices:0,transcript:true},
+      {year:2024,status:"review",balance:0,agi:98500,taxPaid:14100,notices:1,transcript:false}
+    ],
+    conversations:[
+      {id:"irs",title:"Internal Revenue Service",type:"irs",subject:"Refund review",unread:1,items:[
+        {kind:"event",ev:"form",label:"Return received",detail:"Form 1040 (2024) accepted",date:"Apr 14, 2026"},
+        {kind:"event",ev:"letter",label:"Letter sent",detail:"CP05 — We're reviewing your refund",date:"May 19, 2026"},
+        {kind:"msg",from:"irs",body:"We're reviewing your 2024 return before issuing your refund. No action is needed unless we contact you.",date:"May 20, 2026"},
+        {kind:"msg",from:"you",body:"Thanks — roughly how long does the review usually take?",date:"May 21, 2026"},
+        {kind:"msg",from:"irs",body:"Most reviews finish within 60 days. The status will update on your account when it's done.",date:"May 22, 2026"}
+      ]}
+    ]},
+  "3":{key:"carla",name:"Carla Installment",color:"#8a6d00",lang:"es",scenario:"Plan activo · próximo pago 28 jun",email:"c.installment••@gmail.com",
+    owed:"$5,240.55",owedPos:true,owedDate:"al 9 de junio de 2026",balanceDue:5240.55,
+    hasIpPin:false,refund:null,plan:"active",nextPay:"28 jun · $150",banks:["Cuenta ••1201"],topNotice:{code:"CP521",txt:"Recordatorio de pago mensual"},
+    status:{tone:"warn",icon:"i",title:"Su próximo pago vence el 28 de junio",body:'Su plan de pagos está activo. Próximo pago: $150 por débito automático (••1201). <a>Administrar plan</a>'},
+    suggest:["plan","pay","balance","payoff"],
+    years:[
+      {year:2020,status:"paid",balance:0,agi:46000,taxPaid:5200,notices:0,transcript:true},
+      {year:2021,status:"paid",balance:0,agi:49000,taxPaid:5600,notices:0,transcript:true},
+      {year:2022,status:"paid",balance:0,agi:51000,taxPaid:6000,notices:0,transcript:true},
+      {year:2023,status:"balanceDue",balance:5240.55,agi:54200,taxPaid:3800,notices:1,transcript:true}
+    ],
+    conversations:[
+      {id:"irs",title:"Servicio de Impuestos Internos",type:"irs",subject:"Plan de pagos",unread:0,items:[
+        {kind:"event",ev:"payment",label:"Pago recibido",detail:"$150.00 de Cuenta ••1201",date:"28 may 2026"},
+        {kind:"msg",from:"irs",body:"Su próximo pago automático de $150 se procesará el 28 de junio.",date:"5 jun 2026"},
+        {kind:"msg",from:"you",body:"¿Puedo aumentar mi pago mensual para terminar el plan antes?",date:"6 jun 2026"},
+        {kind:"msg",from:"irs",body:"Sí. Puede revisar su acuerdo y elegir un monto mensual mayor sin penalidad.",date:"7 jun 2026"}
+      ]},
+      {id:"pro",title:"Javier Ortiz, EA",type:"taxpro",subject:"Autorización del profesional",unread:1,auth:{status:"pending",scope:"Ver cuenta y planes de pago",granted:"Solicitado 6 jun 2026",expires:"—"},items:[
+        {kind:"event",ev:"auth",label:"Autorización pendiente",detail:"Formulario 2848 enviado — esperando su aprobación",date:"6 jun 2026"},
+        {kind:"msg",from:"pro",body:"Hola Carla, le envié la solicitud de autorización. Apruébela cuando pueda y reviso su plan de pagos.",date:"6 jun 2026"}
+      ]}
+    ]},
+  "4":{key:"diane",name:"Diane Protected",color:"#004c97",lang:"en",scenario:"ID-protected · IP PIN active",email:"d.protected••@proton.me",
+    owed:"$0.00",owedPos:false,owedDate:"as of June 9, 2026",balanceDue:0,
+    hasIpPin:true,ipPin:"••• ••7",refund:null,plan:"none",nextPay:null,banks:[],topNotice:{code:"CP01A",txt:"We assigned you an IP PIN"},
+    status:{tone:"info",icon:"i",title:"Your identity protection PIN is active",body:'Your IP PIN was reissued for 2026 (Notice CP01A). You\'ll need it to e-file. <a>View my IP PIN</a>'},
+    suggest:["ippin","idtheft","transcripts"],
+    years:[
+      {year:2021,status:"paid",balance:0,agi:37000,taxPaid:3900,notices:1,transcript:true},
+      {year:2022,status:"paid",balance:0,agi:39000,taxPaid:4200,notices:0,transcript:true},
+      {year:2023,status:"paid",balance:0,agi:40500,taxPaid:4500,notices:0,transcript:true},
+      {year:2024,status:"paid",balance:0,agi:41000,taxPaid:4600,notices:1,transcript:true}
+    ],
+    conversations:[
+      {id:"irs",title:"Internal Revenue Service",type:"irs",subject:"Identity protection",unread:1,items:[
+        {kind:"event",ev:"form",label:"Form received",detail:"Form 14039 (Identity Theft Affidavit) processed",date:"Dec 20, 2025"},
+        {kind:"event",ev:"letter",label:"Letter sent",detail:"CP01A — We assigned you an IP PIN",date:"Jan 1, 2026"},
+        {kind:"msg",from:"irs",body:"Your IP PIN for 2026 has been issued. Keep it private — you'll need it to e-file.",date:"Jan 2, 2026"},
+        {kind:"msg",from:"you",body:"Can I retrieve my IP PIN here if I lose it?",date:"Jan 4, 2026"},
+        {kind:"msg",from:"irs",body:"Yes — you can view or reissue your IP PIN anytime from your account.",date:"Jan 5, 2026"}
+      ]}
+    ]}
+};
+let current="1",activeTab=0,metric="income",selYear=null,selConvo=null;
+const EV_META={letter:{c:"#5b3fa0",m:"LTR"},payment:{c:"#1a7f4b",m:"PAY"},form:{c:"#004c97",m:"FRM"},auth:{c:"#8a6d00",m:"POA"},doc:{c:"#0050a0",m:"DOC"}};
+const P=()=>PERSONAS[current], L=()=>I18N[P().lang], ES=()=>P().lang==="es";
+const STATUS_META={
+  paid:{color:"#1a7f4b",en:"Paid",es:"Pagado"},
+  balanceDue:{color:"#b50909",en:"Balance due",es:"Saldo pendiente"},
+  notAvailable:{color:"#9aa7b5",en:"Not available",es:"No disponible"},
+  review:{color:"#004c97",en:"Under review",es:"En revisión"},
+  adjust:{color:"#8a6d00",en:"Interest adjustment",es:"Ajuste de interés"}
+};
+const money=n=>"$"+Math.round(n).toLocaleString("en-US");
+const moneyShort=n=>n>=1e6?"$"+(n/1e6).toFixed(1)+"M":n>=1e3?"$"+Math.round(n/1e3)+"k":"$"+Math.round(n);
+
+/* ---------- Intents (localized) ---------- */
+const INTENTS=[
+  {id:"ippin",icon:"IP",color:"#5b3fa0",title:{en:"IP PIN",es:"Número IP PIN"},plain:{en:"The 6-digit code you need to e-file",es:"El código de 6 dígitos para presentar electrónicamente"},
+    route:"GET /api/iola/shared/accounts/profile/1.0/ip-pin",
+    syn:["code","my code","the code","ip pin","ippin","pin","identity code","efile code","number to file","someone filed as me","codigo","código","mi codigo","numero para presentar"],
+    kw:["code","pin","ippin","efile","identity","codigo","código"],
+    answer:()=>{const p=P();return p.hasIpPin?`<div>${ES()?"Su IP PIN":"Your IP PIN"}: <span class="big">${p.ipPin}</span> <a>${L().reveal}</a></div>`:`<div>${ES()?"No tiene un IP PIN todavía.":"You don't have an IP PIN yet."} <a>${ES()?"Solicitar →":"Request one →"}</a></div>`;}},
+  {id:"balance",icon:"$",color:"#004c97",title:{en:"How much you owe",es:"Cuánto debe"},plain:{en:"Your current balance and balance by year",es:"Su saldo actual y por año tributario"},
+    route:"GET /api/iola/v1.0/shared/accounts/baldue-summary",
+    syn:["balance","how much do i owe","do i owe","what i owe","my bill","total owed","how much","saldo","cuanto debo","cuánto debo","mi cuenta"],
+    kw:["balance","owe","bill","total","saldo","debo"],
+    answer:()=>{const p=P();return `<div>${ES()?"Saldo actual":"Current balance"}: <span class="big">${p.owed}</span> ${p.balanceDue>0?(ES()?"· varios años":"· across multiple years"):(ES()?"· al día":"· you\'re all caught up")}</div>`;}},
+  {id:"pay",icon:"PY",color:"#1a7f4b",title:{en:"Make a payment",es:"Hacer un pago"},plain:{en:"Pay from a saved bank account",es:"Pague desde una cuenta bancaria guardada"},
+    route:"POST /api/iola/web-apps/routes/ola/ip/taxpayer/newpayment",
+    syn:["pay","make a payment","pay my taxes","pay irs","send a payment","pagar","hacer un pago","pagar impuestos"],
+    kw:["pay","payment","pagar","pago"],
+    answer:(pr)=>{const p=P(),bank=p.banks[0]||(ES()?"una cuenta nueva":"a new bank account");
+      return pr&&pr.amount?`<div>${ES()?"Pagar":"Pay"} <span class="big">$${pr.amount}</span> ${ES()?"desde":"from"} ${bank} <a>${ES()?"Revisar →":"Review →"}</a></div>`:`<div>${ES()?"Pague desde":"Pay from"} ${bank}. <a>${ES()?"Ingresar monto →":"Enter an amount →"}</a></div>`;}},
+  {id:"plan",icon:"PL",color:"#8a6d00",title:{en:"Payment plan",es:"Plan de pagos"},plain:{en:"Set up or manage an installment agreement",es:"Cree o administre un acuerdo de pagos"},
+    route:"GET /api/iola/shared/accounts/payments/1.0/plans/current-agreement",
+    syn:["payment plan","plan","installment","cant pay","can't pay","cannot pay","pay over time","monthly payments","more time","too much","afford","plan de pagos","no puedo pagar","pagar a plazos","mensual"],
+    kw:["plan","installment","monthly","afford","plazos","mensual"],
+    answer:()=>{const p=P();if(p.plan==="defaulted")return `<div>${ES()?"Su plan incumplió.":"Your plan <b>defaulted</b>."} <a>${ES()?"Restablecer →":"Reinstate your agreement →"}</a></div>`;
+      if(p.plan==="active")return `<div>${ES()?"Plan activo · próximo pago":"Plan active · next payment"} <b>${p.nextPay}</b>. <a>${ES()?"Administrar →":"Manage plan →"}</a></div>`;
+      return `<div>${ES()?"Es elegible para solicitar.":"You're eligible to apply."} <a>${ES()?"Solicitar plan →":"Apply for a payment plan →"}</a></div>`;}},
+  {id:"refund",icon:"RF",color:"#1a7f4b",title:{en:"Where's my refund",es:"Dónde está mi reembolso"},plain:{en:"Track the status of your refund",es:"Rastree el estado de su reembolso"},
+    route:"GET /api/iola/taxpayers/accounts/taxrecords/1.0/refundSummary/2024",
+    syn:["refund","wheres my refund","where's my refund","money back","when do i get paid","refund status","reembolso","mi reembolso","mi dinero"],
+    kw:["refund","money","reembolso"],
+    answer:()=>{const p=P();return p.refund?`<div><span class="big">${p.refund.status}</span> — ${p.refund.txt}</div>`:`<div>${ES()?"No hay reembolso en proceso.":"No refund is being processed right now."}</div>`;}},
+  {id:"notices",icon:"NL",color:"#b50909",title:{en:"Notices & letters",es:"Avisos y cartas"},plain:{en:"Read IRS letters and what to do about them",es:"Lea las cartas del IRS y qué hacer"},
+    route:"GET /api/iola/web-apps/routes/tdc/notifications",
+    syn:["notice","letter","got a letter","irs mail","what does this letter mean","cp2000","aviso","carta","recibi una carta","correo del irs"],
+    kw:["notice","letter","mail","cp","aviso","carta"],
+    answer:(pr)=>{const p=P();if(pr&&pr.cp)return `<div>${ES()?"Aviso":"Notice"} <span class="big">${pr.cp}</span> — <a>${ES()?"abrir y próximos pasos →":"open this letter & next steps →"}</a></div>`;
+      return `<div>${ES()?"Más reciente":"Most recent"}: <b>${p.topNotice.code}</b> — ${p.topNotice.txt}. <a>${ES()?"Abrir →":"Open →"}</a></div>`;}},
+  {id:"transcripts",icon:"TR",color:"#004c97",title:{en:"Tax records / transcripts",es:"Registros / transcripciones"},plain:{en:"Get transcripts — often needed for a mortgage or loan",es:"Obtenga transcripciones — para hipoteca o préstamo"},
+    route:"GET /api/iola/shared/accounts/taxrecords/1.0/taxpayers/transcripts",
+    syn:["transcript","tax record","records","proof of income","records for mortgage","records for loan","wage and income","transcripcion","registros","comprobante de ingresos","hipoteca"],
+    kw:["transcript","record","proof","mortgage","loan","wage","registros","hipoteca"]},
+  {id:"idtheft",icon:"ID",color:"#5b3fa0",title:{en:"Identity theft help",es:"Ayuda por robo de identidad"},plain:{en:"Report and recover from tax identity theft",es:"Reporte y recupérese del robo de identidad"},
+    route:"GET /api/iola/idv/eligibility",
+    syn:["identity theft","someone stole my identity","fraud","i was hacked","somebody filed for me","robo de identidad","fraude","me robaron la identidad"],
+    kw:["identity","theft","fraud","hacked","identidad","fraude"]},
+  {id:"bank",icon:"BK",color:"#004c97",title:{en:"Bank accounts",es:"Cuentas bancarias"},plain:{en:"Add, view, or remove saved bank accounts",es:"Agregue, vea o elimine cuentas bancarias"},
+    route:"GET /api/iola/v1.0/shared/banks/accounts",
+    syn:["bank","bank account","add bank","routing number","my bank","banco","cuenta bancaria","numero de ruta"],
+    kw:["bank","routing","banco","cuenta"]},
+  {id:"payoff",icon:"PO",color:"#8a6d00",title:{en:"Payoff amount",es:"Monto para liquidar"},plain:{en:"See the full amount to clear your balance today",es:"Vea el monto total para saldar hoy"},
+    route:"POST /api/iola/web-apps/routes/ola/ia/taxpayers/payoffs",
+    syn:["payoff","pay it all off","pay in full","full balance","settle my balance","clear my balance","liquidar","pagar todo","saldar"],
+    kw:["payoff","settle","clear","liquidar","saldar"]},
+  {id:"address",icon:"AD",color:"#5c5c5c",title:{en:"Update your address",es:"Actualizar su dirección"},plain:{en:"Change the mailing address on your account",es:"Cambie la dirección postal de su cuenta"},
+    route:"GET /api/iola/web-apps/routes/ola/taxpayer/accountSummary",
+    syn:["change address","moved","update address","new address","cambiar direccion","me mude","dirección nueva"],
+    kw:["address","moved","direccion","dirección"]},
+  {id:"messages",icon:"SM",color:"#004c97",title:{en:"Secure messages",es:"Mensajes seguros"},plain:{en:"Read or send secure messages with the IRS",es:"Lea o envíe mensajes seguros con el IRS"},
+    route:"GET /api/iola/v1.0/shared/digital-comms/messages/emails",
+    syn:["message","messages","secure message","send a message","contact irs","write to irs","mensaje","mensajes","mensaje seguro","contactar al irs"],
+    kw:["message","messages","contact","mensaje","mensajes"],
+    answer:()=>{const p=P(),n=(p.conversations||[]).length;
+      return `<div>${ES()?`${n} conversación${n>1?"es":""}`:`${n} conversation${n>1?"s":""}`} <a>${ES()?"Abrir →":"Open →"}</a></div>`;}}
+];
+
+/* ---------- NOT in IOLA yet: top IRS.gov tasks surfaced inside the account ----------
+   Clicking one opens the real IRS.gov content page in a new tab. Each click is tallied
+   (see logExternal) as demand signal for what to build into IOLA next. */
+const EXTERNAL=[
+  {id:"ein",icon:"EIN",color:"#00687d",url:"https://www.irs.gov/businesses/small-businesses-self-employed/get-an-employer-identification-number",
+    title:{en:"Apply for an EIN",es:"Solicitar un EIN"},plain:{en:"Employer ID Number — free, issued online in minutes",es:"Número de identificación del empleador — gratis, en minutos"},
+    syn:["ein","employer id","employer identification number","start a business","new business","apply for ein","business tax id"],kw:["ein","employer","business"]},
+  {id:"freefile",icon:"FF",color:"#004c97",url:"https://www.irs.gov/filing/free-file-do-your-federal-taxes-for-free",
+    title:{en:"File your taxes (Free File)",es:"Presente sus impuestos (Free File)"},plain:{en:"Prepare and e-file your federal return for free",es:"Prepare y presente su declaración federal gratis"},
+    syn:["file","free file","file my taxes","file a return","direct file","do my taxes","filing"],kw:["file","filing","return"]},
+  {id:"withholding",icon:"W4",color:"#00687d",url:"https://www.irs.gov/individuals/tax-withholding-estimator",
+    title:{en:"Tax Withholding Estimator",es:"Estimador de retención"},plain:{en:"Check if the right amount comes out of your paycheck",es:"Verifique si le retienen la cantidad correcta"},
+    syn:["withholding","w4","w-4","paycheck tax","adjust withholding","too much tax taken","estimator"],kw:["withholding","paycheck","w4"]},
+  {id:"eitc",icon:"EI",color:"#1a7f4b",url:"https://www.irs.gov/credits-deductions/individuals/earned-income-tax-credit/use-the-eitc-assistant",
+    title:{en:"EITC Assistant",es:"Asistente del EITC"},plain:{en:"See if you qualify for the Earned Income Tax Credit",es:"Vea si califica para el Crédito por Ingreso del Trabajo"},
+    syn:["eitc","earned income credit","do i qualify for eitc","earned income"],kw:["eitc","earned"]},
+  {id:"ita",icon:"QA",color:"#5b3fa0",url:"https://www.irs.gov/help/ita",
+    title:{en:"Interactive Tax Assistant",es:"Asistente tributario interactivo"},plain:{en:"Plain-language answers to common tax-law questions",es:"Respuestas claras a preguntas tributarias comunes"},
+    syn:["is it taxable","do i have to file","can i deduct","tax question","do i qualify"],kw:["taxable","deduct","question"]},
+  {id:"amended",icon:"AX",color:"#8a6d00",url:"https://www.irs.gov/filing/wheres-my-amended-return",
+    title:{en:"Where's My Amended Return?",es:"¿Dónde está mi declaración enmendada?"},plain:{en:"Track a Form 1040-X — allow up to 16 weeks",es:"Rastree el Formulario 1040-X — hasta 16 semanas"},
+    syn:["amended","amended return","1040x","wheres my amended","track amended"],kw:["amended"]},
+  {id:"docupload",icon:"UP",color:"#004c97",url:"https://www.irs.gov/help/irs-document-upload-tool",
+    title:{en:"Upload documents to the IRS",es:"Subir documentos al IRS"},plain:{en:"Respond to a notice by securely uploading files",es:"Responda a un aviso subiendo archivos de forma segura"},
+    syn:["upload","upload documents","send documents","respond to notice online","document upload"],kw:["upload","documents"]},
+  {id:"oic",icon:"OIC",color:"#8a6d00",url:"https://www.irs.gov/payments/offer-in-compromise",
+    title:{en:"Offer in Compromise pre-qualifier",es:"Precalificación de oferta de transacción"},plain:{en:"See if you can settle for less than you owe",es:"Vea si puede saldar por menos de lo que debe"},
+    syn:["offer in compromise","settle my debt","oic","settle for less","cant afford anything"],kw:["offer","settle","compromise"]},
+  {id:"teos",icon:"TE",color:"#5b3fa0",url:"https://www.irs.gov/charities-non-profits/tax-exempt-organization-search",
+    title:{en:"Tax Exempt Organization Search",es:"Búsqueda de organizaciones exentas"},plain:{en:"Check if a charity is tax-exempt before you donate",es:"Verifique si una organización benéfica es exenta"},
+    syn:["charity","is this charity tax exempt","tax exempt organization","nonprofit lookup","donation deductible"],kw:["charity","nonprofit","exempt"]},
+  {id:"salestax",icon:"ST",color:"#00687d",url:"https://www.irs.gov/credits-deductions/individuals/use-the-sales-tax-deduction-calculator",
+    title:{en:"Sales Tax Deduction Calculator",es:"Calculadora de deducción de ventas"},plain:{en:"Estimate your deductible state & local sales tax",es:"Estime su deducción de impuesto sobre las ventas"},
+    syn:["sales tax","sales tax deduction","deduct sales tax"],kw:["sales"]},
+  {id:"calendar",icon:"CAL",color:"#5c5c5c",url:"https://www.irs.gov/businesses/small-businesses-self-employed/tax-calendar",
+    title:{en:"Tax calendar & due dates",es:"Calendario de fechas límite"},plain:{en:"Key federal tax deadlines for the year",es:"Fechas límite federales clave del año"},
+    syn:["due date","deadline","when are taxes due","tax calendar","quarterly due dates"],kw:["deadline","due","calendar"]},
+  {id:"forms",icon:"FM",color:"#b50909",url:"https://www.irs.gov/forms-instructions",
+    title:{en:"Forms & instructions",es:"Formularios e instrucciones"},plain:{en:"Find and download any IRS form or publication",es:"Encuentre y descargue cualquier formulario del IRS"},
+    syn:["form","forms","find a form","download form","publication","w9","w-9","1099","instructions"],kw:["form","forms","publication"]},
+  {id:"eftps",icon:"EF",color:"#1a7f4b",url:"https://www.irs.gov/payments/eftps-the-electronic-federal-tax-payment-system",
+    title:{en:"EFTPS (business payments)",es:"EFTPS (pagos de negocios)"},plain:{en:"Enroll to pay federal business taxes electronically",es:"Inscríbase para pagar impuestos de negocios electrónicamente"},
+    syn:["eftps","business payments","payroll tax payment","federal tax deposit"],kw:["eftps","payroll"]}
+];
+EXTERNAL.forEach(e=>{e.ext=true;INTENTS.push(e);});
+
+/* ---------- matching ---------- */
+function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n];}
+function parseQuery(q){const o={};const cp=q.match(/\bcp[\s-]?(\d{2,4}[a-z]?)\b/i);if(cp)o.cp="CP"+cp[1].toUpperCase();
+  const idv=q.match(/\b(\d{4}c)\b/i);if(idv)o.cp=idv[1].toUpperCase();
+  const amt=q.match(/\$?\s?(\d{1,7}(?:\.\d{2})?)\b/);if(amt&&/\b(pay|payment|send|pagar|pago)\b/i.test(q))o.amount=amt[1];return o;}
+function score(it,ql,pr){let s=0,why=null;if(!ql)return{s:0};const qt=ql.split(/\s+/).filter(Boolean);
+  for(const syn of it.syn){if(ql===syn){s+=240;why="exact match";}else if(ql.includes(syn)&&syn.length>=3){s=Math.max(s,150);why=why||`matched “${syn}”`;}else if(syn.includes(ql)&&ql.length>=3){s=Math.max(s,90);why=why||`matched “${syn}”`;}}
+  for(const kw of it.kw)for(const t of qt){if(t===kw){s+=55;why=why||`keyword “${kw}”`;}else if(t.length>=4&&(t.startsWith(kw)||kw.startsWith(t)))s+=28;else if(Math.max(t.length,kw.length)>=4&&lev(t,kw)<=1){s+=20;why=why||"typo-tolerant";}}
+  if(pr.cp&&it.id==="notices"){s+=300;why=`recognized ${pr.cp}`;}
+  if(pr.amount&&it.id==="pay"){s+=200;why=`amount $${pr.amount} detected`;}
+  const p=P();if(it.id==="plan"){if(p.plan==="defaulted")s+=60;else if(p.plan==="active")s+=45;}
+  if(it.id==="balance"&&p.balanceDue>0)s+=25;if(it.id==="ippin"&&p.hasIpPin)s+=20;if(it.id==="refund"&&p.refund)s+=40;if(it.id==="idtheft"&&p.key==="diane")s+=25;
+  return{s,why};}
+
+/* ---------- omni UI ---------- */
+const omni=document.getElementById("omni"),results=document.getElementById("results"),listbox=document.getElementById("listbox"),
+  reshead=document.getElementById("reshead"),live=document.getElementById("live"),clearBtn=document.getElementById("clear");
+let active=-1,curRes=[];
+function render(q){const ql=q.toLowerCase().trim(),pr=parseQuery(ql);active=-1;
+  if(!ql){const sugg=P().suggest.map(id=>INTENTS.find(i=>i.id===id)).filter(Boolean).map(it=>({it,why:null}));
+    const featured=["ein","freefile"].map(id=>INTENTS.find(i=>i.id===id)).filter(Boolean).map(it=>({it,why:null}));
+    curRes=[...sugg,...featured];reshead.textContent=L().suggest;}
+  else{curRes=INTENTS.map(it=>({it,...score(it,ql,pr)})).filter(r=>r.s>0).sort((a,b)=>b.s-a.s).slice(0,6);reshead.textContent=curRes.length?L().best:L().none;}
+  results.hidden=false;omni.setAttribute("aria-expanded","true");
+  listbox.innerHTML=curRes.length?curRes.map((r,i)=>opt(r,i,pr)).join(""):`<div class="empty">${L().noResults(q)}</div>`;
+  live.textContent=curRes.length?`${curRes.length}`:"0";
+  [...listbox.querySelectorAll(".opt")].forEach(el=>{el.onmouseenter=()=>setA(+el.dataset.i);el.onclick=()=>choose(+el.dataset.i);});}
+function opt(r,i,pr){const it=r.it,lang=P().lang,ans=it.ext?null:(it.answer?it.answer(pr):null);
+  const tag=it.ext?`<div class="ext-tag">${ES()?"Se abre en IRS.gov":"Opens on IRS.gov"} ↗</div>`:"";
+  return `<div class="opt${it.ext?' ext':''}" id="opt-${i}" role="option" data-i="${i}"><div class="oicon" style="background:${it.color}1a;color:${it.color}">${it.icon}</div>
+   <div style="flex:1"><p class="otitle">${it.title[lang]}${r.why?`<span class="matchwhy">${r.why}</span>`:""}</p><p class="oplain">${it.plain[lang]}</p>${ans?`<div class="answer">${ans}</div>`:""}${tag}</div><span class="kbd">${it.ext?"↗":"↵"}</span></div>`;}
+function setA(i){active=i;[...listbox.querySelectorAll(".opt")].forEach((el,idx)=>{const on=idx===i;el.classList.toggle("active",on);if(on)omni.setAttribute("aria-activedescendant","opt-"+i);});}
+function choose(i){const r=curRes[i];if(!r)return;const w=document.querySelector(".omni-input-wrap");w.style.transition="background .15s";w.style.background="#e7f7ee";live.textContent="Opening "+r.it.title[P().lang];setTimeout(()=>w.style.background="#fff",260);
+  if(r.it.ext){logExternal(r.it);window.open(r.it.url,"_blank","noopener");return;}
+  if(r.it.id==="messages"){results.hidden=true;activeTab=L().tabs.length-1;apply();window.scrollTo({top:0,behavior:"smooth"});}}
+/* analytics: which non-IOLA tasks people reach for from inside their account —
+   demand signal for what to build into IOLA next */
+function logExternal(it){const KEY="iolaOffsiteDemand";let tally={};
+  try{tally=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+  tally[it.id]=(tally[it.id]||0)+1;localStorage.setItem(KEY,JSON.stringify(tally));
+  console.info("[IOLA offsite demand]",it.id,"→",it.url,"| tally:",tally);}
+omni.addEventListener("input",e=>{clearBtn.hidden=!e.target.value;render(e.target.value);});
+omni.addEventListener("focus",()=>render(omni.value));
+omni.addEventListener("keydown",e=>{if(e.key==="ArrowDown"){e.preventDefault();setA(Math.min(active+1,curRes.length-1));}else if(e.key==="ArrowUp"){e.preventDefault();setA(Math.max(active-1,0));}else if(e.key==="Enter"&&active>=0){e.preventDefault();choose(active);}else if(e.key==="Escape"){omni.blur();results.hidden=true;}});
+clearBtn.addEventListener("click",()=>{omni.value="";clearBtn.hidden=true;render("");omni.focus();});
+document.addEventListener("click",e=>{if(!e.target.closest(".omni-band"))results.hidden=true;});
+
+/* ---------- tax-year timeline ---------- */
+function renderTimeline(){
+  const p=P(),t=L(),lang=p.lang,yrs=p.years||[];
+  const mt=document.getElementById("metricToggle");
+  mt.innerHTML=[["income",t.metricIncome],["balance",t.metricBalance]]
+    .map(([m,lbl])=>`<button class="${m===metric?'active':''}" data-m="${m}" role="tab" aria-selected="${m===metric}">${lbl}</button>`).join("");
+  mt.querySelectorAll("button").forEach(b=>b.onclick=()=>{metric=b.dataset.m;renderTimeline();});
+  const chart=document.getElementById("tlChart");chart.setAttribute("aria-label",t.timelineTitle);
+  const statusLegend=[...new Set(yrs.map(y=>y.status))].map(s=>{const m=STATUS_META[s];return `<span><i style="background:${m.color}"></i>${m[lang]}</span>`;}).join("");
+
+  if(metric==="income"){
+    const max=Math.max(1,...yrs.map(y=>+y.agi||0));
+    chart.innerHTML=yrs.map(y=>{
+      const agi=+y.agi||0, tax=+y.taxPaid||0, sm=STATUS_META[y.status]||STATUS_META.notAvailable, sel=y.year===selYear;
+      const h=agi<=0?0:Math.max(5,Math.round(agi/max*100));
+      const taxFrac=agi>0?tax/agi*100:0, rate=Math.round(taxFrac);
+      const inner=agi>0?`<span class="seg after" style="height:${100-taxFrac}%"></span><span class="seg tax" style="height:${taxFrac}%"></span>`:"";
+      const aria=`${y.year}: ${t.agiLbl} ${money(agi)}, ${t.taxPaidLbl} ${money(tax)} (${rate}%), ${sm[lang]}`;
+      return `<div class="bar-col" aria-selected="${sel}"><button data-y="${y.year}" aria-label="${aria}">
+        <span class="bar-val">${agi>0?rate+"%":"—"}</span><span class="bar stack" style="height:${h}%">${inner}</span>
+        </button><span class="bar-yr">${y.year}</span><span class="bar-dot" style="background:${sm.color}" title="${sm[lang]}"></span></div>`;
+    }).join("");
+    document.getElementById("tlLegend").innerHTML=
+      `<span><i style="background:var(--irs-blue)"></i>${t.taxPaidLbl}</span><span><i style="background:#cfe0f4"></i>${t.afterTax}</span>`+statusLegend;
+  }else{
+    const max=Math.max(1,...yrs.map(y=>+y.balance||0));
+    chart.innerHTML=yrs.map(y=>{
+      const v=+y.balance||0, h=v<=0?0:Math.max(3,Math.round(v/max*100)), sm=STATUS_META[y.status]||STATUS_META.notAvailable, sel=y.year===selYear;
+      const aria=`${y.year}: ${t.balanceLbl} ${money(v)}, ${sm[lang]}`;
+      return `<div class="bar-col" aria-selected="${sel}"><button data-y="${y.year}" aria-label="${aria}">
+        <span class="bar-val">${v>0?moneyShort(v):"—"}</span><span class="bar" style="height:${h}%;background:${sm.color}"></span>
+        </button><span class="bar-yr">${y.year}</span><span class="bar-dot" style="background:${sm.color}" title="${sm[lang]}"></span></div>`;
+    }).join("");
+    document.getElementById("tlLegend").innerHTML=statusLegend;
+  }
+
+  const btns=[...chart.querySelectorAll("button")];
+  btns.forEach((b,idx)=>{
+    b.onclick=()=>{selYear=+b.dataset.y;renderTimeline();};
+    b.onkeydown=e=>{if(e.key==="ArrowRight"){e.preventDefault();(btns[idx+1]||btns[0]).focus();}else if(e.key==="ArrowLeft"){e.preventDefault();(btns[idx-1]||btns[btns.length-1]).focus();}};
+  });
+  document.getElementById("tlTable").innerHTML=`<caption>${t.timelineTitle}</caption><tr><th>${t.yearWord}</th><th>${t.balanceLbl}</th><th>${t.agiLbl}</th><th>${t.taxPaidLbl}</th><th>${t.effRate}</th><th>Status</th></tr>`+
+    yrs.map(y=>{const r=y.agi>0?Math.round(y.taxPaid/y.agi*100)+"%":"—";return `<tr><td>${y.year}</td><td>${money(y.balance)}</td><td>${money(y.agi)}</td><td>${money(y.taxPaid)}</td><td>${r}</td><td>${(STATUS_META[y.status]||{})[lang]||y.status}</td></tr>`;}).join("");
+  renderDetail();
+}
+function renderDetail(){
+  const p=P(),t=L(),lang=p.lang,d=document.getElementById("tlDetail");
+  const y=(p.years||[]).find(x=>x.year===selYear);
+  if(!y){d.innerHTML=`<span class="tl-hint">${t.selectYearHint}</span>`;return;}
+  const sm=STATUS_META[y.status]||STATUS_META.notAvailable, acts=[];
+  if(y.balance>0)acts.push(`<a data-amt="${Math.round(y.balance)}">${t.payThisYear}</a>`);
+  if(y.transcript)acts.push(`<a>${t.viewTranscript}</a>`);
+  d.innerHTML=`<div class="dhead"><h3>${t.yearWord} ${y.year}</h3><span class="tl-chip" style="background:${sm.color}">${sm[lang]}</span></div>
+    <div class="tl-stats">
+      <div><div class="k">${t.balanceLbl}</div><div class="v">${money(y.balance)}</div></div>
+      <div><div class="k">${t.agiLbl}</div><div class="v">${y.agi>0?money(y.agi):"—"}</div></div>
+      <div><div class="k">${t.taxPaidLbl}</div><div class="v">${y.taxPaid>0?money(y.taxPaid):"—"}</div></div>
+      <div><div class="k">${t.effRate}</div><div class="v">${y.agi>0?Math.round(y.taxPaid/y.agi*100)+"%":"—"}</div></div>
+      <div><div class="k">${t.noticesLbl}</div><div class="v">${y.notices||0}</div></div>
+    </div>
+    <div class="tl-actions">${acts.join("")||`<span class="tl-hint">${t.noAction}</span>`}</div>`;
+  const pay=d.querySelector("[data-amt]");
+  if(pay)pay.onclick=()=>{omni.value="pay "+pay.dataset.amt;clearBtn.hidden=false;omni.focus();render(omni.value);window.scrollTo({top:0,behavior:"smooth"});};
+}
+
+/* ---------- inbox (email-style conversations + interaction records) ---------- */
+function tabBadge(){
+  const t=L(),n=(P().conversations||[]).reduce((s,c)=>s+(c.unread||0),0);
+  const btn=document.querySelector(`nav.tabs button[data-tab="${t.tabs.length-1}"]`);
+  if(!btn)return;
+  let b=btn.querySelector(".tabbadge");
+  if(n>0){if(!b){b=document.createElement("span");b.className="tabbadge";btn.appendChild(b);}b.textContent=n;}
+  else if(b)b.remove();
+}
+function renderMessaging(){
+  const p=P(),t=L(),convos=p.conversations||[];
+  if(!convos.length)return;
+  if(!convos.find(c=>c.id===selConvo))selConvo=convos[0].id;
+  const active=convos.find(c=>c.id===selConvo);
+  if(!document.getElementById("view-inbox").hidden)active.unread=0;
+  // inbox list
+  document.getElementById("inboxList").innerHTML=`<button class="inbox-new" id="newMsgBtn">+ ${t.newMsg}</button>`+convos.map(c=>{
+    const last=[...c.items].reverse().find(i=>i.kind==="msg"), snippet=last?last.body:"";
+    const lastDate=c.items.length?c.items[c.items.length-1].date:t.msgNow;
+    const badge=c.type==="taxpro"?t.taxProBadge:t.irsBadge;
+    return `<button class="inbox-item ${c.id===selConvo?'active':''}${c.unread?' unread':''}" data-c="${c.id}" role="tab" aria-selected="${c.id===selConvo}">
+      <div class="ih"><span class="isender">${c.unread?'<span class="udot"></span>':''}${c.title}</span><span class="idate">${lastDate}</span></div>
+      <div class="isub"><span>${c.subject||""}</span><span class="cb ${c.type==="taxpro"?"taxpro":"irs"}">${badge}</span></div>
+      <div class="isnip">${snippet}</div></button>`;
+  }).join("");
+  document.getElementById("inboxList").querySelectorAll("button[data-c]").forEach(b=>b.onclick=()=>{if(selConvo!==b.dataset.c)pendingDocs=[];selConvo=b.dataset.c;renderMessaging();});
+  document.getElementById("newMsgBtn").onclick=startConversation;
+  tabBadge();
+  document.getElementById("msgAttach").setAttribute("aria-label",t.attachDoc);
+  renderPending();
+  // authorization banner (tax pro)
+  const ab=document.getElementById("authBanner");
+  if(active.type==="taxpro"&&active.auth){const a=active.auth;
+    ab.innerHTML=`<div class="auth-banner ${a.status}"><div class="at">${a.status==="active"?t.authActive:t.authPending} — ${active.title}</div>
+      <div class="ascope">${t.authScope}: ${a.scope} · ${t.authGranted}: ${a.granted}${a.expires&&a.expires!=="—"?` · ${t.authExpires}: ${a.expires}`:""}${a.status==="active"?` · <a>${t.revoke}</a>`:""}</div></div>`;
+  }else ab.innerHTML="";
+  // thread (messages + interaction records)
+  const thread=document.getElementById("msgThread");
+  thread.innerHTML=active.items.map(it=>{
+    if(it.kind==="event"){const e=EV_META[it.ev]||EV_META.form;
+      return `<div class="rec"><span class="ri" style="background:${e.c}">${e.m}</span><span><span class="rl">${it.label}</span> — <span class="rd">${it.detail}</span><span class="rt">${it.date}</span></span></div>`;}
+    const who=it.from==="you"?t.msgYou:(it.from==="pro"?active.title.split(",")[0]:t.msgIrs);
+    return `<div class="msg ${it.from}"><div class="meta">${who} · ${it.date}</div>${it.body}</div>`;
+  }).join("");
+  document.getElementById("msgInput").setAttribute("placeholder",t.msgPlaceholder);
+  document.getElementById("msgComposeLabel").textContent=t.msgComposeLabel;
+  thread.scrollTop=thread.scrollHeight;
+}
+let pendingDocs=[];
+function renderPending(){
+  const t=L(),el=document.getElementById("msgPending");
+  el.innerHTML=pendingDocs.map((f,i)=>`<span class="pchip">${f}<button data-i="${i}" aria-label="${t.removeAttach} ${f}">&times;</button></span>`).join("");
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{pendingDocs.splice(+b.dataset.i,1);renderPending();});
+}
+function sendMsg(){
+  const inp=document.getElementById("msgInput"),v=inp.value.trim();
+  if(!v&&!pendingDocs.length)return;
+  const c=(P().conversations||[]).find(x=>x.id===selConvo);if(!c)return;
+  const t=L();
+  pendingDocs.forEach(f=>{c.items.push({kind:"event",ev:"doc",label:t.docUploaded,detail:f,date:t.msgNow});busEmit({taxpayer:P().key,name:P().name,type:"document.uploaded",detail:f,src:"web account"});});
+  if(v){c.items.push({kind:"msg",from:"you",body:v,date:t.msgNow});busEmit({taxpayer:P().key,name:P().name,type:"message.sent",body:v,src:"web account"});}
+  pendingDocs=[];renderPending();
+  inp.value="";renderMessaging();
+}
+
+/* ---------- demo event bus: live wire to the CSR console ---------- */
+const BUS_KEY="irsDemoBus";
+function busEmit(ev){let arr=[];try{arr=JSON.parse(localStorage.getItem(BUS_KEY)||"[]")}catch(e){}
+  ev.id=(arr.length?arr[arr.length-1].id:0)+1;ev.ts=Date.now();
+  arr.push(ev);if(arr.length>60)arr=arr.slice(-60);
+  localStorage.setItem(BUS_KEY,JSON.stringify(arr));}
+function busListen(fn){
+  let last=(()=>{try{const a=JSON.parse(localStorage.getItem(BUS_KEY)||"[]");return a.length?a[a.length-1].id:0}catch(e){return 0}})();
+  const check=()=>{let arr=[];try{arr=JSON.parse(localStorage.getItem(BUS_KEY)||"[]")}catch(e){return}
+    arr.filter(x=>x.id>last).forEach(x=>{last=Math.max(last,x.id);fn(x)});};
+  window.addEventListener("storage",e=>{if(e.key===BUS_KEY)check()});
+  setInterval(check,1200);}
+window.addEventListener("storage",e=>{if(e.key==="irsDemoReset")location.reload();});
+busListen(e=>{
+  if(e.type!=="message.received")return;
+  const entry=Object.entries(PERSONAS).find(([k,p])=>p.key===e.taxpayer);
+  if(!entry)return;
+  const p=entry[1],convo=(p.conversations||[]).find(c=>c.type==="irs");
+  if(!convo)return;
+  convo.items.push({kind:"msg",from:"irs",body:e.body,date:I18N[p.lang].msgNow});
+  const viewing=entry[0]===current&&!document.getElementById("view-inbox").hidden&&selConvo===convo.id;
+  if(!viewing)convo.unread=(convo.unread||0)+1;
+  if(entry[0]===current){renderMessaging();tabBadge();}
+});
+document.getElementById("msgSend").addEventListener("click",sendMsg);
+document.getElementById("msgInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)){e.preventDefault();sendMsg();}});
+document.getElementById("msgAttach").addEventListener("click",()=>document.getElementById("msgFile").click());
+document.getElementById("msgFile").addEventListener("change",e=>{
+  pendingDocs.push(...[...e.target.files].map(f=>f.name));
+  e.target.value="";renderPending();
+});
+
+/* ---------- starting a conversation (chat button + new message) ---------- */
+function startConversation(){
+  const p=P(),t=L();
+  p.conversations=p.conversations||[];
+  let c=p.conversations.find(x=>x.fresh&&!x.items.length);
+  if(!c){c={id:"new-"+(p.conversations.length+1),title:t.irsName,type:"irs",subject:t.newSubject,unread:0,fresh:true,items:[]};p.conversations.unshift(c);}
+  pendingDocs=[];selConvo=c.id;
+  activeTab=t.tabs.length-1;apply();
+  window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById("msgInput").focus();
+}
+const chatFab=document.getElementById("chatFab");
+function renderChat(){chatFab.textContent=L().chatFab;}
+chatFab.addEventListener("click",startConversation);
+
+/* ---------- onboarding wizard ---------- */
+const OB_STATE={ "2":{done:true,email:true,types:{notice:true,refund:true,payment:false},paperless:true} };
+const ob=()=>OB_STATE[current]||(OB_STATE[current]={done:false,email:true,types:{notice:true,refund:true,payment:false},paperless:true});
+const obOverlay=document.getElementById("obOverlay"),obBody=document.getElementById("obBody"),
+  obDots=document.getElementById("obDots"),obNext=document.getElementById("obNext"),
+  obBack=document.getElementById("obBack"),obSkip=document.getElementById("obSkip");
+let obStep=0;
+const OB_STEPS=4;
+function obToggle(id,checked,label,desc,sub){
+  return `<div class="pref${sub?' sub':''}"><div class="pt"><b>${label}</b><div class="pd">${desc}</div></div>
+    <label class="switch"><input type="checkbox" id="${id}" ${checked?"checked":""}><span class="sl"></span></label></div>`;
+}
+function renderOb(){
+  const p=P(),t=L(),s=ob();
+  obDots.innerHTML=Array.from({length:OB_STEPS},(_,i)=>`<span class="${i<=obStep?'on':''}"></span>`).join("");
+  obSkip.textContent=t.obSkip;
+  obBack.textContent=t.obBack;obBack.hidden=obStep===0;
+  obNext.textContent=obStep===0?t.obStart:(obStep===OB_STEPS-1?t.obFinish:t.obNext);
+  if(obStep===0){
+    obBody.innerHTML=`<div class="ob-hero">IRS</div><h2 id="obTitle">${t.obWelcomeTitle(p.name.split(" ")[0])}</h2>
+      <p class="lead">${t.obWelcomeLead}</p>
+      <div class="ob-now">${t.obNow(p.topNotice.code,p.topNotice.txt)}</div>
+      <ul class="ob-list">
+        <li><span class="li" style="background:#004c97">SM</span><div><b>${t.obFeat1}</b><span class="d">${t.obFeat1d}</span></div></li>
+        <li><span class="li" style="background:#5b3fa0">?</span><div><b>${t.obFeat2}</b><span class="d">${t.obFeat2d}</span></div></li>
+        <li><span class="li" style="background:#1a7f4b">NT</span><div><b>${t.obFeat3}</b><span class="d">${t.obFeat3d}</span></div></li>
+      </ul>`;
+  }else if(obStep===1){
+    obBody.innerHTML=`<h2 id="obTitle">${t.obNotifTitle}</h2><p class="lead">${t.obNotifLead}</p>
+      ${obToggle("obEmailT",s.email,t.obEmail,t.obEmailTo(p.email))}
+      ${obToggle("obTNotice",s.types.notice,t.obTypeNotice,t.obTypeNoticeD,true)}
+      ${obToggle("obTRefund",s.types.refund,t.obTypeRefund,t.obTypeRefundD,true)}
+      ${obToggle("obTPayment",s.types.payment,t.obTypePayment,t.obTypePaymentD,true)}`;
+    const sync=()=>{s.email=obBody.querySelector("#obEmailT").checked;
+      s.types.notice=obBody.querySelector("#obTNotice").checked;
+      s.types.refund=obBody.querySelector("#obTRefund").checked;
+      s.types.payment=obBody.querySelector("#obTPayment").checked;};
+    obBody.querySelectorAll("input").forEach(i=>i.addEventListener("change",sync));
+  }else if(obStep===2){
+    obBody.innerHTML=`<h2 id="obTitle">${t.obPaperTitle}</h2><p class="lead">${t.obPaperLead}</p>
+      ${obToggle("obPaperT",s.paperless,t.obPaper,t.obPaperD)}
+      <p class="ob-note">${t.obPaperNote}</p>`;
+    obBody.querySelector("#obPaperT").addEventListener("change",e=>s.paperless=e.target.checked);
+  }else{
+    const types=[s.types.notice&&t.obTypeNotice,s.types.refund&&t.obTypeRefund,s.types.payment&&t.obTypePayment].filter(Boolean);
+    obBody.innerHTML=`<h2 id="obTitle">${t.obDoneTitle}</h2><p class="lead">${t.obDoneLead}</p>
+      <ul class="ob-summary">
+        <li><span class="ok ${s.email?'':'off'}">${s.email?"✓":"–"}</span><div><b>${t.obSumEmail}</b>: ${s.email?t.obSumOn:t.obSumOff}${s.email&&types.length?` — ${types.join(" · ")}`:""}</div></li>
+        <li><span class="ok ${s.paperless?'':'off'}">${s.paperless?"✓":"–"}</span><div><b>${t.obSumPaper}</b>: ${s.paperless?t.obSumOn:t.obSumOff}</div></li>
+      </ul>`;
+  }
+}
+function openOb(){obStep=0;obOverlay.hidden=false;renderOb();obNext.focus();}
+function closeOb(finish){
+  obOverlay.hidden=true;
+  if(finish)ob().done=true;
+  renderSetup();
+}
+obNext.addEventListener("click",()=>{if(obStep<OB_STEPS-1){obStep++;renderOb();obNext.focus();}else closeOb(true);});
+obBack.addEventListener("click",()=>{if(obStep>0){obStep--;renderOb();}});
+obSkip.addEventListener("click",()=>closeOb(false));
+function renderSetup(){
+  const t=L(),s=ob(),el=document.getElementById("setupCard");
+  el.innerHTML=s.done
+    ?`<div class="setup-card done"><span class="si">✓</span><div class="grow"><div class="st">${t.setupDoneTitle}</div><div class="sb">${t.setupDoneBody}</div></div><a id="setupOpen">${t.setupManage}</a></div>`
+    :`<div class="setup-card"><span class="si">1·2·3</span><div class="grow"><div class="st">${t.setupTitle}</div><div class="sb">${t.setupBody}</div></div><a class="btn" id="setupOpen">${t.setupCta}</a></div>`;
+  document.getElementById("setupOpen").onclick=openOb;
+}
+
+/* pay CTA hands off to the omni — payments are an omni intent now */
+document.getElementById("payCta").addEventListener("click",e=>{
+  e.stopPropagation(); // the document click-away handler would close the results we just opened
+  omni.value=ES()?"pagar":"pay";clearBtn.hidden=false;
+  omni.focus();render(omni.value);
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+/* ---------- apply persona ---------- */
+function apply(){const p=P(),t=L();document.documentElement.lang=p.lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(t[k]!=null)el.textContent=t[k];});
+  document.getElementById("lang").innerHTML=t.lang+' <span class="caret">⌄</span>';
+  document.getElementById("welcome").textContent=t.welcome+", "+p.name.split(" ")[0];
+  document.getElementById("omniKicker").textContent=t.kicker;
+  omni.setAttribute("placeholder",t.placeholder);
+  document.getElementById("tabs").innerHTML=t.tabs.map((l,i)=>`<button class="${i===activeTab?'active':''}" data-tab="${i}">${l}</button>`).join("");
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{activeTab=+b.dataset.tab;apply();});
+  const inboxIdx=t.tabs.length-1;
+  document.getElementById("view-home").hidden=activeTab===inboxIdx;
+  document.getElementById("view-inbox").hidden=activeTab!==inboxIdx;
+  const onHome=activeTab===0;
+  document.getElementById("welcome").hidden=!onHome;
+  document.querySelector(".omni-band").hidden=!onHome;
+  if(!onHome)results.hidden=true;
+  const sb=document.getElementById("statusbar");sb.className="infobar "+(p.status.tone==="info"?"":p.status.tone);
+  document.getElementById("statusicon").textContent=p.status.icon;
+  document.getElementById("statustitle").textContent=p.status.title;
+  document.getElementById("statusbody").innerHTML=p.status.body;
+  document.getElementById("owedLabel").textContent=t.owedLabel;
+  document.getElementById("owedDate").textContent=p.owedDate;
+  const owed=document.getElementById("owed");owed.textContent=p.owed;owed.className="owed"+(p.owedPos?" pos":"");
+  document.getElementById("hudDot").style.background=p.color;
+  document.getElementById("hudDot").textContent=p.name.split(" ").map(w=>w[0]).join("");
+  document.getElementById("hudName").textContent=p.name+(p.lang==="es"?" · ES":"");
+  document.getElementById("hudScenario").textContent=p.scenario;
+  renderTimeline();
+  renderMessaging();
+  renderChat();
+  renderSetup();
+  if(!results.hidden||document.activeElement===omni)render(omni.value);}
+
+document.addEventListener("keydown",e=>{
+  if(!obOverlay.hidden){if(e.key==="Escape")closeOb(false);return;}
+  const ae=document.activeElement;
+  if(ae&&(ae===omni||ae.tagName==="TEXTAREA"||ae.tagName==="INPUT"))return;
+  const inChart=ae&&ae.closest&&ae.closest("#tlChart");
+  if(["1","2","3","4"].includes(e.key)){selYear=null;selConvo=null;pendingDocs=[];current=e.key;activeTab=0;apply();}
+  else if(e.key==="ArrowRight"&&!inChart){selYear=null;selConvo=null;pendingDocs=[];current=String((+current%4)+1);activeTab=0;apply();}
+  else if(e.key==="ArrowLeft"&&!inChart){selYear=null;selConvo=null;pendingDocs=[];current=String(((+current+2)%4)+1);activeTab=0;apply();}
+  else if(e.key==="/"){e.preventDefault();omni.focus();}
+});
+apply();
+// onboarding auto-launch disabled for now — focusing the logged-in home on the omni bar
+// if(!ob().done)openOb(); // first sign-in: onboarding
+</script>
+</body>
+</html>
