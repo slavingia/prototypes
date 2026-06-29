@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where's My Amended Return? — Form 1040-X Status Tracker</title>
+<!-- IRS ODG / USWDS type ramp: Source Sans 3 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --bg:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px;line-height:1.5}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner (IRS ODG) */
+  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:#1b1b1b}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#3a3a3a}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{width:42px;height:42px;display:grid;place-items:center}
+  .logo .seal img{width:100%;height:100%;object-fit:contain;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;border-left:1px solid rgba(255,255,255,.4);padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  /* page head */
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 26px}
+
+  /* shell: lookup card vs results */
+  .stage{margin-bottom:60px}
+  .card{border:1px solid var(--line);border-radius:14px;padding:30px 34px;max-width:560px}
+  .card h2{font-size:23px;font-weight:800;margin:0 0 6px}
+  .card .phint{color:var(--muted);font-size:15px;margin:0 0 24px;max-width:52ch}
+
+  .field{margin:0 0 20px}
+  .field label{display:block;font-weight:700;font-size:14px;margin-bottom:5px}
+  .field .hint{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:6px}
+  .field input{width:100%;border:1px solid #9aa7b5;border-radius:8px;padding:11px 12px;font-family:inherit;font-size:16px}
+  .field input:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .field input.bad{border-color:var(--red)}
+  .field .err{display:none;color:var(--red);font-size:12.5px;font-weight:600;margin-top:5px}
+  .field.invalid .err{display:block}
+  .field .ssnwrap{position:relative}
+  .field .ssnwrap .eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;font-size:13px;color:var(--link);font-family:inherit;padding:4px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+
+  .privacy{display:flex;gap:10px;align-items:flex-start;background:#fafcfe;border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:12.5px;color:#3a3a3a;margin:0 0 22px}
+  .privacy .pi{font-size:16px;flex:0 0 20px;line-height:1.3}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;cursor:pointer}
+  .btn:hover{background:#003a73}
+  .btn[disabled]{background:#aebccb;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--irs-blue);border:1.5px solid var(--irs-blue)}
+  .btn.ghost:hover{background:#eef4fb}
+  .btn .spin{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+  .btn.loading .spin{display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---- results ---- */
+  .results{display:none}
+  .results.show{display:block;animation:fadeUp .5s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .summary{display:flex;flex-wrap:wrap;gap:14px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:0 0 24px;background:#fafcfe}
+  .summary .who{flex:1 1 240px}
+  .summary .who .ty{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--irs-blue);margin:0 0 3px}
+  .summary .who .nm{font-size:20px;font-weight:800}
+  .summary .who .sd{font-size:13.5px;color:var(--muted);margin-top:2px}
+  .statebadge{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;border-radius:99px;padding:6px 14px;background:#eef6f0;color:var(--green);border:1px solid #bcdcc6}
+  .statebadge .dot{width:9px;height:9px;border-radius:50%;background:var(--green)}
+
+  .eta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 30px}
+  @media(max-width:620px){.eta{grid-template-columns:1fr}}
+  .eta .e{border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .eta .e .el{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .eta .e .ev{font-size:19px;font-weight:800}
+  .eta .e .ev.sm{font-size:16px}
+
+  /* timeline */
+  .tl-head{font-size:18px;font-weight:800;margin:0 0 4px}
+  .tl-sub{font-size:13.5px;color:var(--muted);margin:0 0 24px}
+  .timeline{position:relative;margin:0 0 30px;padding:0}
+  .timeline .track{position:absolute;left:21px;top:14px;bottom:14px;width:3px;background:#e6e8eb;border-radius:2px}
+  .timeline .fill{position:absolute;left:21px;top:14px;width:3px;background:var(--green);border-radius:2px;height:0;transition:height 1.1s cubic-bezier(.4,0,.2,1)}
+  .stepi{position:relative;display:flex;gap:18px;align-items:flex-start;padding:0 0 30px;opacity:.45;transition:opacity .5s}
+  .stepi:last-child{padding-bottom:0}
+  .stepi.on{opacity:1}
+  .stepi .marker{width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:#fff;border:3px solid #e6e8eb;display:grid;place-items:center;font-size:19px;font-weight:800;color:#9aa7b5;z-index:1;transition:all .45s}
+  .stepi.done .marker{background:var(--green);border-color:var(--green);color:#fff}
+  .stepi.current .marker{background:#fff;border-color:var(--irs-blue);color:var(--irs-blue);box-shadow:0 0 0 5px rgba(0,76,151,.12)}
+  .stepi.current .marker .pulse{position:absolute;width:44px;height:44px;border-radius:50%;border:3px solid var(--irs-blue);animation:pulse 1.8s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.7);opacity:0}}
+  .stepi .c{padding-top:3px}
+  .stepi .c .st{font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .stepi .c .when{font-size:12.5px;font-weight:700;color:var(--muted)}
+  .stepi.current .c .when{color:var(--irs-blue)}
+  .stepi .c .desc{font-size:14px;color:var(--muted);margin-top:3px;max-width:60ch}
+  .nowtag{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--irs-blue);border-radius:5px;padding:2px 7px}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);padding-top:24px}
+  .helpbox{border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:24px 0 0;font-size:14px;color:#3a3a3a;background:#fafcfe}
+  .helpbox b{color:var(--ink)}
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin:18px 0 0}
+
+  footer{border-top:1px solid var(--line);margin-top:30px}
+  footer .wrap{padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5}
+  footer em{font-style:italic}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true">⌄</span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="../assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Where's My Amended Return?</span></div>
+    <div class="util">
+      <a>Español</a>
+      <a>Help</a>
+    </div>
+  </div></div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Home</a> › <a>Refunds</a> › Where's My Amended Return?</p>
+    <h1 class="page">Where's My Amended Return?</h1>
+    <p class="sub">Check the status of your amended return — Form 1040-X — and see an estimated completion date. Processing usually takes up to 16 weeks. Enter your details below to look it up.</p>
+
+    <!-- ===== STAGE 1: lookup ===== -->
+    <div class="stage" id="lookupStage">
+      <div class="card">
+        <h2>Look up your amended return</h2>
+        <p class="phint">To protect your account, enter the information exactly as it appears on your Form 1040-X.</p>
+
+        <div class="field" id="f-ssn">
+          <label for="ssn">Social Security number <span class="hint">or ITIN</span></label>
+          <div class="ssnwrap">
+            <input id="ssn" inputmode="numeric" autocomplete="off" placeholder="•••-••-••••" maxlength="11" aria-describedby="ssn-err">
+            <button type="button" class="eye" id="ssnToggle" aria-pressed="false">Show</button>
+          </div>
+          <div class="err" id="ssn-err">Enter a 9-digit SSN or ITIN.</div>
+        </div>
+
+        <div class="row2">
+          <div class="field" id="f-zip">
+            <label for="zip">ZIP code</label>
+            <input id="zip" inputmode="numeric" autocomplete="off" placeholder="00000" maxlength="5">
+            <div class="err">Enter a 5-digit ZIP code.</div>
+          </div>
+          <div class="field" id="f-dob">
+            <label for="dob">Date of birth</label>
+            <input id="dob" type="text" autocomplete="off" placeholder="MM/DD/YYYY" maxlength="10">
+            <div class="err">Enter a valid date as MM/DD/YYYY.</div>
+          </div>
+        </div>
+
+        <div class="privacy"><span class="pi" aria-hidden="true">🔒</span><span>Your information is used only to locate your return. This is a design prototype — <b>do not enter real personal information.</b> Try the sample values below.</span></div>
+
+        <button class="btn" id="lookupBtn"><span class="spin" aria-hidden="true"></span><span class="lbl">Check status</span></button>
+        <p class="note">Demo tip: any 9-digit number, 5-digit ZIP, and date work. Or click <a id="sample">use sample taxpayer</a>.</p>
+      </div>
+    </div>
+
+    <!-- ===== STAGE 2: results ===== -->
+    <div class="stage results" id="resultsStage">
+      <div class="summary">
+        <div class="who">
+          <p class="ty">Form 1040-X · Tax year 2024</p>
+          <div class="nm" id="r-name">Jordan A. Maple</div>
+          <div class="sd" id="r-meta">SSN •••-••-3097 · Received Apr 18, 2026</div>
+        </div>
+        <span class="statebadge" id="r-badge"><span class="dot"></span><span id="r-badge-txt">In progress — Adjusted</span></span>
+      </div>
+
+      <div class="eta">
+        <div class="e"><p class="el">Current stage</p><div class="ev" id="r-stage">Adjusted</div></div>
+        <div class="e"><p class="el">Estimated completion</p><div class="ev" id="r-eta">Aug 1, 2026</div></div>
+        <div class="e"><p class="el">Adjusted refund</p><div class="ev sm" id="r-amt">+$1,240 (mock)</div></div>
+      </div>
+
+      <p class="tl-head">Status timeline</p>
+      <p class="tl-sub">Your amended return moves through three stages. We'll update this page as it progresses.</p>
+
+      <div class="timeline" id="timeline">
+        <div class="track"></div>
+        <div class="fill" id="tlFill"></div>
+
+        <div class="stepi" data-i="0">
+          <div class="marker"><span class="pulse" aria-hidden="true" style="display:none"></span><span class="ic">1</span></div>
+          <div class="c">
+            <div class="st">Received <span class="when">Apr 18, 2026</span></div>
+            <div class="desc">We received your Form 1040-X and added it to the processing queue. No action needed from you.</div>
+          </div>
+        </div>
+
+        <div class="stepi" data-i="1">
+          <div class="marker"><span class="pulse" aria-hidden="true" style="display:none"></span><span class="ic">2</span></div>
+          <div class="c">
+            <div class="st">Adjusted <span class="when">Jun 27, 2026</span></div>
+            <div class="desc">We made the changes to your account that you requested. If the adjustment results in a refund, balance due, or no change, that information will appear here.</div>
+          </div>
+        </div>
+
+        <div class="stepi" data-i="2">
+          <div class="marker"><span class="pulse" aria-hidden="true" style="display:none"></span><span class="ic">3</span></div>
+          <div class="c">
+            <div class="st">Completed <span class="when">Est. Aug 1, 2026</span></div>
+            <div class="desc">Processing is finished and a notice is mailed to your address of record. Any refund is issued about 3 weeks after completion.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="helpbox">
+        <b>What the stages mean.</b> An amended return can take up to <b>16 weeks</b> (sometimes longer) to process. Status updates can take up to 3 weeks to appear after you mail or e-file Form 1040-X. You don't need to call or file again while it's in progress.
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" id="advance">Advance stage (demo)</button>
+        <button class="btn ghost" id="again">Look up another return</button>
+      </div>
+
+      <p class="note">All figures, dates, and the taxpayer shown are fictional mock data for design purposes only.</p>
+    </div>
+  </main>
+
+  <footer><div class="wrap">
+    <em>Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, sponsored by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, SSNs, ZIP codes, dates, and amounts shown are fictional mock data — no real personal or taxpayer information (PII). This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.</em>
+  </div></footer>
+
+<script>
+// ---- USWDS official-government banner toggle ----
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{
+  const open=gov.classList.toggle("open");
+  howbtn.setAttribute("aria-expanded",open?"true":"false");
+});
+
+// ---- field refs ----
+const ssn=document.getElementById("ssn"),zip=document.getElementById("zip"),dob=document.getElementById("dob");
+const fSsn=document.getElementById("f-ssn"),fZip=document.getElementById("f-zip"),fDob=document.getElementById("f-dob");
+const lookupBtn=document.getElementById("lookupBtn");
+const lookupStage=document.getElementById("lookupStage"),resultsStage=document.getElementById("resultsStage");
+
+// raw SSN digits kept separately so we can mask the visible value
+let ssnDigits="", ssnShown=false;
+function fmtSsn(d,masked){
+  let out="";
+  for(let i=0;i<d.length;i++){
+    const ch=masked?"•":d[i];
+    out+=ch;
+    if(i===2||i===4) out+="-";
+  }
+  return out;
+}
+function renderSsn(){ ssn.value=fmtSsn(ssnDigits, !ssnShown); }
+ssn.addEventListener("input",e=>{
+  // pull digits from whatever the user typed/pasted (ignores bullets & dashes)
+  const typed=e.target.value.replace(/[^\d]/g,"");
+  ssnDigits=typed.slice(0,9);
+  renderSsn();
+  clearErr(fSsn);
+});
+document.getElementById("ssnToggle").addEventListener("click",function(){
+  ssnShown=!ssnShown;
+  this.textContent=ssnShown?"Hide":"Show";
+  this.setAttribute("aria-pressed",ssnShown?"true":"false");
+  renderSsn();
+});
+
+// ZIP: digits only
+zip.addEventListener("input",e=>{ e.target.value=e.target.value.replace(/[^\d]/g,"").slice(0,5); clearErr(fZip); });
+// DOB: auto-slash MM/DD/YYYY
+dob.addEventListener("input",e=>{
+  let d=e.target.value.replace(/[^\d]/g,"").slice(0,8);
+  let out=d.slice(0,2);
+  if(d.length>2) out+="/"+d.slice(2,4);
+  if(d.length>4) out+="/"+d.slice(4,8);
+  e.target.value=out; clearErr(fDob);
+});
+
+function clearErr(f){ f.classList.remove("invalid"); const i=f.querySelector("input"); if(i)i.classList.remove("bad"); }
+function setErr(f){ f.classList.add("invalid"); const i=f.querySelector("input"); if(i)i.classList.add("bad"); }
+
+function validDate(s){
+  const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s); if(!m) return false;
+  const mm=+m[1],dd=+m[2],yy=+m[3];
+  if(mm<1||mm>12||dd<1||dd>31||yy<1900||yy>2025) return false;
+  return true;
+}
+
+document.getElementById("sample").addEventListener("click",()=>{
+  ssnDigits="100223097"; renderSsn();
+  zip.value="20024"; dob.value="07/14/1989";
+  clearErr(fSsn);clearErr(fZip);clearErr(fDob);
+  ssn.focus();
+});
+
+lookupBtn.addEventListener("click",()=>{
+  let ok=true;
+  if(ssnDigits.length!==9){ setErr(fSsn); ok=false; }
+  if(zip.value.length!==5){ setErr(fZip); ok=false; }
+  if(!validDate(dob.value)){ setErr(fDob); ok=false; }
+  if(!ok) return;
+
+  // simulate a lookup
+  lookupBtn.classList.add("loading");
+  lookupBtn.disabled=true;
+  lookupBtn.querySelector(".lbl").textContent="Checking…";
+  setTimeout(()=>{
+    // mask the SSN tail into the results summary using the entered digits
+    document.getElementById("r-meta").textContent=
+      "SSN •••-••-"+ssnDigits.slice(5)+" · Received Apr 18, 2026";
+    lookupStage.style.display="none";
+    resultsStage.classList.add("show");
+    window.scrollTo({top:0,behavior:"smooth"});
+    renderTimeline();
+    lookupBtn.classList.remove("loading");
+    lookupBtn.disabled=false;
+    lookupBtn.querySelector(".lbl").textContent="Check status";
+  },1100);
+});
+
+// ---- timeline state machine ----
+const STAGES=[
+  {name:"Received", badge:"In progress — Received"},
+  {name:"Adjusted", badge:"In progress — Adjusted"},
+  {name:"Completed", badge:"Completed"}
+];
+let current=1; // demo starts mid-process at "Adjusted"
+
+function renderTimeline(){
+  const steps=[...document.querySelectorAll(".stepi")];
+  steps.forEach((el,i)=>{
+    el.classList.remove("done","current","on");
+    const pulse=el.querySelector(".pulse");
+    const ic=el.querySelector(".ic");
+    const st=el.querySelector(".st");
+    // strip any prior NOW tag
+    const old=st.querySelector(".nowtag"); if(old)old.remove();
+    if(i<current){ el.classList.add("done","on"); pulse.style.display="none"; ic.textContent="✓"; }
+    else if(i===current){
+      el.classList.add("current","on"); pulse.style.display="block"; ic.textContent=i+1;
+      const tag=document.createElement("span"); tag.className="nowtag"; tag.textContent="You are here"; st.appendChild(tag);
+    }
+    else { pulse.style.display="none"; ic.textContent=i+1; setTimeout(()=>el.classList.add("on"),300); }
+  });
+  // animate the green fill up to the current marker
+  const fill=document.getElementById("tlFill");
+  const pct = current===0?0 : current/(STAGES.length-1)*100;
+  fill.style.height="0";
+  requestAnimationFrame(()=>{ setTimeout(()=>{ fill.style.height=pct+"%"; },120); });
+
+  // header bits
+  document.getElementById("r-stage").textContent=STAGES[current].name;
+  document.getElementById("r-badge-txt").textContent=STAGES[current].badge;
+  const badge=document.getElementById("r-badge");
+  const eta=document.getElementById("r-eta");
+  if(current===STAGES.length-1){
+    badge.style.background="#eef6f0"; // completed = green (already)
+    eta.textContent="Completed Aug 1, 2026";
+  } else {
+    eta.textContent="Aug 1, 2026";
+  }
+}
+
+document.getElementById("advance").addEventListener("click",()=>{
+  if(current<STAGES.length-1){ current++; renderTimeline(); }
+});
+document.getElementById("again").addEventListener("click",()=>{
+  current=1;
+  resultsStage.classList.remove("show");
+  lookupStage.style.display="block";
+  ssnDigits="";ssnShown=false;ssn.value="";zip.value="";dob.value="";
+  document.getElementById("ssnToggle").textContent="Show";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
