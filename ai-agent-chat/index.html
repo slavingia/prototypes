@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taxpayer Assistant — Live AI Agent with Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px;line-height:1.5}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner */
+  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:#1b1b1b}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#3a3a3a}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{width:42px;height:42px;display:grid;place-items:center}
+  .logo .seal img{width:100%;height:100%;object-fit:contain;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;border-left:1px solid rgba(255,255,255,.4);padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+  .caret{font-size:11px}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 22px}
+
+  /* layout: tool rail + chat */
+  .shell{display:grid;grid-template-columns:268px 1fr;gap:26px;margin-bottom:54px;align-items:start}
+
+  /* tool rail */
+  .rail{border:1px solid var(--line);border-radius:14px;overflow:hidden;position:sticky;top:18px}
+  .rail .rh{background:#fafcfe;border-bottom:1px solid var(--line);padding:14px 16px}
+  .rail .rh .rt{font-weight:800;font-size:14.5px}
+  .rail .rh .rd{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .tool{display:flex;gap:11px;align-items:flex-start;padding:13px 16px;border-top:1px solid var(--line);transition:background .2s}
+  .tool:first-of-type{border-top:0}
+  .tool .ti{width:34px;height:34px;border-radius:9px;flex:0 0 34px;display:grid;place-items:center;font-size:16px;background:#eef1f5;transition:.2s}
+  .tool .tn{font-weight:700;font-size:13.5px;font-family:ui-monospace,Menlo,monospace}
+  .tool .tx{font-size:12px;color:var(--muted);margin-top:1px;line-height:1.35}
+  .tool .tstat{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#9aa7b5;align-self:center;white-space:nowrap}
+  .tool.active{background:#fff7e6}
+  .tool.active .ti{background:#ffe8b3}
+  .tool.active .tstat{color:var(--amber)}
+  .tool.fired .ti{background:#eef6f0}
+  .tool.fired .tstat{color:var(--green)}
+
+  /* chat */
+  .chat{border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-height:560px;overflow:hidden}
+  .chat .ch{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:#fff}
+  .chat .ch .av{width:40px;height:40px;border-radius:50%;flex:0 0 40px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
+  .chat .ch .nm{font-weight:800;font-size:15.5px}
+  .chat .ch .pres{font-size:12.5px;color:var(--green);display:flex;align-items:center;gap:6px}
+  .chat .ch .pres .blip{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 0 0 rgba(26,127,75,.5);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(26,127,75,.5)}70%{box-shadow:0 0 0 7px rgba(26,127,75,0)}100%{box-shadow:0 0 0 0 rgba(26,127,75,0)}}
+  .chat .ch .ai{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--violet);background:#f1ecfb;border:1px solid #ddd0f5;border-radius:99px;padding:3px 10px}
+
+  .scroll{flex:1;overflow-y:auto;padding:20px 18px;background:#f7f9fb;display:flex;flex-direction:column;gap:12px}
+  .msg{display:flex;gap:10px;max-width:84%}
+  .msg .mav{width:30px;height:30px;border-radius:50%;flex:0 0 30px;display:grid;place-items:center;font-size:13px;font-weight:800}
+  .msg .bub{padding:11px 14px;border-radius:14px;font-size:14.5px;line-height:1.5}
+  .msg.bot{align-self:flex-start}
+  .msg.bot .mav{background:var(--irs-blue);color:#fff}
+  .msg.bot .bub{background:#fff;border:1px solid var(--line);border-top-left-radius:4px}
+  .msg.user{align-self:flex-end;flex-direction:row-reverse}
+  .msg.user .mav{background:#dfe7f0;color:var(--irs-navy)}
+  .msg.user .bub{background:var(--irs-blue);color:#fff;border-top-right-radius:4px}
+  .msg .bub b{font-weight:800}
+  .msg .bub .small{font-size:12.5px;opacity:.8;display:block;margin-top:3px}
+
+  /* tool-call card (the "tool usage" visualization) */
+  .toolcard{align-self:stretch;max-width:100%;border:1px solid #dfe6ee;border-radius:12px;background:#fff;overflow:hidden;animation:rise .3s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .toolcard .tch{display:flex;align-items:center;gap:9px;padding:10px 14px;background:#fbfdff;border-bottom:1px solid #eef1f5;font-size:12.5px}
+  .toolcard .tch .gear{font-size:14px}
+  .toolcard .tch .call{font-family:ui-monospace,Menlo,monospace;font-weight:700;color:var(--irs-navy)}
+  .toolcard .tch .badge{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;border-radius:99px;padding:3px 10px}
+  .toolcard .tch .badge.run{color:var(--amber);background:#fdf3d6}
+  .toolcard .tch .badge.ok{color:var(--green);background:#eef6f0}
+  .toolcard .tch .spin{width:11px;height:11px;border:2px solid #e3c878;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .toolcard .tcb{padding:12px 14px;font-size:13px}
+  .toolcard .args{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#3a3a3a;background:#f7f9fb;border:1px solid #eef1f5;border-radius:8px;padding:9px 11px;white-space:pre-wrap;word-break:break-word;margin:0 0 10px}
+  .toolcard .args .key{color:var(--violet)}
+  .toolcard .args .str{color:var(--teal)}
+  .toolcard .res{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#2a2a2a}
+  .toolcard .res .ri{flex:0 0 auto;color:var(--green);font-weight:800}
+
+  /* form-preview produced by complete_form tool */
+  .formprev{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:10px}
+  .formprev .fph{background:var(--irs-blue);color:#fff;padding:8px 12px;font-size:12.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+  .formprev .fph .tag{font-size:10.5px;font-weight:800;background:rgba(255,255,255,.2);border-radius:5px;padding:2px 7px;letter-spacing:.04em}
+  .formprev .frow{display:flex;justify-content:space-between;gap:14px;padding:8px 12px;border-top:1px solid #eef1f5;font-size:12.5px}
+  .formprev .frow:first-of-type{border-top:0}
+  .formprev .frow .fk{color:var(--muted)}
+  .formprev .frow .fv{font-weight:700;text-align:right}
+  .formprev .frow .fv mark{background:#fff3cd;border-radius:3px;padding:0 3px}
+
+  /* fax receipt */
+  .fax{display:flex;gap:12px;align-items:center;border:1px dashed var(--teal);border-radius:10px;padding:11px 13px;margin-top:10px;background:#f0fafc}
+  .fax .fxi{width:38px;height:38px;border-radius:9px;flex:0 0 38px;background:var(--teal);color:#fff;display:grid;place-items:center;font-size:17px}
+  .fax .fxt{font-weight:700;font-size:13px}
+  .fax .fxs{font-size:12px;color:var(--muted);margin-top:1px}
+
+  /* typing indicator */
+  .typing{display:flex;gap:10px;align-self:flex-start;max-width:84%}
+  .typing .mav{width:30px;height:30px;border-radius:50%;flex:0 0 30px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800}
+  .typing .dots{background:#fff;border:1px solid var(--line);border-radius:14px;border-top-left-radius:4px;padding:13px 15px;display:flex;gap:4px;align-items:center}
+  .typing .dots i{width:7px;height:7px;border-radius:50%;background:#b5c0cc;animation:bob 1.2s infinite}
+  .typing .dots i:nth-child(2){animation-delay:.2s}.typing .dots i:nth-child(3){animation-delay:.4s}
+  @keyframes bob{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+
+  /* composer */
+  .composer{border-top:1px solid var(--line);padding:13px 16px;background:#fff}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px}
+  .chip{border:1.5px solid var(--irs-blue);color:var(--irs-blue);background:#fff;border-radius:99px;padding:8px 15px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:.15s}
+  .chip:hover{background:var(--irs-blue);color:#fff}
+  .chip.ghost{border-color:var(--line);color:var(--muted)}
+  .chip.ghost:hover{border-color:var(--irs-blue);color:var(--irs-blue);background:#fff}
+  .inputrow{display:flex;gap:10px;align-items:center}
+  .inputrow input{flex:1;border:1px solid #9aa7b5;border-radius:99px;padding:11px 16px;font-family:inherit;font-size:14.5px;background:#f7f9fb}
+  .inputrow input:focus{outline:2px solid rgba(0,76,151,.3);border-color:var(--irs-blue);background:#fff}
+  .send{width:44px;height:44px;border-radius:50%;flex:0 0 44px;border:0;background:var(--irs-blue);color:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center}
+  .send:hover{background:#003a73}
+  .restart{font-size:12.5px;color:var(--link);background:none;border:0;font-family:inherit;cursor:pointer;text-decoration:underline;margin-top:9px}
+
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin:18px 0 0}
+  @media(max-width:820px){.shell{grid-template-columns:1fr}.rail{position:static;order:2}.chat{order:1}}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true">⌄</span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="../assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Online Account</span></div>
+    <div class="util">
+      <a>Jordan A. Reyes <span class="caret">⌄</span></a>
+      <a>Help</a>
+      <a>Sign out</a>
+    </div>
+  </div></div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Account home</a> › <a>Help &amp; support</a> › Taxpayer Assistant</p>
+    <h1 class="page">Taxpayer Assistant</h1>
+    <p class="sub">A live chat AI agent that doesn't just answer questions — it does the work. Watch it look up your account, fill out forms for you, and fax them to the right unit, narrating every tool it uses along the way.</p>
+
+    <div class="shell">
+      <!-- tool rail -->
+      <aside class="rail">
+        <div class="rh"><div class="rt">🛠 Agent tools</div><div class="rd">Capabilities the assistant can invoke on your behalf</div></div>
+        <div class="tool" data-tool="lookup_account"><span class="ti">🔎</span><span><span class="tn">lookup_account</span><span class="tx">Read your balances, filings &amp; addresses</span></span><span class="tstat">ready</span></div>
+        <div class="tool" data-tool="complete_form"><span class="ti">📝</span><span><span class="tn">complete_form</span><span class="tx">Pre-fill IRS forms from your data</span></span><span class="tstat">ready</span></div>
+        <div class="tool" data-tool="send_fax"><span class="ti">📠</span><span><span class="tn">send_fax</span><span class="tx">Transmit a document to an IRS unit</span></span><span class="tstat">ready</span></div>
+        <div class="tool" data-tool="schedule_callback"><span class="ti">📞</span><span><span class="tn">schedule_callback</span><span class="tx">Book a callback from a live agent</span></span><span class="tstat">ready</span></div>
+      </aside>
+
+      <!-- chat -->
+      <section class="chat">
+        <div class="ch">
+          <span class="av">IA</span>
+          <span><span class="nm">IRS Assistant</span><br><span class="pres"><span class="blip"></span>Online · typically replies instantly</span></span>
+          <span class="ai">AI Agent</span>
+        </div>
+        <div class="scroll" id="scroll" aria-live="polite"></div>
+        <div class="composer">
+          <div class="chips" id="chips"></div>
+          <div class="inputrow">
+            <input id="input" type="text" placeholder="Type a message…" autocomplete="off" aria-label="Message">
+            <button class="send" id="send" aria-label="Send">➤</button>
+          </div>
+          <button class="restart" id="restart">↻ Restart demo conversation</button>
+        </div>
+      </section>
+    </div>
+
+    <p class="note">Demo conversation is scripted to showcase agentic tool usage. All names, SSNs, addresses, fax numbers, and case data are fictional mock data — nothing here is real or actionable.</p>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, SSNs, EINs, addresses, fax numbers, and data shown are fictional mock data — no real personal or taxpayer information. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+const scroll=document.getElementById("scroll"),chips=document.getElementById("chips"),
+  input=document.getElementById("input"),send=document.getElementById("send"),restart=document.getElementById("restart");
+
+let busy=false;
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function scrollDown(){scroll.scrollTop=scroll.scrollHeight;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function addUser(text){
+  const m=document.createElement("div");m.className="msg user";
+  m.innerHTML=`<span class="mav">JR</span><div class="bub">${esc(text)}</div>`;
+  scroll.appendChild(m);scrollDown();
+}
+function addBot(html){
+  const m=document.createElement("div");m.className="msg bot";
+  m.innerHTML=`<span class="mav">IA</span><div class="bub">${html}</div>`;
+  scroll.appendChild(m);scrollDown();
+}
+async function typing(ms){
+  const t=document.createElement("div");t.className="typing";
+  t.innerHTML=`<span class="mav">IA</span><div class="dots"><i></i><i></i><i></i></div>`;
+  scroll.appendChild(t);scrollDown();await sleep(ms);t.remove();
+}
+
+function railFire(tool,state){
+  const el=document.querySelector(`.tool[data-tool="${tool}"]`);if(!el)return;
+  el.classList.remove("active","fired");
+  const stat=el.querySelector(".tstat");
+  if(state==="active"){el.classList.add("active");stat.textContent="running…";}
+  else if(state==="fired"){el.classList.add("fired");stat.textContent="✓ used";}
+}
+
+// Render an agentic tool-call card with running → done transition
+async function toolCall(tool,argsHTML,resultHTML){
+  railFire(tool,"active");
+  const card=document.createElement("div");card.className="toolcard";
+  card.innerHTML=`
+    <div class="tch"><span class="gear">⚙️</span><span class="call">${tool}()</span>
+      <span class="badge run"><span class="spin"></span> Running</span></div>
+    <div class="tcb"><div class="args">${argsHTML}</div><div class="resslot"></div></div>`;
+  scroll.appendChild(card);scrollDown();
+  await sleep(1100);
+  card.querySelector(".badge").outerHTML=`<span class="badge ok">✓ Done</span>`;
+  card.querySelector(".resslot").innerHTML=`<div class="res"><span class="ri">↳</span><div>${resultHTML}</div></div>`;
+  railFire(tool,"fired");scrollDown();
+  await sleep(400);
+}
+
+function arg(obj){
+  return Object.entries(obj).map(([k,v])=>
+    `<span class="key">${k}</span>: <span class="str">"${esc(String(v))}"</span>`).join("\n");
+}
+
+function setChips(list){
+  chips.innerHTML="";
+  list.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="chip"+(c.ghost?" ghost":"");
+    b.textContent=c.label;
+    b.addEventListener("click",()=>run(c.go,c.label));
+    chips.appendChild(b);
+  });
+}
+
+// ---- Scripted agentic flows ----
+const FLOWS={
+  async start(){
+    setChips([]);
+    await typing(700);
+    addBot(`Hi Jordan 👋 I'm your IRS Assistant. I can actually <b>take actions</b> for you — look things up, fill out forms, and fax them to the right unit. What do you need today?`);
+    setChips([
+      {label:"I moved — update my address",go:"address"},
+      {label:"Authorize my accountant (POA)",go:"poa"},
+      {label:"What's my balance?",go:"balance"},
+      {label:"Talk to a person",go:"callback",ghost:true},
+    ]);
+  },
+
+  async balance(){
+    await typing(800);
+    addBot(`Let me pull that up for you.`);
+    await toolCall("lookup_account",
+      arg({account:"individual", taxpayer:"Jordan A. Reyes", scope:"balances"}),
+      `Found <b>1 open balance</b>:<div class="formprev"><div class="fph">Account snapshot <span class="tag">MOCK</span></div>
+        <div class="frow"><span class="fk">2024 Form 1040 balance</span><span class="fv">$1,248.00</span></div>
+        <div class="frow"><span class="fk">Accrued interest</span><span class="fv">$31.74</span></div>
+        <div class="frow"><span class="fk">Next notice</span><span class="fv">CP14 · mailed 06/15</span></div></div>`);
+    await typing(700);
+    addBot(`You have <b>$1,279.74</b> due on your 2024 Form 1040. Want me to set up a short-term payment plan or is there something else?`);
+    setChips([
+      {label:"Update my address",go:"address"},
+      {label:"Authorize my accountant",go:"poa"},
+      {label:"That's all, thanks",go:"end",ghost:true},
+    ]);
+  },
+
+  async address(){
+    await typing(800);
+    addBot(`Happy to handle that. First let me confirm what's on file.`);
+    await toolCall("lookup_account",
+      arg({account:"individual", taxpayer:"Jordan A. Reyes", scope:"address_of_record"}),
+      `Current address of record:<div class="formprev"><div class="fph">On file <span class="tag">MOCK</span></div>
+        <div class="frow"><span class="fk">Street</span><span class="fv">722 Larkspur Ln, Apt 4</span></div>
+        <div class="frow"><span class="fk">City / State / ZIP</span><span class="fv">Boise, ID 83702</span></div></div>`);
+    await typing(600);
+    addBot(`What's your new address? (You can type it, or use the sample below.)`);
+    setChips([
+      {label:"Use sample: 1530 Cedar Park Dr, Reno, NV 89509",go:"address_fill"},
+    ]);
+    input.placeholder="e.g. 1530 Cedar Park Dr, Reno, NV 89509";
+  },
+
+  async address_fill(){
+    await typing(900);
+    addBot(`Got it. I'll prepare <b>Form 8822, Change of Address</b> and pre-fill it from your account.`);
+    await toolCall("complete_form",
+      arg({form:"8822", taxpayer:"Jordan A. Reyes", ssn:"***-**-3391", new_address:"1530 Cedar Park Dr, Reno, NV 89509"}),
+      `Form 8822 drafted &amp; validated:<div class="formprev"><div class="fph">Form 8822 — Change of Address <span class="tag">DRAFT · MOCK</span></div>
+        <div class="frow"><span class="fk">Line 1 — Name</span><span class="fv">Jordan A. Reyes</span></div>
+        <div class="frow"><span class="fk">Line 2 — SSN</span><span class="fv">***-**-3391</span></div>
+        <div class="frow"><span class="fk">Line 6 — Old address</span><span class="fv">722 Larkspur Ln, Boise, ID 83702</span></div>
+        <div class="frow"><span class="fk">Line 7 — New address</span><span class="fv"><mark>1530 Cedar Park Dr, Reno, NV 89509</mark></span></div></div>`);
+    await typing(700);
+    addBot(`Looks complete. Want me to <b>fax it</b> to the campus that processes Form 8822 for your state? Or download it to mail yourself.`);
+    setChips([
+      {label:"📠 Fax it for me",go:"address_fax"},
+      {label:"Download to mail myself",go:"address_dl",ghost:true},
+    ]);
+  },
+
+  async address_fax(){
+    await typing(700);
+    addBot(`On it — routing to the correct service center based on your old address of record.`);
+    await toolCall("send_fax",
+      arg({document:"Form 8822 (signed)", to_unit:"Ogden Service Center", fax:"855-***-9528", pages:1}),
+      `Transmission complete.
+        <div class="fax"><span class="fxi">📠</span><span><span class="fxt">Faxed to Ogden Service Center — 1 page</span><span class="fxs">Confirmation #FX-2026-77310 · delivered 0:14 · mock receipt</span></span></div>`);
+    await typing(700);
+    addBot(`Done! Your change of address is <b>submitted</b>. Processing usually takes 4–6 weeks; I've added a tracking item to your account. Anything else?`);
+    setChips([
+      {label:"Authorize my accountant",go:"poa"},
+      {label:"Check my balance",go:"balance"},
+      {label:"All set, thanks!",go:"end",ghost:true},
+    ]);
+  },
+
+  async address_dl(){
+    await typing(700);
+    addBot(`No problem — I've generated a print-ready <b>Form 8822 (PDF)</b> in your message center. Mail it to the address in the form instructions for your state. Anything else?`);
+    setChips([
+      {label:"Authorize my accountant",go:"poa"},
+      {label:"All set, thanks!",go:"end",ghost:true},
+    ]);
+  },
+
+  async poa(){
+    await typing(850);
+    addBot(`Sure — that's <b>Form 2848, Power of Attorney</b>. Who are you authorizing, and for what years? (Use the sample to autofill.)`);
+    setChips([
+      {label:"Use sample: Morgan Patel, CPA — tax years 2022–2024",go:"poa_fill"},
+    ]);
+  },
+
+  async poa_fill(){
+    await typing(900);
+    addBot(`Great. Drafting Form 2848 and checking the representative's CAF number.`);
+    await toolCall("complete_form",
+      arg({form:"2848", taxpayer:"Jordan A. Reyes", representative:"Morgan Patel, CPA", caf:"****-72104", matters:"Income · 1040 · 2022-2024"}),
+      `Form 2848 drafted &amp; representative verified:<div class="formprev"><div class="fph">Form 2848 — Power of Attorney <span class="tag">DRAFT · MOCK</span></div>
+        <div class="frow"><span class="fk">Part I — Taxpayer</span><span class="fv">Jordan A. Reyes</span></div>
+        <div class="frow"><span class="fk">Representative</span><span class="fv">Morgan Patel, CPA</span></div>
+        <div class="frow"><span class="fk">CAF number</span><span class="fv"><mark>****-72104 ✓ verified</mark></span></div>
+        <div class="frow"><span class="fk">Matters / years</span><span class="fv">Income, Form 1040, 2022–2024</span></div></div>`);
+    await typing(700);
+    addBot(`The form needs your signature. I can route it to your phone for an e-signature, then <b>fax it to the CAF Unit</b> automatically once you sign.`);
+    setChips([
+      {label:"✍️ Sign & fax to CAF Unit",go:"poa_fax"},
+      {label:"Not now",go:"end",ghost:true},
+    ]);
+  },
+
+  async poa_fax(){
+    await typing(650);
+    addBot(`Signature captured on your device ✓ — transmitting now.`);
+    await toolCall("send_fax",
+      arg({document:"Form 2848 (e-signed)", to_unit:"CAF Unit — Ogden", fax:"855-***-6038", pages:2}),
+      `Transmission complete.
+        <div class="fax"><span class="fxi">📠</span><span><span class="fxt">Faxed to CAF Unit (Ogden) — 2 pages</span><span class="fxs">Confirmation #FX-2026-77384 · delivered 0:22 · mock receipt</span></span></div>`);
+    await typing(750);
+    addBot(`All set — <b>Morgan Patel, CPA</b> is now authorized to represent you for 2022–2024 once the CAF Unit posts it (usually a few business days). Want anything else?`);
+    setChips([
+      {label:"Update my address",go:"address"},
+      {label:"Check my balance",go:"balance"},
+      {label:"All set, thanks!",go:"end",ghost:true},
+    ]);
+  },
+
+  async callback(){
+    await typing(800);
+    addBot(`Of course — I can book a callback so you don't wait on hold. Let me find the next opening for the right department.`);
+    await toolCall("schedule_callback",
+      arg({topic:"general account", phone:"(***) ***-2046", priority:"standard"}),
+      `Next available slot reserved:<div class="formprev"><div class="fph">Callback scheduled <span class="tag">MOCK</span></div>
+        <div class="frow"><span class="fk">Department</span><span class="fv">Individual Accounts</span></div>
+        <div class="frow"><span class="fk">Window</span><span class="fv">Today, 2:40–3:00 PM MT</span></div>
+        <div class="frow"><span class="fk">Ticket</span><span class="fv">#CB-2026-4471</span></div></div>`);
+    await typing(650);
+    addBot(`You're booked — a live agent will call <b>(***) ***-2046</b> in your window. Want me to handle anything before then?`);
+    setChips([
+      {label:"Update my address",go:"address"},
+      {label:"Authorize my accountant",go:"poa"},
+      {label:"No, that's all",go:"end",ghost:true},
+    ]);
+  },
+
+  async end(){
+    await typing(650);
+    addBot(`You're welcome, Jordan! Everything's saved to your account message center. Have a great day. 🙂`);
+    setChips([{label:"↻ Start over",go:"restart"}]);
+  },
+
+  async fallback(){
+    await typing(750);
+    addBot(`I can help with that kind of request in the full version. For this demo, try one of the actions below so you can see me use my tools 👇`);
+    setChips([
+      {label:"Update my address",go:"address"},
+      {label:"Authorize my accountant (POA)",go:"poa"},
+      {label:"What's my balance?",go:"balance"},
+      {label:"Talk to a person",go:"callback",ghost:true},
+    ]);
+  },
+};
+
+async function run(flow,userLabel){
+  if(busy)return;busy=true;
+  setChips([]);
+  if(userLabel){const clean=userLabel.replace(/^[^\w]+\s*/,"");addUser(clean);}
+  if(flow==="restart"){await resetConvo();busy=false;return;}
+  const fn=FLOWS[flow]||FLOWS.fallback;
+  await fn();
+  busy=false;
+}
+
+// free-text routing -> best-effort intent match, else fallback
+function route(text){
+  const t=text.toLowerCase();
+  if(/(address|moved|reloc)/.test(t))return "address_fill_from_text";
+  if(/(poa|power of attorney|2848|accountant|cpa|authoriz)/.test(t))return "poa";
+  if(/(balance|owe|due|pay)/.test(t))return "balance";
+  if(/(person|human|agent|call|representative|hold)/.test(t))return "callback";
+  return "fallback";
+}
+
+async function submitText(){
+  const text=input.value.trim();if(!text||busy)return;
+  input.value="";
+  busy=true;setChips([]);addUser(text);
+  const r=route(text);
+  if(r==="address_fill_from_text"){
+    // treat typed address as the new address
+    await typing(900);
+    addBot(`Got it. I'll prepare <b>Form 8822, Change of Address</b> with that and pre-fill the rest from your account.`);
+    await toolCall("complete_form",
+      arg({form:"8822", taxpayer:"Jordan A. Reyes", ssn:"***-**-3391", new_address:text}),
+      `Form 8822 drafted &amp; validated:<div class="formprev"><div class="fph">Form 8822 — Change of Address <span class="tag">DRAFT · MOCK</span></div>
+        <div class="frow"><span class="fk">Line 1 — Name</span><span class="fv">Jordan A. Reyes</span></div>
+        <div class="frow"><span class="fk">Line 7 — New address</span><span class="fv"><mark>${esc(text)}</mark></span></div></div>`);
+    await typing(650);
+    addBot(`Want me to <b>fax it</b> to your service center, or download it to mail yourself?`);
+    setChips([
+      {label:"📠 Fax it for me",go:"address_fax"},
+      {label:"Download to mail myself",go:"address_dl",ghost:true},
+    ]);
+    busy=false;return;
+  }
+  busy=false;
+  await run(r,null);
+}
+
+send.addEventListener("click",submitText);
+input.addEventListener("keydown",e=>{if(e.key==="Enter")submitText();});
+
+async function resetConvo(){
+  scroll.innerHTML="";chips.innerHTML="";input.value="";input.placeholder="Type a message…";
+  document.querySelectorAll(".tool").forEach(el=>{el.classList.remove("active","fired");el.querySelector(".tstat").textContent="ready";});
+  busy=true;await FLOWS.start();busy=false;
+}
+restart.addEventListener("click",resetConvo);
+
+// gov banner toggle
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");});
+
+resetConvo();
+</script>
+</body>
+</html>
