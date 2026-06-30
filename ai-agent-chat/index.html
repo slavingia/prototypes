@@ -6,7 +6,7 @@
 <title>Taxpayer Assistant — Live AI Agent with Tools</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
     --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
@@ -15,7 +15,7 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:#fff;color:var(--ink);
-    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px;line-height:1.5}
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
   a:hover{text-decoration:none}
   .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
@@ -58,13 +58,13 @@
   .shell{display:grid;grid-template-columns:268px 1fr;gap:26px;margin-bottom:54px;align-items:start}
 
   /* tool rail */
-  .rail{border:1px solid var(--line);border-radius:14px;overflow:hidden;position:sticky;top:18px}
+  .rail{border:1px solid var(--line);border-radius:0;overflow:hidden;position:sticky;top:18px}
   .rail .rh{background:#fafcfe;border-bottom:1px solid var(--line);padding:14px 16px}
   .rail .rh .rt{font-weight:800;font-size:14.5px}
   .rail .rh .rd{font-size:12.5px;color:var(--muted);margin-top:2px}
   .tool{display:flex;gap:11px;align-items:flex-start;padding:13px 16px;border-top:1px solid var(--line);transition:background .2s}
   .tool:first-of-type{border-top:0}
-  .tool .ti{width:34px;height:34px;border-radius:9px;flex:0 0 34px;display:grid;place-items:center;font-size:16px;background:#eef1f5;transition:.2s}
+  .tool .ti{width:34px;height:34px;border-radius:4px;flex:0 0 34px;display:grid;place-items:center;font-size:16px;background:#eef1f5;transition:.2s}
   .tool .tn{font-weight:700;font-size:13.5px;font-family:ui-monospace,Menlo,monospace}
   .tool .tx{font-size:12px;color:var(--muted);margin-top:1px;line-height:1.35}
   .tool .tstat{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#9aa7b5;align-self:center;white-space:nowrap}
@@ -75,7 +75,7 @@
   .tool.fired .tstat{color:var(--green)}
 
   /* chat */
-  .chat{border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-height:560px;overflow:hidden}
+  .chat{border:1px solid var(--line);border-radius:0;display:flex;flex-direction:column;min-height:560px;overflow:hidden}
   .chat .ch{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:#fff}
   .chat .ch .av{width:40px;height:40px;border-radius:50%;flex:0 0 40px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
   .chat .ch .nm{font-weight:800;font-size:15.5px}
@@ -98,7 +98,7 @@
   .msg .bub .small{font-size:12.5px;opacity:.8;display:block;margin-top:3px}
 
   /* tool-call card (the "tool usage" visualization) */
-  .toolcard{align-self:stretch;max-width:100%;border:1px solid #dfe6ee;border-radius:12px;background:#fff;overflow:hidden;animation:rise .3s ease}
+  .toolcard{align-self:stretch;max-width:100%;border:1px solid #dfe6ee;border-radius:0;background:#fff;overflow:hidden;animation:rise .3s ease}
   @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .toolcard .tch{display:flex;align-items:center;gap:9px;padding:10px 14px;background:#fbfdff;border-bottom:1px solid #eef1f5;font-size:12.5px}
   .toolcard .tch .gear{font-size:14px}
@@ -109,16 +109,16 @@
   .toolcard .tch .spin{width:11px;height:11px;border:2px solid #e3c878;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .toolcard .tcb{padding:12px 14px;font-size:13px}
-  .toolcard .args{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#3a3a3a;background:#f7f9fb;border:1px solid #eef1f5;border-radius:8px;padding:9px 11px;white-space:pre-wrap;word-break:break-word;margin:0 0 10px}
+  .toolcard .args{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#3a3a3a;background:#f7f9fb;border:1px solid #eef1f5;border-radius:0;padding:9px 11px;white-space:pre-wrap;word-break:break-word;margin:0 0 10px}
   .toolcard .args .key{color:var(--violet)}
   .toolcard .args .str{color:var(--teal)}
   .toolcard .res{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#2a2a2a}
   .toolcard .res .ri{flex:0 0 auto;color:var(--green);font-weight:800}
 
   /* form-preview produced by complete_form tool */
-  .formprev{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:10px}
+  .formprev{border:1px solid var(--line);border-radius:0;overflow:hidden;margin-top:10px}
   .formprev .fph{background:var(--irs-blue);color:#fff;padding:8px 12px;font-size:12.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
-  .formprev .fph .tag{font-size:10.5px;font-weight:800;background:rgba(255,255,255,.2);border-radius:5px;padding:2px 7px;letter-spacing:.04em}
+  .formprev .fph .tag{font-size:10.5px;font-weight:800;background:rgba(255,255,255,.2);border-radius:4px;padding:2px 7px;letter-spacing:.04em}
   .formprev .frow{display:flex;justify-content:space-between;gap:14px;padding:8px 12px;border-top:1px solid #eef1f5;font-size:12.5px}
   .formprev .frow:first-of-type{border-top:0}
   .formprev .frow .fk{color:var(--muted)}
@@ -126,8 +126,8 @@
   .formprev .frow .fv mark{background:#fff3cd;border-radius:3px;padding:0 3px}
 
   /* fax receipt */
-  .fax{display:flex;gap:12px;align-items:center;border:1px dashed var(--teal);border-radius:10px;padding:11px 13px;margin-top:10px;background:#f0fafc}
-  .fax .fxi{width:38px;height:38px;border-radius:9px;flex:0 0 38px;background:var(--teal);color:#fff;display:grid;place-items:center;font-size:17px}
+  .fax{display:flex;gap:12px;align-items:center;border:1px dashed var(--teal);border-radius:0;padding:11px 13px;margin-top:10px;background:#f0fafc}
+  .fax .fxi{width:38px;height:38px;border-radius:4px;flex:0 0 38px;background:var(--teal);color:#fff;display:grid;place-items:center;font-size:17px}
   .fax .fxt{font-weight:700;font-size:13px}
   .fax .fxs{font-size:12px;color:var(--muted);margin-top:1px}
 
