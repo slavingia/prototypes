@@ -28,6 +28,9 @@ directly in a browser — so this is a spec to copy, not a shared stylesheet.
 7. **Step indicators.** Pending = white fill with a `1px #5B616B` outline;
    done = solid blue `#00599C`; current = solid navy `#002D62`. Never green.
 8. **Tighter spacing.** Prefer compact gaps (e.g. layout columns `24px`).
+9. **No red text.** Never color balances, amounts, or body text red. A balance
+   owed is plain dark `--ink`, like any other amount. Red is reserved for
+   error-alert accents (left rule / icon) — never for numbers or text.
 
 ---
 
