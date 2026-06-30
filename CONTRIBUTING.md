@@ -14,6 +14,13 @@ This repository holds **design prototypes and concept explorations only**.
 - **Prototypes only.** This repo is for HTML/visual concepts and walkthroughs.
   It is not for production code, secrets, infrastructure, or anything that
   touches live taxpayer systems.
+- **Follow the design system.** Every prototype — new or updated — must match
+  [`DESIGN.md`](DESIGN.md), the IRS ODG (USWDS-based) styling standard. This is
+  not optional: use its color tokens, Source Sans 3 type ramp, the expandable
+  USWDS government banner, square containers/inputs (`4px` buttons), the
+  blue/navy step indicators, and the disclaimer footer. Run the checklist at the
+  bottom of `DESIGN.md` before committing. This applies equally to humans and to
+  AI assistants working in this repo.
 
 ## Before you commit
 

@@ -1,186 +1,132 @@
-Design System:
+# Design System — IRS ODG (USWDS-based)
 
-  1. Typography
+The styling standard for every prototype in this repo. It follows the IRS Online
+Design Guidelines, which are built on the U.S. Web Design System (USWDS). New
+prototypes should start from these rules; existing ones should match them.
 
-  ┌──────────────────┬───────────────────────────┬──────────────────────────────────────────────────┐
-  │     Element      │         Original          │                    ODG (New)                     │
-  ├──────────────────┼───────────────────────────┼──────────────────────────────────────────────────┤
-  │ Font family      │ "Source Sans Pro" (local) │ "Source Sans 3" via Google Fonts with preconnect │
-  ├──────────────────┼───────────────────────────┼──────────────────────────────────────────────────┤
-  │ Body line-height │ 1.5                       │ Removed (browser default)                        │
-  └──────────────────┴───────────────────────────┴──────────────────────────────────────────────────┘
+Prototypes stay self-contained (inline CSS/JS, local assets) so they open
+directly in a browser — so this is a spec to copy, not a shared stylesheet.
 
-  ---
-  2. Government Banner (USWDS Compliance)
+---
 
-  ┌───────────────────────┬────────────────────┬──────────────────────────────────────────┐
-  │        Aspect         │      Original      │                ODG (New)                 │
-  ├───────────────────────┼────────────────────┼──────────────────────────────────────────┤
-  │ Structure             │ Simple single line │ Full expandable USWDS banner             │
-  ├───────────────────────┼────────────────────┼──────────────────────────────────────────┤
-  │ Flag icon             │ None               │ US flag SVG                              │
-  ├───────────────────────┼────────────────────┼──────────────────────────────────────────┤
-  │ "Here's how you know" │ Static link        │ Expandable toggle with guidance          │
-  ├───────────────────────┼────────────────────┼──────────────────────────────────────────┤
-  │ Accessibility         │ None               │ aria-label, aria-controls, aria-expanded │
-  ├───────────────────────┼────────────────────┼──────────────────────────────────────────┤
-  │ Content               │ Text only          │ Official .gov + HTTPS lock explanations  │
-  └───────────────────────┴────────────────────┴──────────────────────────────────────────┘
+## Core principles
 
-  ---
-  3. Border Radius (Major: Rounded → Square)
+1. **Square corners.** Containers, panels, cards, and inputs have no
+   border-radius. Buttons and small icon tiles use `4px`. Only true indicators
+   (step circles, status dots, the success ring) stay circular.
+2. **USWDS government banner.** Every page opens with the full expandable
+   official-government banner — US-flag SVG, "Here's how you know" toggle, and
+   the `.gov` / HTTPS-lock guidance, wired with `aria-label`, `aria-controls`,
+   and `aria-expanded`.
+3. **Bolder labels, plain values.** Keys/labels are dark (`#1b1b1b`) and bold
+   (`700`); the values they describe are plain weight.
+4. **Left-aligned key/value.** In read rows, the key takes `50%` width and both
+   key and value are left-aligned (no `space-between`, no right-aligned values).
+5. **Larger base text.** Labels, hints, buttons, and panel hints are `16px`.
+6. **Lighter UI weight.** Interactive/structural text (buttons, field labels,
+   step titles) is weight `500`, not `700`.
+7. **Step indicators.** Pending = white fill with a `1px #5B616B` outline;
+   done = solid blue `#00599C`; current = solid navy `#002D62`. Never green.
+8. **Tighter spacing.** Prefer compact gaps (e.g. layout columns `24px`).
 
-  ┌───────────────┬──────────┬────────────────┐
-  │    Element    │ Original │   ODG (New)    │
-  ├───────────────┼──────────┼────────────────┤
-  │ .bizchip      │ 12px     │ None (removed) │
-  ├───────────────┼──────────┼────────────────┤
-  │ .steps        │ 12px     │ None           │
-  ├───────────────┼──────────┼────────────────┤
-  │ .panel        │ 12px     │ None           │
-  ├───────────────┼──────────┼────────────────┤
-  │ .attest       │ 11px     │ None           │
-  ├───────────────┼──────────┼────────────────┤
-  │ .field input  │ 8px      │ 0px            │
-  ├───────────────┼──────────┼────────────────┤
-  │ .btn          │ 8px      │ 4px            │
-  ├───────────────┼──────────┼────────────────┤
-  │ .nextcard     │ 11px     │ None           │
-  ├───────────────┼──────────┼────────────────┤
-  │ .route        │ 11px     │ None           │
-  ├───────────────┼──────────┼────────────────┤
-  │ .route .dot   │ 9px      │ 4px            │
-  ├───────────────┼──────────┼────────────────┤
-  │ .nextcard .ni │ 10px     │ 4px            │
-  └───────────────┴──────────┴────────────────┘
+---
 
-  ---
-  4. Wizard Steps Sidebar
+## Color tokens
 
-  ┌─────────────────────┬─────────────────────────────────────┬──────────────────────────────────────────────────┐
-  │      Property       │              Original               │                    ODG (New)                     │
-  ├─────────────────────┼─────────────────────────────────────┼──────────────────────────────────────────────────┤
-  │ align-items         │ flex-start                          │ center                                           │
-  ├─────────────────────┼─────────────────────────────────────┼──────────────────────────────────────────────────┤
-  │ Step number         │ background:#eef1f5;                 │ background:#fff; color:#5B616B; border:1px       │
-  │ (default)           │ color:var(--muted)                  │ #5B616B solid                                    │
-  ├─────────────────────┼─────────────────────────────────────┼──────────────────────────────────────────────────┤
-  │ Step number (done)  │ background:var(--green) (green)     │ background:#00599C (blue)                        │
-  ├─────────────────────┼─────────────────────────────────────┼──────────────────────────────────────────────────┤
-  │ Step number         │ background:var(--irs-blue)          │ background:#002D62 (navy)                        │
-  │ (current)           │                                     │                                                  │
-  ├─────────────────────┼─────────────────────────────────────┼──────────────────────────────────────────────────┤
-  │ Step title weight   │ 600                                 │ 500                                              │
-  └─────────────────────┴─────────────────────────────────────┴──────────────────────────────────────────────────┘
+```css
+:root{
+  --irs-blue:#004c97;  --irs-navy:#002d5c;
+  --ink:#1b1b1b;       --muted:#5c5c5c;     --link:#0050a0;
+  --line:#d6d7d9;      --bg:#fff;
+  --green:#1a7f4b;     --amber:#8a6d00;     --red:#b50909;
+  --teal:#00687d;      --violet:#5b3fa0;
+}
+```
 
-  ---
-  5. Layout Spacing
+Step-indicator colors are used directly: pending outline `#5B616B`,
+done `#00599C`, current `#002D62`. Borders/dividers use `#D6D7D9`; secondary
+text on light backgrounds uses `#5b616b`.
 
-  ┌──────────────┬──────────┬───────────┐
-  │   Element    │ Original │ ODG (New) │
-  ├──────────────┼──────────┼───────────┤
-  │ .shell gap   │ 32px     │ 24px      │
-  ├──────────────┼──────────┼───────────┤
-  │ .formopt gap │ 13px     │ 12px      │
-  └──────────────┴──────────┴───────────┘
+---
 
-  ---
-  6. Read Rows (Key-Value Display)
+## Typography
 
-  ┌───────────────────┬─────────────────────┬──────────────────┐
-  │     Property      │      Original       │    ODG (New)     │
-  ├───────────────────┼─────────────────────┼──────────────────┤
-  │ justify-content   │ space-between       │ left             │
-  ├───────────────────┼─────────────────────┼──────────────────┤
-  │ Border color      │ #eef1f5 (light)     │ #D6D7D9 (darker) │
-  ├───────────────────┼─────────────────────┼──────────────────┤
-  │ Key (.k) color    │ var(--muted) (gray) │ #1b1b1b (black)  │
-  ├───────────────────┼─────────────────────┼──────────────────┤
-  │ Key (.k) weight   │ None                │ 700 (bold)       │
-  ├───────────────────┼─────────────────────┼──────────────────┤
-  │ Key (.k) width    │ Auto                │ 50%              │
-  ├───────────────────┼─────────────────────┼──────────────────┤
-  │ Value (.v) align  │ right               │ left             │
-  ├───────────────────┼─────────────────────┼──────────────────┤
-  │ Value (.v) weight │ 700                 │ None             │
-  └───────────────────┴─────────────────────┴──────────────────┘
+- **Font:** `"Source Sans 3"` loaded via Google Fonts with `preconnect`, falling
+  back to `"Source Sans Pro", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif`.
 
-  ---
-  7. Form Fields
+  ```html
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+  ```
+- **Body:** `font-size:16px`; use the browser default line-height (do not set
+  `line-height:1.5` on `body`).
+- **Base UI text:** `16px` for field labels, hints, buttons, and panel hints.
 
-  ┌──────────────┬──────────────────────────┬──────────────────────────────────────┐
-  │   Property   │         Original         │              ODG (New)               │
-  ├──────────────┼──────────────────────────┼──────────────────────────────────────┤
-  │ Label size   │ 14px                     │ 16px                                 │
-  ├──────────────┼──────────────────────────┼──────────────────────────────────────┤
-  │ Label weight │ 700                      │ 500                                  │
-  ├──────────────┼──────────────────────────┼──────────────────────────────────────┤
-  │ Hint size    │ 12.5px                   │ 14px                                 │
-  ├──────────────┼──────────────────────────┼──────────────────────────────────────┤
-  │ Hint color   │ var(--muted)             │ #5b616b                              │
-  ├──────────────┼──────────────────────────┼──────────────────────────────────────┤
-  │ Hint weight  │ 400                      │ 500                                  │
-  ├──────────────┼──────────────────────────┼──────────────────────────────────────┤
-  │ Hint display │ Inline (margin-left:6px) │ Block (display:block; margin-left:0) │
-  └──────────────┴──────────────────────────┴──────────────────────────────────────┘
+---
 
-  ---
-  8. Panel & Text
+## Components
 
-  ┌──────────────────┬──────────┬───────────┐
-  │     Element      │ Original │ ODG (New) │
-  ├──────────────────┼──────────┼───────────┤
-  │ .phint font-size │ 15px     │ 16px      │
-  └──────────────────┴──────────┴───────────┘
+### Government banner
+Full expandable USWDS banner: flag SVG + "An official website of the United
+States government" + a "Here's how you know" `<button>` that toggles the
+`.gov` / HTTPS guidance. Accessibility attributes are required
+(`aria-label`, `aria-controls`, `aria-expanded`).
 
-  ---
-  9. Buttons
+### Border radius
+| Element | Radius |
+|---|---|
+| Containers — `.bizchip`, `.steps`, `.panel`, `.attest`, `.nextcard`, `.route`, `.formopt`, `.pinbox` | none |
+| Inputs — `.field input` | `0` |
+| Buttons — `.btn` | `4px` |
+| Small icon tiles — `.nextcard .ni`, `.route .dot`, `.bizchip .bi` | `4px` |
+| Indicators — step `.num`, success `.ring` | circular (`50%`) |
 
-  ┌───────────────┬──────────┬───────────┐
-  │   Property    │ Original │ ODG (New) │
-  ├───────────────┼──────────┼───────────┤
-  │ Font size     │ 15.5px   │ 16px      │
-  ├───────────────┼──────────┼───────────┤
-  │ Font weight   │ 700      │ 500       │
-  ├───────────────┼──────────┼───────────┤
-  │ Border radius │ 8px      │ 4px       │
-  └───────────────┴──────────┴───────────┘
+### Wizard step sidebar
+- `.steps li` — `align-items:center`.
+- `.steps li .num` (pending) — `background:#fff; color:#5B616B; border:1px solid #5B616B`.
+- `.steps li.done .num` — `background:#00599C; color:#fff; border-color:#00599C`.
+- `.steps li.current .num` — `background:#002D62; color:#fff; border-color:#002D62`.
+- `.steps li .st` (title) — `font-weight:500`.
 
-  ---
-  10. Cards & Diagrams
+### Read rows (key/value)
+- `.readrow` — `justify-content:flex-start; border-bottom:1px solid #D6D7D9`.
+- `.readrow .k` — `color:#1b1b1b; font-weight:700; width:50%`.
+- `.readrow .v` — `text-align:left` (plain weight).
 
-  ┌─────────────────────────┬──────────┬───────────┐
-  │         Element         │ Original │ ODG (New) │
-  ├─────────────────────────┼──────────┼───────────┤
-  │ .nextcard .ni font-size │ 12px     │ 16px      │
-  ├─────────────────────────┼──────────┼───────────┤
-  │ .nextcard .nt font-size │ 15.5px   │ 16px      │
-  ├─────────────────────────┼──────────┼───────────┤
-  │ .route .dot font-size   │ 11px     │ 16px      │
-  ├─────────────────────────┼──────────┼───────────┤
-  │ .route .dot font-weight │ 800      │ 700       │
-  └─────────────────────────┴──────────┴───────────┘
+### Form fields
+- Label — `font-size:16px; font-weight:500`.
+- Hint — `font-size:14px; color:#5b616b; font-weight:500; display:block`
+  (block, not inline).
+- Input — `border-radius:0`.
 
-  ---
-  11. New Elements
+### Buttons
+- `font-size:16px; font-weight:500; border-radius:4px`.
 
-  ┌──────────────────┬──────────┬─────────────────────────────────┐
-  │     Element      │ Original │            ODG (New)            │
-  ├──────────────────┼──────────┼─────────────────────────────────┤
-  │ Footer           │ None     │ Added with disclaimer           │
-  ├──────────────────┼──────────┼─────────────────────────────────┤
-  │ Banner JS toggle │ None     │ Added for expandable gov banner │
-  └──────────────────┴──────────┴─────────────────────────────────┘
+### Panel & cards
+- `.panel .phint` — `font-size:16px`.
+- `.nextcard .ni` — `font-size:16px`.
+- `.nextcard .nt` — `font-size:16px`.
+- `.route .dot` — `font-size:16px; font-weight:700`.
 
-  ---
-  Summary for Design Guide
+### Layout spacing
+- `.shell` column gap — `24px`.
+- `.formopt` gap — `12px`.
 
-  Key principles in ODG version:
-  1. Square corners — Remove border-radius from containers, panels, cards, inputs
-  2. USWDS gov banner — Full expandable banner with flag, accessibility attrs
-  3. Bolder labels — Key/label text is dark/bold, values are plain
-  4. Left-aligned key-value — Keys take 50% width, both aligned left
-  5. Larger base text — Labels, hints, buttons bumped to 16px
-  6. Lighter button weight — 500 instead of 700
-  7. Step indicators — Use border outline for pending, blue for done (not green)
-  8. Tighter spacing — Reduced gaps (32→24px)
+### Required page furniture
+- A **footer** carrying the project disclaimer (personal hobby project; not
+  official/affiliated; mock data only).
+- The **banner toggle JS** for the expandable government banner.
+
+---
+
+## Checklist for a new prototype
+- [ ] Source Sans 3 loaded via Google Fonts (with `preconnect`); no body `line-height:1.5`.
+- [ ] Full expandable USWDS government banner with ARIA attributes.
+- [ ] Square containers/inputs; `4px` buttons & icon tiles; circular indicators only.
+- [ ] Bold dark keys, plain values, left-aligned, key at `50%`.
+- [ ] `16px` labels/hints/buttons; weight `500` for buttons, labels, step titles.
+- [ ] Step indicators: outlined pending, blue done, navy current.
+- [ ] Color tokens from this file; dividers `#D6D7D9`.
+- [ ] Disclaimer footer present.
+- [ ] Mock data only — no PII (see `CONTRIBUTING.md`).
