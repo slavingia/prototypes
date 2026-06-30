@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unified Tax Account — sign in, pick a role, search everywhere</title>
+<!-- IRS ODG / USWDS type ramp: Source Sans 3 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner (IRS ODG) */
+  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:#1b1b1b}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#3a3a3a}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  /* masthead */
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px;flex:0 0 auto}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;border-left:1px solid rgba(255,255,255,.4);padding-left:12px;letter-spacing:0}
+
+  /* persistent masthead omni search (the "everywhere" anchor) */
+  .mast-omni{flex:1 1 auto;max-width:430px;display:none;align-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.5);border-radius:4px;padding:0 10px}
+  .mast-omni.show{display:flex}
+  .mast-omni svg{width:18px;height:18px;fill:#fff;opacity:.9;flex:0 0 18px}
+  .mast-omni input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-family:inherit;font-size:14.5px;padding:9px 8px}
+  .mast-omni input::placeholder{color:rgba(255,255,255,.8)}
+  .mast-omni .slash{font-size:11px;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.55);border-radius:4px;padding:1px 6px;flex:0 0 auto}
+
+  .util{display:flex;align-items:center;font-size:14.5px;flex:0 0 auto}
+  .util > *{padding:0 12px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+  .caret{font-size:11px}
+
+  /* account switcher chip in masthead */
+  .acct-switch{position:relative}
+  .acct-switch .asbtn{display:none;align-items:center;gap:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.45);border-radius:4px;color:#fff;font-family:inherit;font-size:13.5px;padding:6px 10px;cursor:pointer}
+  .acct-switch.show .asbtn{display:inline-flex}
+  .acct-switch .asbtn .av{width:24px;height:24px;border-radius:4px;display:grid;place-items:center;font-size:11px;font-weight:800;flex:0 0 24px}
+  .acct-switch .asbtn b{font-weight:600}
+  .acct-menu{position:absolute;right:0;top:calc(100% + 8px);width:300px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 50px rgba(0,40,90,.22);z-index:60;color:var(--ink);display:none}
+  .acct-menu.open{display:block}
+  .acct-menu .amh{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;padding:12px 16px 6px}
+  .acct-row{display:flex;gap:11px;align-items:center;padding:11px 16px;cursor:pointer;border-top:1px solid #f0f4f8;text-align:left;width:100%;background:#fff;border-left:0;border-right:0;border-bottom:0;font-family:inherit}
+  .acct-row:hover{background:#f5f9fd}
+  .acct-row.on{background:#eef4fb}
+  .acct-row .av{width:34px;height:34px;border-radius:4px;display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 34px;color:#fff}
+  .acct-row .an{font-weight:700;font-size:14.5px;color:var(--ink)}
+  .acct-row .ad{font-size:12.5px;color:var(--muted)}
+  .acct-row .chk{margin-left:auto;color:var(--irs-blue);font-weight:800}
+
+  /* generic buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--irs-blue);color:#fff;border:1px solid var(--irs-blue);border-radius:4px;font-family:inherit;font-size:16px;font-weight:500;padding:12px 22px;cursor:pointer;text-decoration:none}
+  .btn:hover{background:#003a73}
+  .btn.ghost{background:#fff;color:var(--irs-blue)}
+  .btn.ghost:hover{background:#f0f6fc}
+  .btn.block{width:100%}
+
+  /* screens */
+  .screen{display:none}
+  .screen.active{display:block}
+
+  /* ---------- SIGN IN ---------- */
+  .signin{max-width:440px;margin:56px auto 0;border:1px solid var(--line);padding:34px 34px 30px}
+  .signin h1{font-size:28px;font-weight:800;margin:0 0 4px}
+  .signin .sub{font-size:15px;color:var(--muted);margin:0 0 22px}
+  .field{margin:0 0 18px}
+  .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
+  .field .hint{font-size:14px;color:#5b616b;font-weight:500;display:block;margin-bottom:6px}
+  .field input{width:100%;border:1px solid #9aa7b5;border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px}
+  .field input:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .signin .alt{text-align:center;font-size:13.5px;color:var(--muted);margin:16px 0 0}
+  .idme{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);padding:11px;margin:10px 0 0;font-size:14.5px;font-weight:600;color:var(--ink);background:#fafcfe;border-radius:4px;cursor:pointer}
+  .idme .badge{background:#1a7f4b;color:#fff;font-size:11px;font-weight:800;border-radius:4px;padding:2px 7px}
+  .secure-note{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--muted);margin:20px 0 0}
+
+  /* ---------- ROLE PICKER ---------- */
+  .picker{padding:8px 0 10px}
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  h1.page{font-size:34px;font-weight:800;margin:6px 0 6px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 26px}
+  .rsec-h{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--irs-blue);margin:26px 0 12px}
+  .roles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .role{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);padding:18px 20px;cursor:pointer;text-align:left;background:#fff;font-family:inherit;width:100%}
+  .role:hover{border-color:var(--irs-blue);background:#fafcfe}
+  .role:focus-visible{outline:3px solid rgba(0,76,151,.35)}
+  .role .ri{width:42px;height:42px;border-radius:4px;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff;flex:0 0 42px}
+  .role .rt{font-size:18px;font-weight:700;margin:0}
+  .role .rd{font-size:13.5px;color:var(--muted);margin:3px 0 0}
+  .role .rmeta{font-size:12.5px;color:var(--irs-blue);font-weight:700;margin:7px 0 0;display:flex;align-items:center;gap:6px}
+  .role .arrow{margin-left:auto;align-self:center;color:#9aa7b5;font-size:20px}
+  @media(max-width:700px){.roles{grid-template-columns:1fr}}
+
+  /* ---------- DASHBOARD ---------- */
+  .dash{padding:6px 0 0}
+  h1.welcome{font-size:32px;font-weight:800;margin:22px 0 4px}
+  .scope{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);padding:8px 13px;margin:6px 0 24px;background:#fafcfe}
+  .scope .av{width:30px;height:30px;border-radius:4px;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex:0 0 30px}
+  .scope .sn{font-weight:700;font-size:15px}
+  .scope .sd{font-size:12.5px;color:var(--muted)}
+  .scope .relink{margin-left:6px;font-size:13px}
+
+  /* hero omni bar */
+  .omni-band{margin:0 0 16px;position:relative;z-index:30}
+  .omni-kicker{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--irs-blue);margin:0 0 8px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .omni-kicker .new{background:var(--irs-blue);color:#fff;border-radius:4px;padding:1px 8px;font-size:11px;letter-spacing:.06em}
+  .omni-input-wrap{display:flex;align-items:center;background:#fff;border:2px solid var(--irs-blue);border-radius:4px;padding:2px 8px 2px 16px;box-shadow:0 10px 34px rgba(0,40,90,.12)}
+  .omni-input-wrap:focus-within{outline:3px solid rgba(0,76,151,.22)}
+  .omni-input-wrap > svg{width:22px;height:22px;fill:var(--irs-blue);flex:0 0 22px}
+  #omni{flex:1;border:0;outline:0;font-size:18px;padding:14px 12px;background:transparent;color:var(--ink);font-family:inherit}
+  #omni::placeholder{color:#8a99a8}
+  .clearbtn{border:0;background:#eef3f9;color:var(--muted);width:32px;height:32px;border-radius:4px;cursor:pointer;font-size:15px}
+  .results{position:absolute;left:0;right:0;margin-top:8px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 50px rgba(0,40,90,.20);overflow:hidden}
+  .results[hidden]{display:none}
+  .res-head{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;padding:12px 16px 6px}
+  .opt{display:flex;gap:13px;align-items:flex-start;padding:12px 16px;cursor:pointer;border-top:1px solid #f0f4f8}
+  .opt:first-of-type{border-top:0}
+  .opt.active{background:#e7f0fa}
+  .opt .oicon{width:36px;height:36px;border-radius:4px;flex:0 0 36px;display:grid;place-items:center;font-size:13px;font-weight:800;letter-spacing:.02em;color:#fff}
+  .opt .otitle{font-size:15.5px;font-weight:700;margin:0}
+  .opt .oplain{font-size:13px;color:var(--muted);margin:2px 0 0}
+  .opt .answer{margin-top:7px;background:#f5f9fd;border:1px solid #dce8f4;border-radius:0;padding:7px 11px;font-size:13.5px}
+  .opt .answer .big{font-size:18px;font-weight:800;color:var(--irs-blue)}
+  .opt .route{font-size:10.5px;color:#9aa7b5;font-family:ui-monospace,Menlo,monospace;margin-top:6px}
+  .opt .scopetag{display:inline-block;font-size:10.5px;font-weight:700;border-radius:4px;padding:1px 7px;margin-top:7px}
+  .opt .kbd{margin-left:auto;font-size:11px;color:#aeb9c5;align-self:center}
+  .empty{padding:20px 16px;color:var(--muted);font-size:14px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  .omni-tip{font-size:12.5px;color:var(--muted);margin:8px 2px 0}
+  .omni-tip kbd{font-family:ui-monospace,Menlo,monospace;background:#eef3f9;border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:11.5px}
+
+  /* dashboard cards */
+  .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin:14px 0 0}
+  .card{border:1px solid var(--line);padding:22px 24px}
+  .card h2{font-size:20px;font-weight:800;margin:0 0 14px}
+  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid #D6D7D9;font-size:15px}
+  .readrow:last-child{border-bottom:0}
+  .readrow .k{color:#1b1b1b;font-weight:700;width:50%}
+  .readrow .v{text-align:left}
+  .card .lead-link{font-size:16px;margin:14px 0 4px}
+  .card .lead-link:first-of-type{margin-top:0}
+  .card .muted-body{font-size:13.5px;color:var(--muted);margin:0}
+  .card hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+  @media(max-width:780px){.home-grid{grid-template-columns:1fr}}
+
+  /* "omni bar everywhere" demo strip */
+  .everywhere{margin:34px 0 8px;border:1px solid var(--line);background:#fafcfe;padding:24px 24px 26px}
+  .everywhere h2{font-size:20px;font-weight:800;margin:0 0 4px}
+  .everywhere .ph{font-size:14.5px;color:var(--muted);margin:0 0 18px;max-width:70ch}
+  .surfaces{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .surface{border:1px solid var(--line);background:#fff;padding:14px 15px}
+  .surface .sh{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .mini-omni{display:flex;align-items:center;gap:8px;border:1px solid var(--irs-blue);border-radius:4px;padding:8px 10px;background:#fff}
+  .mini-omni svg{width:15px;height:15px;fill:var(--irs-blue);flex:0 0 15px}
+  .mini-omni span{font-size:13px;color:#8a99a8}
+  .surface .scap{font-size:12px;color:var(--muted);margin:10px 0 0}
+  @media(max-width:780px){.surfaces{grid-template-columns:1fr}}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);margin-top:36px}
+  footer .wrap{padding:18px 16px 44px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-label="Here's how you know" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true">⌄</span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Unified Tax Account</span></div>
+
+    <label class="mast-omni" id="mastOmni" aria-label="Search your tax account">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+      <input id="mastOmniInput" type="text" placeholder="Search or jump to anything…" autocomplete="off">
+      <span class="slash" aria-hidden="true">/</span>
+    </label>
+
+    <div class="util">
+      <div class="acct-switch" id="acctSwitch">
+        <button class="asbtn" id="asbtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="asAv">IN</span><b id="asName">Individual</b> <span class="caret" aria-hidden="true">⌄</span></button>
+        <div class="acct-menu" id="acctMenu" role="menu" aria-label="Switch account"></div>
+      </div>
+      <a id="signoutLink">Sign out</a>
+    </div>
+  </div></div>
+
+  <main class="wrap">
+
+    <!-- ================= SCREEN 1: SIGN IN ================= -->
+    <section class="screen active" id="screen-signin">
+      <div class="signin">
+        <h1>Sign in to your tax account</h1>
+        <p class="sub">One login for everything — your individual taxes, any businesses you run or belong to, and the clients you represent as a tax pro.</p>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" type="text" value="jordan.rivera@example.com" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="pw">Password</label>
+          <input id="pw" type="password" value="••••••••••" autocomplete="off">
+        </div>
+        <button class="btn block" id="doSignin">Sign in</button>
+        <p class="alt">or continue with a verified identity</p>
+        <button class="idme" id="doSigninIdme"><span class="badge">ID.me</span> Sign in with your verified account</button>
+        <p class="secure-note"><span aria-hidden="true">🔒</span><span>Mock sign-in for a design prototype. No real credentials are checked and nothing is stored. Any button continues to the demo.</span></p>
+      </div>
+    </section>
+
+    <!-- ================= SCREEN 2: ROLE PICKER ================= -->
+    <section class="screen" id="screen-picker">
+      <div class="picker">
+        <p class="crumb"><a id="backToSignin">Sign in</a> › Choose how you want to work today</p>
+        <h1 class="page">Welcome back, Jordan</h1>
+        <p class="sub">You're signed in once. Pick the account you want to act in — you can switch anytime from the menu in the top bar without signing in again.</p>
+
+        <p class="rsec-h">You</p>
+        <div class="roles" id="rolesYou"></div>
+
+        <p class="rsec-h">Businesses you run or belong to</p>
+        <div class="roles" id="rolesBiz"></div>
+
+        <p class="rsec-h">Professional</p>
+        <div class="roles" id="rolesPro"></div>
+      </div>
+    </section>
+
+    <!-- ================= SCREEN 3: DASHBOARD ================= -->
+    <section class="screen" id="screen-dash">
+      <div class="dash">
+        <h1 class="welcome" id="dashWelcome">Welcome</h1>
+        <div class="scope">
+          <span class="av" id="scopeAv">IN</span>
+          <span><span class="sn" id="scopeName">Individual</span> <span class="sd" id="scopeDesc"></span></span>
+          <a class="relink" id="changeRole">Change</a>
+        </div>
+
+        <!-- HERO OMNI BAR -->
+        <div class="omni-band">
+          <p class="omni-kicker">Omni bar <span class="new">EVERYWHERE</span></p>
+          <label class="omni-input-wrap" for="omni">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+            <input id="omni" type="text" role="combobox" aria-expanded="false" aria-controls="listbox" aria-autocomplete="list" autocomplete="off" placeholder="Ask, search, or jump — e.g. “balance”, “make a payment”, “941”…">
+            <button class="clearbtn" id="clearbtn" aria-label="Clear" hidden>✕</button>
+          </label>
+          <div class="results" id="results" hidden>
+            <div class="res-head" id="resHead">Suggestions</div>
+            <div id="listbox" role="listbox" aria-label="Omni bar results"></div>
+          </div>
+          <p class="omni-tip">The same omni bar follows you across every surface and re-scopes itself to <b id="tipScope">your account</b>. Type <kbd>/</kbd> anywhere to focus it · <kbd>↑</kbd><kbd>↓</kbd> to navigate · <kbd>Enter</kbd> to open.</p>
+        </div>
+
+        <!-- ROLE-SCOPED CARDS -->
+        <div class="home-grid" id="dashGrid"></div>
+
+        <!-- OMNI BAR EVERYWHERE STRIP -->
+        <div class="everywhere">
+          <h2>One bar, integrated everywhere</h2>
+          <p class="ph">The omni bar isn't a single search box — it's a primitive that shows up on every surface and inherits the account you're in. Same keystrokes, same results, context-aware ranking.</p>
+          <div class="surfaces">
+            <div class="surface">
+              <p class="sh">Top navigation</p>
+              <div class="mini-omni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg><span>Search or jump to…</span></div>
+              <p class="scap">Persistent in the blue masthead on every page.</p>
+            </div>
+            <div class="surface">
+              <p class="sh">Empty states</p>
+              <div class="mini-omni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg><span>What are you trying to do?</span></div>
+              <p class="scap">Surfaced where there's nothing yet, instead of a dead end.</p>
+            </div>
+            <div class="surface">
+              <p class="sh">⌘K command palette</p>
+              <div class="mini-omni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg><span>Type a command…</span></div>
+              <p class="scap">Same engine, summoned from anywhere with a keystroke.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, balances, and data shown are fictional mock data — no real personal or taxpayer information. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- USWDS government banner toggle ---------- */
+  var gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+  howbtn.addEventListener("click",function(){
+    var open=gov.classList.toggle("open");
+    howbtn.setAttribute("aria-expanded",open?"true":"false");
+  });
+
+  /* ---------- ACCOUNTS (mock personas / roles) ---------- */
+  var ACCOUNTS=[
+    {id:"individual",group:"you",av:"IN",color:"#004c97",name:"Individual",desc:"Jordan Rivera · SSN •••-••-4021",
+      blurb:"Your personal 1040 taxes, refunds, and notices.",
+      tag:{t:"Individual",c:"#004c97"}},
+    {id:"sole",group:"biz",av:"RB",color:"#5b3fa0",name:"Rivera Bakehouse LLC",desc:"Sole owner · EIN 47-•••0192",
+      blurb:"A single-member LLC you run. Full business tax account access.",
+      role:"Owner",tag:{t:"Business",c:"#5b3fa0"}},
+    {id:"partner",group:"biz",av:"NF",color:"#00687d",name:"Northgate Foods LLC",desc:"Partner (28%) · EIN 82-•••5510",
+      blurb:"A partnership you belong to. View-and-file access granted by the managing partner.",
+      role:"Partner · limited",tag:{t:"Business",c:"#00687d"}},
+    {id:"pro",group:"pro",av:"TP",color:"#1a7f4b",name:"Tax Pro — Rivera Tax Group",desc:"CAF 9876•••• · 14 active clients",
+      blurb:"Represent clients under a Power of Attorney. Switch into any client you're authorized for.",
+      role:"Tax professional",tag:{t:"Tax Pro",c:"#1a7f4b"}}
+  ];
+  function acct(id){return ACCOUNTS.find(function(a){return a.id===id;});}
+  var current="individual";
+
+  /* ---------- ROLE-SCOPED DASHBOARD CONTENT ---------- */
+  var DASH={
+    individual:{welcome:"Welcome, Jordan",cards:[
+      {h:"Account balance",rows:[["Total balance owed","$0.00"],["2025 return","Accepted · refund issued"],["Estimated payments (2026)","$1,200.00 paid"]],
+       links:[["View payment history","Records & transcripts"]]},
+      {h:"Next up",rows:[["Filing status","Single"],["2026 return opens","Jan 2027"]],
+       links:[["Set up a payment plan","Get an Identity Protection PIN"]]}
+    ]},
+    sole:{welcome:"Rivera Bakehouse LLC",cards:[
+      {h:"Business tax account",rows:[["EIN","47-•••0192"],["Balance owed","$1,480.00"],["Next deposit (941)","Due Apr 30, 2026"]],
+       links:[["Make a federal tax deposit","Request a 94x Online Signature PIN"]]},
+      {h:"Filings",rows:[["Form 941 (Q1 2026)","Not started"],["Form 940 (2025)","Filed Jan 28, 2026"]],
+       links:[["File Form 941 online","View business transcripts"]]}
+    ]},
+    partner:{welcome:"Northgate Foods LLC",cards:[
+      {h:"Your access",rows:[["Your role","Partner — 28%"],["Granted by","Managing partner"],["You can","View filings · file 1065 · view notices"]],
+       links:[["View Schedule K-1 (draft)","See what you can't access"]]},
+      {h:"Partnership filings",rows:[["Form 1065 (2025)","In review"],["K-1s issued","Not yet"]],
+       links:[["Open Form 1065","Message the managing partner"]]}
+    ]},
+    pro:{welcome:"Tax Pro workspace",cards:[
+      {h:"Client roster",rows:[["Active clients","14"],["Authorizations expiring","2 within 30 days"],["Pending POA (2848)","1 awaiting client e-sign"]],
+       links:[["Open a client account","Submit a new Form 2848"]]},
+      {h:"This week",rows:[["Returns to review","6"],["Notices across clients","3 new"]],
+       links:[["View all client notices","Bulk filing dashboard"]]}
+    ]}
+  };
+
+  /* ---------- OMNI BAR DATA (per-scope suggestions) ---------- */
+  /* type: action | answer | nav | client ; color is icon bg */
+  var OMNI={
+    individual:[
+      {ic:"$",c:"#004c97",title:"Make a payment",plain:"Pay a balance or estimated tax",route:"/individual/pay",kw:"pay payment balance owe make"},
+      {ic:"=",c:"#00687d",type:"answer",title:"What's my balance?",plain:"Total amount owed",big:"$0.00",sub:"You're all paid up for 2025.",route:"/individual/balance",kw:"balance owe how much"},
+      {ic:"↻",c:"#1a7f4b",type:"answer",title:"Where's my refund?",plain:"2025 refund status",big:"Issued",sub:"Deposited Mar 12, 2026.",route:"/individual/refund",kw:"refund where status return"},
+      {ic:"PIN",c:"#5b3fa0",title:"Get an Identity Protection PIN",plain:"Six-digit IP PIN for filing",route:"/individual/ip-pin",kw:"ip pin identity protection security"},
+      {ic:"T",c:"#8a6d00",title:"Get a tax transcript",plain:"Account, wage & income, return transcripts",route:"/individual/transcripts",kw:"transcript record wage income"},
+      {ic:"BIZ",c:"#5b3fa0",type:"nav",title:"Switch to Rivera Bakehouse LLC",plain:"Jump into your business account",route:"switch:sole",kw:"business switch llc bakehouse"}
+    ],
+    sole:[
+      {ic:"$",c:"#004c97",title:"Make a federal tax deposit",plain:"EFTPS-style deposit for 941/940",route:"/biz/deposit",kw:"pay deposit eftps make federal"},
+      {ic:"=",c:"#00687d",type:"answer",title:"What's the business balance?",plain:"Rivera Bakehouse LLC",big:"$1,480.00",sub:"Includes Q4 2025 941 balance.",route:"/biz/balance",kw:"balance owe how much business"},
+      {ic:"941",c:"#5b3fa0",title:"File Form 941",plain:"Employer's quarterly federal tax return",route:"/biz/941",kw:"941 quarterly employment file payroll"},
+      {ic:"PIN",c:"#1a7f4b",title:"Request a 94x Online Signature PIN",plain:"10-digit PIN to e-file 940/941/943/944/945",route:"/biz/94x-pin",kw:"94x pin signature mef e-file"},
+      {ic:"T",c:"#8a6d00",title:"View business transcripts",plain:"Account & return transcripts for this EIN",route:"/biz/transcripts",kw:"transcript record business ein"},
+      {ic:"IND",c:"#004c97",type:"nav",title:"Switch to Individual",plain:"Back to your personal 1040 account",route:"switch:individual",kw:"individual personal switch 1040"}
+    ],
+    partner:[
+      {ic:"=",c:"#00687d",type:"answer",title:"What can I do here?",plain:"Your access on Northgate Foods LLC",big:"Partner · limited",sub:"View filings, file 1065, view notices. No payments.",route:"/biz/access",kw:"access permission role what can"},
+      {ic:"1065",c:"#5b3fa0",title:"Open Form 1065",plain:"U.S. return of partnership income",route:"/biz/1065",kw:"1065 partnership file return"},
+      {ic:"K1",c:"#004c97",title:"View Schedule K-1 (draft)",plain:"Your partner share — 28%",route:"/biz/k1",kw:"k1 k-1 schedule share partner"},
+      {ic:"✉",c:"#8a6d00",title:"Message the managing partner",plain:"Request additional access",route:"/biz/message",kw:"message contact managing partner access"},
+      {ic:"IND",c:"#004c97",type:"nav",title:"Switch to Individual",plain:"Back to your personal 1040 account",route:"switch:individual",kw:"individual personal switch 1040"}
+    ],
+    pro:[
+      {ic:"@",c:"#1a7f4b",type:"client",title:"Open client: Aurora Print Co.",plain:"EIN 51-•••3380 · POA active",route:"/pro/client/aurora",kw:"client aurora open print"},
+      {ic:"@",c:"#1a7f4b",type:"client",title:"Open client: M. Castillo (1040)",plain:"SSN •••-••-7745 · POA active",route:"/pro/client/castillo",kw:"client castillo open individual 1040"},
+      {ic:"2848",c:"#5b3fa0",title:"Submit Form 2848 (Power of Attorney)",plain:"Authorize representation for a new client",route:"/pro/2848",kw:"2848 poa power attorney authorize new client"},
+      {ic:"⚠",c:"#8a6d00",type:"answer",title:"Authorizations expiring",plain:"Across all clients",big:"2 within 30 days",sub:"Aurora Print Co. and one 1040 client.",route:"/pro/expiring",kw:"expiring authorization poa renew"},
+      {ic:"≡",c:"#004c97",title:"Bulk filing dashboard",plain:"Track returns across your roster",route:"/pro/bulk",kw:"bulk filing dashboard roster all"}
+    ]
+  };
+
+  /* ===================== SCREEN ROUTING ===================== */
+  function show(screen){
+    ["signin","picker","dash"].forEach(function(s){
+      document.getElementById("screen-"+s).classList.toggle("active",s===screen);
+    });
+    var signedIn = (screen!=="signin");
+    document.getElementById("mastOmni").classList.toggle("show", screen==="dash");
+    document.getElementById("acctSwitch").classList.toggle("show", screen==="dash");
+    document.getElementById("signoutLink").style.display = signedIn ? "" : "none";
+    window.scrollTo(0,0);
+  }
+  document.getElementById("signoutLink").style.display="none";
+
+  /* ===================== SIGN IN ===================== */
+  function gotoPicker(){ renderPicker(); show("picker"); }
+  document.getElementById("doSignin").addEventListener("click",gotoPicker);
+  document.getElementById("doSigninIdme").addEventListener("click",gotoPicker);
+  document.getElementById("backToSignin").addEventListener("click",function(){show("signin");});
+
+  /* ===================== ROLE PICKER ===================== */
+  function roleCard(a){
+    var meta = a.role ? '<p class="rmeta">'+a.role+'</p>' : '';
+    return '<button class="role" data-id="'+a.id+'">'
+      + '<span class="ri" style="background:'+a.color+'">'+a.av+'</span>'
+      + '<span><p class="rt">'+a.name+'</p><p class="rd">'+a.blurb+'</p>'+meta+'</span>'
+      + '<span class="arrow" aria-hidden="true">→</span></button>';
+  }
+  function renderPicker(){
+    document.getElementById("rolesYou").innerHTML = ACCOUNTS.filter(function(a){return a.group==="you";}).map(roleCard).join("");
+    document.getElementById("rolesBiz").innerHTML = ACCOUNTS.filter(function(a){return a.group==="biz";}).map(roleCard).join("");
+    document.getElementById("rolesPro").innerHTML = ACCOUNTS.filter(function(a){return a.group==="pro";}).map(roleCard).join("");
+    document.querySelectorAll(".role").forEach(function(btn){
+      btn.addEventListener("click",function(){ enterAccount(btn.getAttribute("data-id")); });
+    });
+  }
+
+  /* ===================== ACCOUNT SWITCHER (masthead) ===================== */
+  var acctMenu=document.getElementById("acctMenu"), asbtn=document.getElementById("asbtn");
+  function renderSwitcher(){
+    document.getElementById("asAv").textContent=acct(current).av;
+    document.getElementById("asAv").style.background=acct(current).color;
+    document.getElementById("asName").textContent=acct(current).name.replace(/^Tax Pro — /,"Tax Pro");
+    acctMenu.innerHTML='<p class="amh">Switch account — no re-login</p>'+ACCOUNTS.map(function(a){
+      return '<button class="acct-row '+(a.id===current?"on":"")+'" role="menuitem" data-id="'+a.id+'">'
+        +'<span class="av" style="background:'+a.color+'">'+a.av+'</span>'
+        +'<span><span class="an">'+a.name+'</span><br><span class="ad">'+a.desc+'</span></span>'
+        +(a.id===current?'<span class="chk" aria-hidden="true">✓</span>':'')+'</button>';
+    }).join("");
+    acctMenu.querySelectorAll(".acct-row").forEach(function(b){
+      b.addEventListener("click",function(){ enterAccount(b.getAttribute("data-id")); closeMenu(); });
+    });
+  }
+  function openMenu(){acctMenu.classList.add("open");asbtn.setAttribute("aria-expanded","true");}
+  function closeMenu(){acctMenu.classList.remove("open");asbtn.setAttribute("aria-expanded","false");}
+  asbtn.addEventListener("click",function(e){e.stopPropagation();acctMenu.classList.contains("open")?closeMenu():openMenu();});
+  document.addEventListener("click",function(e){ if(!acctMenu.contains(e.target)&&e.target!==asbtn) closeMenu(); });
+
+  /* ===================== ENTER / RENDER DASHBOARD ===================== */
+  function enterAccount(id){
+    current=id;
+    var a=acct(id), d=DASH[id];
+    document.getElementById("dashWelcome").textContent=d.welcome;
+    document.getElementById("scopeAv").textContent=a.av;
+    document.getElementById("scopeAv").style.background=a.color;
+    document.getElementById("scopeName").textContent=a.name;
+    document.getElementById("scopeDesc").textContent="· "+a.desc;
+    document.getElementById("tipScope").textContent=a.name;
+    // cards
+    document.getElementById("dashGrid").innerHTML=d.cards.map(function(c){
+      var rows=c.rows.map(function(r){return '<div class="readrow"><span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span></div>';}).join("");
+      var links=(c.links||[]).map(function(g){return g.map(function(t){return '<p class="lead-link"><a>'+t+'</a></p>';}).join("");}).join("<hr>");
+      return '<div class="card"><h2>'+c.h+'</h2>'+rows+(links?'<hr>'+links:'')+'</div>';
+    }).join("");
+    renderSwitcher();
+    show("dash");
+    resetOmni();
+  }
+  document.getElementById("changeRole").addEventListener("click",function(){ show("picker"); });
+
+  /* ===================== OMNI BAR ENGINE ===================== */
+  var omni=document.getElementById("omni"),
+      results=document.getElementById("results"),
+      listbox=document.getElementById("listbox"),
+      resHead=document.getElementById("resHead"),
+      clearbtn=document.getElementById("clearbtn"),
+      mastInput=document.getElementById("mastOmniInput");
+  var active=-1, shown=[];
+
+  function scopeTag(){return acct(current).tag;}
+
+  function rank(q){
+    var data=OMNI[current]||[];
+    q=q.trim().toLowerCase();
+    if(!q) return data.slice(0,5);
+    return data.filter(function(o){
+      return (o.title+" "+o.plain+" "+(o.kw||"")).toLowerCase().indexOf(q)>=0;
+    });
+  }
+  function optHTML(o,i){
+    var tag=scopeTag();
+    var ans = o.type==="answer"
+      ? '<div class="answer"><span class="big">'+o.big+'</span>'+(o.sub?' — '+o.sub:'')+'</div>' : '';
+    var label = o.type==="nav" ? "Switch account"
+      : o.type==="client" ? "Open client"
+      : o.type==="answer" ? "Instant answer" : "Action";
+    return '<div class="opt" id="opt-'+i+'" role="option" data-route="'+o.route+'">'
+      +'<span class="oicon" style="background:'+o.c+'">'+o.ic+'</span>'
+      +'<span style="flex:1;min-width:0"><p class="otitle">'+o.title+'</p><p class="oplain">'+o.plain+'</p>'+ans
+      +'<span class="scopetag" style="color:'+tag.c+';background:'+hexA(tag.c)+'">'+label+' · '+tag.t+'</span>'
+      +'<div class="route">'+o.route+'</div></span>'
+      +'<span class="kbd" aria-hidden="true">↵</span></div>';
+  }
+  function hexA(hex){ // light tint background from a hex color
+    var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+    return 'rgba('+r+','+g+','+b+',.10)';
+  }
+  function render(q){
+    shown=rank(q); active=-1;
+    resHead.textContent = q.trim() ? 'Results in '+acct(current).name : 'Suggested for '+acct(current).name;
+    if(!shown.length){
+      listbox.innerHTML='<div class="empty">No matches for “'+q+'”. Try “balance”, “pay”, “transcript”, or a form number.</div>';
+    } else {
+      listbox.innerHTML=shown.map(optHTML).join("");
+      listbox.querySelectorAll(".opt").forEach(function(el,idx){
+        el.addEventListener("click",function(){choose(idx);});
+        el.addEventListener("mousemove",function(){setActive(idx);});
+      });
+    }
+    open();
+  }
+  function open(){results.hidden=false;omni.setAttribute("aria-expanded","true");}
+  function close(){results.hidden=true;omni.setAttribute("aria-expanded","false");active=-1;}
+  function setActive(i){
+    active=i;
+    listbox.querySelectorAll(".opt").forEach(function(el,idx){
+      var on=idx===i; el.classList.toggle("active",on);
+      if(on) omni.setAttribute("aria-activedescendant","opt-"+i);
+    });
+  }
+  function choose(i){
+    if(i<0||i>=shown.length) return;
+    var o=shown[i];
+    if(o.route&&o.route.indexOf("switch:")===0){
+      enterAccount(o.route.split(":")[1]);
+      return;
+    }
+    // demo: flash the route as a confirmation in the bar
+    omni.value="";
+    resHead.textContent="Opening…";
+    listbox.innerHTML='<div class="empty">→ <b>'+o.title+'</b><br><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#9aa7b5">'+o.route+'</span><br><span style="font-size:12.5px">(prototype — this is where the destination screen would load, scoped to <b>'+acct(current).name+'</b>.)</span></div>';
+    clearbtn.hidden=true;
+    open();
+  }
+  function resetOmni(){ omni.value=""; clearbtn.hidden=true; close(); }
+
+  omni.addEventListener("input",function(){
+    clearbtn.hidden = !omni.value;
+    render(omni.value);
+  });
+  omni.addEventListener("focus",function(){ render(omni.value); });
+  omni.addEventListener("keydown",function(e){
+    if(results.hidden) return;
+    if(e.key==="ArrowDown"){e.preventDefault();setActive(Math.min(active+1,shown.length-1));}
+    else if(e.key==="ArrowUp"){e.preventDefault();setActive(Math.max(active-1,0));}
+    else if(e.key==="Enter"){e.preventDefault();choose(active<0?0:active);}
+    else if(e.key==="Escape"){close();omni.blur();}
+  });
+  clearbtn.addEventListener("click",function(){omni.value="";clearbtn.hidden=true;render("");omni.focus();});
+  document.addEventListener("click",function(e){
+    if(!results.hidden && !e.target.closest(".omni-band")) close();
+  });
+
+  // masthead mini-omni mirrors into the hero omni bar
+  mastInput.addEventListener("focus",function(){ if(omni){ omni.scrollIntoView({behavior:"smooth",block:"center"}); } });
+  mastInput.addEventListener("input",function(){
+    omni.value=mastInput.value; clearbtn.hidden=!omni.value; render(omni.value);
+    omni.focus();
+  });
+
+  // "/" focuses the omni bar from anywhere on the dashboard
+  document.addEventListener("keydown",function(e){
+    if(e.key==="/" && document.getElementById("screen-dash").classList.contains("active")){
+      var t=e.target.tagName;
+      if(t!=="INPUT"&&t!=="TEXTAREA"){ e.preventDefault(); omni.focus(); render(omni.value); }
+    }
+  });
+
+  /* ---------- init ---------- */
+  show("signin");
+})();
+</script>
+</body>
+</html>
