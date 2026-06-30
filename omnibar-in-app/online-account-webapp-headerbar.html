@@ -42,18 +42,12 @@
   .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:30px;letter-spacing:.5px;flex:0 0 auto}
   .logo .seal{display:flex;align-items:center;flex:0 0 auto}
   .logo .seal img{height:34px;width:auto;display:block}
-  .util{display:flex;align-items:center;font-size:14.5px;flex:0 0 auto;margin-left:auto}
-  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
-  .util > *:first-child{border-left:0}
-  .util a{color:#fff;text-decoration:none}
-  .util a:hover{text-decoration:underline}
-  .caret{font-size:11px}
-
-  nav.tabs{background:var(--irs-navy)}
-  nav.tabs .wrap{display:flex}
-  nav.tabs button{background:transparent;border:0;color:#fff;font-size:15px;font-family:inherit;padding:14px 18px;cursor:pointer;white-space:nowrap}
-  nav.tabs button:hover{background:rgba(255,255,255,.08)}
-  nav.tabs button.active{background:#fff;color:var(--irs-navy);font-weight:700}
+  .usermenu{position:relative;flex:0 0 auto;margin-left:auto}
+  .avatar{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;font-family:inherit;font-weight:800;font-size:14px;letter-spacing:.3px;cursor:pointer;display:grid;place-items:center}
+  .avatar:hover{background:rgba(255,255,255,.30)}
+  .usermenu-pop{position:absolute;right:0;top:50px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:184px;padding:6px;z-index:60}
+  .usermenu-pop a{display:block;padding:9px 12px;color:var(--ink);text-decoration:none;font-size:14.5px;cursor:pointer}
+  .usermenu-pop a:hover{background:#eef4fb}
 
   h1.welcome{font-size:40px;font-weight:800;margin:26px 0 14px}
 
@@ -313,15 +307,17 @@
       <span class="sr-only" id="live" aria-live="polite"></span>
     </div>
 
-    <div class="util">
-      <a id="lang">English <span class="caret">⌄</span></a>
-      <a><span data-i18n="profile">Profile</span></a>
-      <a data-i18n="help">Help</a>
-      <a href="irsgov-homepage.html"><span data-i18n="logout">Logout</span></a>
+    <div class="usermenu">
+      <button class="avatar" id="avatarBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu"><span id="avatarInitials">SL</span></button>
+      <div class="usermenu-pop" id="userPop" hidden>
+        <a><span data-i18n="profile">Profile</span></a>
+        <a data-i18n="help">Help</a>
+        <a href="irsgov-homepage.html"><span data-i18n="logout">Logout</span></a>
+      </div>
     </div>
   </div></div>
 
-  <nav class="tabs"><div class="wrap" id="tabs"></div></nav>
+  <!-- section nav removed — simplified to logo + account menu -->
 
   <main class="wrap">
     <h1 class="welcome" id="welcome">Welcome</h1>
@@ -1057,11 +1053,9 @@ document.getElementById("payCta").addEventListener("click",e=>{
 /* ---------- apply persona ---------- */
 function apply(){const p=P(),t=L();document.documentElement.lang=p.lang;
   document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(t[k]!=null)el.textContent=t[k];});
-  document.getElementById("lang").innerHTML=t.lang+' <span class="caret">⌄</span>';
+  document.getElementById("avatarInitials").textContent=p.name.split(" ").map(w=>w[0]).join("");
   document.getElementById("welcome").textContent=t.welcome+", "+p.name.split(" ")[0];
   omni.setAttribute("placeholder",t.placeholder);
-  document.getElementById("tabs").innerHTML=t.tabs.map((l,i)=>`<button class="${i===activeTab?'active':''}" data-tab="${i}">${l}</button>`).join("");
-  document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{activeTab=+b.dataset.tab;apply();});
   const inboxIdx=t.tabs.length-1;
   document.getElementById("view-home").hidden=activeTab===inboxIdx;
   document.getElementById("view-inbox").hidden=activeTab!==inboxIdx;
@@ -1104,6 +1098,16 @@ howbtn.addEventListener("click",()=>{
   const open=gov.classList.toggle("open");
   howbtn.setAttribute("aria-expanded",open?"true":"false");
 });
+
+// account avatar popover (Profile / Help / Logout)
+const avatarBtn=document.getElementById("avatarBtn"),userPop=document.getElementById("userPop");
+avatarBtn.addEventListener("click",e=>{e.stopPropagation();const willOpen=userPop.hidden;userPop.hidden=!willOpen;avatarBtn.setAttribute("aria-expanded",willOpen?"true":"false");});
+document.addEventListener("click",e=>{if(!userPop.hidden&&!e.target.closest(".usermenu")){userPop.hidden=true;avatarBtn.setAttribute("aria-expanded","false");}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!userPop.hidden){userPop.hidden=true;avatarBtn.setAttribute("aria-expanded","false");avatarBtn.focus();}});
+// IRS logo returns to account home
+const logoEl=document.querySelector(".masthead .logo");
+logoEl.style.cursor="pointer";logoEl.setAttribute("role","button");logoEl.setAttribute("aria-label","Account home");
+logoEl.addEventListener("click",()=>{activeTab=0;apply();window.scrollTo({top:0,behavior:"smooth"});});
 
 apply();
 // onboarding auto-launch disabled for now — focusing the logged-in home on the omni bar
