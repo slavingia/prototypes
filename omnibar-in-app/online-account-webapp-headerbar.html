@@ -43,9 +43,22 @@
   .logo .seal{display:flex;align-items:center;flex:0 0 auto}
   .logo .seal img{height:34px;width:auto;display:block}
   .usermenu{position:relative;flex:0 0 auto;margin-left:auto}
-  .avatar{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;font-family:inherit;font-weight:800;font-size:14px;letter-spacing:.3px;cursor:pointer;display:grid;place-items:center}
-  .avatar:hover{background:rgba(255,255,255,.30)}
-  .usermenu-pop{position:absolute;right:0;top:50px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:184px;padding:6px;z-index:60}
+  .acct-trigger{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.28);color:#fff;font-family:inherit;cursor:pointer;padding:6px 12px;border-radius:6px}
+  .acct-trigger:hover{background:rgba(255,255,255,.20)}
+  .acct-trigger .acct-text{display:flex;flex-direction:column}
+  .acct-trigger .acct-name{font-size:14px;font-weight:700;line-height:1.25}
+  .acct-trigger .acct-ctx{font-size:12px;opacity:.85;line-height:1.25;white-space:nowrap}
+  .acct-trigger .acct-caret{font-size:12px;opacity:.85}
+  .usermenu-pop{position:absolute;right:0;top:54px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:292px;padding:6px;z-index:60}
+  .pop-head{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 12px 4px}
+  .acct-opt{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;font-family:inherit;text-align:left;padding:9px 12px;cursor:pointer}
+  .acct-opt:hover{background:#eef4fb}
+  .acct-opt .opt-text{display:flex;flex-direction:column}
+  .acct-opt .opt-main{font-size:14.5px;font-weight:700;color:var(--ink)}
+  .acct-opt .opt-sub{font-size:12.5px;color:var(--muted)}
+  .acct-opt .opt-check{margin-left:auto;color:var(--irs-blue);font-weight:800;visibility:hidden}
+  .acct-opt.active .opt-check{visibility:visible}
+  .pop-div{height:1px;background:var(--line);margin:6px 0}
   .usermenu-pop a{display:block;padding:9px 12px;color:var(--ink);text-decoration:none;font-size:14.5px;cursor:pointer}
   .usermenu-pop a:hover{background:#eef4fb}
 
@@ -308,8 +321,24 @@
     </div>
 
     <div class="usermenu">
-      <button class="avatar" id="avatarBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu"><span id="avatarInitials">SL</span></button>
+      <button class="acct-trigger" id="acctBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="acct-text">
+          <span class="acct-name">Sahil Lavingia</span>
+          <span class="acct-ctx" id="acctCtx">Individual</span>
+        </span>
+        <span class="acct-caret" aria-hidden="true">⌄</span>
+      </button>
       <div class="usermenu-pop" id="userPop" hidden>
+        <div class="pop-head">Switch account</div>
+        <button class="acct-opt active" type="button" data-ctx="Individual">
+          <span class="opt-text"><span class="opt-main">Individual</span><span class="opt-sub">Sahil Lavingia</span></span>
+          <span class="opt-check" aria-hidden="true">✓</span>
+        </button>
+        <button class="acct-opt" type="button" data-ctx="Designated Official · Gumroad, Inc.">
+          <span class="opt-text"><span class="opt-main">Gumroad, Inc.</span><span class="opt-sub">Designated Official</span></span>
+          <span class="opt-check" aria-hidden="true">✓</span>
+        </button>
+        <div class="pop-div"></div>
         <a><span data-i18n="profile">Profile</span></a>
         <a data-i18n="help">Help</a>
         <a href="irsgov-homepage.html"><span data-i18n="logout">Logout</span></a>
@@ -1053,7 +1082,7 @@ document.getElementById("payCta").addEventListener("click",e=>{
 /* ---------- apply persona ---------- */
 function apply(){const p=P(),t=L();document.documentElement.lang=p.lang;
   document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(t[k]!=null)el.textContent=t[k];});
-  document.getElementById("avatarInitials").textContent=p.name.split(" ").map(w=>w[0]).join("");
+  // masthead identity is the fixed signed-in user (account switcher); not persona-driven
   document.getElementById("welcome").textContent=t.welcome+", "+p.name.split(" ")[0];
   omni.setAttribute("placeholder",t.placeholder);
   const inboxIdx=t.tabs.length-1;
@@ -1100,10 +1129,17 @@ howbtn.addEventListener("click",()=>{
 });
 
 // account avatar popover (Profile / Help / Logout)
-const avatarBtn=document.getElementById("avatarBtn"),userPop=document.getElementById("userPop");
-avatarBtn.addEventListener("click",e=>{e.stopPropagation();const willOpen=userPop.hidden;userPop.hidden=!willOpen;avatarBtn.setAttribute("aria-expanded",willOpen?"true":"false");});
-document.addEventListener("click",e=>{if(!userPop.hidden&&!e.target.closest(".usermenu")){userPop.hidden=true;avatarBtn.setAttribute("aria-expanded","false");}});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!userPop.hidden){userPop.hidden=true;avatarBtn.setAttribute("aria-expanded","false");avatarBtn.focus();}});
+const acctBtn=document.getElementById("acctBtn"),userPop=document.getElementById("userPop");
+acctBtn.addEventListener("click",e=>{e.stopPropagation();const willOpen=userPop.hidden;userPop.hidden=!willOpen;acctBtn.setAttribute("aria-expanded",willOpen?"true":"false");});
+document.addEventListener("click",e=>{if(!userPop.hidden&&!e.target.closest(".usermenu")){userPop.hidden=true;acctBtn.setAttribute("aria-expanded","false");}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!userPop.hidden){userPop.hidden=true;acctBtn.setAttribute("aria-expanded","false");acctBtn.focus();}});
+// account switcher: selecting a context updates the trigger's second line
+document.querySelectorAll(".acct-opt").forEach(opt=>opt.addEventListener("click",()=>{
+  document.querySelectorAll(".acct-opt").forEach(o=>o.classList.remove("active"));
+  opt.classList.add("active");
+  document.getElementById("acctCtx").textContent=opt.dataset.ctx;
+  userPop.hidden=true;acctBtn.setAttribute("aria-expanded","false");
+}));
 // IRS logo returns to account home
 const logoEl=document.querySelector(".masthead .logo");
 logoEl.style.cursor="pointer";logoEl.setAttribute("role","button");logoEl.setAttribute("aria-label","Account home");
