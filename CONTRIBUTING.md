@@ -21,6 +21,18 @@ This repository holds **design prototypes and concept explorations only**.
   blue/navy step indicators, and the disclaimer footer. Run the checklist at the
   bottom of `DESIGN.md` before committing. This applies equally to humans and to
   AI assistants working in this repo.
+- **Screenshots are generated, and never stale.** Committed screenshots are
+  produced by a script (e.g. [`omnibar-in-app/tools/shots.mjs`](omnibar-in-app/tools/shots.mjs)),
+  not captured by hand. Whenever you change a prototype's look or behavior, **you
+  must re-run its screenshot generator in the same change** so the images (and
+  any gallery/README/PR that shows them) stay accurate. Never commit a change
+  that leaves a screenshot showing an out-of-date design. New prototypes that
+  show screenshots must add a generator script and updated dates. Regenerate with:
+  `npm i playwright && npx playwright install chromium` then `node <path>/shots.mjs`.
+- **Keep the index fresh.** When you add or meaningfully change a prototype,
+  bump its `data-updated` date in the root `index.html` so the humanized
+  "Updated …" label and the "New" badge stay meaningful, and link it from the
+  relevant landing page (with its screenshots).
 
 ## Before you commit
 
@@ -29,3 +41,6 @@ This repository holds **design prototypes and concept explorations only**.
   obviously-fake placeholders.
 - Keep prototypes self-contained (inline CSS/JS, local assets) so they open
   directly in a browser.
+- Regenerate and re-commit every screenshot your change affects — no stale
+  images. If you changed a prototype, run its screenshot generator before
+  committing and include the updated PNGs in the same commit.
