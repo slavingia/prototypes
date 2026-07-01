@@ -63,16 +63,35 @@
   .appliesnote{font-size:13px;color:var(--muted);margin:0 0 22px}
   .appliesnote b{color:var(--ink)}
 
-  /* step rail (horizontal) */
-  .rail{display:flex;gap:0;border:1px solid var(--line);margin:0 0 22px;overflow:hidden}
-  .rail .rstep{flex:1;display:flex;gap:10px;align-items:center;padding:13px 16px;border-left:1px solid var(--line);font-size:14px}
-  .rail .rstep:first-child{border-left:0}
+  /* prominent "paying on behalf of" banner */
+  .obo{display:flex;align-items:center;gap:16px;border:1px solid var(--irs-blue);border-left:6px solid var(--irs-blue);background:#eef4fb;padding:16px 20px;margin:0 0 22px}
+  .obo .obicon{width:40px;height:40px;border-radius:4px;background:var(--irs-navy);color:#fff;display:grid;place-items:center;flex:0 0 40px}
+  .obo .obicon svg{width:22px;height:22px}
+  .obo .obtxt{line-height:1.35}
+  .obo .obkick{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--irs-blue)}
+  .obo .obmain{font-size:18px;font-weight:800;color:var(--ink);margin-top:2px}
+  .obo .obmain .who{color:var(--irs-blue)}
+  .obo .obsub{font-size:13.5px;color:var(--muted);margin-top:2px}
+  @media(max-width:640px){.obo{flex-wrap:wrap}.obo .obmain{font-size:16px}}
+
+  /* two-column shell: vertical timeline + panel */
+  .shell{display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:start}
+  @media(max-width:860px){.shell{grid-template-columns:1fr}}
+
+  /* step rail (vertical timeline) */
+  .rail{border:1px solid var(--line);padding:8px 0}
+  .rail .rstep{position:relative;display:flex;gap:12px;align-items:flex-start;padding:14px 18px;font-size:14px}
   .rail .rstep.current{background:#eef4fb}
-  .rail .rstep .num{width:24px;height:24px;border-radius:50%;flex:0 0 24px;display:grid;place-items:center;font-size:12px;font-weight:800;background:#fff;color:#5B616B;border:1px solid #5B616B}
+  .rail .rstep .num{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:grid;place-items:center;font-size:12px;font-weight:800;background:#fff;color:#5B616B;border:1px solid #5B616B;z-index:1}
   .rail .rstep.done .num{background:#00599C;color:#fff;border-color:#00599C}
   .rail .rstep.current .num{background:#002D62;color:#fff;border-color:#002D62}
-  .rail .rstep .st{font-weight:500}
+  /* connector line between step dots */
+  .rail .rstep:not(:last-child)::before{content:"";position:absolute;left:30px;top:40px;bottom:-14px;width:2px;background:var(--line)}
+  .rail .rstep.done:not(:last-child)::before{background:#00599C}
+  .rail .rstep .stwrap{padding-top:3px}
+  .rail .rstep .st{font-weight:500;display:block}
   .rail .rstep.current .st{font-weight:800}
+  .rail .rstep .sn{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700;display:block;margin-bottom:1px}
 
   .panel{border:1px solid var(--line);padding:24px 26px;min-height:360px}
   .panel h2{font-size:23px;font-weight:800;margin:0 0 6px}
@@ -142,7 +161,6 @@
     .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;row-gap:6px}
     .util{width:100%;justify-content:flex-start;flex-wrap:wrap;font-size:13px}
     .util > *{border-left:0;padding:0 14px 0 0}
-    .rail{flex-wrap:wrap}.rail .rstep{flex:1 0 50%}
   }
 </style>
 </head>
@@ -180,15 +198,26 @@
     </div>
     <p class="appliesnote"><b>Payer of record applied to all rows:</b> Riverbend Community Bank (financial institution, on behalf of each listed account holder). Per-row authorization is carried in the file.</p>
 
-    <div class="rail" id="rail"></div>
+    <div class="obo" role="note" aria-label="Paying on behalf of">
+      <span class="obicon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span class="obtxt">
+        <span class="obkick">Paying on behalf of</span>
+        <span class="obmain"><span class="who">Riverbend Community Bank</span> is paying <span class="who">8 taxpayers</span> — as the payer of record on every payment</span>
+        <span class="obsub">Financial institution · identity-proofed · each row carries its own account-holder authorization. No payment is anonymous.</span>
+      </span>
+    </div>
 
-    <section class="panel">
-      <div id="body"></div>
-      <div class="foot" id="foot">
-        <button class="back" id="back" hidden>← Back</button>
-        <button class="btn" id="next">Continue</button>
-      </div>
-    </section>
+    <div class="shell">
+      <nav class="rail" id="rail" aria-label="Progress"></nav>
+
+      <section class="panel">
+        <div id="body"></div>
+        <div class="foot" id="foot">
+          <button class="back" id="back" hidden>← Back</button>
+          <button class="btn" id="next">Continue</button>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer style="border-top:1px solid var(--line);margin-top:30px">
@@ -229,7 +258,8 @@ function renderRail(){
   railEl.innerHTML=RAIL.map((s,i)=>{
     const cls=i<state.step?"done":(i===state.step?"current":"");
     const num=i<state.step?"✓":(i+1);
-    return `<div class="rstep ${cls}"><span class="num">${num}</span><span class="st">${s.t}</span></div>`;
+    const label=i<state.step?"Done":(i===state.step?"Current step":"Step "+(i+1));
+    return `<div class="rstep ${cls}"><span class="num">${num}</span><span class="stwrap"><span class="sn">${label}</span><span class="st">${s.t}</span></span></div>`;
   }).join("");
 }
 
