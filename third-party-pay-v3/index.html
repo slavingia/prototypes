@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payer dashboard — Payments on behalf of others</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
+    --teal:#00687d; --bg:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner (IRS ODG) */
+  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1120px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:#1b1b1b}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1120px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#3a3a3a}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  /* payer header / identity card */
+  .payerhead{display:flex;align-items:flex-start;gap:16px;margin:22px 0 6px;flex-wrap:wrap}
+  .avatar{width:56px;height:56px;border-radius:50%;background:var(--irs-navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;flex:0 0 56px}
+  .payerhead h1{font-size:30px;font-weight:800;margin:0 0 2px}
+  .payerhead .sub{font-size:15px;color:var(--muted);margin:0}
+  .idcard{margin-left:auto;border:1px solid #bcdcc6;background:#eef6f0;padding:12px 16px;min-width:230px}
+  .idcard .il{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--green)}
+  .idcard .iv{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;color:var(--green);margin-top:3px}
+  .idcard .iv .dot{width:11px;height:11px;border-radius:50%;background:var(--green)}
+  .idcard .id{font-size:12.5px;color:#3a3a3a;margin-top:4px}
+
+  /* layout */
+  .cols{display:grid;grid-template-columns:1fr 360px;gap:24px;margin:22px 0 60px;align-items:start}
+  @media(max-width:900px){.cols{grid-template-columns:1fr}}
+
+  .card{border:1px solid var(--line);padding:0;margin:0 0 22px}
+  .card .ch{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--line)}
+  .card .ch h2{font-size:18px;font-weight:800;margin:0}
+  .card .cb{padding:16px 20px}
+
+  /* summary tiles */
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 22px}
+  .tile{border:1px solid var(--line);padding:15px 16px}
+  .tile .tn{font-size:26px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+  .tile .tl{font-size:12.5px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  @media(max-width:620px){.tiles{grid-template-columns:1fr}}
+
+  /* history table */
+  .tablewrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+  thead th{background:#f4f6f9;text-align:left;padding:10px 14px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#333;border-bottom:1px solid var(--line);white-space:nowrap}
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  .amt{font-variant-numeric:tabular-nums;font-weight:700}
+  .who{font-weight:700}
+  .rel{font-size:12.5px;color:var(--muted)}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border-radius:99px;padding:3px 10px;white-space:nowrap}
+  .chip .cd{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+  .chip.posted{background:#eef6f0;color:var(--green);border:1px solid #bcdcc6}
+  .chip.posted .cd{background:var(--green)}
+  .chip.pending{background:#fbf7e9;color:var(--amber);border:1px solid #e7d9a6}
+  .chip.pending .cd{background:var(--amber)}
+  .chip.scheduled{background:#eef4fb;color:var(--irs-blue);border:1px solid #bcd4ec}
+  .chip.scheduled .cd{background:var(--irs-blue)}
+
+  /* quick pay panel (right) — identity-first */
+  .qp{border:1px solid var(--line);position:sticky;top:18px}
+  .qp .qh{background:var(--irs-navy);color:#fff;padding:15px 18px}
+  .qp .qh h2{font-size:18px;font-weight:800;margin:0}
+  .qp .qh p{font-size:13px;opacity:.9;margin:3px 0 0}
+  .qp .qb{padding:16px 18px}
+  .field{margin:0 0 15px}
+  .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
+  .field .hint{font-size:14px;color:#5b616b;font-weight:500;display:block}
+  .field input[type=text],.field select{width:100%;border:1px solid #9aa7b5;border-radius:0;padding:10px 12px;font-family:inherit;font-size:15px;background:#fff}
+  .field input:focus,.field select:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .amtwrap{position:relative}
+  .amtwrap .dol{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:17px;font-weight:700;color:var(--muted)}
+  .amtwrap input{padding-left:24px !important;font-size:19px !important;font-weight:700}
+
+  /* tier ladder — the organizing idea */
+  .ladder{border:1px solid var(--line);margin:2px 0 14px}
+  .ladder .lrow{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-bottom:1px solid var(--line);font-size:13px;opacity:.55}
+  .ladder .lrow:last-child{border-bottom:0}
+  .ladder .lrow.on{opacity:1;background:#eef4fb}
+  .ladder .lrow.reached{opacity:1}
+  .ladder .lrow .ld{width:22px;height:22px;border-radius:50%;flex:0 0 22px;display:grid;place-items:center;font-size:12px;font-weight:800;background:#fff;color:#5B616B;border:1px solid #5B616B}
+  .ladder .lrow.reached .ld{background:#00599C;color:#fff;border-color:#00599C}
+  .ladder .lrow.on .ld{background:#002D62;color:#fff;border-color:#002D62}
+  .ladder .lt{font-weight:800}
+  .ladder .ls{color:var(--muted);display:block;margin-top:1px}
+  .caplabel{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+  .caplabel b{color:var(--ink)}
+
+  .onbehalf{border:1px solid var(--line);background:#fafcfe;padding:11px 13px;font-size:14px;margin:0 0 14px}
+  .onbehalf b{color:var(--ink)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:12px 20px;border-radius:4px;text-decoration:none;cursor:pointer;width:100%}
+  .btn:hover{background:#003a73}
+  .btn.ghost{background:#fff;color:var(--irs-blue);border:1.5px solid var(--irs-blue)}
+  .btn.ghost:hover{background:#eef4fb}
+  .btnrow{display:flex;gap:10px}
+
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin:16px 0 0}
+  .pill{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--teal);border-radius:6px;padding:2px 8px;vertical-align:middle;margin-left:8px}
+  .toast{margin:12px 0 0;border-left:4px solid var(--green);background:#eef6f0;padding:11px 14px;font-size:14px;color:#245c3d;display:none}
+  .toast.show{display:block}
+
+  @media(max-width:640px){
+    .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;row-gap:6px}
+    .util{width:100%;justify-content:flex-start;flex-wrap:wrap;font-size:13px}
+    .util > *{border-left:0;padding:0 14px 0 0}
+    .idcard{margin-left:0}
+  }
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="../assets/irs-logo.svg" alt="IRS logo"></span><span class="ctx">Third-Party Payments · Payer dashboard</span></div>
+    <div class="util">
+      <a>Cedar Peak Accounting</a>
+      <a>Help</a>
+      <a>Sign out</a>
+    </div>
+  </div></div>
+
+  <main class="wrap">
+    <div class="payerhead">
+      <span class="avatar">CP</span>
+      <div>
+        <h1>Payments you've made for others</h1>
+        <p class="sub">Cedar Peak Accounting LLC · a business paying on behalf of clients</p>
+      </div>
+      <div class="idcard">
+        <div class="il">Payer identity</div>
+        <div class="iv"><span class="dot"></span>Identity-proofed</div>
+        <div class="id">ID.me verified (mock) · authorized to pay for clients on file</div>
+      </div>
+    </div>
+
+    <div class="tiles">
+      <div class="tile"><div class="tn">$26,412.50</div><div class="tl">Paid on behalf · YTD</div></div>
+      <div class="tile"><div class="tn">37</div><div class="tl">Payments made</div></div>
+      <div class="tile"><div class="tn">14</div><div class="tl">Taxpayers helped</div></div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <div class="card">
+          <div class="ch"><h2>Payment history — on behalf of others</h2><a>Export CSV</a></div>
+          <div class="cb" style="padding:0">
+            <div class="tablewrap"><table>
+              <thead><tr><th>Date</th><th>On behalf of</th><th>Obligation</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="hist"></tbody>
+            </table></div>
+          </div>
+        </div>
+        <p class="note">Because this payer is identity-proofed, every payment they make on someone's behalf is attributable and appears here — the dashboard <em>is</em> the "who paid on whose behalf" record over time.</p>
+      </div>
+
+      <aside class="qp">
+        <div class="qh"><h2>Quick pay for someone <span class="pill">identity-first</span></h2><p>What you can do depends on your verification tier.</p></div>
+        <div class="qb">
+          <div class="ladder" id="ladder"></div>
+          <p class="caplabel" id="caplabel"></p>
+
+          <div class="field"><label>Taxpayer reference <span class="hint">Masked token from their notice — never a full SSN.</span></label>
+            <input type="text" id="tok" value="QMR-9920" placeholder="e.g. QMR-9920"></div>
+          <div class="field"><label>On behalf of</label>
+            <input type="text" id="behalf" value="L. Adeyemi"></div>
+          <div class="field"><label>Obligation</label>
+            <select id="oblig"><option selected>2024 · CP14 · Balance due</option><option>2024 · Form 1040 · Tax owed</option><option>2024 · Form 941 · Employment tax</option></select></div>
+          <div class="field"><label>Amount</label>
+            <div class="amtwrap"><span class="dol">$</span><input type="text" id="amt" value="865.50"></div></div>
+
+          <div class="onbehalf" id="ob">You are paying <b>L. Adeyemi</b> on behalf record as <b>Cedar Peak Accounting LLC</b>.</div>
+
+          <div class="btnrow">
+            <button class="btn" id="pay">Pay now</button>
+          </div>
+          <div class="toast" id="toast"></div>
+          <p class="note" style="margin-top:14px">Identity tier is the organizing idea: an unverified payer can start a payment but it posts flagged with a mailed confirmation; an identity-proofed payer (you) pays instantly and it lands in this history.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link,#0050a0);text-decoration:none">‹ All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5"><em>
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, amounts, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </em></div>
+  </footer>
+
+<script>
+// Fictional mock history — tokenized, no real PII.
+const HIST=[
+  {date:"Jun 28, 2026", who:"L. Adeyemi",   rel:"Client",             ob:"2024 · CP14",   amt:865.50,  st:"posted"},
+  {date:"Jun 21, 2026", who:"S. Nakamura",  rel:"Client",             ob:"2023 · CP2000", amt:2130.00, st:"posted"},
+  {date:"Jun 15, 2026", who:"M. Okafor",    rel:"Client (payroll)",   ob:"2024 · Form 941",amt:5290.75, st:"posted"},
+  {date:"Jun 09, 2026", who:"A. Petrov",    rel:"Client",             ob:"2024 · CP14",   amt:702.00,  st:"pending"},
+  {date:"Jun 30, 2026", who:"T. Blanchard", rel:"Client",             ob:"2023 · CP2000", amt:1875.25, st:"scheduled"},
+  {date:"May 30, 2026", who:"P. Raman",     rel:"Client",             ob:"2024 · Form 1040",amt:1240.00,st:"posted"}
+];
+const TIERS=[
+  {k:"unverified",n:"Unverified",s:"Name + contact only",cap:"can start a payment, posts flagged"},
+  {k:"email",n:"Email-verified",s:"One-time email code",cap:"instant email receipt, email-only assurance"},
+  {k:"proofed",n:"Identity-proofed",s:"ID.me proofing (mock)",cap:"pay instantly + full payer history"}
+];
+const CURRENT="proofed"; // this payer
+
+const hist=document.getElementById("hist");
+const money=n=>"$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+hist.innerHTML=HIST.map(r=>`<tr>
+  <td>${r.date}</td>
+  <td><span class="who">${r.who}</span><br><span class="rel">${r.rel}</span></td>
+  <td>${r.ob}</td>
+  <td class="amt">${money(r.amt)}</td>
+  <td><span class="chip ${r.st}"><span class="cd"></span>${r.st.charAt(0).toUpperCase()+r.st.slice(1)}</span></td>
+</tr>`).join("");
+
+// tier ladder — highlight current, mark reached
+const ladder=document.getElementById("ladder");
+const curIdx=TIERS.findIndex(t=>t.k===CURRENT);
+ladder.innerHTML=TIERS.map((t,i)=>{
+  const cls=i===curIdx?"on":(i<curIdx?"reached":"");
+  const mark=i<curIdx?"✓":(i+1);
+  return `<div class="lrow ${cls}"><span class="ld">${mark}</span><span><span class="lt">${t.n}</span><span class="ls">${t.s} — ${t.cap}</span></span></div>`;
+}).join("");
+document.getElementById("caplabel").innerHTML=`Your tier: <b>${TIERS[curIdx].n}</b> — you can pay instantly and everything you pay lands in your history below.`;
+
+// live "on behalf of" line
+const behalf=document.getElementById("behalf"),ob=document.getElementById("ob");
+behalf.addEventListener("input",()=>{ob.innerHTML=`You are paying <b>${behalf.value||"—"}</b> on behalf record as <b>Cedar Peak Accounting LLC</b>.`;});
+
+// amount formatting
+const amt=document.getElementById("amt");
+amt.addEventListener("blur",()=>{const v=parseFloat(amt.value.replace(/[^0-9.]/g,""));if(!isNaN(v))amt.value=v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});});
+
+// pay -> optimistic prepend to history + toast
+const pay=document.getElementById("pay"),toast=document.getElementById("toast");
+pay.addEventListener("click",()=>{
+  const v=parseFloat(amt.value.replace(/[^0-9.]/g,""))||0;
+  const name=behalf.value||"—";
+  const oblig=document.getElementById("oblig").value.replace(/·/g,"·");
+  const tr=document.createElement("tr");
+  tr.innerHTML=`<td>Jun 30, 2026</td>
+    <td><span class="who">${name}</span><br><span class="rel">Client</span></td>
+    <td>${oblig.split(" · ").slice(0,2).join(" · ")}</td>
+    <td class="amt">${money(v)}</td>
+    <td><span class="chip posted"><span class="cd"></span>Posted</span></td>`;
+  hist.insertBefore(tr,hist.firstChild);
+  toast.textContent=`✓ Paid ${money(v)} for ${name} — recorded to your payer history as identity-proofed. A receipt was emailed.`;
+  toast.classList.add("show");
+  pay.textContent="Paid ✓";pay.style.background="var(--green)";
+  setTimeout(()=>{pay.textContent="Pay now";pay.style.background="";},2200);
+});
+
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{
+  const open=gov.classList.toggle("open");
+  howbtn.setAttribute("aria-expanded",open?"true":"false");
+});
+</script>
+</body>
+</html>
