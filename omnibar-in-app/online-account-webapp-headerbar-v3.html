@@ -39,15 +39,18 @@
 
   .masthead{background:var(--irs-blue);color:#fff;position:relative;z-index:20}
   .masthead .wrap{display:flex;align-items:center;gap:16px;height:64px}
-  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:30px;letter-spacing:.5px;flex:0 0 auto;margin-right:auto}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:30px;letter-spacing:.5px;flex:0 0 auto}
   .logo .seal{display:flex;align-items:center;flex:0 0 auto}
   .logo .seal img{height:34px;width:auto;display:block}
   .usermenu{position:relative;flex:0 0 auto}
   .acct-trigger{display:flex;align-items:center;gap:8px;background:none;border:0;color:#fff;font-family:inherit;cursor:pointer;padding:6px 0}
   .acct-trigger:hover{opacity:.82}
-  .acct-trigger .acct-oneline{font-size:14px;font-weight:600;white-space:nowrap}
-  .acct-trigger .acct-oneline .ctx{opacity:.85}
-  .acct-trigger .acct-caret{font-size:12px;opacity:.85}
+  .acct-trigger .acct-text{display:flex;flex-direction:column;line-height:1.2;text-align:left}
+  .acct-trigger .acct-name{font-size:14px;font-weight:700}
+  .acct-trigger .acct-ctx{font-size:12.5px;font-weight:500;opacity:.85}
+  .acct-trigger .acct-caret{display:inline-flex;align-items:center;opacity:.85}
+  .acct-trigger .acct-caret svg{width:14px;height:14px;display:block;transition:transform .18s ease;transform-origin:center}
+  .acct-trigger[aria-expanded="true"] .acct-caret svg{transform:rotate(180deg)}
   .usermenu-pop{position:absolute;right:0;top:52px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:300px;padding:6px;z-index:60}
   .pop-head{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 12px 4px}
   .acct-opt{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;font-family:inherit;text-align:left;padding:10px 12px;cursor:pointer}
@@ -63,7 +66,7 @@
   h1.welcome{font-size:40px;font-weight:800;margin:26px 0 14px}
 
   /* ---------------- HEADER OMNIBAR (command-palette style, in the masthead) ---------------- */
-  .omni-band{position:relative;z-index:50;flex:0 1 520px;margin:0}
+  .omni-band{position:relative;z-index:50;flex:1 1 auto;margin:0}
   .omni-input-wrap{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.34);border-radius:11px;padding:0 8px 0 13px;height:40px;position:relative;z-index:3;cursor:text;transition:background .12s,border-color .12s,box-shadow .12s}
   .omni-input-wrap:hover{background:rgba(255,255,255,.24)}
   .omni-input-wrap:focus-within{background:#fff;border-color:#fff;box-shadow:0 14px 44px rgba(0,18,46,.40)}
@@ -320,8 +323,11 @@
 
     <div class="usermenu">
       <button class="acct-trigger" id="acctBtn" type="button" aria-haspopup="true" aria-expanded="false">
-        <span class="acct-oneline">Sahil Lavingia <span class="ctx">· <span id="acctCtx">Individual</span></span></span>
-        <span class="acct-caret" aria-hidden="true">⌄</span>
+        <span class="acct-text">
+          <span class="acct-name">Sahil Lavingia</span>
+          <span class="acct-ctx" id="acctCtx">Individual</span>
+        </span>
+        <span class="acct-caret" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span>
       </button>
       <div class="usermenu-pop" id="userPop" hidden>
         <div class="pop-head">Switch account</div>
