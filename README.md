@@ -4,6 +4,19 @@ Personal, just-for-fun design explorations. Self-contained HTML — open any fil
 directly in a browser. Styled to the U.S. Web Design System for visual context.
 All data shown is mock.
 
+## Run it locally
+
+Opening the files with `file://` works, but clicking a folder link shows the
+raw filesystem listing. Serve over HTTP for clean navigation:
+
+```bash
+./serve.sh            # then open http://localhost:8000
+./serve.sh 4000       # custom port
+```
+
+`serve.sh` wraps `python3 -m http.server` and opens your browser. (In Claude
+Code you can also just run the `/serve` skill.)
+
 ## Disclaimer
 
 This is a **personal hobby project made for fun**. It is **not** an official

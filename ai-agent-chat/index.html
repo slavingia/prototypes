@@ -203,12 +203,11 @@
             <input id="input" type="text" placeholder="Type a message…" autocomplete="off" aria-label="Message">
             <button class="send" id="send" aria-label="Send">➤</button>
           </div>
-          <button class="restart" id="restart">↻ Restart demo conversation</button>
+          <button class="restart" id="restart">↻ Restart conversation</button>
         </div>
       </section>
     </div>
 
-    <p class="note">Demo conversation is scripted to showcase agentic tool usage. All names, SSNs, addresses, fax numbers, and case data are fictional mock data — nothing here is real or actionable.</p>
   </main>
 
   <footer style="border-top:1px solid var(--line);margin-top:30px">
@@ -303,7 +302,7 @@ const FLOWS={
     addBot(`Let me pull that up for you.`);
     await toolCall("lookup_account",
       arg({account:"individual", taxpayer:"Jordan A. Reyes", scope:"balances"}),
-      `Found <b>1 open balance</b>:<div class="formprev"><div class="fph">Account snapshot <span class="tag">MOCK</span></div>
+      `Found <b>1 open balance</b>:<div class="formprev"><div class="fph">Account snapshot</div>
         <div class="frow"><span class="fk">2024 Form 1040 balance</span><span class="fv">$1,248.00</span></div>
         <div class="frow"><span class="fk">Accrued interest</span><span class="fv">$31.74</span></div>
         <div class="frow"><span class="fk">Next notice</span><span class="fv">CP14 · mailed 06/15</span></div></div>`);
@@ -321,7 +320,7 @@ const FLOWS={
     addBot(`Happy to handle that. First let me confirm what's on file.`);
     await toolCall("lookup_account",
       arg({account:"individual", taxpayer:"Jordan A. Reyes", scope:"address_of_record"}),
-      `Current address of record:<div class="formprev"><div class="fph">On file <span class="tag">MOCK</span></div>
+      `Current address of record:<div class="formprev"><div class="fph">On file</div>
         <div class="frow"><span class="fk">Street</span><span class="fv">722 Larkspur Ln, Apt 4</span></div>
         <div class="frow"><span class="fk">City / State / ZIP</span><span class="fv">Boise, ID 83702</span></div></div>`);
     await typing(600);
@@ -337,7 +336,7 @@ const FLOWS={
     addBot(`Got it. I'll prepare <b>Form 8822, Change of Address</b> and pre-fill it from your account.`);
     await toolCall("complete_form",
       arg({form:"8822", taxpayer:"Jordan A. Reyes", ssn:"***-**-3391", new_address:"1530 Cedar Park Dr, Reno, NV 89509"}),
-      `Form 8822 drafted &amp; validated:<div class="formprev"><div class="fph">Form 8822 — Change of Address <span class="tag">DRAFT · MOCK</span></div>
+      `Form 8822 drafted &amp; validated:<div class="formprev"><div class="fph">Form 8822 — Change of Address <span class="tag">DRAFT</span></div>
         <div class="frow"><span class="fk">Line 1 — Name</span><span class="fv">Jordan A. Reyes</span></div>
         <div class="frow"><span class="fk">Line 2 — SSN</span><span class="fv">***-**-3391</span></div>
         <div class="frow"><span class="fk">Line 6 — Old address</span><span class="fv">722 Larkspur Ln, Boise, ID 83702</span></div>
@@ -388,7 +387,7 @@ const FLOWS={
     addBot(`Great. Drafting Form 2848 and checking the representative's CAF number.`);
     await toolCall("complete_form",
       arg({form:"2848", taxpayer:"Jordan A. Reyes", representative:"Morgan Patel, CPA", caf:"****-72104", matters:"Income · 1040 · 2022-2024"}),
-      `Form 2848 drafted &amp; representative verified:<div class="formprev"><div class="fph">Form 2848 — Power of Attorney <span class="tag">DRAFT · MOCK</span></div>
+      `Form 2848 drafted &amp; representative verified:<div class="formprev"><div class="fph">Form 2848 — Power of Attorney <span class="tag">DRAFT</span></div>
         <div class="frow"><span class="fk">Part I — Taxpayer</span><span class="fv">Jordan A. Reyes</span></div>
         <div class="frow"><span class="fk">Representative</span><span class="fv">Morgan Patel, CPA</span></div>
         <div class="frow"><span class="fk">CAF number</span><span class="fv"><mark>****-72104 ✓ verified</mark></span></div>
@@ -422,7 +421,7 @@ const FLOWS={
     addBot(`Of course — I can book a callback so you don't wait on hold. Let me find the next opening for the right department.`);
     await toolCall("schedule_callback",
       arg({topic:"general account", phone:"(***) ***-2046", priority:"standard"}),
-      `Next available slot reserved:<div class="formprev"><div class="fph">Callback scheduled <span class="tag">MOCK</span></div>
+      `Next available slot reserved:<div class="formprev"><div class="fph">Callback scheduled</div>
         <div class="frow"><span class="fk">Department</span><span class="fv">Individual Accounts</span></div>
         <div class="frow"><span class="fk">Window</span><span class="fv">Today, 2:40–3:00 PM MT</span></div>
         <div class="frow"><span class="fk">Ticket</span><span class="fv">#CB-2026-4471</span></div></div>`);
@@ -484,7 +483,7 @@ async function submitText(){
     addBot(`Got it. I'll prepare <b>Form 8822, Change of Address</b> with that and pre-fill the rest from your account.`);
     await toolCall("complete_form",
       arg({form:"8822", taxpayer:"Jordan A. Reyes", ssn:"***-**-3391", new_address:text}),
-      `Form 8822 drafted &amp; validated:<div class="formprev"><div class="fph">Form 8822 — Change of Address <span class="tag">DRAFT · MOCK</span></div>
+      `Form 8822 drafted &amp; validated:<div class="formprev"><div class="fph">Form 8822 — Change of Address <span class="tag">DRAFT</span></div>
         <div class="frow"><span class="fk">Line 1 — Name</span><span class="fv">Jordan A. Reyes</span></div>
         <div class="frow"><span class="fk">Line 7 — New address</span><span class="fv"><mark>${esc(text)}</mark></span></div></div>`);
     await typing(650);
