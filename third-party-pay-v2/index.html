@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk third-party payments — Institution console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
+    --teal:#00687d; --bg:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner (IRS ODG) */
+  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1120px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:#1b1b1b}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1120px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#3a3a3a}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:70ch;margin:0 0 20px}
+
+  /* institution identity banner — payer applied to every row */
+  .payerbar{display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:#fafcfe;padding:14px 18px;margin:0 0 8px}
+  .payerbar .pi{width:44px;height:44px;border-radius:4px;background:var(--irs-navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;flex:0 0 44px}
+  .payerbar .pn{font-weight:800;font-size:17px}
+  .payerbar .pd{font-size:13.5px;color:var(--muted);margin-top:1px}
+  .payerbar .tierbadge{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;border:1px solid #bcdcc6;background:#eef6f0;color:var(--green);padding:6px 12px;border-radius:99px}
+  .payerbar .tierbadge .tdot{width:10px;height:10px;border-radius:50%;background:var(--green)}
+  .appliesnote{font-size:13px;color:var(--muted);margin:0 0 22px}
+  .appliesnote b{color:var(--ink)}
+
+  /* step rail (horizontal) */
+  .rail{display:flex;gap:0;border:1px solid var(--line);margin:0 0 22px;overflow:hidden}
+  .rail .rstep{flex:1;display:flex;gap:10px;align-items:center;padding:13px 16px;border-left:1px solid var(--line);font-size:14px}
+  .rail .rstep:first-child{border-left:0}
+  .rail .rstep.current{background:#eef4fb}
+  .rail .rstep .num{width:24px;height:24px;border-radius:50%;flex:0 0 24px;display:grid;place-items:center;font-size:12px;font-weight:800;background:#fff;color:#5B616B;border:1px solid #5B616B}
+  .rail .rstep.done .num{background:#00599C;color:#fff;border-color:#00599C}
+  .rail .rstep.current .num{background:#002D62;color:#fff;border-color:#002D62}
+  .rail .rstep .st{font-weight:500}
+  .rail .rstep.current .st{font-weight:800}
+
+  .panel{border:1px solid var(--line);padding:24px 26px;min-height:360px}
+  .panel h2{font-size:23px;font-weight:800;margin:0 0 6px}
+  .panel .phint{color:var(--muted);font-size:16px;margin:0 0 20px;max-width:74ch}
+
+  /* dropzone */
+  .drop{border:2px dashed #9aa7b5;background:#fafcfe;padding:36px 24px;text-align:center}
+  .drop .di{font-size:40px}
+  .drop .dt{font-weight:800;font-size:18px;margin:8px 0 4px}
+  .drop .dd{font-size:14px;color:var(--muted);margin:0 0 16px}
+  .drop .fake{font-size:13px;color:var(--muted);margin-top:14px}
+  .schema{border:1px solid var(--line);margin:18px 0 0;font-size:13.5px}
+  .schema .sh{background:#f4f6f9;font-weight:800;padding:9px 14px;border-bottom:1px solid var(--line)}
+  .schema code{display:block;padding:12px 14px;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:#333;white-space:pre-wrap;line-height:1.6}
+
+  /* summary tiles */
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 20px}
+  .tile{border:1px solid var(--line);padding:14px 16px}
+  .tile .tn{font-size:26px;font-weight:800;line-height:1}
+  .tile .tl{font-size:12.5px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  .tile.warn{border-color:#e7d9a6;background:#fbf7e9}
+  .tile.warn .tn{color:var(--amber)}
+  @media(max-width:720px){.tiles{grid-template-columns:1fr 1fr}}
+
+  /* review table */
+  .tablewrap{border:1px solid var(--line);overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+  thead th{background:#f4f6f9;text-align:left;padding:11px 14px;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#333;border-bottom:1px solid var(--line);white-space:nowrap}
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr.err{background:#fbf1f1}
+  .amt{font-variant-numeric:tabular-nums;font-weight:700}
+  .rowstat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;white-space:nowrap}
+  .rowstat .sdot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
+  .ok .sdot{background:var(--green)} .ok{color:var(--green)}
+  .bad .sdot{background:var(--red)} .bad{color:var(--red)}
+  .fix{font-size:12px;color:var(--red)}
+  .token{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#333}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:12px 22px;border-radius:4px;text-decoration:none;cursor:pointer}
+  .btn:hover{background:#003a73}
+  .btn[disabled]{background:#aebccb;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--irs-blue);border:1.5px solid var(--irs-blue)}
+  .btn.ghost:hover{background:#eef4fb}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:24px;border-top:1px solid var(--line);padding-top:20px;gap:12px;flex-wrap:wrap}
+  .foot .back{border:0;background:none;color:var(--link);font-family:inherit;font-size:15px;cursor:pointer;text-decoration:underline}
+
+  .attest{background:#fafcfe;border:1px solid var(--line);padding:16px 18px;font-size:14px;color:#333;margin:18px 0 12px}
+  .attest b{color:var(--ink)}
+  .checkrow{display:flex;gap:11px;align-items:flex-start;margin:12px 0;font-size:14.5px}
+  .checkrow input{margin-top:3px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
+
+  /* success */
+  .done-hero{text-align:center;padding:12px 0 4px}
+  .done-hero .ring{width:70px;height:70px;border-radius:50%;background:#eef6f0;border:2px solid var(--green);color:var(--green);display:grid;place-items:center;font-size:32px;font-weight:800;margin:0 auto 12px}
+  .batchbox{margin:18px auto 8px;max-width:560px;border:2px dashed var(--irs-blue);padding:16px;text-align:center;background:#fafcfe}
+  .batchbox .pl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .batchbox .pv{font-size:26px;font-weight:800;letter-spacing:.08em;color:var(--irs-blue);font-family:ui-monospace,Menlo,monospace;margin:6px 0}
+  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid #D6D7D9;font-size:15px}
+  .readrow:last-child{border-bottom:0}
+  .readrow .k{color:#1b1b1b;font-weight:700;width:50%} .readrow .v{text-align:left}
+
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin:16px 0 0}
+  .pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--teal);border-radius:6px;padding:2px 8px;vertical-align:middle;margin-left:8px}
+
+  @media(max-width:640px){
+    .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;row-gap:6px}
+    .util{width:100%;justify-content:flex-start;flex-wrap:wrap;font-size:13px}
+    .util > *{border-left:0;padding:0 14px 0 0}
+    .rail{flex-wrap:wrap}.rail .rstep{flex:1 0 50%}
+  }
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="../assets/irs-logo.svg" alt="IRS logo"></span><span class="ctx">Third-Party Payments · Bulk</span></div>
+    <div class="util">
+      <a>Riverbend Community Bank</a>
+      <a>Help</a>
+      <a>Sign out</a>
+    </div>
+  </div></div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Institution portal</a> › <a>Third-party payments</a> › Bulk submission</p>
+    <h1 class="page">Bulk payment submission</h1>
+    <p class="sub">Pay the IRS on behalf of many taxpayers at once. Upload a file, review and fix any rows, then submit as one batch. The institution's verified identity is attached to <b>every</b> payment as the payer of record — no payment is anonymous.</p>
+
+    <div class="payerbar">
+      <span class="pi">RCB</span>
+      <span><span class="pn">Riverbend Community Bank</span><span class="pd" style="display:block">EIN 91-2048837 · Submitting official: J. Okonkwo · Directed-payment agreement on file</span></span>
+      <span class="tierbadge"><span class="tdot"></span>Identity-proofed institution</span>
+    </div>
+    <p class="appliesnote"><b>Payer of record applied to all rows:</b> Riverbend Community Bank (financial institution, on behalf of each listed account holder). Per-row authorization is carried in the file.</p>
+
+    <div class="rail" id="rail"></div>
+
+    <section class="panel">
+      <div id="body"></div>
+      <div class="foot" id="foot">
+        <button class="back" id="back" hidden>← Back</button>
+        <button class="btn" id="next">Continue</button>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link,#0050a0);text-decoration:none">‹ All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5"><em>
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, amounts, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </em></div>
+  </footer>
+
+<script>
+const RAIL=[
+  {t:"Upload file"},
+  {t:"Review & fix"},
+  {t:"Attest & submit"},
+  {t:"Batch receipt"}
+];
+// Fictional mock roster — tokenized taxpayer refs, no real PII.
+const ROWS=[
+  {tok:"XKD-4417", name:"P. Raman",       year:"2024", form:"CP14",  amt:1240.00, auth:"Acct-holder instruction #88213", ok:true},
+  {tok:"QMR-9920", name:"L. Adeyemi",     year:"2024", form:"1040",  amt:865.50,  auth:"Acct-holder instruction #88220", ok:true},
+  {tok:"BTW-3051", name:"S. Nakamura",    year:"2023", form:"CP2000",amt:2130.00, auth:"Acct-holder instruction #88231", ok:true},
+  {tok:"—",        name:"D. Fischer",     year:"2024", form:"CP14",  amt:410.00,  auth:"Acct-holder instruction #88240", ok:false, fix:"Missing taxpayer token"},
+  {tok:"HZP-7788", name:"M. Okafor",      year:"2024", form:"941",   amt:5290.75, auth:"Acct-holder instruction #88255", ok:true},
+  {tok:"LVN-2264", name:"C. Delgado",     year:"2022", form:"1040",  amt:-15.00,  auth:"Acct-holder instruction #88261", ok:false, fix:"Amount must be greater than $0"},
+  {tok:"RQF-1180", name:"A. Petrov",      year:"2024", form:"CP14",  amt:702.00,  auth:"Acct-holder instruction #88277", ok:true},
+  {tok:"WGE-5533", name:"T. Blanchard",   year:"2023", form:"CP2000",amt:1875.25, auth:"Acct-holder instruction #88288", ok:true}
+];
+const state={step:0, attest:false, batch:null};
+const railEl=document.getElementById("rail"),body=document.getElementById("body"),
+  back=document.getElementById("back"),next=document.getElementById("next");
+
+const money=n=>"$"+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const validRows=()=>ROWS.filter(r=>r.ok);
+const totalValid=()=>validRows().reduce((s,r)=>s+r.amt,0);
+function genBatch(){let n="BATCH-";const seed=[3,9,1,6,2,8,4,0];for(let i=0;i<8;i++)n+=seed[(i*3+2)%8];return n;}
+
+function renderRail(){
+  railEl.innerHTML=RAIL.map((s,i)=>{
+    const cls=i<state.step?"done":(i===state.step?"current":"");
+    const num=i<state.step?"✓":(i+1);
+    return `<div class="rstep ${cls}"><span class="num">${num}</span><span class="st">${s.t}</span></div>`;
+  }).join("");
+}
+
+function renderBody(){
+  const s=state.step;
+  if(s===0){
+    body.innerHTML=`<h2>Upload your payment file</h2>
+      <p class="phint">Drag a CSV of payments, or use our template. Each row is one taxpayer obligation; the institution above is the payer of record for all of them.</p>
+      <div class="drop" id="drop">
+        <div class="di" aria-hidden="true">⬆️</div>
+        <div class="dt">Drop a CSV here, or <a id="browse">browse</a></div>
+        <div class="dd">Up to 5,000 rows · UTF-8 · max 10 MB</div>
+        <button class="btn ghost" id="loadsample">Load sample file (8 rows)</button>
+        <div class="fake" id="fakename"></div>
+      </div>
+      <div class="schema">
+        <div class="sh">Expected columns</div>
+        <code>taxpayer_token, taxpayer_name, tax_year, form_or_notice, amount, authorization_ref</code>
+      </div>
+      <p class="note">Tokens replace SSNs so the file never carries full taxpayer identifiers. Sample data is fictional.</p>`;
+    const load=()=>{document.getElementById("fakename").innerHTML="✓ <b>riverbend_2026Q2_directed_payments.csv</b> — 8 rows parsed";next.disabled=false;state.loaded=true;};
+    document.getElementById("loadsample").addEventListener("click",load);
+    document.getElementById("browse").addEventListener("click",load);
+    next.textContent="Review "+ROWS.length+" rows";
+    next.disabled=!state.loaded;
+  }else if(s===1){
+    const bad=ROWS.length-validRows().length;
+    body.innerHTML=`<h2>Review &amp; fix</h2>
+      <p class="phint">We validated every row. Fix or drop the flagged rows; valid rows are ready to submit. Nothing is sent yet.</p>
+      <div class="tiles">
+        <div class="tile"><div class="tn">${ROWS.length}</div><div class="tl">Rows in file</div></div>
+        <div class="tile"><div class="tn">${validRows().length}</div><div class="tl">Ready to submit</div></div>
+        <div class="tile warn"><div class="tn">${bad}</div><div class="tl">Need attention</div></div>
+        <div class="tile"><div class="tn amt">${money(totalValid())}</div><div class="tl">Valid total</div></div>
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Taxpayer token</th><th>Name</th><th>Year</th><th>Form / notice</th><th>Amount</th><th>Authorization</th><th>Status</th></tr></thead>
+        <tbody>
+          ${ROWS.map(r=>`<tr class="${r.ok?"":"err"}">
+            <td class="token">${r.tok}</td>
+            <td>${r.name}</td>
+            <td>${r.year}</td>
+            <td>${r.form}</td>
+            <td class="amt">${money(r.amt)}</td>
+            <td class="token">${r.auth}</td>
+            <td>${r.ok?'<span class="rowstat ok"><span class="sdot"></span>Ready</span>':'<span class="rowstat bad"><span class="sdot"></span>Error</span><div class="fix">'+r.fix+'</div>'}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table></div>
+      <p class="note">${bad} row(s) will be skipped unless fixed. In a real system you'd edit inline or re-upload; here the ${validRows().length} valid rows carry forward.</p>`;
+    next.textContent="Submit "+validRows().length+" payments →";
+    next.disabled=false;
+  }else if(s===2){
+    body.innerHTML=`<h2>Attest &amp; submit the batch</h2>
+      <p class="phint">One declaration covers the whole batch. The institution's identity is bound to each payment as the payer of record.</p>
+      <div class="readrow"><span class="k">Payer of record (all rows)</span><span class="v">Riverbend Community Bank · EIN 91-2048837</span></div>
+      <div class="readrow"><span class="k">Payer type</span><span class="v">Financial institution, on behalf of account holders</span></div>
+      <div class="readrow"><span class="k">Payer verification</span><span class="v">Identity-proofed institution</span></div>
+      <div class="readrow"><span class="k">Payments in batch</span><span class="v">${validRows().length}</span></div>
+      <div class="readrow"><span class="k">Batch total</span><span class="v amt">${money(totalValid())}</span></div>
+      <div class="readrow"><span class="k">Funding source</span><span class="v">Institution settlement account ••••• 4021 (mock)</span></div>
+      <div class="attest">Under penalties of perjury, I, the submitting official for <b>Riverbend Community Bank</b>, declare that the institution is authorized to remit each listed payment on behalf of the named account holder under a directed-payment instruction, and that the information provided is true, correct, and complete. The institution is recorded as the payer of record for every payment in this batch.</div>
+      <label class="checkrow"><input type="checkbox" id="ack"><span>I have read and agree to the batch declaration above, on behalf of the institution.</span></label>
+      <p class="note">No money moves in this prototype — submission is simulated.</p>`;
+    const ack=document.getElementById("ack");ack.checked=state.attest;
+    ack.addEventListener("change",e=>{state.attest=e.target.checked;updateNext();});
+    next.textContent="Submit batch";
+  }else{
+    state.batch=state.batch||genBatch();
+    body.innerHTML=`<div class="done-hero"><div class="ring">✓</div>
+      <h2>Batch submitted — ${validRows().length} payments</h2>
+      <p class="phint" style="margin:0 auto">Every payment carries Riverbend Community Bank as the payer of record.</p></div>
+      <div class="batchbox"><div class="pl">Batch reference</div><div class="pv">${state.batch}</div><div class="pl" style="margin-top:6px">${validRows().length} payments · ${money(totalValid())} · submitted June 30, 2026</div></div>
+      <div class="readrow"><span class="k">Payer of record</span><span class="v">Riverbend Community Bank (identity-proofed)</span></div>
+      <div class="readrow"><span class="k">Accepted</span><span class="v">${validRows().length} of ${ROWS.length} rows</span></div>
+      <div class="readrow"><span class="k">Skipped (errors)</span><span class="v">${ROWS.length-validRows().length} rows returned for correction</span></div>
+      <div class="readrow"><span class="k">Per-payment receipts</span><span class="v">Each links back to this batch and to the payer of record</span></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a class="btn" id="dl">Download batch manifest (CSV)</a>
+        <a class="btn ghost" id="err">Download error rows</a>
+      </div>
+      <p class="note">Bulk pathway turns a stack of phone/mail payments into one authenticated file — and still attaches payer identity to every single payment.</p>`;
+    back.hidden=false;next.textContent="New batch";
+    const dl=document.getElementById("dl"),err=document.getElementById("err");
+    dl.addEventListener("click",()=>{dl.textContent="Manifest downloaded ✓";dl.style.background="var(--green)";});
+    err.addEventListener("click",()=>{err.textContent="Error rows downloaded ✓";err.style.borderColor="var(--green)";err.style.color="var(--green)";});
+  }
+  back.hidden=state.step===0;
+  updateNext();
+}
+function updateNext(){
+  if(state.step===0)next.disabled=!state.loaded;
+  else if(state.step===2)next.disabled=!state.attest;
+  else next.disabled=false;
+}
+function go(d){
+  if(d>0&&state.step<RAIL.length-1){state.step++;}
+  else if(d<0&&state.step>0){state.step--;}
+  else if(d>0&&state.step===RAIL.length-1){state.step=0;state.attest=false;state.batch=null;state.loaded=false;}
+  renderRail();renderBody();window.scrollTo({top:0,behavior:"smooth"});
+}
+next.addEventListener("click",()=>go(1));
+back.addEventListener("click",()=>go(-1));
+
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{
+  const open=gov.classList.toggle("open");
+  howbtn.setAttribute("aria-expanded",open?"true":"false");
+});
+
+renderRail();renderBody();
+</script>
+</body>
+</html>
