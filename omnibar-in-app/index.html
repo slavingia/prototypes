@@ -36,12 +36,15 @@
   .shot .cap{padding:9px 12px;font-size:13.5px;font-weight:600}
   .shot .cap span{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:1px}
   .note{font-size:13px;color:var(--muted);margin-top:18px}
+  .back{display:inline-block;color:#fff;text-decoration:none;font-size:13.5px;font-weight:600;opacity:.92;margin-bottom:14px}
+  .back:hover{text-decoration:underline}
   @media(max-width:680px){.gal{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
   <div class="gov"><div class="gi"><span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span><span>An official website of the United States government</span></div></div>
   <header><div class="wrap">
+    <a class="back" href="../index.html">‹ All prototypes</a>
     <div class="eyebrow">IRS · Online Account concept</div>
     <h1>Omni bar — in the logged-in account</h1>
     <p>A single smart search bar on the Online Account (IOLA) home. It understands plain language, notice codes, and dollar amounts, answers inline, and surfaces top IRS.gov tasks that aren't in IOLA yet — clicking one opens the IRS.gov page in a new tab. Interactive prototype, walkthrough PDFs, and screenshots are all in this folder.</p>
@@ -68,15 +71,20 @@
 
     <div class="card">
       <h2>2 · Modern variant — omnibar in the header</h2>
-      <p class="lead">The same smart search, but moved <em>into the masthead</em> as a command palette — the pattern from Microsoft Teams, Chrome, and GitHub. A compact pill sits in the header on every tab; focusing it (or pressing <strong>/</strong> or <strong>⌘K</strong>) turns it white, dims the page behind a scrim, and drops the results panel right under the bar. Same engine: plain language, notice codes, dollar amounts, and featured non-IOLA tasks.</p>
+      <p class="lead">The same smart search, but moved <em>into the masthead</em> as a command palette — the pattern from Microsoft Teams, Chrome, and GitHub. A compact pill sits in the header on every tab; focusing it (or pressing <strong>/</strong> or <strong>⌘K</strong>) turns it white, dims the page behind a scrim, and drops the results panel right under the bar. Same engine: plain language, notice codes, dollar amounts, and featured non-IOLA tasks. The masthead also carries a Gusto-style <strong>account switcher</strong> — act as yourself, a business you're a Designated Official for, or a client you hold Power of Attorney for. Three trigger treatments below (V1 list · V2 chips · V3 compact).</p>
       <div class="btns">
-        <a class="btn" href="online-account-webapp-headerbar.html">Open interactive prototype <span class="tag">HTML</span></a>
+        <a class="btn" href="online-account-webapp-headerbar-v3.html">V3 — compact <span class="tag">recommended</span></a>
+        <a class="btn ghost" href="online-account-webapp-headerbar-v2.html">V2 — chips &amp; groups</a>
+        <a class="btn ghost" href="online-account-webapp-headerbar.html">V1 — simple list</a>
       </div>
       <div class="gal">
         <a class="shot" href="pngs/header-1-collapsed.png"><img src="pngs/header-1-collapsed.png" alt="Collapsed header pill"><div class="cap">Resting state<span>compact pill in the masthead, “/” hint</span></div></a>
         <a class="shot" href="pngs/header-2-open-suggestions.png"><img src="pngs/header-2-open-suggestions.png" alt="Open command palette"><div class="cap">Command palette<span>focus / “/” / ⌘K → dimmed scrim + suggestions</span></div></a>
         <a class="shot" href="pngs/header-3-cantpay.png"><img src="pngs/header-3-cantpay.png" alt="Cant pay"><div class="cap">Plain language<span>“can't pay” → payment plan</span></div></a>
         <a class="shot" href="pngs/header-4-cp523.png"><img src="pngs/header-4-cp523.png" alt="CP523"><div class="cap">Notice code<span>“CP523” recognized</span></div></a>
+        <a class="shot" href="pngs/headerbar-switcher-v3.png"><img src="pngs/headerbar-switcher-v3.png" alt="Account switcher V3"><div class="cap">Account switcher · V3 compact<span>plain trigger, chevron, fills the bar</span></div></a>
+        <a class="shot" href="pngs/headerbar-switcher-v2.png"><img src="pngs/headerbar-switcher-v2.png" alt="Account switcher V2"><div class="cap">Account switcher · V2 chips<span>grouped: You / Businesses &amp; clients</span></div></a>
+        <a class="shot" href="pngs/headerbar-switcher-v1.png"><img src="pngs/headerbar-switcher-v1.png" alt="Account switcher V1"><div class="cap">Account switcher · V1 list<span>two-line trigger, flat list</span></div></a>
       </div>
     </div>
 

@@ -25,11 +25,13 @@
   h1{font-size:34px;font-weight:800;margin:28px 0 6px}
   .sub{font-size:17px;color:var(--muted);max-width:62ch;margin:0 0 28px}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:56px}
-  .card{border:1px solid var(--line);padding:22px 24px;text-decoration:none;color:inherit;display:block}
+  .card{border:1px solid var(--line);padding:22px 24px;text-decoration:none;color:inherit;display:block;position:relative}
   .card:hover{border-color:var(--irs-blue);background:#fafcfe}
   .card .k{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--irs-blue);margin:0 0 8px}
   .card h2{font-size:20px;font-weight:800;margin:0 0 6px}
   .card p{font-size:14.5px;color:var(--muted);margin:0}
+  .card .updated{font-size:12px;color:var(--muted);margin:14px 0 0}
+  .new-badge{position:absolute;top:16px;right:16px;background:var(--irs-blue);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px}
   .note{font-size:12.5px;color:var(--muted);font-style:italic}
   @media(max-width:700px){.grid{grid-template-columns:1fr}}
 </style>
@@ -40,34 +42,66 @@
   <main class="wrap">
     <h1>Prototypes</h1>
     <p class="sub">Design prototypes and concept explorations for IRS Taxpayer Services &amp; Online Accounts. Styled to the IRS Online Design Guidelines (ODG) / U.S. Web Design System. All data shown is mock.</p>
-    <div class="grid">
-      <a class="card" href="refund-tracker/">
-        <p class="k">Refunds &amp; Returns</p>
-        <h2>Where's My Refund? — timeline tracker</h2>
-        <p>A delivery-style status tracker that shows every state a refund or amended return has moved through — plus what's expected next — instead of just three vague stages.</p>
-      </a>
-      <a class="card" href="ai-agent-chat/">
-        <p class="k">Help &amp; Support</p>
-        <h2>Taxpayer Assistant (AI agent)</h2>
-        <p>A live chat AI agent that uses tools — it looks up your account, fills out forms (8822, 2848), and faxes them to the right unit, narrating each tool call.</p>
-      </a>
-      <a class="card" href="bta-94x-pin/">
-        <p class="k">Business Tax Account</p>
-        <h2>94x Online Signature PIN</h2>
-        <p>Self-service wizard for a responsible official to request the 10-digit 94x PIN (Forms 940/941/943/944/945) and e-file straight to MeF.</p>
-      </a>
-      <a class="card" href="omnibar-in-app/">
+    <div class="grid" id="grid">
+      <a class="card" href="omnibar-in-app/" data-id="omnibar-in-app" data-updated="2026-07-01">
+        <span class="new-badge" hidden>New</span>
         <p class="k">Online Account</p>
         <h2>Omni bar (in-app concept)</h2>
-        <p>A unified action/search "omni bar" for the Online Account web app, with walkthrough and variants.</p>
+        <p>A unified action/search "omni bar" for the Online Account web app, plus a masthead command-palette variant with an account switcher.</p>
+        <p class="updated"></p>
       </a>
-      <a class="card" href="unified-tax-account/">
+      <a class="card" href="unified-tax-account/" data-id="unified-tax-account" data-updated="2026-07-01">
+        <span class="new-badge" hidden>New</span>
         <p class="k">Unified Tax Account</p>
         <h2>One login, pick your role</h2>
         <p>Sign in once, then act as an individual, a business you run or belong to, or a tax pro — with the omni bar integrated everywhere and re-scoping itself to whichever account you switch into.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="refund-tracker/" data-id="refund-tracker" data-updated="2026-06-30">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Refunds &amp; Returns</p>
+        <h2>Where's My Refund? — timeline tracker</h2>
+        <p>A delivery-style status tracker that shows every state a refund or amended return has moved through — plus what's expected next — instead of just three vague stages.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="ai-agent-chat/" data-id="ai-agent-chat" data-updated="2026-06-29">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Help &amp; Support</p>
+        <h2>Taxpayer Assistant (AI agent)</h2>
+        <p>A live chat AI agent that uses tools — it looks up your account, fills out forms (8822, 2848), and faxes them to the right unit, narrating each tool call.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="bta-94x-pin/" data-id="bta-94x-pin" data-updated="2026-06-29">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Business Tax Account</p>
+        <h2>94x Online Signature PIN</h2>
+        <p>Self-service wizard for a responsible official to request the 10-digit 94x PIN (Forms 940/941/943/944/945) and e-file straight to MeF.</p>
+        <p class="updated"></p>
       </a>
     </div>
     <p class="note">Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of any agency. All data is fictional mock data — no real personal or taxpayer information. These concepts do not reflect any agency's roadmap, decisions, or opinions.</p>
   </main>
+  <script>
+  (function(){
+    function humanize(iso){
+      const d=new Date(iso+"T12:00:00"),n=new Date();
+      const t0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),d0=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+      const days=Math.round((t0-d0)/86400000);
+      if(days<=0)return"today";
+      if(days===1)return"yesterday";
+      if(days<7)return days+" days ago";
+      if(days<14)return"last week";
+      if(days<31)return Math.floor(days/7)+" weeks ago";
+      return d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+    }
+    let seen={};try{seen=JSON.parse(localStorage.getItem("protoSeen")||"{}");}catch(e){}
+    document.querySelectorAll("#grid .card").forEach(card=>{
+      const id=card.dataset.id,upd=card.dataset.updated;
+      const u=card.querySelector(".updated");if(u)u.textContent="Updated "+humanize(upd);
+      const b=card.querySelector(".new-badge");if(b)b.hidden=!(!seen[id]||seen[id]<upd);
+      card.addEventListener("click",()=>{try{seen[id]=upd;localStorage.setItem("protoSeen",JSON.stringify(seen));}catch(e){}});
+    });
+  })();
+  </script>
 </body>
 </html>
