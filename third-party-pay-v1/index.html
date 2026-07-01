@@ -51,11 +51,19 @@
   .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
   .crumb a{color:var(--link)}
   h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
-  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 22px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 18px}
+
+  /* persistent "paying on behalf of" context bar */
+  .obhbar{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:#fafcfe;padding:12px 16px;margin:0 0 20px;display:flex;flex-wrap:wrap;gap:6px 22px;align-items:baseline}
+  .obhbar[hidden]{display:none}
+  .obhbar .lead{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--irs-blue);width:100%;margin:0 0 2px}
+  .obhbar .seg{font-size:15px}
+  .obhbar .seg b{font-weight:800}
+  .obhbar .muted{color:var(--muted)}
 
   .shell{display:grid;grid-template-columns:248px 1fr;gap:24px;margin-bottom:60px;align-items:start}
   .steps{position:sticky;top:18px;list-style:none;margin:0;padding:0;border:1px solid var(--line);overflow:hidden}
-  .steps li{display:flex;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line);font-size:14px}
+  .steps li{display:flex;gap:12px;align-items:center;padding:13px 16px;border-top:1px solid var(--line);font-size:14px}
   .steps li:first-child{border-top:0}
   .steps li .num{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:grid;place-items:center;font-size:12.5px;font-weight:800;background:#fff;color:#5B616B;border:1px solid #5B616B}
   .steps li.done .num{background:#00599C;color:#fff;border-color:#00599C}
@@ -65,7 +73,7 @@
   .steps li.current .st{font-weight:800}
   .steps li .sd{display:block;font-size:12px;color:var(--muted);margin-top:1px}
 
-  .panel{border:1px solid var(--line);padding:26px 30px;min-height:440px;position:relative}
+  .panel{border:1px solid var(--line);padding:26px 30px;min-height:460px;position:relative}
   .panel h2{font-size:24px;font-weight:800;margin:0 0 6px}
   .panel .phint{color:var(--muted);font-size:16px;margin:0 0 22px;max-width:62ch}
   .progress{height:5px;background:#eef1f5;overflow:hidden;margin-bottom:22px}
@@ -81,13 +89,25 @@
   .opt .od{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
   .opt input{position:absolute;opacity:0}
 
+  /* yes/no segmented toggle */
+  .yn{display:flex;gap:12px;margin:2px 0 6px}
+  .yn .ynopt{flex:1;border:1px solid var(--line);padding:13px 16px;cursor:pointer;display:flex;gap:11px;align-items:center;font-weight:500;font-size:16px}
+  .yn .ynopt:hover{border-color:var(--irs-blue);background:#fafcfe}
+  .yn .ynopt.on{border-color:var(--irs-blue);background:#eef4fb;box-shadow:inset 3px 0 0 var(--irs-blue)}
+  .yn .ynopt .rd{width:18px;height:18px;border-radius:50%;flex:0 0 18px;border:2px solid #5B616B;display:grid;place-items:center}
+  .yn .ynopt.on .rd{border-color:var(--irs-blue)}
+  .yn .ynopt.on .rd::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--irs-blue)}
+
   .field{margin:0 0 18px}
   .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
   .field .hint{font-size:14px;color:#5b616b;font-weight:500;display:block}
-  .field input,.field select{width:100%;border:1px solid #9aa7b5;border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px;background:#fff}
-  .field input:focus,.field select:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .field input,.field select,.field textarea{width:100%;border:1px solid #9aa7b5;border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px;background:#fff}
+  .field textarea{min-height:74px;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .fieldset-lead{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--irs-blue);margin:20px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+  .fieldset-lead:first-child{border-top:0;padding-top:0;margin-top:0}
 
   .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid #D6D7D9;font-size:15px}
   .readrow:last-child{border-bottom:0}
@@ -101,10 +121,19 @@
   .tier .tl{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14.5px}
   .tier .tdot{width:12px;height:12px;border-radius:50%;flex:0 0 12px;background:#9aa7b5}
   .tier.t1 .tdot{background:#9aa7b5}.tier.t2 .tdot{background:var(--amber)}.tier.t3 .tdot{background:var(--green)}
-  .tier .tdsc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+  .tier .tlim{font-size:12px;font-weight:700;color:var(--ink);margin-top:5px}
+  .tier .tdsc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35}
   @media(max-width:560px){.tiers{grid-template-columns:1fr}}
-  .tiernote{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:#fafcfe;padding:13px 15px;font-size:14px;margin:14px 0 4px}
-  .tiernote b{color:var(--ink)}
+
+  /* tier gating decision box */
+  .gate{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:#fafcfe;padding:14px 16px;font-size:14.5px;margin:14px 0 4px;line-height:1.45}
+  .gate.ok{border-left-color:var(--green)}
+  .gate.flag{border-left-color:var(--amber)}
+  .gate.block{border-left-color:var(--red)}
+  .gate .gh{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin:0 0 4px}
+  .gate .gh .gd{width:11px;height:11px;border-radius:50%;flex:0 0 11px}
+  .gate.ok .gh .gd{background:var(--green)} .gate.flag .gh .gd{background:var(--amber)} .gate.block .gh .gd{background:var(--red)}
+  .gate b{color:var(--ink)}
 
   .onbehalf{border:1px solid var(--line);background:#fafcfe;padding:16px 18px;margin:18px 0 4px;font-size:16px}
   .onbehalf .oh-lead{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--irs-blue);margin:0 0 6px}
@@ -125,7 +154,18 @@
 
   .done-hero{text-align:center;padding:14px 0 4px}
   .done-hero .ring{width:74px;height:74px;border-radius:50%;background:#eef6f0;border:2px solid var(--green);color:var(--green);display:grid;place-items:center;font-size:34px;font-weight:800;margin:0 auto 14px}
-  .receipt{border:1px solid var(--line);margin:20px 0 6px}
+  .done-hero .ring.pending{background:#fdf6e3;border-color:var(--amber);color:var(--amber)}
+
+  /* payer-of-record hero block on receipt */
+  .por{border:2px solid var(--irs-blue);margin:20px 0 6px}
+  .por .porhead{background:var(--irs-blue);color:#fff;padding:11px 18px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  .por .porbody{padding:16px 18px 8px}
+  .por .porflow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0 0 12px;font-size:16px}
+  .por .porflow .who{font-weight:800;font-size:19px}
+  .por .porflow .arrow{color:var(--irs-blue);font-weight:800;font-size:18px}
+  .por .porflow .amt{font-weight:800;font-size:19px;color:var(--ink)}
+
+  .receipt{border:1px solid var(--line);margin:16px 0 6px}
   .receipt .rhead{background:#fafcfe;border-bottom:1px solid var(--line);padding:13px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
   .receipt .rhead .rt{font-weight:800;font-size:15px}
   .receipt .rhead .rn{font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--irs-blue);font-weight:700}
@@ -166,6 +206,14 @@
     <h1 class="page">Pay the IRS on behalf of a taxpayer</h1>
     <p class="sub">A guided, fully digital way for an individual, business, or financial institution to submit a payment for someone else — and to attach <b>who is paying</b> to the payment as a first-class record. No phone, no mail.</p>
 
+    <!-- persistent payer-of-record context banner -->
+    <div class="obhbar" id="obhbar" hidden>
+      <p class="lead">Paying on behalf of</p>
+      <span class="seg" id="obhPayer"></span>
+      <span class="seg muted" id="obhTaxpayer"></span>
+      <span class="seg muted" id="obhReason"></span>
+    </div>
+
     <div class="shell">
       <ol class="steps" id="steps"></ol>
       <section class="panel">
@@ -189,29 +237,58 @@
 <script>
 const STEPS=[
   {t:"Who's paying",d:"Payer type"},
+  {t:"Payment reason",d:"Notice or form"},
   {t:"Who it's for",d:"Taxpayer & obligation"},
-  {t:"Payment",d:"Amount & source"},
+  {t:"Payment",d:"Amount & how to apply"},
   {t:"Your identity",d:"Payer on record"},
   {t:"Receipt",d:"Confirmed"}
 ];
 const PAYERS={
-  individual:{icon:"🧑",label:"An individual",desc:"I'm paying for a family member, friend, or someone I help.",rel:["Family member","Friend / household","Power of attorney","Other individual"]},
-  business:{icon:"🏢",label:"A business",desc:"We're paying on behalf of an employee, contractor, or client.",rel:["Employer paying for employee","Payer for contractor","Payroll / accounting agent","Client representative"]},
-  bank:{icon:"🏦",label:"A financial institution",desc:"We're submitting for an account holder.",rel:["Account holder authorization","Trustee / fiduciary","Escrow / settlement","Lender servicing"]}
+  individual:{icon:"🧑",label:"An individual",short:"Individual",desc:"I'm paying for a family member, friend, or someone I help.",rel:["Family member","Friend / household","Power of attorney","Other individual"]},
+  business:{icon:"🏢",label:"A business",short:"Business",desc:"We're paying on behalf of an employee, contractor, or client.",rel:["Employer paying for employee","Payer for contractor","Client representative","Other business relationship"]},
+  bank:{icon:"🏦",label:"A financial institution",short:"Financial institution",desc:"We're submitting for an account holder.",rel:["Account holder authorization","Trustee / fiduciary","Escrow / settlement (title co.)","Lender servicing"]}
 };
-const state={step:0, payer:null, tin:"4471", year:"2025", oblig:"Form 1040 balance due", btype:"Notice CP14", amount:"1250.00", source:"Bank account (ACH)", date:"2026-07-06", pname:"", rel:"", email:"", tier:"t2", attest:false, ref:null};
+// Verification tiers now GATE submission with real dollar limits — not just a badge.
+const TIERS={
+  t1:{name:"Unverified",badge:"n",limit:2500,
+      dsc:"Name + contact only. Posts flagged for manual review; capped per payment.",
+      lim:"Limit $2,500 / payment"},
+  t2:{name:"Email-verified",badge:"a",limit:25000,
+      dsc:"One-time code confirmed the payer's email. Higher cap, faster processing.",
+      lim:"Limit $25,000 / payment"},
+  t3:{name:"Identity-proofed",badge:"g",limit:Infinity,
+      dsc:"Payer completed ID.me / IAL2 proofing. No limit, immediate posting, full self-service.",
+      lim:"No limit · immediate posting"}
+};
+
+const state={
+  step:0, payer:null,
+  hasNotice:null, noticeNum:"CP14", noticeDate:"2026-05-18",
+  tin:"4471", year:"2025", oblig:"Form 1040 balance due", btype:"Notice CP14",
+  amount:"1250.00", source:"Bank account (ACH)", date:"2026-07-06",
+  applyMode:"single", applyDetail:"",
+  // payer identity (payer-type aware)
+  pname:"", entityId:"", repName:"", repTitle:"", rel:"", email:"", phone:"",
+  tier:"t2", attest:false, ref:null
+};
 
 const steps=document.getElementById("steps"),body=document.getElementById("body"),
-  bar=document.getElementById("bar"),back=document.getElementById("back"),next=document.getElementById("next");
+  bar=document.getElementById("bar"),back=document.getElementById("back"),next=document.getElementById("next"),
+  obhbar=document.getElementById("obhbar");
 
 function genRef(){const s="TPP-2026-";const seed=[7,3,9,1,4,8];let n="";for(let i=0;i<6;i++)n+=seed[(i*5+2)%6];return s+n;}
-function money(v){return "$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
-function payerLine(){const p=PAYERS[state.payer];return p?p.label.replace(/^An? /,""):"—";}
-
-const TIERS={
-  t1:{name:"Unverified",badge:"n",dot:"",dsc:"Name + contact only. Payment still posts to the taxpayer, but the payer record is marked unverified and capped."},
-  t2:{name:"Email-verified",badge:"a",dsc:"A one-time code confirmed the payer's email. Higher limits; receipt notes email-verified payer."},
-  t3:{name:"Identity-proofed",badge:"g",dsc:"Payer completed ID.me / IAL2 proofing. Full limits, bulk access, and a durable verified payer profile."}
+function money(v){const n=Number(String(v).replace(/[^0-9.]/g,""))||0;return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function amt(){return Number(String(state.amount).replace(/[^0-9.]/g,""))||0;}
+function payerLine(){const p=PAYERS[state.payer];return p?p.short:"—";}
+function payerName(){ // primary display name for the entity/person paying
+  if(state.payer==="individual")return state.pname.trim()||"You";
+  return state.pname.trim()||"Your organization";
+}
+const APPLY={
+  single:"Apply to the single obligation above",
+  split:"Split across multiple tax periods",
+  type:"Apply to a specific obligation type",
+  notice:"Follow the notice's payment instructions"
 };
 
 function renderSteps(){
@@ -223,11 +300,21 @@ function renderSteps(){
   bar.style.width=Math.round(state.step/(STEPS.length-1)*100)+"%";
 }
 
+function renderContextBar(){
+  // Show the persistent "paying on behalf of" bar once we know the payer.
+  if(!state.payer||state.step===0){obhbar.hidden=true;return;}
+  obhbar.hidden=false;
+  document.getElementById("obhPayer").innerHTML=`<b>${payerName()}</b> · ${payerLine()}`;
+  document.getElementById("obhTaxpayer").textContent=`Taxpayer token TXP-9F42-•••• · TY ${state.year}`;
+  const r=state.hasNotice? `Re: notice/form ${state.noticeNum}` : "No specific notice";
+  document.getElementById("obhReason").textContent=r;
+}
+
 function renderBody(){
   const s=state.step;
   if(s===0){
     body.innerHTML=`<h2>Who is making this payment?</h2>
-      <p class="phint">We capture who's paying as part of the record — not just that a balance was paid. Pick the payer type to start.</p>
+      <p class="phint">We capture who's paying as part of the record — not just that a balance was paid. Your answer here also sets which identity details we collect later.</p>
       <div class="opts" id="opts">
         ${Object.entries(PAYERS).map(([k,p])=>`
           <label class="opt ${state.payer===k?'on':''}" data-k="${k}">
@@ -236,10 +323,39 @@ function renderBody(){
             <input type="radio" name="payer" value="${k}" ${state.payer===k?'checked':''}>
           </label>`).join("")}
       </div>
-      <p class="note">You'll confirm the taxpayer and obligation next. No real payment is processed — this is a prototype.</p>`;
-    body.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>{state.payer=o.dataset.k;renderBody();updateNext();}));
+      <p class="note">No real payment is processed — this is a prototype with fictional mock data.</p>`;
+    body.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>{state.payer=o.dataset.k;state.rel="";renderBody();updateNext();}));
     next.textContent="Continue";
   }else if(s===1){
+    // NEW: payment reason step — notice/form lookup, before taxpayer identification
+    body.innerHTML=`<h2>What's the reason for this payment?</h2>
+      <p class="phint">If you're responding to a specific IRS notice or form, tell us — it helps route the payment correctly and captures the context up front.</p>
+      <label style="display:block;font-weight:500;font-size:16px;margin:0 0 8px">Are you responding to a specific notice or form?</label>
+      <div class="yn" id="yn">
+        <div class="ynopt ${state.hasNotice===true?'on':''}" data-v="yes"><span class="rd" aria-hidden="true"></span>Yes — I have a notice / form number</div>
+        <div class="ynopt ${state.hasNotice===false?'on':''}" data-v="no"><span class="rd" aria-hidden="true"></span>No — this is a general payment</div>
+      </div>
+      <div id="noticeFields" ${state.hasNotice===true?'':'hidden'} style="margin-top:18px">
+        <div class="grid2">
+          <div class="field"><label for="noticeNum">Notice or form number <span class="hint">e.g. CP14, CP501, Form 1040-ES. Printed at the top of your notice.</span></label>
+            <input id="noticeNum" value="${state.noticeNum}"></div>
+          <div class="field"><label for="noticeDate">Notice date</label>
+            <input id="noticeDate" type="date" value="${state.noticeDate}"></div>
+        </div>
+        <div class="readrow"><span class="k">Reason captured</span><span class="v" id="reasonPrev">Responding to notice/form ${state.noticeNum} (${state.noticeDate})</span></div>
+      </div>
+      <p class="note">Mock lookup only. In a real system the notice number would pre-fill the obligation and tax period on the next step.</p>`;
+    body.querySelectorAll(".ynopt").forEach(o=>o.addEventListener("click",()=>{
+      state.hasNotice=o.dataset.v==="yes";
+      renderBody();updateNext();
+    }));
+    if(state.hasNotice===true){
+      body.querySelector("#noticeNum").addEventListener("input",e=>{state.noticeNum=e.target.value;const p=body.querySelector("#reasonPrev");if(p)p.textContent=`Responding to notice/form ${state.noticeNum} (${state.noticeDate})`;});
+      body.querySelector("#noticeDate").addEventListener("input",e=>{state.noticeDate=e.target.value;const p=body.querySelector("#reasonPrev");if(p)p.textContent=`Responding to notice/form ${state.noticeNum} (${state.noticeDate})`;});
+    }
+    next.textContent="Continue";
+  }else if(s===2){
+    const noticeCtx = state.hasNotice ? `<div class="readrow"><span class="k">From your notice</span><span class="v">${state.noticeNum} · dated ${state.noticeDate}</span></div>` : "";
     body.innerHTML=`<h2>Who &amp; what is this payment for?</h2>
       <p class="phint">Identify the taxpayer (we tokenize their ID — you never see the full number) and the obligation being paid.</p>
       <div class="field"><label for="tin">Taxpayer ID — last 4 digits <span class="hint">We match to a masked, tokenized record. Full SSN/EIN is never shown to a third-party payer.</span></label>
@@ -253,52 +369,128 @@ function renderBody(){
       <div class="field"><label for="oblig">Form / obligation</label>
         <select id="oblig">${["Form 1040 balance due","Form 941 employment tax","Form 1120 corporate tax","Civil penalty","Trust fund recovery"].map(o=>`<option ${state.oblig===o?'selected':''}>${o}</option>`).join("")}</select></div>
       <div class="readrow"><span class="k">Matched taxpayer</span><span class="v">R••••• M. (token TXP-9F42-••••)</span></div>
+      ${noticeCtx}
       <div class="readrow"><span class="k">Obligation on file</span><span class="v" id="obPrev">${state.oblig} · ${state.btype} · TY ${state.year}</span></div>
       <p class="note">Mock match only. In a real system the token would resolve against IRS records after the taxpayer or their notice authorizes third-party payment.</p>`;
     const tin=body.querySelector("#tin");tin.addEventListener("input",e=>state.tin=e.target.value.replace(/\D/g,""));
     ["year","btype","oblig"].forEach(id=>body.querySelector("#"+id).addEventListener("change",e=>{state[id]=e.target.value;const p=body.querySelector("#obPrev");if(p)p.textContent=`${state.oblig} · ${state.btype} · TY ${state.year}`;}));
     next.textContent="Continue";
-  }else if(s===2){
+  }else if(s===3){
     body.innerHTML=`<h2>Payment details</h2>
-      <p class="phint">Enter the amount and where it comes from. Funds settle to the taxpayer's obligation above.</p>
+      <p class="phint">Enter the amount and where it comes from — then tell us how to apply it. Funds settle to the taxpayer's obligation above.</p>
       <div class="grid2">
         <div class="field"><label for="amount">Amount (USD)</label>
           <input id="amount" value="${state.amount}"></div>
         <div class="field"><label for="date">Payment date</label>
           <input id="date" type="date" value="${state.date}"></div>
       </div>
-      <div class="field"><label for="source">Funding source <span class="hint">Mock sources only — no real account is charged.</span></label>
-        <select id="source">${["Bank account (ACH)","Debit card","Business operating account","Trust / escrow account"].map(o=>`<option ${state.source===o?'selected':''}>${o}</option>`).join("")}</select></div>
+      <div class="field"><label for="source">Funding source <span class="hint">Mock sources only — no real account is charged. Large third-party payments may use wire.</span></label>
+        <select id="source">${["Bank account (ACH)","Debit card","Business operating account","Trust / escrow account","Wire transfer"].map(o=>`<option ${state.source===o?'selected':''}>${o}</option>`).join("")}</select></div>
+
+      <p class="fieldset-lead">Payment application instructions</p>
+      <div class="field"><label for="applyMode">How should this payment be applied? <span class="hint">Prevents manual intervention later when a payer needs the money split or targeted.</span></label>
+        <select id="applyMode">${Object.entries(APPLY).map(([k,v])=>`<option value="${k}" ${state.applyMode===k?'selected':''}>${v}</option>`).join("")}</select></div>
+      <div class="field" id="applyDetailWrap" ${state.applyMode==='single'?'hidden':''}><label for="applyDetail">Application detail <span class="hint" id="applyHint"></span></label>
+        <textarea id="applyDetail" placeholder="e.g. Apply $600 to TY 2024 and $650 to TY 2025 estimated tax.">${state.applyDetail}</textarea></div>
+
       <div class="readrow"><span class="k">Applied to</span><span class="v">${state.oblig} — TY ${state.year}</span></div>
       <div class="readrow"><span class="k">Effective date</span><span class="v" id="dPrev">${state.date}</span></div>
       <p class="note">A confirmation of who paid on whose behalf is generated on the next step before you submit.</p>`;
     body.querySelector("#amount").addEventListener("input",e=>state.amount=e.target.value);
     body.querySelector("#date").addEventListener("input",e=>{state.date=e.target.value;body.querySelector("#dPrev").textContent=state.date;});
     body.querySelector("#source").addEventListener("change",e=>state.source=e.target.value);
+    const applyHints={split:"List each tax period and the amount for it.",type:"Name the obligation type (estimated tax, levy response, lien payoff).",notice:"Reference the notice line/section to follow."};
+    function syncApply(){
+      const wrap=body.querySelector("#applyDetailWrap"),h=body.querySelector("#applyHint");
+      wrap.hidden=state.applyMode==="single";
+      if(h)h.textContent=applyHints[state.applyMode]||"";
+    }
+    body.querySelector("#applyMode").addEventListener("change",e=>{state.applyMode=e.target.value;syncApply();});
+    body.querySelector("#applyDetail").addEventListener("input",e=>state.applyDetail=e.target.value);
+    syncApply();
     next.textContent="Continue";
-  }else if(s===3){
+  }else if(s===4){
     const p=PAYERS[state.payer];
     if(!state.rel)state.rel=p.rel[0];
-    body.innerHTML=`<h2>Your identity as the payer</h2>
-      <p class="phint">This is the differentiator: we attach <b>who you are</b> and <b>your authority to pay</b> to the payment record.</p>
-      <div class="field"><label for="pname">Payer's full name</label>
-        <input id="pname" placeholder="e.g. Jordan A. Michaels" value="${state.pname}"></div>
-      <div class="grid2">
-        <div class="field"><label for="rel">Relationship / authorization to pay</label>
+    // Payer-type-aware identity fields
+    let idFields="";
+    if(state.payer==="individual"){
+      idFields=`
+        <p class="fieldset-lead">Your details</p>
+        <div class="field"><label for="pname">Your full name</label>
+          <input id="pname" placeholder="e.g. Jordan A. Michaels" value="${state.pname}"></div>
+        <div class="grid2">
+          <div class="field"><label for="rel">Relationship / authorization to pay</label>
+            <select id="rel">${p.rel.map(o=>`<option ${state.rel===o?'selected':''}>${o}</option>`).join("")}</select></div>
+          <div class="field"><label for="email">Contact email</label>
+            <input id="email" placeholder="you@example.com" value="${state.email}"></div>
+        </div>
+        <div class="field" style="max-width:50%"><label for="phone">Contact phone</label>
+          <input id="phone" placeholder="(555) 010-0143" value="${state.phone}"></div>`;
+    }else if(state.payer==="business"){
+      idFields=`
+        <p class="fieldset-lead">Business (payer of record)</p>
+        <div class="grid2">
+          <div class="field"><label for="pname">Business name</label>
+            <input id="pname" placeholder="e.g. Northgate Logistics LLC" value="${state.pname}"></div>
+          <div class="field"><label for="entityId">Employer ID (EIN) <span class="hint">Mock EIN only — never a real identifier.</span></label>
+            <input id="entityId" placeholder="12-3456789" value="${state.entityId}"></div>
+        </div>
+        <div class="field"><label for="rel">Relationship to taxpayer</label>
           <select id="rel">${p.rel.map(o=>`<option ${state.rel===o?'selected':''}>${o}</option>`).join("")}</select></div>
-        <div class="field"><label for="email">Payer contact email</label>
-          <input id="email" placeholder="you@example.com" value="${state.email}"></div>
-      </div>
+        <p class="fieldset-lead">Authorized representative</p>
+        <div class="grid2">
+          <div class="field"><label for="repName">Representative name</label>
+            <input id="repName" placeholder="e.g. Dana Okafor" value="${state.repName}"></div>
+          <div class="field"><label for="repTitle">Title</label>
+            <input id="repTitle" placeholder="e.g. Controller" value="${state.repTitle}"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="email">Contact email</label>
+            <input id="email" placeholder="ap@example.com" value="${state.email}"></div>
+          <div class="field"><label for="phone">Contact phone</label>
+            <input id="phone" placeholder="(555) 010-0143" value="${state.phone}"></div>
+        </div>`;
+    }else{ // bank / financial institution
+      idFields=`
+        <p class="fieldset-lead">Institution (payer of record)</p>
+        <div class="grid2">
+          <div class="field"><label for="pname">Institution name</label>
+            <input id="pname" placeholder="e.g. Riverbend Community Bank" value="${state.pname}"></div>
+          <div class="field"><label for="entityId">Routing number <span class="hint">Mock ABA routing number — illustrative only.</span></label>
+            <input id="entityId" placeholder="021000021" value="${state.entityId}"></div>
+        </div>
+        <div class="field"><label for="rel">Basis for submitting</label>
+          <select id="rel">${p.rel.map(o=>`<option ${state.rel===o?'selected':''}>${o}</option>`).join("")}</select></div>
+        <p class="fieldset-lead">Authorized representative</p>
+        <div class="grid2">
+          <div class="field"><label for="repName">Representative name</label>
+            <input id="repName" placeholder="e.g. Morgan Ellery" value="${state.repName}"></div>
+          <div class="field"><label for="repTitle">Title</label>
+            <input id="repTitle" placeholder="e.g. Treasury Operations Officer" value="${state.repTitle}"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="email">Contact email</label>
+            <input id="email" placeholder="treasury@example.com" value="${state.email}"></div>
+          <div class="field"><label for="phone">Contact phone</label>
+            <input id="phone" placeholder="(555) 010-0143" value="${state.phone}"></div>
+        </div>`;
+    }
 
-      <label style="display:block;font-weight:500;font-size:16px;margin:6px 0 6px">Payer identity verification tier <span class="hint" style="font-weight:500">Toggle to see how the flow adapts. This is the open design question.</span></label>
+    body.innerHTML=`<h2>Your identity as the payer</h2>
+      <p class="phint">This is the differentiator: we attach <b>who is paying</b> and <b>the authority to pay</b> to the payment record. Fields adapt to the payer type you chose.</p>
+      ${idFields}
+
+      <label style="display:block;font-weight:500;font-size:16px;margin:6px 0 6px">Payer identity verification tier <span class="hint" style="font-weight:500">Your tier sets a per-payment limit and whether the payment posts immediately or is flagged.</span></label>
       <div class="tiers" id="tiers">
         ${Object.entries(TIERS).map(([k,t])=>`
           <div class="tier ${k} ${state.tier===k?'on':''}" data-k="${k}">
             <span class="tl"><span class="tdot"></span>${t.name}</span>
+            <span class="tlim">${t.lim}</span>
             <span class="tdsc">${t.dsc}</span>
           </div>`).join("")}
       </div>
-      <div class="tiernote" id="tiernote"></div>
+      <div class="gate" id="gate"></div>
 
       <div class="onbehalf">
         <p class="oh-lead">Confirm — you are paying on behalf of</p>
@@ -307,39 +499,67 @@ function renderBody(){
 
       <div class="attest" style="margin-top:14px">Under penalties of perjury, I declare that I am <b id="atRel"></b> and am <b>authorized to make this payment</b> on behalf of the taxpayer identified above. I understand my payer identity is recorded with this payment.</div>
       <label class="checkrow"><input type="checkbox" id="ack" ${state.attest?'checked':''}><span>I confirm the above and authorize this payment.</span></label>`;
-    const pn=body.querySelector("#pname");pn.addEventListener("input",e=>{state.pname=e.target.value;paint();updateNext();});
-    body.querySelector("#rel").addEventListener("change",e=>{state.rel=e.target.value;paint();});
-    body.querySelector("#email").addEventListener("input",e=>{state.email=e.target.value;});
+
+    // wire up fields present for this payer type
+    const bind=(id,key,repaint)=>{const el=body.querySelector("#"+id);if(el)el.addEventListener("input",e=>{state[key]=e.target.value;if(repaint)paint();updateNext();});};
+    bind("pname","pname",true);bind("entityId","entityId");bind("repName","repName",true);bind("repTitle","repTitle");bind("email","email");bind("phone","phone");
+    const relEl=body.querySelector("#rel");if(relEl)relEl.addEventListener("change",e=>{state.rel=e.target.value;paint();});
     body.querySelectorAll(".tier").forEach(t=>t.addEventListener("click",()=>{state.tier=t.dataset.k;renderBody();updateNext();}));
     body.querySelector("#ack").addEventListener("change",e=>{state.attest=e.target.checked;updateNext();});
+
     function paint(){
-      const nm=state.pname.trim()||"You";
+      const nm=payerName();
       body.querySelector("#ohLine").innerHTML=`<b>${nm}</b> (${payerLine()}) → paying <b>${money(state.amount)}</b> for taxpayer <b>token TXP-9F42</b> · ${state.oblig}, TY ${state.year}`;
-      body.querySelector("#atRel").textContent=state.rel.toLowerCase();
-      const t=TIERS[state.tier];
-      body.querySelector("#tiernote").innerHTML=`<b>${t.name} payer.</b> ${t.dsc}`;
+      const at=body.querySelector("#atRel");if(at)at.textContent=(state.rel||"").toLowerCase();
+      paintGate();
     }
     paint();
     next.textContent="Submit payment";
   }else{
+    // Receipt — status reflects tier gating decision
+    const d=gateDecision();
     state.ref=state.ref||genRef();
     const t=TIERS[state.tier];
-    const nm=state.pname.trim()||"Payer";
-    body.innerHTML=`<div class="done-hero"><div class="ring">✓</div>
-      <h2>Payment submitted</h2>
-      <p class="phint" style="margin:0 auto">${money(state.amount)} was submitted toward the taxpayer's ${state.oblig.toLowerCase()} — with your payer identity attached.</p></div>
+    const nm=payerName();
+    const pending=d.status==="flag";
+    const idLine = state.payer==="individual" ? "" :
+      `<div class="readrow"><span class="k">${state.payer==="bank"?"Routing number":"Employer ID (EIN)"}</span><span class="v">${state.entityId||"—"}</span></div>
+       <div class="readrow"><span class="k">Authorized representative</span><span class="v">${(state.repName||"—")}${state.repTitle?" · "+state.repTitle:""}</span></div>`;
+    const applyLine = state.applyMode==="single" ? APPLY.single : `${APPLY[state.applyMode]}${state.applyDetail?" — "+state.applyDetail:""}`;
+    const noticeLine = state.hasNotice ? `<div class="readrow"><span class="k">In response to</span><span class="v">Notice/form ${state.noticeNum} · ${state.noticeDate}</span></div>` : "";
+
+    body.innerHTML=`<div class="done-hero"><div class="ring ${pending?'pending':''}">${pending?'⏳':'✓'}</div>
+      <h2>${pending?'Payment received — pending review':'Payment submitted'}</h2>
+      <p class="phint" style="margin:0 auto">${money(state.amount)} toward the taxpayer's ${state.oblig.toLowerCase()} — with your payer identity attached${pending?', flagged for manual review because the payer is unverified.':' and posted immediately.'}</p></div>
+
+      <div class="por">
+        <div class="porhead">Payer of record</div>
+        <div class="porbody">
+          <div class="porflow">
+            <span class="who">${nm}</span>
+            <span class="arrow" aria-hidden="true">→</span>
+            <span>paid <span class="amt">${money(state.amount)}</span> on behalf of</span>
+            <span class="who">taxpayer TXP-9F42-••••</span>
+          </div>
+          <div class="readrow"><span class="k">Payer type</span><span class="v">${payerLine()}</span></div>
+          ${idLine}
+          <div class="readrow"><span class="k">Authorization</span><span class="v">${state.rel}</span></div>
+          <div class="readrow"><span class="k">Payer contact</span><span class="v">${[state.email,state.phone].filter(Boolean).join(" · ")||"—"}</span></div>
+          <div class="readrow"><span class="k">Payer verification</span><span class="v"><span class="badge ${t.badge}">${state.tier==='t3'?'✓ ':''}${t.name} payer</span></span></div>
+        </div>
+      </div>
+
       <div class="receipt">
         <div class="rhead"><span class="rt">Third-party payment receipt</span><span class="rn">${state.ref}</span></div>
         <div class="rbody">
           <div class="readrow"><span class="k">Amount</span><span class="v">${money(state.amount)}</span></div>
           <div class="readrow"><span class="k">Applied to</span><span class="v">${state.oblig} · ${state.btype} · TY ${state.year}</span></div>
+          <div class="readrow"><span class="k">Application</span><span class="v">${applyLine}</span></div>
+          ${noticeLine}
           <div class="readrow"><span class="k">Taxpayer</span><span class="v">token TXP-9F42-•••• (masked)</span></div>
-          <div class="readrow"><span class="k">Paid by</span><span class="v">${nm} — ${payerLine()}</span></div>
-          <div class="readrow"><span class="k">Authorization</span><span class="v">${state.rel}</span></div>
-          <div class="readrow"><span class="k">Payer verification</span><span class="v"><span class="badge ${t.badge}">${state.tier==='t3'?'✓ ':''}${t.name} payer</span></span></div>
           <div class="readrow"><span class="k">Funding source</span><span class="v">${state.source}</span></div>
           <div class="readrow"><span class="k">Effective date</span><span class="v">${state.date}</span></div>
-          <div class="readrow"><span class="k">Status</span><span class="v"><span class="badge g">✓ Accepted (mock)</span></span></div>
+          <div class="readrow"><span class="k">Status</span><span class="v"><span class="badge ${pending?'a':'g'}">${pending?'⏳ Pending manual review (mock)':'✓ Accepted (mock)'}</span></span></div>
         </div>
       </div>
       <div class="ractions">
@@ -353,17 +573,51 @@ function renderBody(){
     em.addEventListener("click",()=>{em.textContent="Sent ✓";em.style.background="#eef4fb";});
   }
   back.hidden=state.step===0;
+  renderContextBar();
   updateNext();
 }
+
+// Tier gating logic: returns {status:'ok'|'flag'|'block', ...}
+function gateDecision(){
+  const t=TIERS[state.tier],a=amt();
+  if(a>t.limit)return {status:"block",limit:t.limit};
+  if(state.tier==="t1")return {status:"flag"};
+  return {status:"ok"};
+}
+function paintGate(){
+  const g=document.getElementById("gate");if(!g)return;
+  const d=gateDecision(),t=TIERS[state.tier];
+  if(d.status==="block"){
+    g.className="gate block";
+    g.innerHTML=`<div class="gh"><span class="gd"></span>Over your tier limit — can't submit yet</div>
+      This payment of <b>${money(state.amount)}</b> exceeds the <b>${t.name}</b> cap of <b>${money(t.limit)}</b>. Raise your verification tier (email-verify or complete identity proofing) to continue, or lower the amount.`;
+  }else if(d.status==="flag"){
+    g.className="gate flag";
+    g.innerHTML=`<div class="gh"><span class="gd"></span>Will post flagged for manual review</div>
+      As an <b>unverified</b> payer you can submit up to <b>${money(t.limit)}</b>, but the payment posts <b>held for manual review</b> rather than immediately. Email-verify or complete identity proofing for faster, higher-limit posting.`;
+  }else{
+    g.className="gate ok";
+    const immediate=state.tier==="t3";
+    g.innerHTML=`<div class="gh"><span class="gd"></span>Clear to submit — ${immediate?'posts immediately':'faster processing'}</div>
+      As an <b>${t.name}</b> payer this <b>${money(state.amount)}</b> payment is within your ${t.limit===Infinity?'unlimited allowance':'limit of '+money(t.limit)}${immediate?' and posts to the taxpayer immediately.':' and processes on a faster track.'}`;
+  }
+}
+
 function updateNext(){
   if(state.step===0)next.disabled=!state.payer;
-  else if(state.step===3)next.disabled=!(state.attest&&state.pname.trim().length>=2);
+  else if(state.step===1)next.disabled=state.hasNotice===null;
+  else if(state.step===4){
+    const d=gateDecision();
+    next.disabled=!(state.attest && state.pname.trim().length>=2 && d.status!=="block");
+  }
   else next.disabled=false;
 }
 function go(d){
   if(d>0&&state.step<STEPS.length-1)state.step++;
   else if(d<0&&state.step>0)state.step--;
-  else if(d>0&&state.step===STEPS.length-1){state.step=0;state.payer=null;state.pname="";state.attest=false;state.ref=null;}
+  else if(d>0&&state.step===STEPS.length-1){
+    state.step=0;state.payer=null;state.hasNotice=null;state.pname="";state.entityId="";state.repName="";state.repTitle="";state.rel="";state.attest=false;state.ref=null;
+  }
   renderSteps();renderBody();window.scrollTo({top:0,behavior:"smooth"});
 }
 next.addEventListener("click",()=>go(1));
