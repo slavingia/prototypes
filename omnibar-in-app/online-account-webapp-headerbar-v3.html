@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Online Account | Internal Revenue Service</title>
+<title>IRS Online Account — Header omni bar (switcher V3 compact)</title>
 <!-- IRS ODG / USWDS type ramp: Source Sans 3 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,20 +43,18 @@
   .logo .seal{display:flex;align-items:center;flex:0 0 auto}
   .logo .seal img{height:34px;width:auto;display:block}
   .usermenu{position:relative;flex:0 0 auto;margin-left:auto}
-  .acct-trigger{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.28);color:#fff;font-family:inherit;cursor:pointer;padding:6px 12px;border-radius:6px}
+  .acct-trigger{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.28);color:#fff;font-family:inherit;cursor:pointer;padding:9px 12px;border-radius:6px}
   .acct-trigger:hover{background:rgba(255,255,255,.20)}
-  .acct-trigger .acct-text{display:flex;flex-direction:column}
-  .acct-trigger .acct-name{font-size:14px;font-weight:700;line-height:1.25}
-  .acct-trigger .acct-ctx{font-size:12px;opacity:.85;line-height:1.25;white-space:nowrap}
+  .acct-trigger .acct-oneline{font-size:14px;font-weight:600;white-space:nowrap}
+  .acct-trigger .acct-oneline .ctx{opacity:.85}
   .acct-trigger .acct-caret{font-size:12px;opacity:.85}
-  .usermenu-pop{position:absolute;right:0;top:54px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:292px;padding:6px;z-index:60}
+  .usermenu-pop{position:absolute;right:0;top:52px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:300px;padding:6px;z-index:60}
   .pop-head{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 12px 4px}
-  .acct-opt{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;font-family:inherit;text-align:left;padding:9px 12px;cursor:pointer}
+  .acct-opt{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;font-family:inherit;text-align:left;padding:10px 12px;cursor:pointer}
   .acct-opt:hover{background:#eef4fb}
-  .acct-opt .opt-text{display:flex;flex-direction:column}
   .acct-opt .opt-main{font-size:14.5px;font-weight:700;color:var(--ink)}
-  .acct-opt .opt-sub{font-size:12.5px;color:var(--muted)}
-  .acct-opt .opt-check{margin-left:auto;color:var(--irs-blue);font-weight:800;visibility:hidden}
+  .acct-opt .opt-role{margin-left:auto;color:var(--muted);font-size:12.5px;white-space:nowrap}
+  .acct-opt .opt-check{margin-left:10px;color:var(--irs-blue);font-weight:800;visibility:hidden}
   .acct-opt.active .opt-check{visibility:visible}
   .pop-div{height:1px;background:var(--line);margin:6px 0}
   .usermenu-pop a{display:block;padding:9px 12px;color:var(--ink);text-decoration:none;font-size:14.5px;cursor:pointer}
@@ -322,29 +320,22 @@
 
     <div class="usermenu">
       <button class="acct-trigger" id="acctBtn" type="button" aria-haspopup="true" aria-expanded="false">
-        <span class="acct-text">
-          <span class="acct-name">Sahil Lavingia</span>
-          <span class="acct-ctx" id="acctCtx">Individual</span>
-        </span>
+        <span class="acct-oneline">Sahil Lavingia <span class="ctx">· <span id="acctCtx">Individual</span></span></span>
         <span class="acct-caret" aria-hidden="true">⌄</span>
       </button>
       <div class="usermenu-pop" id="userPop" hidden>
         <div class="pop-head">Switch account</div>
         <button class="acct-opt active" type="button" data-ctx="Individual">
-          <span class="opt-text"><span class="opt-main">Individual</span><span class="opt-sub">Sahil Lavingia</span></span>
-          <span class="opt-check" aria-hidden="true">✓</span>
+          <span class="opt-main">Individual</span><span class="opt-role">Sahil Lavingia</span><span class="opt-check" aria-hidden="true">✓</span>
         </button>
-        <button class="acct-opt" type="button" data-ctx="Designated Official · Gumroad, Inc.">
-          <span class="opt-text"><span class="opt-main">Gumroad, Inc.</span><span class="opt-sub">Designated Official</span></span>
-          <span class="opt-check" aria-hidden="true">✓</span>
+        <button class="acct-opt" type="button" data-ctx="Gumroad, Inc.">
+          <span class="opt-main">Gumroad, Inc.</span><span class="opt-role">Designated Official</span><span class="opt-check" aria-hidden="true">✓</span>
         </button>
-        <button class="acct-opt" type="button" data-ctx="Designated Official · Acme Studios LLC">
-          <span class="opt-text"><span class="opt-main">Acme Studios LLC</span><span class="opt-sub">Designated Official</span></span>
-          <span class="opt-check" aria-hidden="true">✓</span>
+        <button class="acct-opt" type="button" data-ctx="Acme Studios LLC">
+          <span class="opt-main">Acme Studios LLC</span><span class="opt-role">Designated Official</span><span class="opt-check" aria-hidden="true">✓</span>
         </button>
-        <button class="acct-opt" type="button" data-ctx="Power of Attorney · Maria R. Okafor">
-          <span class="opt-text"><span class="opt-main">Maria R. Okafor</span><span class="opt-sub">Power of Attorney · Form 2848</span></span>
-          <span class="opt-check" aria-hidden="true">✓</span>
+        <button class="acct-opt" type="button" data-ctx="Maria R. Okafor">
+          <span class="opt-main">Maria R. Okafor</span><span class="opt-role">Power of Attorney</span><span class="opt-check" aria-hidden="true">✓</span>
         </button>
         <div class="pop-div"></div>
         <a><span data-i18n="profile">Profile</span></a>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Online Account | Internal Revenue Service</title>
+<title>IRS Online Account — Header omni bar (switcher V2 chips + grouped)</title>
 <!-- IRS ODG / USWDS type ramp: Source Sans 3 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,9 +49,13 @@
   .acct-trigger .acct-name{font-size:14px;font-weight:700;line-height:1.25}
   .acct-trigger .acct-ctx{font-size:12px;opacity:.85;line-height:1.25;white-space:nowrap}
   .acct-trigger .acct-caret{font-size:12px;opacity:.85}
-  .usermenu-pop{position:absolute;right:0;top:54px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:292px;padding:6px;z-index:60}
+  .chip{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:11px;flex:0 0 26px}
+  .acct-trigger .chip{background:#fff;color:var(--irs-blue)}
+  .acct-opt .chip{color:#fff}
+  .chip-g{background:#5b3fa0}.chip-a{background:#00687d}.chip-m{background:#8a6d00}
+  .usermenu-pop{position:absolute;right:0;top:54px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 34px rgba(0,40,90,.22);min-width:300px;padding:6px;z-index:60}
   .pop-head{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 12px 4px}
-  .acct-opt{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;font-family:inherit;text-align:left;padding:9px 12px;cursor:pointer}
+  .acct-opt{display:flex;align-items:center;gap:11px;width:100%;background:none;border:0;font-family:inherit;text-align:left;padding:9px 12px;cursor:pointer}
   .acct-opt:hover{background:#eef4fb}
   .acct-opt .opt-text{display:flex;flex-direction:column}
   .acct-opt .opt-main{font-size:14.5px;font-weight:700;color:var(--ink)}
@@ -322,6 +326,7 @@
 
     <div class="usermenu">
       <button class="acct-trigger" id="acctBtn" type="button" aria-haspopup="true" aria-expanded="false">
+        <span class="chip" aria-hidden="true">SL</span>
         <span class="acct-text">
           <span class="acct-name">Sahil Lavingia</span>
           <span class="acct-ctx" id="acctCtx">Individual</span>
@@ -329,20 +334,25 @@
         <span class="acct-caret" aria-hidden="true">⌄</span>
       </button>
       <div class="usermenu-pop" id="userPop" hidden>
-        <div class="pop-head">Switch account</div>
+        <div class="pop-head">You</div>
         <button class="acct-opt active" type="button" data-ctx="Individual">
+          <span class="chip" aria-hidden="true">SL</span>
           <span class="opt-text"><span class="opt-main">Individual</span><span class="opt-sub">Sahil Lavingia</span></span>
           <span class="opt-check" aria-hidden="true">✓</span>
         </button>
+        <div class="pop-head">Businesses &amp; clients</div>
         <button class="acct-opt" type="button" data-ctx="Designated Official · Gumroad, Inc.">
+          <span class="chip chip-g" aria-hidden="true">G</span>
           <span class="opt-text"><span class="opt-main">Gumroad, Inc.</span><span class="opt-sub">Designated Official</span></span>
           <span class="opt-check" aria-hidden="true">✓</span>
         </button>
         <button class="acct-opt" type="button" data-ctx="Designated Official · Acme Studios LLC">
+          <span class="chip chip-a" aria-hidden="true">A</span>
           <span class="opt-text"><span class="opt-main">Acme Studios LLC</span><span class="opt-sub">Designated Official</span></span>
           <span class="opt-check" aria-hidden="true">✓</span>
         </button>
         <button class="acct-opt" type="button" data-ctx="Power of Attorney · Maria R. Okafor">
+          <span class="chip chip-m" aria-hidden="true">MO</span>
           <span class="opt-text"><span class="opt-main">Maria R. Okafor</span><span class="opt-sub">Power of Attorney · Form 2848</span></span>
           <span class="opt-check" aria-hidden="true">✓</span>
         </button>
