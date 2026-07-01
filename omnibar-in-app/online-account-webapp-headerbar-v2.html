@@ -70,6 +70,12 @@
 
   /* ---------------- HEADER OMNIBAR (command-palette style, in the masthead) ---------------- */
   .omni-band{position:relative;z-index:50;flex:1 1 auto;max-width:560px;margin:0 6px}
+  /* mobile: wrap the masthead so the omni bar gets its own full-width row (no overflow/collision) */
+  @media(max-width:720px){
+    .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:10px;padding-bottom:10px;row-gap:12px}
+    .usermenu{margin-left:auto}
+    .omni-band{order:3;flex:0 0 100%;max-width:100%;margin:0}
+  }
   .omni-input-wrap{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.34);border-radius:11px;padding:0 8px 0 13px;height:40px;position:relative;z-index:3;cursor:text;transition:background .12s,border-color .12s,box-shadow .12s}
   .omni-input-wrap:hover{background:rgba(255,255,255,.24)}
   .omni-input-wrap:focus-within{background:#fff;border-color:#fff;box-shadow:0 14px 44px rgba(0,18,46,.40)}
