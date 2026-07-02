@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Direct Pay with a bank account — IRS (concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --line-strong:#9aa7b5; --step-pend:#5B616B; --accent-blue:#004c97;
+    --btn-disabled-bg:#aebccb; --btn-disabled-ink:#fff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4;
+      --tint:#20262c; --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --line-strong:#4d5866; --step-pend:#9aa1a9; --accent-blue:#79b4e6;
+      --btn-disabled-bg:#39424c; --btn-disabled-ink:#aeb6bf;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner */
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{transition:transform .15s}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink)}
+  .gov .gcol .gi{flex:0 0 18px;color:var(--irs-blue)}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:66ch;margin:0 0 18px}
+
+  /* account-type toggle */
+  .acct{display:flex;gap:12px;margin:0 0 22px}
+  .acct .aopt{flex:1;border:1px solid var(--line);padding:14px 16px;cursor:pointer;display:flex;gap:12px;align-items:flex-start}
+  .acct .aopt:hover{border-color:var(--irs-blue);background:var(--tint)}
+  .acct .aopt.on{border-color:var(--irs-blue);background:var(--tint-blue);box-shadow:inset 3px 0 0 var(--irs-blue)}
+  .acct .aopt .ai{width:40px;height:40px;border-radius:4px;flex:0 0 40px;display:grid;place-items:center;background:var(--irs-blue);color:#fff}
+  .acct .aopt .ac{font-weight:700;font-size:16.5px}
+  .acct .aopt .ad{font-size:13.5px;color:var(--muted);margin-top:2px}
+
+  /* Direct-Pay style step tab bar */
+  .tabs{display:flex;border:1px solid var(--line);margin:0 0 0}
+  .tabs .tab{flex:1;padding:11px 8px;text-align:center;font-size:13px;font-weight:500;color:var(--muted);border-left:1px solid var(--line);background:var(--surface-2);position:relative}
+  .tabs .tab:first-child{border-left:0}
+  .tabs .tab .tn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:11.5px;font-weight:800;background:var(--surface);color:var(--step-pend);border:1px solid var(--step-pend);margin-right:6px;vertical-align:-3px}
+  .tabs .tab.done{color:var(--ink);background:var(--surface)}
+  .tabs .tab.done .tn{background:#00599C;color:#fff;border-color:#00599C}
+  .tabs .tab.current{color:#fff;background:var(--irs-blue)}
+  .tabs .tab.current .tn{background:#fff;color:var(--irs-blue);border-color:#fff}
+  @media(max-width:720px){.tabs .tab .tl{display:none}.tabs .tab .tn{margin-right:0}}
+
+  .panel{border:1px solid var(--line);border-top:0;padding:26px 30px;min-height:420px}
+  .panel h2{font-size:23px;font-weight:800;margin:0 0 4px}
+  .panel .phint{color:var(--muted);font-size:16px;margin:0 0 20px;max-width:64ch}
+
+  .field{margin:0 0 18px}
+  .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
+  .field .hint{font-size:14px;color:var(--muted);font-weight:500;display:block;margin-bottom:5px}
+  .field input,.field select,.field textarea{width:100%;border:1px solid var(--line-strong);border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px;background:var(--surface);color:var(--ink)}
+  .field input:focus,.field select:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
+  @media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr}}
+  .lead{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-blue);margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+  .lead:first-child{border-top:0;padding-top:0;margin-top:0}
+
+  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .readrow:last-child{border-bottom:0}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%} .readrow .v{text-align:left}
+
+  /* processing-time note (replaces tier gate) */
+  .note{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint);padding:13px 16px;font-size:14.5px;margin:16px 0 4px;line-height:1.45}
+  .note .nh{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin:0 0 4px;color:var(--ink)}
+  .note b{color:var(--ink)}
+  .disc{font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.4}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:12px 22px;border-radius:4px;cursor:pointer}
+  .btn:hover{background:#003a73}
+  .btn[disabled]{background:var(--btn-disabled-bg);color:var(--btn-disabled-ink);cursor:not-allowed}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:26px;border-top:1px solid var(--line);padding-top:20px}
+  .foot .back{border:0;background:none;color:var(--link);font-family:inherit;font-size:15px;cursor:pointer;text-decoration:underline}
+  .foot .back[hidden]{visibility:hidden}
+
+  .ring{width:58px;height:58px;border-radius:50%;background:var(--irs-blue);color:#fff;display:grid;place-items:center;margin:0 0 14px}
+  .ring svg{width:30px;height:30px}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Direct Pay</span></div>
+    <div class="util"><a>Sign in</a><a>Help</a><a>Español</a></div>
+  </div></div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Payments</a> / <a>Direct Pay</a> / Pay with a bank account</p>
+    <h1 class="page">Pay with a bank account (Direct Pay)</h1>
+    <p class="sub">Pay directly from a checking or savings account at no cost. Choose whether the payment is for an <b>individual</b> or a <b>business</b> account, then follow the five steps. Payments are made by <b>ACH bank transfer only</b> — no card, no wallet.</p>
+
+    <div class="acct" id="acct"></div>
+
+    <div class="tabs" id="tabs"></div>
+    <section class="panel">
+      <div id="body"></div>
+      <div class="foot" id="foot">
+        <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+        <button class="btn" id="next">Continue</button>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link);text-decoration:none"><svg class="ic" viewBox="0 0 16 16"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+const IC_PERSON=`<svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg>`;
+const IC_BUILDING=`<svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg>`;
+const IC_CLOCK=`<svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.8V8l2.3 1.6"/></g></svg>`;
+const IC_CHECK=`<svg viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+// Full Direct Pay reason catalog — individual (IMF) and business (BMF).
+const CAT={
+  individual:{
+    label:"An individual", short:"Individual", icon:IC_PERSON,
+    idLabel:"Social Security Number (SSN) or ITIN", idPlaceholder:"e.g. 400-00-0000 (mock)",
+    nameLabel:"Taxpayer name (as on the return)", namePlaceholder:"e.g. Jordan A. Rivera",
+    post:"Individual (IMF) payments generally post to the account in about <b>2 business days</b>.",
+    reasons:[
+      {v:"balance",  t:"Balance due",                     apply:"Form 1040 series",     periods:"2019–2025"},
+      {v:"estimated",t:"Estimated tax",                   apply:"Form 1040-ES",         periods:"2025 (Q1–Q4)"},
+      {v:"extension",t:"Extension to file",               apply:"Form 4868",            periods:"2024"},
+      {v:"notice",   t:"Tax return or notice",            apply:"Form 1040 series",     periods:"2019–2025"},
+      {v:"amended",  t:"Amended return",                  apply:"Form 1040-X",          periods:"2019–2024"},
+      {v:"cp2000",   t:"Proposed tax assessment",         apply:"CP2000 / CP2501 / CP3219A", periods:"2021–2024"},
+      {v:"installment",t:"Installment agreement",         apply:"Form 1040 series",     periods:"2018–2025"},
+      {v:"deficiency",t:"Advance payment of a deficiency",apply:"Form 1040 series",     periods:"2020–2024"},
+      {v:"health",   t:"Health care — shared responsibility",apply:"Form 1040 (ISRP)", periods:"2016–2018"}
+    ]
+  },
+  business:{
+    label:"A business", short:"Business", icon:IC_BUILDING,
+    idLabel:"Employer Identification Number (EIN)", idPlaceholder:"e.g. 00-0000000 (mock)",
+    nameLabel:"Business name (as on the return)", namePlaceholder:"e.g. Blue Harbor Roasters LLC",
+    post:"Business (BMF) payments settle on a <b>weekly processing cycle</b> — allow up to a week for the payment to post to the account.",
+    reasons:[
+      {v:"941", t:"Form 941 — Employer's quarterly federal tax",   apply:"Form 941",   periods:"2025 (Q1–Q4)"},
+      {v:"940", t:"Form 940 — Federal unemployment (FUTA)",        apply:"Form 940",   periods:"2024–2025"},
+      {v:"943", t:"Form 943 — Agricultural employees",             apply:"Form 943",   periods:"2024–2025"},
+      {v:"944", t:"Form 944 — Employer's annual federal tax",      apply:"Form 944",   periods:"2024–2025"},
+      {v:"945", t:"Form 945 — Withheld federal income tax",        apply:"Form 945",   periods:"2024–2025"},
+      {v:"1120",t:"Form 1120 — Corporation income tax",            apply:"Form 1120",  periods:"2023–2025"},
+      {v:"1120s",t:"Form 1120-S — S corporation",                 apply:"Form 1120-S",periods:"2023–2025"},
+      {v:"2290",t:"Form 2290 — Heavy highway vehicle use",         apply:"Form 2290",  periods:"2024–2025"},
+      {v:"720", t:"Form 720 — Quarterly federal excise tax",       apply:"Form 720",   periods:"2025 (Q1–Q4)"},
+      {v:"1041",t:"Form 1041 — Estates and trusts income tax",     apply:"Form 1041",  periods:"2023–2025"}
+    ]
+  }
+};
+const STEPS=["Reason","Amount","Verify identity","Bank / ACH","Review"];
+const st={acct:"individual", step:0, data:{}};
+
+const acctEl=document.getElementById("acct"), tabsEl=document.getElementById("tabs"),
+      bodyEl=document.getElementById("body"), backEl=document.getElementById("back"),
+      nextEl=document.getElementById("next"), footEl=document.getElementById("foot");
+
+function renderAcct(){
+  acctEl.innerHTML=Object.entries(CAT).map(([k,c])=>
+    `<div class="aopt ${k===st.acct?'on':''}" data-a="${k}">
+      <span class="ai">${c.icon}</span>
+      <span><span class="ac">${c.label}</span><span class="ad">${k==='individual'?'SSN/ITIN · IMF account · posts in ~2 business days':'EIN · BMF account · weekly processing cycle'}</span></span>
+    </div>`).join("");
+  acctEl.querySelectorAll(".aopt").forEach(o=>o.onclick=()=>{
+    if(st.acct!==o.dataset.a){st.acct=o.dataset.a; st.step=0; st.data={}; renderAll();}
+  });
+}
+function renderTabs(){
+  tabsEl.innerHTML=STEPS.map((s,i)=>
+    `<div class="tab ${i<st.step?'done':''} ${i===st.step?'current':''}">
+      <span class="tn">${i<st.step?IC_CHECK:(i+1)}</span><span class="tl">${s}</span>
+    </div>`).join("");
+}
+function esc(v){return (v||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function renderBody(){
+  const c=CAT[st.acct], d=st.data;
+  if(st.step===0){
+    const opts=c.reasons.map(r=>`<option value="${r.v}" ${d.reason===r.v?'selected':''}>${r.t}</option>`).join("");
+    bodyEl.innerHTML=`<h2>Reason for payment</h2>
+      <p class="phint">Tell us why you're paying so we apply it to the right ${c.short.toLowerCase()} account. This catalog mirrors the full set of Direct Pay reasons for a <b>${c.short}</b> account.</p>
+      <div class="field"><label for="reason">Reason for payment</label>
+        <span class="hint">All ${c.reasons.length} ${c.short.toLowerCase()} payment types are available.</span>
+        <select id="reason">${opts}</select></div>
+      <div class="grid2">
+        <div class="field"><label for="apply">Apply payment to</label><input id="apply" readonly></div>
+        <div class="field"><label for="period">Tax period</label><select id="period"></select></div>
+      </div>`;
+    const sel=document.getElementById("reason"), applyEl=document.getElementById("apply"), periodEl=document.getElementById("period");
+    function sync(){
+      const r=c.reasons.find(x=>x.v===sel.value);
+      applyEl.value=r.apply;
+      periodEl.innerHTML=r.periods.split(",").map(p=>`<option>${p.trim()}</option>`).join("")||`<option>${r.periods}</option>`;
+    }
+    sel.onchange=sync; if(!d.reason)sel.value=c.reasons[0].v; sync();
+  } else if(st.step===1){
+    bodyEl.innerHTML=`<h2>Payment amount</h2>
+      <p class="phint">Enter the amount to pay from the bank account. This is a mock prototype — no money moves.</p>
+      <div class="field"><label for="amt">Amount (USD)</label>
+        <span class="hint">Whole dollars and cents. Example: 1,250.00</span>
+        <input id="amt" inputmode="decimal" placeholder="$0.00" value="${esc(d.amt||'')}"></div>
+      <div class="note"><div class="nh">${IC_CLOCK} Processing time</div>${c.post} You'll pick the settlement date on the next steps.</div>`;
+  } else if(st.step===2){
+    bodyEl.innerHTML=`<h2>Verify your identity</h2>
+      <p class="phint">Enter <b>all</b> of the ${c.short.toLowerCase()}'s tax information exactly as it appears on the return being paid. This full entry is how the payment is matched — there is no shortcut tier.</p>
+      <p class="lead">${c.short} on record</p>
+      <div class="field"><label for="tname">${c.nameLabel}</label><input id="tname" placeholder="${c.namePlaceholder}" value="${esc(d.tname||'')}"></div>
+      <div class="grid2">
+        <div class="field"><label for="tid">${c.idLabel}</label><input id="tid" placeholder="${c.idPlaceholder}" value="${esc(d.tid||'')}"></div>
+        <div class="field"><label for="tfy">Tax year of the return that matches</label><input id="tfy" placeholder="e.g. 2023" value="${esc(d.tfy||'')}"></div>
+      </div>
+      <p class="lead">Address on that return</p>
+      <div class="field"><label for="taddr">Street address</label><input id="taddr" placeholder="e.g. 118 Mock Harbor Rd" value="${esc(d.taddr||'')}"></div>
+      <div class="grid3">
+        <div class="field"><label for="tcity">City</label><input id="tcity" placeholder="e.g. Springfield" value="${esc(d.tcity||'')}"></div>
+        <div class="field"><label for="tstate">State</label><input id="tstate" placeholder="e.g. OR" value="${esc(d.tstate||'')}"></div>
+        <div class="field"><label for="tzip">ZIP</label><input id="tzip" placeholder="e.g. 97000" value="${esc(d.tzip||'')}"></div>
+      </div>`;
+  } else if(st.step===3){
+    bodyEl.innerHTML=`<h2>Bank account (ACH)</h2>
+      <p class="phint">Payments are made by <b>ACH bank transfer only</b>. Enter a U.S. checking or savings account. No debit or credit cards are accepted.</p>
+      <div class="field"><label for="btype">Account type</label>
+        <select id="btype"><option ${d.btype==='Checking'?'selected':''}>Checking</option><option ${d.btype==='Savings'?'selected':''}>Savings</option></select></div>
+      <div class="grid2">
+        <div class="field"><label for="brtn">Routing number</label><span class="hint">9 digits, bottom-left of a check.</span><input id="brtn" inputmode="numeric" placeholder="e.g. 011000015 (mock)" value="${esc(d.brtn||'')}"></div>
+        <div class="field"><label for="bacct">Account number</label><span class="hint">Mock value only.</span><input id="bacct" inputmode="numeric" placeholder="e.g. 0000123456" value="${esc(d.bacct||'')}"></div>
+      </div>
+      <div class="field"><label for="bdate">Settlement date</label><span class="hint">The date the ACH debit is initiated.</span><input id="bdate" type="date" value="${esc(d.bdate||'')}"></div>
+      <div class="field"><label for="bemail">Email for confirmation</label><input id="bemail" placeholder="e.g. payer@example.com (mock)" value="${esc(d.bemail||'')}"></div>`;
+  } else if(st.step===4){
+    const r=c.reasons.find(x=>x.v===d.reason)||c.reasons[0];
+    bodyEl.innerHTML=`<h2>Review and submit</h2>
+      <p class="phint">Confirm the details below. Nothing is sent — this is a design prototype.</p>
+      <div class="readrow"><span class="k">Account type</span><span class="v">${c.short} (${st.acct==='individual'?'IMF':'BMF'})</span></div>
+      <div class="readrow"><span class="k">Reason</span><span class="v">${r.t}</span></div>
+      <div class="readrow"><span class="k">Apply to · period</span><span class="v">${r.apply} · ${esc(d.period||'')}</span></div>
+      <div class="readrow"><span class="k">Amount</span><span class="v">${esc(d.amt||'—')}</span></div>
+      <div class="readrow"><span class="k">${c.nameLabel}</span><span class="v">${esc(d.tname||'—')}</span></div>
+      <div class="readrow"><span class="k">${c.idLabel}</span><span class="v">${esc(d.tid||'—')}</span></div>
+      <div class="readrow"><span class="k">Bank (ACH)</span><span class="v">${esc(d.btype||'Checking')} · routing ${esc(d.brtn||'—')}</span></div>
+      <div class="readrow"><span class="k">Settlement date</span><span class="v">${esc(d.bdate||'—')}</span></div>
+      <div class="note"><div class="nh">${IC_CLOCK} When this posts</div>${c.post}</div>`;
+  } else {
+    const r=CAT[st.acct].reasons.find(x=>x.v===d.reason)||CAT[st.acct].reasons[0];
+    footEl.style.display="none";
+    bodyEl.innerHTML=`<div class="ring">${IC_CHECK}</div>
+      <h2>Payment scheduled (mock)</h2>
+      <p class="phint">Confirmation number <b>DP-${st.acct==='individual'?'I':'B'}-4827-MOCK</b>. A receipt would be emailed to the address you entered.</p>
+      <div class="readrow"><span class="k">Reason</span><span class="v">${r.t}</span></div>
+      <div class="readrow"><span class="k">Amount</span><span class="v">${esc(d.amt||'—')}</span></div>
+      <div class="note"><div class="nh">${IC_CLOCK} Expected posting</div>${CAT[st.acct].post}</div>
+      <p class="disc">This confirmation is illustrative. No payment was initiated and no bank account was contacted.</p>`;
+    return;
+  }
+  backEl.hidden = st.step===0;
+  nextEl.textContent = st.step===4 ? "Submit payment" : "Continue";
+}
+function collect(){
+  const g=id=>{const e=document.getElementById(id);return e?e.value:undefined;};
+  const d=st.data;
+  if(st.step===0){d.reason=g("reason");d.period=g("period");}
+  else if(st.step===1){d.amt=g("amt");}
+  else if(st.step===2){["tname","tid","tfy","taddr","tcity","tstate","tzip"].forEach(k=>d[k]=g(k));}
+  else if(st.step===3){["btype","brtn","bacct","bdate","bemail"].forEach(k=>d[k]=g(k));}
+}
+function renderAll(){renderAcct();renderTabs();renderBody();window.scrollTo({top:0,behavior:'smooth'});}
+nextEl.onclick=()=>{collect(); if(st.step<5)st.step++; renderTabs(); renderBody(); window.scrollTo({top:200,behavior:'smooth'});};
+backEl.onclick=()=>{collect(); if(st.step>0)st.step--; renderTabs(); renderBody();};
+
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");});
+renderAll();
+</script>
+</body>
+</html>
