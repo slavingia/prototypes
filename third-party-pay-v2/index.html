@@ -3,36 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>Bulk third-party payments — Institution console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
 <style>
   :root{
+    color-scheme:light dark;
     --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
     --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
-    --teal:#00687d; --bg:#fff;
+    --teal:#00687d; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0; --surface-3:#f4f6f9;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --tint-green:#eef6f0; --tint-amber:#fbf7e9; --tint-red:#fbf1f1;
+    --line-green:#bcdcc6; --line-amber:#e7d9a6;
+    --ink-2:#333; --line-strong:#9aa7b5; --step-pend:#5B616B; --accent-blue:#004c97;
+    --btn-disabled-bg:#aebccb; --btn-disabled-ink:#fff; --pill-ink:#fff; --paid-ink:#fff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a;        /* page background */
+      --surface:#1e2328;   /* cards, panels, dropdowns */
+      --surface-2:#262c33; /* nested / tinted panels (was #f5f9fd etc.) */
+      --ink:#e8eaed;       --muted:#9aa1a9;
+      --line:#3d4551;      --link:#79b4e6;
+      --green:#55b685;     --amber:#d9ae4a;  --red:#f2857f;
+      --teal:#57bfd4;      --violet:#ab96ee;
+      /* extra tokens introduced by this prototype */
+      --surface-3:#262c33;
+      --tint:#20262c;
+      --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --tint-green:color-mix(in srgb, var(--green) 16%, var(--surface));
+      --tint-amber:color-mix(in srgb, var(--amber) 14%, var(--surface));
+      --tint-red:color-mix(in srgb, var(--red) 14%, var(--surface));
+      --line-green:color-mix(in srgb, var(--green) 40%, var(--surface));
+      --line-amber:color-mix(in srgb, var(--amber) 40%, var(--surface));
+      --ink-2:#c9cdd2; --line-strong:#4d5866; --step-pend:#9aa1a9; --accent-blue:#79b4e6;
+      --btn-disabled-bg:#39424c; --btn-disabled-ink:#aeb6bf; --pill-ink:#14171a; --paid-ink:#14171a;
+    }
   }
   *{box-sizing:border-box}
   .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
-  body{margin:0;background:#fff;color:var(--ink);
+  body{margin:0;background:var(--bg);color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
   a:hover{text-decoration:none}
   .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
 
   /* USWDS official government banner (IRS ODG) */
-  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov{background:var(--surface-2);font-size:12.5px}
   .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1120px;margin:0 auto}
   .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
   .gov .flag svg{width:16px;height:11px;display:block}
-  .gov .banner-inner .txt{color:#1b1b1b}
+  .gov .banner-inner .txt{color:var(--ink)}
   .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
   .gov .howbtn .chev{font-size:10px;transition:transform .15s}
   .gov .guidance{display:none;max-width:1120px;margin:0 auto;padding:8px 16px 16px}
   .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
   .gov.open .howbtn .chev{transform:rotate(180deg)}
-  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#3a3a3a}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-2)}
   .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
   .gov .gcol b{color:var(--ink)}
   @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
@@ -55,23 +83,23 @@
   .sub{font-size:17px;color:var(--muted);max-width:70ch;margin:0 0 20px}
 
   /* institution identity banner — payer applied to every row */
-  .payerbar{display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:#fafcfe;padding:14px 18px;margin:0 0 8px}
+  .payerbar{display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:var(--tint);padding:14px 18px;margin:0 0 8px}
   .payerbar .pi{width:44px;height:44px;border-radius:4px;background:var(--irs-navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;flex:0 0 44px}
   .payerbar .pn{font-weight:800;font-size:17px}
   .payerbar .pd{font-size:13.5px;color:var(--muted);margin-top:1px}
-  .payerbar .tierbadge{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;border:1px solid #bcdcc6;background:#eef6f0;color:var(--green);padding:6px 12px;border-radius:99px}
+  .payerbar .tierbadge{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;border:1px solid var(--line-green);background:var(--tint-green);color:var(--green);padding:6px 12px;border-radius:99px}
   .payerbar .tierbadge .tdot{width:10px;height:10px;border-radius:50%;background:var(--green)}
   .appliesnote{font-size:13px;color:var(--muted);margin:0 0 22px}
   .appliesnote b{color:var(--ink)}
 
   /* prominent "paying on behalf of" banner */
-  .obo{display:flex;align-items:center;gap:16px;border:1px solid var(--irs-blue);border-left:6px solid var(--irs-blue);background:#eef4fb;padding:16px 20px;margin:0 0 22px}
+  .obo{display:flex;align-items:center;gap:16px;border:1px solid var(--irs-blue);border-left:6px solid var(--irs-blue);background:var(--tint-blue);padding:16px 20px;margin:0 0 22px}
   .obo .obicon{width:40px;height:40px;border-radius:4px;background:var(--irs-navy);color:#fff;display:grid;place-items:center;flex:0 0 40px}
   .obo .obicon svg{width:22px;height:22px}
   .obo .obtxt{line-height:1.35}
-  .obo .obkick{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--irs-blue)}
+  .obo .obkick{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--accent-blue)}
   .obo .obmain{font-size:18px;font-weight:800;color:var(--ink);margin-top:2px}
-  .obo .obmain .who{color:var(--irs-blue)}
+  .obo .obmain .who{color:var(--accent-blue)}
   .obo .obsub{font-size:13.5px;color:var(--muted);margin-top:2px}
   @media(max-width:640px){.obo{flex-wrap:wrap}.obo .obmain{font-size:16px}}
 
@@ -82,8 +110,8 @@
   /* step rail (vertical timeline) */
   .rail{border:1px solid var(--line);padding:8px 0}
   .rail .rstep{position:relative;display:flex;gap:12px;align-items:flex-start;padding:14px 18px;font-size:14px}
-  .rail .rstep.current{background:#eef4fb}
-  .rail .rstep .num{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:grid;place-items:center;font-size:12px;font-weight:800;background:#fff;color:#5B616B;border:1px solid #5B616B;z-index:1}
+  .rail .rstep.current{background:var(--tint-blue)}
+  .rail .rstep .num{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--surface);color:var(--step-pend);border:1px solid var(--step-pend);z-index:1}
   .rail .rstep.done .num{background:#00599C;color:#fff;border-color:#00599C}
   .rail .rstep.current .num{background:#002D62;color:#fff;border-color:#002D62}
   /* connector line between step dots */
@@ -99,64 +127,65 @@
   .panel .phint{color:var(--muted);font-size:16px;margin:0 0 20px;max-width:74ch}
 
   /* dropzone */
-  .drop{border:2px dashed #9aa7b5;background:#fafcfe;padding:36px 24px;text-align:center}
+  .drop{border:2px dashed var(--line-strong);background:var(--tint);padding:36px 24px;text-align:center}
   .drop .di{font-size:40px}
   .drop .dt{font-weight:800;font-size:18px;margin:8px 0 4px}
   .drop .dd{font-size:14px;color:var(--muted);margin:0 0 16px}
   .drop .fake{font-size:13px;color:var(--muted);margin-top:14px}
   .schema{border:1px solid var(--line);margin:18px 0 0;font-size:13.5px}
-  .schema .sh{background:#f4f6f9;font-weight:800;padding:9px 14px;border-bottom:1px solid var(--line)}
-  .schema code{display:block;padding:12px 14px;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:#333;white-space:pre-wrap;line-height:1.6}
+  .schema .sh{background:var(--surface-3);font-weight:800;padding:9px 14px;border-bottom:1px solid var(--line)}
+  .schema code{display:block;padding:12px 14px;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--ink-2);white-space:pre-wrap;line-height:1.6}
 
   /* summary tiles */
   .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 20px}
   .tile{border:1px solid var(--line);padding:14px 16px}
   .tile .tn{font-size:26px;font-weight:800;line-height:1}
   .tile .tl{font-size:12.5px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
-  .tile.warn{border-color:#e7d9a6;background:#fbf7e9}
+  .tile.warn{border-color:var(--line-amber);background:var(--tint-amber)}
   .tile.warn .tn{color:var(--amber)}
   @media(max-width:720px){.tiles{grid-template-columns:1fr 1fr}}
 
   /* review table */
   .tablewrap{border:1px solid var(--line);overflow-x:auto}
   table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
-  thead th{background:#f4f6f9;text-align:left;padding:11px 14px;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#333;border-bottom:1px solid var(--line);white-space:nowrap}
+  thead th{background:var(--surface-3);text-align:left;padding:11px 14px;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-2);border-bottom:1px solid var(--line);white-space:nowrap}
   tbody td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
   tbody tr:last-child td{border-bottom:0}
-  tbody tr.err{background:#fbf1f1}
+  tbody tr.err{background:var(--tint-red)}
   .amt{font-variant-numeric:tabular-nums;font-weight:700}
   .rowstat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;white-space:nowrap}
   .rowstat .sdot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
   .ok .sdot{background:var(--green)} .ok{color:var(--green)}
   .bad .sdot{background:var(--red)} .bad{color:var(--red)}
   .fix{font-size:12px;color:var(--red)}
-  .token{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#333}
+  .token{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--ink-2)}
 
   .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:12px 22px;border-radius:4px;text-decoration:none;cursor:pointer}
   .btn:hover{background:#003a73}
-  .btn[disabled]{background:#aebccb;cursor:not-allowed}
-  .btn.ghost{background:#fff;color:var(--irs-blue);border:1.5px solid var(--irs-blue)}
-  .btn.ghost:hover{background:#eef4fb}
+  .btn[disabled]{background:var(--btn-disabled-bg);color:var(--btn-disabled-ink);cursor:not-allowed}
+  .btn.ghost{background:var(--surface);color:var(--accent-blue);border:1.5px solid var(--accent-blue)}
+  .btn.ghost:hover{background:var(--tint-blue)}
+  .btn.paid{background:var(--green);color:var(--paid-ink)}
   .foot{display:flex;justify-content:space-between;align-items:center;margin-top:24px;border-top:1px solid var(--line);padding-top:20px;gap:12px;flex-wrap:wrap}
   .foot .back{border:0;background:none;color:var(--link);font-family:inherit;font-size:15px;cursor:pointer;text-decoration:underline}
 
-  .attest{background:#fafcfe;border:1px solid var(--line);padding:16px 18px;font-size:14px;color:#333;margin:18px 0 12px}
+  .attest{background:var(--tint);border:1px solid var(--line);padding:16px 18px;font-size:14px;color:var(--ink-2);margin:18px 0 12px}
   .attest b{color:var(--ink)}
   .checkrow{display:flex;gap:11px;align-items:flex-start;margin:12px 0;font-size:14.5px}
   .checkrow input{margin-top:3px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
 
   /* success */
   .done-hero{text-align:center;padding:12px 0 4px}
-  .done-hero .ring{width:70px;height:70px;border-radius:50%;background:#eef6f0;border:2px solid var(--green);color:var(--green);display:grid;place-items:center;font-size:32px;font-weight:800;margin:0 auto 12px}
-  .batchbox{margin:18px auto 8px;max-width:560px;border:2px dashed var(--irs-blue);padding:16px;text-align:center;background:#fafcfe}
+  .done-hero .ring{width:70px;height:70px;border-radius:50%;background:var(--tint-green);border:2px solid var(--green);color:var(--green);display:grid;place-items:center;font-size:32px;font-weight:800;margin:0 auto 12px}
+  .batchbox{margin:18px auto 8px;max-width:560px;border:2px dashed var(--irs-blue);padding:16px;text-align:center;background:var(--tint)}
   .batchbox .pl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-  .batchbox .pv{font-size:26px;font-weight:800;letter-spacing:.08em;color:var(--irs-blue);font-family:ui-monospace,Menlo,monospace;margin:6px 0}
-  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid #D6D7D9;font-size:15px}
+  .batchbox .pv{font-size:26px;font-weight:800;letter-spacing:.08em;color:var(--accent-blue);font-family:ui-monospace,Menlo,monospace;margin:6px 0}
+  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
   .readrow:last-child{border-bottom:0}
-  .readrow .k{color:#1b1b1b;font-weight:700;width:50%} .readrow .v{text-align:left}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%} .readrow .v{text-align:left}
 
   .note{font-size:12px;color:var(--muted);font-style:italic;margin:16px 0 0}
-  .pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--teal);border-radius:6px;padding:2px 8px;vertical-align:middle;margin-left:8px}
+  .pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--pill-ink);background:var(--teal);border-radius:6px;padding:2px 8px;vertical-align:middle;margin-left:8px}
 
   @media(max-width:640px){
     .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;row-gap:6px}
@@ -347,7 +376,7 @@ function renderBody(){
       <p class="note">Bulk pathway turns a stack of phone/mail payments into one authenticated file — and still attaches payer identity to every single payment.</p>`;
     back.hidden=false;next.textContent="New batch";
     const dl=document.getElementById("dl"),err=document.getElementById("err");
-    dl.addEventListener("click",()=>{dl.innerHTML=`Manifest downloaded ${IC_CHECK}`;dl.style.background="var(--green)";});
+    dl.addEventListener("click",()=>{dl.innerHTML=`Manifest downloaded ${IC_CHECK}`;dl.classList.add("paid");});
     err.addEventListener("click",()=>{err.innerHTML=`Error rows downloaded ${IC_CHECK}`;err.style.borderColor="var(--green)";err.style.color="var(--green)";});
   }
   back.hidden=state.step===0;
