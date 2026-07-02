@@ -15,6 +15,7 @@
     --teal:#00687d; --violet:#5b3fa0; --bg:#fff;
   }
   *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   body{margin:0;background:#fff;color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
@@ -198,8 +199,8 @@
       <button class="howbtn" id="howbtn" aria-label="Here's how you know" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -239,7 +240,7 @@
         <button class="btn block" id="doSignin">Sign in</button>
         <p class="alt">or continue with a verified identity</p>
         <button class="idme" id="doSigninIdme"><span class="badge">ID.me</span> Sign in with your verified account</button>
-        <p class="secure-note"><span aria-hidden="true">🔒</span><span>Your sign-in is secure and encrypted. We'll never share your information.</span></p>
+        <p class="secure-note"><span aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span>Your sign-in is secure and encrypted. We'll never share your information.</span></p>
       </div>
     </section>
 
@@ -277,13 +278,13 @@
           <label class="omni-input-wrap" for="omni">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
             <input id="omni" type="text" role="combobox" aria-expanded="false" aria-controls="listbox" aria-autocomplete="list" autocomplete="off" placeholder="Ask, search, or jump — e.g. “balance”, “make a payment”, “941”…">
-            <button class="clearbtn" id="clearbtn" aria-label="Clear" hidden>✕</button>
+            <button class="clearbtn" id="clearbtn" aria-label="Clear" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
           </label>
           <div class="results" id="results" hidden>
             <div class="res-head" id="resHead">Suggestions</div>
             <div id="listbox" role="listbox" aria-label="Omni bar results"></div>
           </div>
-          <p class="omni-tip">The same omni bar follows you across every surface and re-scopes itself to <b id="tipScope">your account</b>. Type <kbd>/</kbd> anywhere to focus it · <kbd>↑</kbd><kbd>↓</kbd> to navigate · <kbd>Enter</kbd> to open.</p>
+          <p class="omni-tip">The same omni bar follows you across every surface and re-scopes itself to <b id="tipScope">your account</b>. Type <kbd>/</kbd> anywhere to focus it · <kbd><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5v-11M3.5 7 8 2.5 12.5 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd><kbd><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v11M3.5 9 8 13.5 12.5 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></kbd> to navigate · <kbd>Enter</kbd> to open.</p>
         </div>
 
         <!-- ROLE-SCOPED CARDS -->
@@ -326,6 +327,14 @@
 <script>
 (function(){
   "use strict";
+
+  /* ---------- Inline SVG icon library (see DESIGN.md) ---------- */
+  var IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  var IC_REFRESH=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.8"/><path d="M13.5 2.5v2.2h-2.2"/></g></svg>`;
+  var IC_LIST=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg>`;
+  var IC_ARROW_RIGHT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  var IC_ENVELOPE=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg>`;
+  var IC_WARNING=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg>`;
 
   /* ---------- USWDS government banner toggle ---------- */
   var gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
@@ -386,7 +395,7 @@
     individual:[
       {ic:"$",c:"#004c97",title:"Make a payment",plain:"Pay a balance or estimated tax",route:"/individual/pay",kw:"pay payment balance owe make"},
       {ic:"=",c:"#00687d",type:"answer",title:"What's my balance?",plain:"Total amount owed",big:"$0.00",sub:"You're all paid up for 2025.",route:"/individual/balance",kw:"balance owe how much"},
-      {ic:"↻",c:"#1a7f4b",type:"answer",title:"Where's my refund?",plain:"2025 refund status",big:"Issued",sub:"Deposited Mar 12, 2026.",route:"/individual/refund",kw:"refund where status return"},
+      {ic:IC_REFRESH,c:"#1a7f4b",type:"answer",title:"Where's my refund?",plain:"2025 refund status",big:"Issued",sub:"Deposited Mar 12, 2026.",route:"/individual/refund",kw:"refund where status return"},
       {ic:"PIN",c:"#5b3fa0",title:"Get an Identity Protection PIN",plain:"Six-digit IP PIN for filing",route:"/individual/ip-pin",kw:"ip pin identity protection security"},
       {ic:"T",c:"#8a6d00",title:"Get a tax transcript",plain:"Account, wage & income, return transcripts",route:"/individual/transcripts",kw:"transcript record wage income"},
       {ic:"BIZ",c:"#5b3fa0",type:"nav",title:"Switch to Rivera Bakehouse LLC",plain:"Jump into your business account",route:"switch:sole",kw:"business switch llc bakehouse"}
@@ -403,15 +412,15 @@
       {ic:"=",c:"#00687d",type:"answer",title:"What can I do here?",plain:"Your access on Northgate Foods LLC",big:"Partner · limited",sub:"View filings, file 1065, view notices. No payments.",route:"/biz/access",kw:"access permission role what can"},
       {ic:"1065",c:"#5b3fa0",title:"Open Form 1065",plain:"U.S. return of partnership income",route:"/biz/1065",kw:"1065 partnership file return"},
       {ic:"K1",c:"#004c97",title:"View Schedule K-1 (draft)",plain:"Your partner share — 28%",route:"/biz/k1",kw:"k1 k-1 schedule share partner"},
-      {ic:"✉",c:"#8a6d00",title:"Message the managing partner",plain:"Request additional access",route:"/biz/message",kw:"message contact managing partner access"},
+      {ic:IC_ENVELOPE,c:"#8a6d00",title:"Message the managing partner",plain:"Request additional access",route:"/biz/message",kw:"message contact managing partner access"},
       {ic:"IND",c:"#004c97",type:"nav",title:"Switch to Individual",plain:"Back to your personal 1040 account",route:"switch:individual",kw:"individual personal switch 1040"}
     ],
     pro:[
       {ic:"@",c:"#1a7f4b",type:"client",title:"Open client: Aurora Print Co.",plain:"EIN 51-•••3380 · POA active",route:"/pro/client/aurora",kw:"client aurora open print"},
       {ic:"@",c:"#1a7f4b",type:"client",title:"Open client: M. Castillo (1040)",plain:"SSN •••-••-7745 · POA active",route:"/pro/client/castillo",kw:"client castillo open individual 1040"},
       {ic:"2848",c:"#5b3fa0",title:"Submit Form 2848 (Power of Attorney)",plain:"Authorize representation for a new client",route:"/pro/2848",kw:"2848 poa power attorney authorize new client"},
-      {ic:"⚠",c:"#8a6d00",type:"answer",title:"Authorizations expiring",plain:"Across all clients",big:"2 within 30 days",sub:"Aurora Print Co. and one 1040 client.",route:"/pro/expiring",kw:"expiring authorization poa renew"},
-      {ic:"≡",c:"#004c97",title:"Bulk filing dashboard",plain:"Track returns across your roster",route:"/pro/bulk",kw:"bulk filing dashboard roster all"}
+      {ic:IC_WARNING,c:"#8a6d00",type:"answer",title:"Authorizations expiring",plain:"Across all clients",big:"2 within 30 days",sub:"Aurora Print Co. and one 1040 client.",route:"/pro/expiring",kw:"expiring authorization poa renew"},
+      {ic:IC_LIST,c:"#004c97",title:"Bulk filing dashboard",plain:"Track returns across your roster",route:"/pro/bulk",kw:"bulk filing dashboard roster all"}
     ]
   };
 
@@ -440,7 +449,7 @@
     return '<button class="role" data-id="'+a.id+'">'
       + '<span class="ri" style="background:'+a.color+'">'+a.av+'</span>'
       + '<span><p class="rt">'+a.name+'</p><p class="rd">'+a.blurb+'</p>'+meta+'</span>'
-      + '<span class="arrow" aria-hidden="true">→</span></button>';
+      + '<span class="arrow" aria-hidden="true">'+IC_ARROW_RIGHT+'</span></button>';
   }
   function renderPicker(){
     document.getElementById("rolesYou").innerHTML = ACCOUNTS.filter(function(a){return a.group==="you";}).map(roleCard).join("");
@@ -461,7 +470,7 @@
       return '<button class="acct-row '+(a.id===current?"on":"")+'" role="menuitem" data-id="'+a.id+'">'
         +'<span class="av" style="background:'+a.color+'">'+a.av+'</span>'
         +'<span><span class="an">'+a.name+'</span><br><span class="ad">'+a.desc+'</span></span>'
-        +(a.id===current?'<span class="chk" aria-hidden="true">✓</span>':'')+'</button>';
+        +(a.id===current?'<span class="chk" aria-hidden="true">'+IC_CHECK+'</span>':'')+'</button>';
     }).join("");
     acctMenu.querySelectorAll(".acct-row").forEach(function(b){
       b.addEventListener("click",function(){ enterAccount(b.getAttribute("data-id")); closeMenu(); });
@@ -564,7 +573,7 @@
     // demo: flash the route as a confirmation in the bar
     omni.value="";
     resHead.textContent="Opening…";
-    listbox.innerHTML='<div class="empty">→ <b>'+o.title+'</b><br><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#9aa7b5">'+o.route+'</span><br><span style="font-size:12.5px">(prototype — this is where the destination screen would load, scoped to <b>'+acct(current).name+'</b>.)</span></div>';
+    listbox.innerHTML='<div class="empty">'+IC_ARROW_RIGHT+' <b>'+o.title+'</b><br><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#9aa7b5">'+o.route+'</span><br><span style="font-size:12.5px">(prototype — this is where the destination screen would load, scoped to <b>'+acct(current).name+'</b>.)</span></div>';
     clearbtn.hidden=true;
     open();
   }

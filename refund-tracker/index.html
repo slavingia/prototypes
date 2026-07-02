@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
 <style>
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   :root{
     --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
     --link:#0050a0; --line:#d6d7d9; --bg:#fff;
@@ -132,7 +133,7 @@
   .tl .tloc b{color:var(--ink);font-weight:700}
   /* expandable scan detail (package-style) */
   .tl .detbtn{margin-top:8px;background:none;border:0;font-family:inherit;font-size:13px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
-  .tl .detbtn .chev{font-size:10px;transition:transform .15s}
+  .tl .detbtn .chev{font-size:10px;transition:transform .15s;display:inline-block}
   .tl li.open .detbtn .chev{transform:rotate(180deg)}
   .tl .scans{display:none;margin:10px 0 2px;padding:12px 14px;border:1px solid var(--line);background:#fafcfe}
   .tl li.open .scans{display:block}
@@ -177,8 +178,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -233,6 +234,10 @@
   </div></footer>
 
 <script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_DOT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>`;
+const IC_CHEVDOWN=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_PACKAGE=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5 8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5 8 8l5.5-3M8 8v6"/></g></svg>`;
 // ---- mock data: fictional only, no PII ----
 const CASES = [
   {
@@ -358,7 +363,7 @@ function renderSimple(){
   const pct=step/(SIMPLE_LABELS.length-1)*100;
   const dots=SIMPLE_LABELS.map((s,i)=>{
     const cls=i<step?"done":(i===step?"current":"");
-    const mk=i<step?"✓":(i+1);
+    const mk=i<step?IC_CHECK:(i+1);
     return `<div class="pstep ${cls}"><span class="pdot">${mk}</span><span class="plab">${s.l}</span><span class="psub">${s.sub}</span></div>`;
   }).join("");
   simpleView.innerHTML=`
@@ -372,13 +377,13 @@ function renderSimple(){
 
 function renderTimeline(){
   tl.innerHTML=current.steps.map((st,i)=>{
-    const mk=st.s==="done"?"✓":(st.s==="current"?"●":(i+1));
+    const mk=st.s==="done"?IC_CHECK:(st.s==="current"?IC_DOT:(i+1));
     let chip="";
     if(st.s==="current")chip=`<span class="tchip now">You are here</span>`;
     else if(st.s==="future")chip=`<span class="tchip next">Expected</span>`;
     let scans="";
     if(st.scans&&st.scans.length){
-      scans=`<button class="detbtn" data-i="${i}">View detail <span class="chev" aria-hidden="true">⌄</span></button>
+      scans=`<button class="detbtn" data-i="${i}">View detail <span class="chev" aria-hidden="true">${IC_CHEVDOWN}</span></button>
         <div class="scans">${st.scans.map(sc=>`<div class="scan"><span class="sct">${sc[0]}</span><span class="scd">${sc[1]}</span></div>`).join("")}</div>`;
     }
     return `<li class="${st.s}">
@@ -393,7 +398,7 @@ function renderTimeline(){
   tl.querySelectorAll(".detbtn").forEach(b=>b.addEventListener("click",()=>{
     b.closest("li").classList.toggle("open");
   }));
-  arrival.innerHTML=`<span class="ai" aria-hidden="true">📦</span>
+  arrival.innerHTML=`<span class="ai" aria-hidden="true">${IC_PACKAGE}</span>
     <span><span class="at">${current.arrival.label}</span><br><span class="av">${current.arrival.value}</span></span>`;
 }
 

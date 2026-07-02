@@ -31,6 +31,12 @@ directly in a browser — so this is a spec to copy, not a shared stylesheet.
 9. **No red text.** Never color balances, amounts, or body text red. A balance
    owed is plain dark `--ink`, like any other amount. Red is reserved for
    error-alert accents (left rule / icon) — never for numbers or text.
+10. **No emoji. No glyph icons.** Emoji (🏦 ✓ ⏳ …) and icon-glyphs
+    (`›`, `‹`, `⌄`, `✕`, `➤`, arrows used as icons) are never used in UI.
+    Every pictograph is an inline SVG from the icon library below — one
+    consistent stroke style, colored via `currentColor`, sized via `1em`.
+    Typographic arrows inside running prose (e.g. "upload → review") are
+    fine; the ban is on glyphs doing an icon's job.
 
 ---
 
@@ -123,6 +129,117 @@ States government" + a "Here's how you know" `<button>` that toggles the
 
 ---
 
+## Iconography (inline SVG library)
+
+All pictographs are inline SVGs — never emoji, never glyph characters. One
+shared style: `viewBox="0 0 16 16"`, `fill="none"`, `stroke="currentColor"`,
+`stroke-width="1.6"`, round caps/joins. Icons inherit text color via
+`currentColor` and size via `1em`.
+
+Base CSS (include in every prototype):
+
+```css
+.ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+```
+
+Usage rules:
+- Static HTML: paste the SVG inline with `aria-hidden="true"` (icons are
+  decorative; adjacent text carries meaning).
+- JS-generated markup: define each icon **once** as a `const` template
+  literal (`const IC_CHECK = `<svg …>`;`) and interpolate — never rebuild
+  SVG strings ad hoc, and never use single/double-quoted JS strings for SVG
+  (attribute quotes will collide).
+- Recolor with `color:` on the icon or parent; resize with `font-size`.
+
+### The set
+
+```html
+<!-- chevron-right (breadcrumbs, forward affordance) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- chevron-left (back links) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- chevron-down (expand/collapse) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- arrow-right (call-to-action "continue") -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- arrow-left (back buttons) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- arrow-up / arrow-down (kbd hints, sort) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5v-11M3.5 7 8 2.5 12.5 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v11M3.5 9 8 13.5 12.5 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- check (done, verified, success) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- close / clear -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+
+<!-- person (individual payer) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg>
+
+<!-- building (business) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg>
+
+<!-- bank (financial institution) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6 8 2.5 13.5 6z"/><path d="M4 8.5v3M6.7 8.5v3M9.3 8.5v3M12 8.5v3M2.5 13.5h11"/></g></svg>
+
+<!-- landmark (government banner icon) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg>
+
+<!-- lock (secure) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg>
+
+<!-- clock (pending / in review — replaces ⏳) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.8V8l2.3 1.6"/></g></svg>
+
+<!-- upload -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5v-8M4.5 6 8 2.5 11.5 6M3 13.5h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+<!-- package (shipment/refund tracker) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5 8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5 8 8l5.5-3M8 8v6"/></g></svg>
+
+<!-- envelope (mail/notice) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg>
+
+<!-- warning (alert) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg>
+
+<!-- gear (tool call / settings) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.7 3.7l1.4 1.4M10.9 10.9l1.4 1.4M12.3 3.7l-1.4 1.4M5.1 10.9l-1.4 1.4"/></g></svg>
+
+<!-- fax / printer -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="11" height="5.5"/><path d="M5 6V2.5h6V6M5 11.5v2h6v-2"/></g><circle cx="11.3" cy="8.2" r=".9" fill="currentColor"/></svg>
+
+<!-- send (paper plane) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg>
+
+<!-- pen (sign) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l.8-2.8 7.5-7.5a1.4 1.4 0 0 1 2 2l-7.5 7.5z"/><path d="M10.3 4.2l2 2"/></g></svg>
+
+<!-- refresh (refund / status cycle) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.8"/><path d="M13.5 2.5v2.2h-2.2"/></g></svg>
+
+<!-- list (roster / dashboard) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg>
+
+<!-- dot (current-state marker inside step/timeline indicators) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
+
+<!-- keyboard-key symbols (⌘, ↵, kbd arrows) inside a <kbd>/.kbd element are typography, not icons — allowed.
+     wave / greeting: DO NOT replace 👋 🙂 👇 with an icon — cut the emoji and let the words carry the tone -->
+```
+
+If a prototype needs an icon that isn't here, draw it in the same style
+(16-grid, 1.6 stroke, round caps, `currentColor`) and **add it to this file**
+in the same PR.
+
+---
+
 ## Checklist for a new prototype
 - [ ] Source Sans 3 loaded via Google Fonts (with `preconnect`); no body `line-height:1.5`.
 - [ ] Full expandable USWDS government banner with ARIA attributes.
@@ -131,5 +248,6 @@ States government" + a "Here's how you know" `<button>` that toggles the
 - [ ] `16px` labels/hints/buttons; weight `500` for buttons, labels, step titles.
 - [ ] Step indicators: outlined pending, blue done, navy current.
 - [ ] Color tokens from this file; dividers `#D6D7D9`.
+- [ ] No emoji or glyph icons — all pictographs are inline SVGs from the icon library (`.ic`, `currentColor`, 16-grid / 1.6 stroke).
 - [ ] Disclaimer footer present.
 - [ ] Mock data only — no PII (see `CONTRIBUTING.md`).

@@ -14,6 +14,7 @@
     --teal:#00687d; --bg:#fff;
   }
   *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   body{margin:0;background:#fff;color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
@@ -172,8 +173,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -187,7 +188,7 @@
   </div></div>
 
   <main class="wrap">
-    <p class="crumb"><a>Institution portal</a> › <a>Third-party payments</a> › Bulk submission</p>
+    <p class="crumb"><a>Institution portal</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <a>Third-party payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Bulk submission</p>
     <h1 class="page">Bulk payment submission</h1>
     <p class="sub">Pay the IRS on behalf of many taxpayers at once. Upload a file, review and fix any rows, then submit as one batch. The institution's verified identity is attached to <b>every</b> payment as the payer of record — no payment is anonymous.</p>
 
@@ -213,7 +214,7 @@
       <section class="panel">
         <div id="body"></div>
         <div class="foot" id="foot">
-          <button class="back" id="back" hidden>← Back</button>
+          <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
           <button class="btn" id="next">Continue</button>
         </div>
       </section>
@@ -221,13 +222,15 @@
   </main>
 
   <footer style="border-top:1px solid var(--line);margin-top:30px">
-    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link,#0050a0);text-decoration:none">‹ All prototypes</a></div>
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link,#0050a0);text-decoration:none"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> All prototypes</a></div>
     <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5"><em>
       Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, amounts, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
     </em></div>
   </footer>
 
 <script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_ARROW_RIGHT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const RAIL=[
   {t:"Upload file"},
   {t:"Review & fix"},
@@ -257,7 +260,7 @@ function genBatch(){let n="BATCH-";const seed=[3,9,1,6,2,8,4,0];for(let i=0;i<8;
 function renderRail(){
   railEl.innerHTML=RAIL.map((s,i)=>{
     const cls=i<state.step?"done":(i===state.step?"current":"");
-    const num=i<state.step?"✓":(i+1);
+    const num=i<state.step?IC_CHECK:(i+1);
     const label=i<state.step?"Done":(i===state.step?"Current step":"Step "+(i+1));
     return `<div class="rstep ${cls}"><span class="num">${num}</span><span class="stwrap"><span class="sn">${label}</span><span class="st">${s.t}</span></span></div>`;
   }).join("");
@@ -269,7 +272,7 @@ function renderBody(){
     body.innerHTML=`<h2>Upload your payment file</h2>
       <p class="phint">Drag a CSV of payments, or use our template. Each row is one taxpayer obligation; the institution above is the payer of record for all of them.</p>
       <div class="drop" id="drop">
-        <div class="di" aria-hidden="true">⬆️</div>
+        <div class="di" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5v-8M4.5 6 8 2.5 11.5 6M3 13.5h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="dt">Drop a CSV here, or <a id="browse">browse</a></div>
         <div class="dd">Up to 5,000 rows · UTF-8 · max 10 MB</div>
         <button class="btn ghost" id="loadsample">Load sample file (8 rows)</button>
@@ -280,7 +283,7 @@ function renderBody(){
         <code>taxpayer_token, taxpayer_name, tax_year, form_or_notice, amount, authorization_ref</code>
       </div>
       <p class="note">Tokens replace SSNs so the file never carries full taxpayer identifiers. Sample data is fictional.</p>`;
-    const load=()=>{document.getElementById("fakename").innerHTML="✓ <b>riverbend_2026Q2_directed_payments.csv</b> — 8 rows parsed";next.disabled=false;state.loaded=true;};
+    const load=()=>{document.getElementById("fakename").innerHTML=`${IC_CHECK} <b>riverbend_2026Q2_directed_payments.csv</b> — 8 rows parsed`;next.disabled=false;state.loaded=true;};
     document.getElementById("loadsample").addEventListener("click",load);
     document.getElementById("browse").addEventListener("click",load);
     next.textContent="Review "+ROWS.length+" rows";
@@ -310,7 +313,7 @@ function renderBody(){
         </tbody>
       </table></div>
       <p class="note">${bad} row(s) will be skipped unless fixed. In a real system you'd edit inline or re-upload; here the ${validRows().length} valid rows carry forward.</p>`;
-    next.textContent="Submit "+validRows().length+" payments →";
+    next.innerHTML=`Submit ${validRows().length} payments ${IC_ARROW_RIGHT}`;
     next.disabled=false;
   }else if(s===2){
     body.innerHTML=`<h2>Attest &amp; submit the batch</h2>
@@ -329,7 +332,7 @@ function renderBody(){
     next.textContent="Submit batch";
   }else{
     state.batch=state.batch||genBatch();
-    body.innerHTML=`<div class="done-hero"><div class="ring">✓</div>
+    body.innerHTML=`<div class="done-hero"><div class="ring">${IC_CHECK}</div>
       <h2>Batch submitted — ${validRows().length} payments</h2>
       <p class="phint" style="margin:0 auto">Every payment carries Riverbend Community Bank as the payer of record.</p></div>
       <div class="batchbox"><div class="pl">Batch reference</div><div class="pv">${state.batch}</div><div class="pl" style="margin-top:6px">${validRows().length} payments · ${money(totalValid())} · submitted June 30, 2026</div></div>
@@ -344,8 +347,8 @@ function renderBody(){
       <p class="note">Bulk pathway turns a stack of phone/mail payments into one authenticated file — and still attaches payer identity to every single payment.</p>`;
     back.hidden=false;next.textContent="New batch";
     const dl=document.getElementById("dl"),err=document.getElementById("err");
-    dl.addEventListener("click",()=>{dl.textContent="Manifest downloaded ✓";dl.style.background="var(--green)";});
-    err.addEventListener("click",()=>{err.textContent="Error rows downloaded ✓";err.style.borderColor="var(--green)";err.style.color="var(--green)";});
+    dl.addEventListener("click",()=>{dl.innerHTML=`Manifest downloaded ${IC_CHECK}`;dl.style.background="var(--green)";});
+    err.addEventListener("click",()=>{err.innerHTML=`Error rows downloaded ${IC_CHECK}`;err.style.borderColor="var(--green)";err.style.color="var(--green)";});
   }
   back.hidden=state.step===0;
   updateNext();

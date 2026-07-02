@@ -22,7 +22,7 @@ This repository holds **design prototypes and concept explorations only**.
   bottom of `DESIGN.md` before committing. This applies equally to humans and to
   AI assistants working in this repo.
 - **Screenshots are generated, and never stale.** Committed screenshots are
-  produced by a script (e.g. [`omnibar-in-app/tools/shots.mjs`](omnibar-in-app/tools/shots.mjs)),
+  produced by a script (e.g. [`archive/omnibar-in-app/tools/shots.mjs`](archive/omnibar-in-app/tools/shots.mjs)),
   not captured by hand. Whenever you change a prototype's look or behavior, **you
   must re-run its screenshot generator in the same change** so the images (and
   any gallery/README/PR that shows them) stay accurate. Never commit a change

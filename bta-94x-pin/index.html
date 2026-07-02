@@ -15,6 +15,7 @@
     --teal:#00687d; --bg:#fff;
   }
   *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   body{margin:0;background:#fff;color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
@@ -177,8 +178,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -212,7 +213,7 @@
         <div class="progress"><i id="bar"></i></div>
         <div id="body"></div>
         <div class="foot" id="foot">
-          <button class="back" id="back" hidden>← Back</button>
+          <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
           <button class="btn" id="next">Continue</button>
         </div>
       </section>
@@ -227,6 +228,8 @@
   </footer>
 
 <script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_ARROW_RIGHT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const STEPS=[
   {t:"Confirm business",d:"EIN & address"},
   {t:"Responsible official",d:"Who signs"},
@@ -245,7 +248,7 @@ function genPin(){ // deterministic 10-digit, no Math.random needed
 function renderSteps(){
   steps.innerHTML=STEPS.map((s,i)=>{
     const cls=i<state.step?"done":(i===state.step?"current":"");
-    const num=i<state.step?"✓":(i+1);
+    const num=i<state.step?IC_CHECK:(i+1);
     return `<li class="${cls}"><span class="num">${num}</span><span><span class="st">${s.t}</span><span class="sd">${s.d}</span></span></li>`;
   }).join("");
   bar.style.width=Math.round(state.step/(STEPS.length-1)*100)+"%";
@@ -269,8 +272,8 @@ function renderBody(){
       <div class="readrow"><span class="k">Name</span><span class="v">Dana R. Okafor</span></div>
       <div class="readrow"><span class="k">Title</span><span class="v">Managing Member</span></div>
       <div class="readrow"><span class="k">SSN</span><span class="v">•••-••-4471</span></div>
-      <div class="readrow"><span class="k">Identity</span><span class="v"><span class="verified">✓ Verified — ID.me</span></span></div>
-      <div class="readrow"><span class="k">Authority on file</span><span class="v"><span class="verified">✓ Matches EIN responsible party</span></span></div>
+      <div class="readrow"><span class="k">Identity</span><span class="v"><span class="verified">${IC_CHECK} Verified — ID.me</span></span></div>
+      <div class="readrow"><span class="k">Authority on file</span><span class="v"><span class="verified">${IC_CHECK} Matches EIN responsible party</span></span></div>
       <p class="note">Not the responsible official? Only a responsible official can apply for the 94x PIN. <a>See who qualifies</a>.</p>`;
     next.textContent="Confirm — continue";
   }else if(s===2){
@@ -288,7 +291,7 @@ function renderBody(){
     next.textContent="Sign & issue my PIN";
   }else{
     state.pin=state.pin||genPin();
-    body.innerHTML=`<div class="done-hero"><div class="ring">✓</div>
+    body.innerHTML=`<div class="done-hero"><div class="ring">${IC_CHECK}</div>
       <h2>Your 94x Online Signature PIN is active</h2>
       <p class="phint" style="margin:0 auto">Use this PIN to sign ${ALL_94X} when you e-file.</p></div>
       <div class="pinbox"><div class="pl">94x Online Signature PIN</div><div class="pv">${state.pin.replace(/(\d{5})(\d{5})/,"$1 $2")}</div><div class="pn">Keep this private. It's stored in your Business Tax Account under e-File &amp; PINs.</div></div>
@@ -296,20 +299,20 @@ function renderBody(){
       <div class="nextcard">
         <span class="ni" style="background:var(--irs-blue)">941</span>
         <span><span class="nt">File Form 941 for Q2 2026 now</span><span class="nd">Routed straight to MeF with your new PIN — due July 31</span></span>
-        <a class="btn go" id="fileNow">File now →</a>
+        <a class="btn go" id="fileNow">File now ${IC_ARROW_RIGHT}</a>
       </div>
 
       <div class="route">
         <div class="node"><span class="dot" style="background:var(--irs-blue)">BTA</span><span class="nl">Business Tax Account</span><span class="ns">PIN signed</span></div>
-        <span class="arr">→</span>
+        <span class="arr">${IC_ARROW_RIGHT}</span>
         <div class="node"><span class="dot" style="background:var(--teal)">MeF</span><span class="nl">Internal MeF routing</span><span class="ns">No third-party transmitter</span></div>
-        <span class="arr">→</span>
+        <span class="arr">${IC_ARROW_RIGHT}</span>
         <div class="node"><span class="dot" style="background:var(--green)">ACK</span><span class="nl">Acceptance</span><span class="ns">Receipt in minutes</span></div>
       </div>
       <p class="note">Your PIN is stored in Business Tax Account under e-File &amp; PINs. Keep it confidential — anyone with it can sign employment tax returns for this business.</p>`;
     back.hidden=false;next.textContent="Done";
     const fn=document.getElementById("fileNow");if(fn)fn.addEventListener("click",()=>{
-      fn.textContent="Submitted to MeF ✓";fn.style.background="var(--green)";});
+      fn.innerHTML=`Submitted to MeF ${IC_CHECK}`;fn.style.background="var(--green)";});
   }
   back.hidden=state.step===0;
   updateNext();

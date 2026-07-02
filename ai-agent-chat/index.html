@@ -14,6 +14,7 @@
     --teal:#00687d; --violet:#5b3fa0; --bg:#fff;
   }
   *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   body{margin:0;background:#fff;color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
@@ -172,8 +173,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website.</span></div>
     </div>
   </section>
 
@@ -201,9 +202,9 @@
           <div class="chips" id="chips"></div>
           <div class="inputrow">
             <input id="input" type="text" placeholder="Type a message…" autocomplete="off" aria-label="Message">
-            <button class="send" id="send" aria-label="Send">➤</button>
+            <button class="send" id="send" aria-label="Send"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg></button>
           </div>
-          <button class="restart" id="restart">↻ Restart conversation</button>
+          <button class="restart" id="restart">Restart conversation</button>
         </div>
       </section>
     </div>
@@ -222,6 +223,13 @@ const scroll=document.getElementById("scroll"),chips=document.getElementById("ch
   input=document.getElementById("input"),send=document.getElementById("send"),restart=document.getElementById("restart");
 
 let busy=false;
+
+// Inline SVG icon library (DESIGN.md — 16-grid, 1.6 stroke, currentColor)
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_GEAR=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.7 3.7l1.4 1.4M10.9 10.9l1.4 1.4M12.3 3.7l-1.4 1.4M5.1 10.9l-1.4 1.4"/></g></svg>`;
+const IC_FAX=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="11" height="5.5"/><path d="M5 6V2.5h6V6M5 11.5v2h6v-2"/></g><circle cx="11.3" cy="8.2" r=".9" fill="currentColor"/></svg>`;
+const IC_PEN=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l.8-2.8 7.5-7.5a1.4 1.4 0 0 1 2 2l-7.5 7.5z"/><path d="M10.3 4.2l2 2"/></g></svg>`;
+const IC_ARROW_R=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function scrollDown(){scroll.scrollTop=scroll.scrollHeight;}
@@ -248,7 +256,7 @@ function railFire(tool,state){
   el.classList.remove("active","fired");
   const stat=el.querySelector(".tstat");
   if(state==="active"){el.classList.add("active");stat.textContent="running…";}
-  else if(state==="fired"){el.classList.add("fired");stat.textContent="✓ used";}
+  else if(state==="fired"){el.classList.add("fired");stat.innerHTML=`${IC_CHECK} used`;}
 }
 
 // Render an agentic tool-call card with running → done transition
@@ -256,13 +264,13 @@ async function toolCall(tool,argsHTML,resultHTML){
   railFire(tool,"active");
   const card=document.createElement("div");card.className="toolcard";
   card.innerHTML=`
-    <div class="tch"><span class="gear">⚙️</span><span class="call">${tool}()</span>
+    <div class="tch"><span class="gear">${IC_GEAR}</span><span class="call">${tool}()</span>
       <span class="badge run"><span class="spin"></span> Running</span></div>
     <div class="tcb"><div class="args">${argsHTML}</div><div class="resslot"></div></div>`;
   scroll.appendChild(card);scrollDown();
   await sleep(1100);
-  card.querySelector(".badge").outerHTML=`<span class="badge ok">✓ Done</span>`;
-  card.querySelector(".resslot").innerHTML=`<div class="res"><span class="ri">↳</span><div>${resultHTML}</div></div>`;
+  card.querySelector(".badge").outerHTML=`<span class="badge ok">${IC_CHECK} Done</span>`;
+  card.querySelector(".resslot").innerHTML=`<div class="res"><span class="ri">${IC_ARROW_R}</span><div>${resultHTML}</div></div>`;
   railFire(tool,"fired");scrollDown();
   await sleep(400);
 }
@@ -277,7 +285,7 @@ function setChips(list){
   list.forEach(c=>{
     const b=document.createElement("button");
     b.className="chip"+(c.ghost?" ghost":"");
-    b.textContent=c.label;
+    if(c.icon){b.innerHTML=`${c.icon} ${esc(c.label)}`;}else{b.textContent=c.label;}
     b.addEventListener("click",()=>run(c.go,c.label));
     chips.appendChild(b);
   });
@@ -288,7 +296,7 @@ const FLOWS={
   async start(){
     setChips([]);
     await typing(700);
-    addBot(`Hi Jordan 👋 I'm your IRS Assistant. I can actually <b>take actions</b> for you — look things up, fill out forms, and fax them to the right unit. What do you need today?`);
+    addBot(`Hi Jordan, I'm your IRS Assistant. I can actually <b>take actions</b> for you — look things up, fill out forms, and fax them to the right unit. What do you need today?`);
     setChips([
       {label:"I moved — update my address",go:"address"},
       {label:"Authorize my accountant (POA)",go:"poa"},
@@ -344,7 +352,7 @@ const FLOWS={
     await typing(700);
     addBot(`Looks complete. Want me to <b>fax it</b> to the campus that processes Form 8822 for your state? Or download it to mail yourself.`);
     setChips([
-      {label:"📠 Fax it for me",go:"address_fax"},
+      {label:"Fax it for me",icon:IC_FAX,go:"address_fax"},
       {label:"Download to mail myself",go:"address_dl",ghost:true},
     ]);
   },
@@ -355,7 +363,7 @@ const FLOWS={
     await toolCall("send_fax",
       arg({document:"Form 8822 (signed)", to_unit:"Ogden Service Center", fax:"855-***-9528", pages:1}),
       `Transmission complete.
-        <div class="fax"><span class="fxi">📠</span><span><span class="fxt">Faxed to Ogden Service Center — 1 page</span><span class="fxs">Confirmation #FX-2026-77310 · delivered 0:14 · mock receipt</span></span></div>`);
+        <div class="fax"><span class="fxi">${IC_FAX}</span><span><span class="fxt">Faxed to Ogden Service Center — 1 page</span><span class="fxs">Confirmation #FX-2026-77310 · delivered 0:14 · mock receipt</span></span></div>`);
     await typing(700);
     addBot(`Done! Your change of address is <b>submitted</b>. Processing usually takes 4–6 weeks; I've added a tracking item to your account. Anything else?`);
     setChips([
@@ -390,23 +398,23 @@ const FLOWS={
       `Form 2848 drafted &amp; representative verified:<div class="formprev"><div class="fph">Form 2848 — Power of Attorney <span class="tag">DRAFT</span></div>
         <div class="frow"><span class="fk">Part I — Taxpayer</span><span class="fv">Jordan A. Reyes</span></div>
         <div class="frow"><span class="fk">Representative</span><span class="fv">Morgan Patel, CPA</span></div>
-        <div class="frow"><span class="fk">CAF number</span><span class="fv"><mark>****-72104 ✓ verified</mark></span></div>
+        <div class="frow"><span class="fk">CAF number</span><span class="fv"><mark>****-72104 ${IC_CHECK} verified</mark></span></div>
         <div class="frow"><span class="fk">Matters / years</span><span class="fv">Income, Form 1040, 2022–2024</span></div></div>`);
     await typing(700);
     addBot(`The form needs your signature. I can route it to your phone for an e-signature, then <b>fax it to the CAF Unit</b> automatically once you sign.`);
     setChips([
-      {label:"✍️ Sign & fax to CAF Unit",go:"poa_fax"},
+      {label:"Sign & fax to CAF Unit",icon:IC_PEN,go:"poa_fax"},
       {label:"Not now",go:"end",ghost:true},
     ]);
   },
 
   async poa_fax(){
     await typing(650);
-    addBot(`Signature captured on your device ✓ — transmitting now.`);
+    addBot(`Signature captured on your device ${IC_CHECK} — transmitting now.`);
     await toolCall("send_fax",
       arg({document:"Form 2848 (e-signed)", to_unit:"CAF Unit — Ogden", fax:"855-***-6038", pages:2}),
       `Transmission complete.
-        <div class="fax"><span class="fxi">📠</span><span><span class="fxt">Faxed to CAF Unit (Ogden) — 2 pages</span><span class="fxs">Confirmation #FX-2026-77384 · delivered 0:22 · mock receipt</span></span></div>`);
+        <div class="fax"><span class="fxi">${IC_FAX}</span><span><span class="fxt">Faxed to CAF Unit (Ogden) — 2 pages</span><span class="fxs">Confirmation #FX-2026-77384 · delivered 0:22 · mock receipt</span></span></div>`);
     await typing(750);
     addBot(`All set — <b>Morgan Patel, CPA</b> is now authorized to represent you for 2022–2024 once the CAF Unit posts it (usually a few business days). Want anything else?`);
     setChips([
@@ -436,13 +444,13 @@ const FLOWS={
 
   async end(){
     await typing(650);
-    addBot(`You're welcome, Jordan! Everything's saved to your account message center. Have a great day. 🙂`);
-    setChips([{label:"↻ Start over",go:"restart"}]);
+    addBot(`You're welcome, Jordan! Everything's saved to your account message center. Have a great day.`);
+    setChips([{label:"Start over",go:"restart"}]);
   },
 
   async fallback(){
     await typing(750);
-    addBot(`I can help with that kind of request in the full version. For this demo, try one of the actions below so you can see me use my tools 👇`);
+    addBot(`I can help with that kind of request in the full version. For this demo, try one of the actions below to see me use my tools.`);
     setChips([
       {label:"Update my address",go:"address"},
       {label:"Authorize my accountant (POA)",go:"poa"},
@@ -489,7 +497,7 @@ async function submitText(){
     await typing(650);
     addBot(`Want me to <b>fax it</b> to your service center, or download it to mail yourself?`);
     setChips([
-      {label:"📠 Fax it for me",go:"address_fax"},
+      {label:"Fax it for me",icon:IC_FAX,go:"address_fax"},
       {label:"Download to mail myself",go:"address_dl",ghost:true},
     ]);
     busy=false;return;

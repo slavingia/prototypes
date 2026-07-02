@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
 <style>
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   :root{
     --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
     --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
@@ -152,8 +153,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -228,13 +229,14 @@
   </main>
 
   <footer style="border-top:1px solid var(--line);margin-top:30px">
-    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link,#0050a0);text-decoration:none">‹ All prototypes</a></div>
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link,#0050a0);text-decoration:none"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> All prototypes</a></div>
     <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5"><em>
       Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, amounts, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
     </em></div>
   </footer>
 
 <script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 // Fictional mock history — tokenized, no real PII.
 const HIST=[
   {date:"Jun 28, 2026", who:"L. Adeyemi",   rel:"Client",             ob:"2024 · CP14",   amt:865.50,  st:"posted"},
@@ -266,7 +268,7 @@ const ladder=document.getElementById("ladder");
 const curIdx=TIERS.findIndex(t=>t.k===CURRENT);
 ladder.innerHTML=TIERS.map((t,i)=>{
   const cls=i===curIdx?"on":(i<curIdx?"reached":"");
-  const mark=i<curIdx?"✓":(i+1);
+  const mark=i<curIdx?IC_CHECK:(i+1);
   return `<div class="lrow ${cls}"><span class="ld">${mark}</span><span><span class="lt">${t.n}</span><span class="ls">${t.s} — ${t.cap}</span></span></div>`;
 }).join("");
 document.getElementById("caplabel").innerHTML=`Your tier: <b>${TIERS[curIdx].n}</b> — you can pay instantly and everything you pay lands in your history below.`;
@@ -292,9 +294,9 @@ pay.addEventListener("click",()=>{
     <td class="amt">${money(v)}</td>
     <td><span class="chip posted"><span class="cd"></span>Posted</span></td>`;
   hist.insertBefore(tr,hist.firstChild);
-  toast.textContent=`✓ Paid ${money(v)} for ${name} — recorded to your payer history as identity-proofed. A receipt was emailed.`;
+  toast.innerHTML=`${IC_CHECK} Paid ${money(v)} for ${name} — recorded to your payer history as identity-proofed. A receipt was emailed.`;
   toast.classList.add("show");
-  pay.textContent="Paid ✓";pay.style.background="var(--green)";
+  pay.innerHTML=`Paid ${IC_CHECK}`;pay.style.background="var(--green)";
   setTimeout(()=>{pay.textContent="Pay now";pay.style.background="";},2200);
 });
 

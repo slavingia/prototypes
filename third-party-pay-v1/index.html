@@ -14,6 +14,7 @@
     --teal:#00687d; --bg:#fff;
   }
   *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   body{margin:0;background:#fff;color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
@@ -191,8 +192,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -202,7 +203,7 @@
   </div></div>
 
   <main class="wrap">
-    <p class="crumb"><a>Payments</a> › <a>Pay on behalf of someone</a> › Guided</p>
+    <p class="crumb"><a>Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <a>Pay on behalf of someone</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Guided</p>
     <h1 class="page">Pay the IRS on behalf of a taxpayer</h1>
     <p class="sub">A guided, fully digital way for an individual, business, or financial institution to submit a payment for someone else — and to attach <b>who is paying</b> to the payment as a first-class record. No phone, no mail.</p>
 
@@ -220,7 +221,7 @@
         <div class="progress"><i id="bar"></i></div>
         <div id="body"></div>
         <div class="foot" id="foot">
-          <button class="back" id="back" hidden>← Back</button>
+          <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
           <button class="btn" id="next">Continue</button>
         </div>
       </section>
@@ -228,13 +229,20 @@
   </main>
 
   <footer style="border-top:1px solid var(--line);margin-top:30px">
-    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link);text-decoration:none">← All prototypes</a></div>
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link);text-decoration:none"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> All prototypes</a></div>
     <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
       Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
     </div>
   </footer>
 
 <script>
+// Inline SVG icon constants (DESIGN.md icon library — 16-grid, 1.6 stroke, currentColor)
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_CLOCK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.8V8l2.3 1.6"/></g></svg>`;
+const IC_PERSON=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg>`;
+const IC_BUILDING=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg>`;
+const IC_BANK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6 8 2.5 13.5 6z"/><path d="M4 8.5v3M6.7 8.5v3M9.3 8.5v3M12 8.5v3M2.5 13.5h11"/></g></svg>`;
+const IC_ARROW_RIGHT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const STEPS=[
   {t:"Who's paying",d:"Payer type"},
   {t:"Payment reason",d:"Notice or form"},
@@ -244,9 +252,9 @@ const STEPS=[
   {t:"Receipt",d:"Confirmed"}
 ];
 const PAYERS={
-  individual:{icon:"🧑",label:"An individual",short:"Individual",desc:"I'm paying for a family member, friend, or someone I help.",rel:["Family member","Friend / household","Power of attorney","Other individual"]},
-  business:{icon:"🏢",label:"A business",short:"Business",desc:"We're paying on behalf of an employee, contractor, or client.",rel:["Employer paying for employee","Payer for contractor","Client representative","Other business relationship"]},
-  bank:{icon:"🏦",label:"A financial institution",short:"Financial institution",desc:"We're submitting for an account holder.",rel:["Account holder authorization","Trustee / fiduciary","Escrow / settlement (title co.)","Lender servicing"]}
+  individual:{icon:IC_PERSON,label:"An individual",short:"Individual",desc:"I'm paying for a family member, friend, or someone I help.",rel:["Family member","Friend / household","Power of attorney","Other individual"]},
+  business:{icon:IC_BUILDING,label:"A business",short:"Business",desc:"We're paying on behalf of an employee, contractor, or client.",rel:["Employer paying for employee","Payer for contractor","Client representative","Other business relationship"]},
+  bank:{icon:IC_BANK,label:"A financial institution",short:"Financial institution",desc:"We're submitting for an account holder.",rel:["Account holder authorization","Trustee / fiduciary","Escrow / settlement (title co.)","Lender servicing"]}
 };
 // Verification tiers now GATE submission with real dollar limits — not just a badge.
 const TIERS={
@@ -294,7 +302,7 @@ const APPLY={
 function renderSteps(){
   steps.innerHTML=STEPS.map((s,i)=>{
     const cls=i<state.step?"done":(i===state.step?"current":"");
-    const num=i<state.step?"✓":(i+1);
+    const num=i<state.step?IC_CHECK:(i+1);
     return `<li class="${cls}"><span class="num">${num}</span><span><span class="st">${s.t}</span><span class="sd">${s.d}</span></span></li>`;
   }).join("");
   bar.style.width=Math.round(state.step/(STEPS.length-1)*100)+"%";
@@ -528,7 +536,7 @@ function renderBody(){
     const applyLine = state.applyMode==="single" ? APPLY.single : `${APPLY[state.applyMode]}${state.applyDetail?" — "+state.applyDetail:""}`;
     const noticeLine = state.hasNotice ? `<div class="readrow"><span class="k">In response to</span><span class="v">Notice/form ${state.noticeNum} · ${state.noticeDate}</span></div>` : "";
 
-    body.innerHTML=`<div class="done-hero"><div class="ring ${pending?'pending':''}">${pending?'⏳':'✓'}</div>
+    body.innerHTML=`<div class="done-hero"><div class="ring ${pending?'pending':''}">${pending?IC_CLOCK:IC_CHECK}</div>
       <h2>${pending?'Payment received — pending review':'Payment submitted'}</h2>
       <p class="phint" style="margin:0 auto">${money(state.amount)} toward the taxpayer's ${state.oblig.toLowerCase()} — with your payer identity attached${pending?', flagged for manual review because the payer is unverified.':' and posted immediately.'}</p></div>
 
@@ -537,7 +545,7 @@ function renderBody(){
         <div class="porbody">
           <div class="porflow">
             <span class="who">${nm}</span>
-            <span class="arrow" aria-hidden="true">→</span>
+            <span class="arrow" aria-hidden="true">${IC_ARROW_RIGHT}</span>
             <span>paid <span class="amt">${money(state.amount)}</span> on behalf of</span>
             <span class="who">taxpayer TXP-9F42-••••</span>
           </div>
@@ -545,7 +553,7 @@ function renderBody(){
           ${idLine}
           <div class="readrow"><span class="k">Authorization</span><span class="v">${state.rel}</span></div>
           <div class="readrow"><span class="k">Payer contact</span><span class="v">${[state.email,state.phone].filter(Boolean).join(" · ")||"—"}</span></div>
-          <div class="readrow"><span class="k">Payer verification</span><span class="v"><span class="badge ${t.badge}">${state.tier==='t3'?'✓ ':''}${t.name} payer</span></span></div>
+          <div class="readrow"><span class="k">Payer verification</span><span class="v"><span class="badge ${t.badge}">${state.tier==='t3'?IC_CHECK+' ':''}${t.name} payer</span></span></div>
         </div>
       </div>
 
@@ -559,7 +567,7 @@ function renderBody(){
           <div class="readrow"><span class="k">Taxpayer</span><span class="v">token TXP-9F42-•••• (masked)</span></div>
           <div class="readrow"><span class="k">Funding source</span><span class="v">${state.source}</span></div>
           <div class="readrow"><span class="k">Effective date</span><span class="v">${state.date}</span></div>
-          <div class="readrow"><span class="k">Status</span><span class="v"><span class="badge ${pending?'a':'g'}">${pending?'⏳ Pending manual review (mock)':'✓ Accepted (mock)'}</span></span></div>
+          <div class="readrow"><span class="k">Status</span><span class="v"><span class="badge ${pending?'a':'g'}">${pending?IC_CLOCK+' Pending manual review (mock)':IC_CHECK+' Accepted (mock)'}</span></span></div>
         </div>
       </div>
       <div class="ractions">
@@ -569,8 +577,8 @@ function renderBody(){
       <p class="note">A record of <b>who paid on whose behalf</b> is stored with this payment. The taxpayer sees the credit and the verified payer on their account.</p>`;
     back.hidden=false;next.textContent="Make another payment";
     const dl=body.querySelector("#dl"),em=body.querySelector("#em");
-    dl.addEventListener("click",()=>{dl.textContent="Downloaded ✓";});
-    em.addEventListener("click",()=>{em.textContent="Sent ✓";em.style.background="#eef4fb";});
+    dl.addEventListener("click",()=>{dl.innerHTML=`Downloaded ${IC_CHECK}`;});
+    em.addEventListener("click",()=>{em.innerHTML=`Sent ${IC_CHECK}`;em.style.background="#eef4fb";});
   }
   back.hidden=state.step===0;
   renderContextBar();
