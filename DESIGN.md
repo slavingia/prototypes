@@ -230,6 +230,9 @@ Usage rules:
 <!-- dot (current-state marker inside step/timeline indicators) -->
 <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
 
+<!-- external-link (opens on another site) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 6.5 9.5M7 4H3v9h9V9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
 <!-- keyboard-key symbols (⌘, ↵, kbd arrows) inside a <kbd>/.kbd element are typography, not icons — allowed.
      wave / greeting: DO NOT replace 👋 🙂 👇 with an icon — cut the emoji and let the words carry the tone -->
 ```
@@ -237,6 +240,57 @@ Usage rules:
 If a prototype needs an icon that isn't here, draw it in the same style
 (16-grid, 1.6 stroke, round caps, `currentColor`) and **add it to this file**
 in the same PR.
+
+---
+
+## Dark mode
+
+Every prototype supports dark mode via **`prefers-color-scheme` only** — the
+page follows the OS/browser setting. **No manual toggle**, no JS, no
+localStorage: it's pure CSS.
+
+Required plumbing:
+
+```html
+<meta name="color-scheme" content="light dark">
+```
+
+```css
+:root{color-scheme:light dark}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14171a;        /* page background */
+    --surface:#1e2328;   /* cards, panels, dropdowns */
+    --surface-2:#262c33; /* nested / tinted panels (was #f5f9fd etc.) */
+    --ink:#e8eaed;       --muted:#9aa1a9;
+    --line:#3d4551;      --link:#79b4e6;
+    --green:#55b685;     --amber:#d9ae4a;  --red:#f2857f;
+    --teal:#57bfd4;      --violet:#ab96ee;
+  }
+}
+```
+
+Rules:
+1. **Everything through tokens.** Dark mode only works if surfaces and text
+   use `var(--bg)`, `var(--surface)`, `var(--ink)`, etc. Replace literal
+   `background:#fff` on the page/panels with tokens (add `--bg:#fff` and
+   `--surface:#fff`-family tokens to the light `:root` first). Literal light
+   tints (`#f5f9fd`, `#e7f0fa`, `#eef3f9`, `#f0f0f0`…) become `--surface-2`
+   or a `color-mix(in srgb, var(--irs-blue) 12%, var(--surface))`.
+2. **The masthead stays IRS blue** in both schemes (white text on `--irs-blue`
+   passes in both). The gov banner strip becomes `--surface-2` in dark.
+3. **Accent text colors must use the dark-tuned tokens** — the light-mode
+   `#1a7f4b` green / `#8a6d00` amber fail contrast on dark surfaces; the
+   `@media` block above retunes them. Anything written as `var(--green)` etc.
+   inherits the fix for free.
+4. **Shadows:** keep them, but they may need more opacity on dark to read.
+   Borders (`--line`) carry most separation in dark mode.
+5. **Form controls & scrollbars** follow automatically via `color-scheme`.
+6. **Contrast floor still applies** in dark: 4.5:1 body text, 3:1 large text.
+   Spot-check status chips, `.oicon`-style tinted tiles (use
+   `color-mix(... 25%, var(--surface))` backgrounds with the tuned accent as
+   text), and anything with a hardcoded hex.
+7. **Images/screenshots** get no filter — leave them as-is.
 
 ---
 
@@ -249,5 +303,6 @@ in the same PR.
 - [ ] Step indicators: outlined pending, blue done, navy current.
 - [ ] Color tokens from this file; dividers `#D6D7D9`.
 - [ ] No emoji or glyph icons — all pictographs are inline SVGs from the icon library (`.ic`, `currentColor`, 16-grid / 1.6 stroke).
+- [ ] Dark mode via `prefers-color-scheme` (meta + token overrides); no toggle.
 - [ ] Disclaimer footer present.
 - [ ] Mock data only — no PII (see `CONTRIBUTING.md`).

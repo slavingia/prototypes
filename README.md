@@ -43,10 +43,13 @@ Published via GitHub Pages so prototypes are easy to share and update — push t
 
 ## Contents
 
-### `archive/` — retired prototypes
-Superseded explorations (e.g. the original `omnibar-in-app/` concept, folded
-into `unified-tax-account/`). Kept for reference, not maintained; see
-`archive/README.md`.
+### `archive/` — retired prototype variants
+Earlier omni bar iterations (the current one graduated to `omnibar-in-app/`).
+Kept for reference, not maintained; see `archive/README.md`.
+
+### `omnibar-in-app/` — Online Account "omni bar" (in-app concept)
+A command-palette style omni bar in the Online Account masthead, with an
+account switcher, persona scenarios (keys 1–4), and bilingual EN/ES content.
 
 ### `bta-94x-pin/` — Business Tax Account: 94x Online Signature PIN
 A self-service wizard for a responsible official to request the 10-digit 94x

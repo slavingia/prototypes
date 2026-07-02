@@ -15,6 +15,7 @@
     --teal:#00687d; --infobar:#e1f3f8;
   }
   *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
   body{margin:0;background:#fff;color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
@@ -90,20 +91,20 @@
   .omni-hint kbd{font-family:ui-monospace,Menlo,monospace;border:1px solid rgba(255,255,255,.55);border-radius:4px;padding:2px 6px;line-height:1;background:rgba(255,255,255,.1)}
   .omni-input-wrap:focus-within .omni-hint{display:none}
   .clearbtn{border:0;background:#eef3f9;color:var(--muted);width:28px;height:28px;border-radius:4px;cursor:pointer;font-size:14px;flex:0 0 28px}
-  .results{position:absolute;left:0;right:0;top:calc(100% + 10px);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 26px 70px rgba(0,18,46,.34);overflow:hidden;z-index:3;max-height:72vh;overflow-y:auto}
+  .results{position:absolute;left:0;right:0;top:calc(100% + 10px);background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 26px 70px rgba(0,18,46,.34);overflow:hidden;z-index:3;max-height:72vh;overflow-y:auto}
   .omni-scrim{position:fixed;inset:0;background:rgba(0,21,46,.40);z-index:1;display:none}
   #results:not([hidden]) ~ .omni-scrim{display:block}
   .res-head{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;padding:12px 16px 6px}
   .opt{display:flex;gap:13px;align-items:flex-start;padding:12px 16px;cursor:pointer;border-top:1px solid #f0f4f8}
   .opt:first-of-type{border-top:0}
   .opt.active{background:#e7f0fa}
-  .opt .oicon{width:36px;height:36px;border-radius:4px;flex:0 0 36px;display:grid;place-items:center;font-size:13px;font-weight:800;letter-spacing:.02em}
+  .opt .oicon{width:36px;height:36px;border-radius:4px;flex:0 0 36px;display:grid;place-items:center;font-size:13px;font-weight:800;letter-spacing:.02em;background:color-mix(in srgb,var(--c) 10%,#fff);color:color-mix(in srgb,var(--c) 80%,#000)}
   .opt .otitle{font-size:15.5px;font-weight:700;margin:0}
   .opt .oplain{font-size:13px;color:var(--muted);margin:2px 0 0}
   .opt .answer{margin-top:7px;background:#f5f9fd;border:1px solid #dce8f4;border-radius:0;padding:7px 11px;font-size:13.5px}
   .opt .answer .big{font-size:18px;font-weight:800;color:var(--irs-blue)}
-  .opt .route{font-size:10.5px;color:#9aa7b5;font-family:ui-monospace,Menlo,monospace;margin-top:6px}
-  .opt .kbd{margin-left:auto;font-size:11px;color:#aeb9c5;align-self:center}
+  .opt .route{font-size:10.5px;color:var(--muted);font-family:ui-monospace,Menlo,monospace;margin-top:6px}
+  .opt .kbd{margin-left:auto;font-size:11px;color:var(--muted);align-self:center}
   .matchwhy{display:inline-block;font-size:10.5px;font-weight:700;color:var(--irs-blue);background:#e7f0fa;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
   .opt.ext .oicon{border-radius:50%}
   .opt .ext-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:var(--teal);background:#e3f1f4;border-radius:4px;padding:2px 8px;margin-top:7px}
@@ -306,8 +307,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -334,7 +335,7 @@
     <div class="usermenu">
       <button class="acct-trigger" id="acctBtn" type="button" aria-haspopup="true" aria-expanded="false">
         <span class="acct-text">
-          <span class="acct-name">SAHIL LAVINGIA</span>
+          <span class="acct-name">JORDAN A. RIVERA</span>
           <span class="acct-ctx" id="acctCtx">Individual</span>
         </span>
         <span class="acct-caret" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span>
@@ -342,16 +343,16 @@
       <div class="usermenu-pop" id="userPop" hidden>
         <div class="pop-head">Switch account</div>
         <button class="acct-opt active" type="button" data-ctx="Individual">
-          <span class="opt-main">Individual</span><span class="opt-role">SAHIL LAVINGIA</span><span class="opt-check" aria-hidden="true">✓</span>
+          <span class="opt-main">Individual</span><span class="opt-role">JORDAN A. RIVERA</span><span class="opt-check" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <button class="acct-opt" type="button" data-ctx="Gumroad, Inc.">
-          <span class="opt-main">Gumroad, Inc.</span><span class="opt-role">Designated Official</span><span class="opt-check" aria-hidden="true">✓</span>
+        <button class="acct-opt" type="button" data-ctx="Rivera Bakehouse LLC">
+          <span class="opt-main">Rivera Bakehouse LLC</span><span class="opt-role">Designated Official</span><span class="opt-check" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
         <button class="acct-opt" type="button" data-ctx="Acme Studios LLC">
-          <span class="opt-main">Acme Studios LLC</span><span class="opt-role">Designated Official</span><span class="opt-check" aria-hidden="true">✓</span>
+          <span class="opt-main">Acme Studios LLC</span><span class="opt-role">Designated Official</span><span class="opt-check" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
         <button class="acct-opt" type="button" data-ctx="Maria R. Okafor">
-          <span class="opt-main">Maria R. Okafor</span><span class="opt-role">Power of Attorney</span><span class="opt-check" aria-hidden="true">✓</span>
+          <span class="opt-main">Maria R. Okafor</span><span class="opt-role">Power of Attorney</span><span class="opt-check" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
         <div class="pop-div"></div>
         <a><span data-i18n="profile">Profile</span></a>
@@ -364,7 +365,7 @@
   <!-- section nav removed — simplified to logo + account menu -->
 
   <main class="wrap">
-    <h1 class="welcome" id="welcome"><span id="welcomeWord">Welcome</span>, <span id="dispName">SAHIL LAVINGIA</span><button class="edit-name" id="editNameBtn" type="button" aria-label="Edit your display name" title="Edit your name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></button></h1>
+    <h1 class="welcome" id="welcome"><span id="welcomeWord">Welcome</span>, <span id="dispName">JORDAN A. RIVERA</span><button class="edit-name" id="editNameBtn" type="button" aria-label="Edit your display name" title="Edit your name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></button></h1>
 
     <div id="view-home">
     <!-- ===== classic IRS Online Account layout (status / payments / notifications / records) ===== -->
@@ -480,7 +481,7 @@
 <script>
 /* ---------- i18n ---------- */
 const I18N={
-  en:{tabs:["Account home","Account balance","Payments ⌄","Tax records","Notices and letters","Authorizations","Inbox"],
+  en:{tabs:["Account home","Account balance","Payments","Tax records","Notices and letters","Authorizations","Inbox"],
     profile:"Profile",help:"Help",logout:"Logout",lang:"English",welcome:"Welcome",
     accountStatus:"Account status",payments:"Payments",makePayment:"Make a payment",paymentOptions:"View payment options",
     paymentActivity:"View payment activity",viewBalance:"View balance details",owedLabel:"Total amount owed",
@@ -492,7 +493,7 @@ const I18N={
     rec3:"Economic Impact Payment filing information",rec4:"Downloadable tax records",
     viewNotices:"View notices and letters",noticesFor:"for correspondence from the IRS",viewAuth:"View authorizations",authFor:"for online requests from tax professionals",
     kicker:"What do you need to do today?",placeholder:'Try “code”, “can\'t pay”, “CP523”, or “pay 200”…',suggest:"Suggestions for you",best:"Best matches",none:"No matches",reveal:"Reveal",noResults:q=>`Nothing matched “${q}”. Try “owe”, “refund”, or “letter”.`},
-  es:{tabs:["Inicio de la cuenta","Saldo de la cuenta","Pagos ⌄","Registros tributarios","Avisos y cartas","Autorizaciones","Buzón"],
+  es:{tabs:["Inicio de la cuenta","Saldo de la cuenta","Pagos","Registros tributarios","Avisos y cartas","Autorizaciones","Buzón"],
     profile:"Perfil",help:"Ayuda",logout:"Salir",lang:"Español",welcome:"Bienvenida",
     accountStatus:"Estado de la cuenta",payments:"Pagos",makePayment:"Hacer un pago",paymentOptions:"Ver opciones de pago",
     paymentActivity:"Ver actividad de pagos",viewBalance:"Ver detalles del saldo",owedLabel:"Cantidad total adeudada",
@@ -666,6 +667,7 @@ const PERSONAS={
       ]}
     ]}
 };
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,IC_ARROW_R=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,IC_EXT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 6.5 9.5M7 4H3v9h9V9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 let current="1",activeTab=0,metric="income",selYear=null,selConvo=null;
 const EV_META={letter:{c:"#5b3fa0",m:"LTR"},payment:{c:"#1a7f4b",m:"PAY"},form:{c:"#004c97",m:"FRM"},auth:{c:"#8a6d00",m:"POA"},doc:{c:"#0050a0",m:"DOC"}};
 const P=()=>PERSONAS[current], L=()=>I18N[P().lang], ES=()=>P().lang==="es";
@@ -685,7 +687,7 @@ const INTENTS=[
     route:"GET /api/iola/shared/accounts/profile/1.0/ip-pin",
     syn:["code","my code","the code","ip pin","ippin","pin","identity code","efile code","number to file","someone filed as me","codigo","código","mi codigo","numero para presentar"],
     kw:["code","pin","ippin","efile","identity","codigo","código"],
-    answer:()=>{const p=P();return p.hasIpPin?`<div>${ES()?"Su IP PIN":"Your IP PIN"}: <span class="big">${p.ipPin}</span> <a>${L().reveal}</a></div>`:`<div>${ES()?"No tiene un IP PIN todavía.":"You don't have an IP PIN yet."} <a>${ES()?"Solicitar →":"Request one →"}</a></div>`;}},
+    answer:()=>{const p=P();return p.hasIpPin?`<div>${ES()?"Su IP PIN":"Your IP PIN"}: <span class="big">${p.ipPin}</span> <a>${L().reveal}</a></div>`:`<div>${ES()?"No tiene un IP PIN todavía.":"You don't have an IP PIN yet."} <a>${ES()?"Solicitar "+IC_ARROW_R:"Request one "+IC_ARROW_R}</a></div>`;}},
   {id:"balance",icon:"$",color:"#004c97",title:{en:"How much you owe",es:"Cuánto debe"},plain:{en:"Your current balance and balance by year",es:"Su saldo actual y por año tributario"},
     route:"GET /api/iola/v1.0/shared/accounts/baldue-summary",
     syn:["balance","how much do i owe","do i owe","what i owe","my bill","total owed","how much","saldo","cuanto debo","cuánto debo","mi cuenta"],
@@ -696,14 +698,14 @@ const INTENTS=[
     syn:["pay","make a payment","pay my taxes","pay irs","send a payment","pagar","hacer un pago","pagar impuestos"],
     kw:["pay","payment","pagar","pago"],
     answer:(pr)=>{const p=P(),bank=p.banks[0]||(ES()?"una cuenta nueva":"a new bank account");
-      return pr&&pr.amount?`<div>${ES()?"Pagar":"Pay"} <span class="big">$${pr.amount}</span> ${ES()?"desde":"from"} ${bank} <a>${ES()?"Revisar →":"Review →"}</a></div>`:`<div>${ES()?"Pague desde":"Pay from"} ${bank}. <a>${ES()?"Ingresar monto →":"Enter an amount →"}</a></div>`;}},
+      return pr&&pr.amount?`<div>${ES()?"Pagar":"Pay"} <span class="big">$${pr.amount}</span> ${ES()?"desde":"from"} ${bank} <a>${ES()?"Revisar "+IC_ARROW_R:"Review "+IC_ARROW_R}</a></div>`:`<div>${ES()?"Pague desde":"Pay from"} ${bank}. <a>${ES()?"Ingresar monto "+IC_ARROW_R:"Enter an amount "+IC_ARROW_R}</a></div>`;}},
   {id:"plan",icon:"PL",color:"#8a6d00",title:{en:"Payment plan",es:"Plan de pagos"},plain:{en:"Set up or manage an installment agreement",es:"Cree o administre un acuerdo de pagos"},
     route:"GET /api/iola/shared/accounts/payments/1.0/plans/current-agreement",
     syn:["payment plan","plan","installment","cant pay","can't pay","cannot pay","pay over time","monthly payments","more time","too much","afford","plan de pagos","no puedo pagar","pagar a plazos","mensual"],
     kw:["plan","installment","monthly","afford","plazos","mensual"],
-    answer:()=>{const p=P();if(p.plan==="defaulted")return `<div>${ES()?"Su plan incumplió.":"Your plan <b>defaulted</b>."} <a>${ES()?"Restablecer →":"Reinstate your agreement →"}</a></div>`;
-      if(p.plan==="active")return `<div>${ES()?"Plan activo · próximo pago":"Plan active · next payment"} <b>${p.nextPay}</b>. <a>${ES()?"Administrar →":"Manage plan →"}</a></div>`;
-      return `<div>${ES()?"Es elegible para solicitar.":"You're eligible to apply."} <a>${ES()?"Solicitar plan →":"Apply for a payment plan →"}</a></div>`;}},
+    answer:()=>{const p=P();if(p.plan==="defaulted")return `<div>${ES()?"Su plan incumplió.":"Your plan <b>defaulted</b>."} <a>${ES()?"Restablecer "+IC_ARROW_R:"Reinstate your agreement "+IC_ARROW_R}</a></div>`;
+      if(p.plan==="active")return `<div>${ES()?"Plan activo · próximo pago":"Plan active · next payment"} <b>${p.nextPay}</b>. <a>${ES()?"Administrar "+IC_ARROW_R:"Manage plan "+IC_ARROW_R}</a></div>`;
+      return `<div>${ES()?"Es elegible para solicitar.":"You're eligible to apply."} <a>${ES()?"Solicitar plan "+IC_ARROW_R:"Apply for a payment plan "+IC_ARROW_R}</a></div>`;}},
   {id:"refund",icon:"RF",color:"#1a7f4b",title:{en:"Where's my refund",es:"Dónde está mi reembolso"},plain:{en:"Track the status of your refund",es:"Rastree el estado de su reembolso"},
     route:"GET /api/iola/taxpayers/accounts/taxrecords/1.0/refundSummary/2024",
     syn:["refund","wheres my refund","where's my refund","money back","when do i get paid","refund status","reembolso","mi reembolso","mi dinero"],
@@ -713,8 +715,8 @@ const INTENTS=[
     route:"GET /api/iola/web-apps/routes/tdc/notifications",
     syn:["notice","letter","got a letter","irs mail","what does this letter mean","cp2000","aviso","carta","recibi una carta","correo del irs"],
     kw:["notice","letter","mail","cp","aviso","carta"],
-    answer:(pr)=>{const p=P();if(pr&&pr.cp)return `<div>${ES()?"Aviso":"Notice"} <span class="big">${pr.cp}</span> — <a>${ES()?"abrir y próximos pasos →":"open this letter & next steps →"}</a></div>`;
-      return `<div>${ES()?"Más reciente":"Most recent"}: <b>${p.topNotice.code}</b> — ${p.topNotice.txt}. <a>${ES()?"Abrir →":"Open →"}</a></div>`;}},
+    answer:(pr)=>{const p=P();if(pr&&pr.cp)return `<div>${ES()?"Aviso":"Notice"} <span class="big">${pr.cp}</span> — <a>${ES()?"abrir y próximos pasos "+IC_ARROW_R:"open this letter & next steps "+IC_ARROW_R}</a></div>`;
+      return `<div>${ES()?"Más reciente":"Most recent"}: <b>${p.topNotice.code}</b> — ${p.topNotice.txt}. <a>${ES()?"Abrir "+IC_ARROW_R:"Open "+IC_ARROW_R}</a></div>`;}},
   {id:"transcripts",icon:"TR",color:"#004c97",title:{en:"Tax records / transcripts",es:"Registros / transcripciones"},plain:{en:"Get transcripts — often needed for a mortgage or loan",es:"Obtenga transcripciones — para hipoteca o préstamo"},
     route:"GET /api/iola/shared/accounts/taxrecords/1.0/taxpayers/transcripts",
     syn:["transcript","tax record","records","proof of income","records for mortgage","records for loan","wage and income","transcripcion","registros","comprobante de ingresos","hipoteca"],
@@ -740,7 +742,7 @@ const INTENTS=[
     syn:["message","messages","secure message","send a message","contact irs","write to irs","mensaje","mensajes","mensaje seguro","contactar al irs"],
     kw:["message","messages","contact","mensaje","mensajes"],
     answer:()=>{const p=P(),n=(p.conversations||[]).length;
-      return `<div>${ES()?`${n} conversación${n>1?"es":""}`:`${n} conversation${n>1?"s":""}`} <a>${ES()?"Abrir →":"Open →"}</a></div>`;}}
+      return `<div>${ES()?`${n} conversación${n>1?"es":""}`:`${n} conversation${n>1?"s":""}`} <a>${ES()?"Abrir "+IC_ARROW_R:"Open "+IC_ARROW_R}</a></div>`;}}
 ];
 
 /* ---------- NOT in IOLA yet: top IRS.gov tasks surfaced inside the account ----------
@@ -818,13 +820,14 @@ function render(q){const ql=q.toLowerCase().trim(),pr=parseQuery(ql);active=-1;
   live.textContent=curRes.length?`${curRes.length}`:"0";
   [...listbox.querySelectorAll(".opt")].forEach(el=>{el.onmouseenter=()=>setA(+el.dataset.i);el.onclick=()=>choose(+el.dataset.i);});}
 function opt(r,i,pr){const it=r.it,lang=P().lang,ans=it.ext?null:(it.answer?it.answer(pr):null);
-  const tag=it.ext?`<div class="ext-tag">${ES()?"Se abre en IRS.gov":"Opens on IRS.gov"} ↗</div>`:"";
-  return `<div class="opt${it.ext?' ext':''}" id="opt-${i}" role="option" data-i="${i}"><div class="oicon" style="background:${it.color}1a;color:${it.color}">${it.icon}</div>
-   <div style="flex:1"><p class="otitle">${it.title[lang]}${r.why?`<span class="matchwhy">${r.why}</span>`:""}</p><p class="oplain">${it.plain[lang]}</p>${ans?`<div class="answer">${ans}</div>`:""}${tag}</div><span class="kbd">${it.ext?"↗":"↵"}</span></div>`;}
+  const tag=it.ext?`<div class="ext-tag">${ES()?"Se abre en IRS.gov":"Opens on IRS.gov"} ${IC_EXT}</div>`:"";
+  return `<div class="opt${it.ext?' ext':''}" id="opt-${i}" role="option" data-i="${i}"><div class="oicon" style="--c:${it.color}">${it.icon}</div>
+   <div style="flex:1"><p class="otitle">${it.title[lang]}${r.why?`<span class="matchwhy">${r.why}</span>`:""}</p><p class="oplain">${it.plain[lang]}</p>${ans?`<div class="answer">${ans}</div>`:""}${tag}</div><span class="kbd">${it.ext?IC_EXT:"↵"}</span></div>`;}
 function setA(i){active=i;[...listbox.querySelectorAll(".opt")].forEach((el,idx)=>{const on=idx===i;el.classList.toggle("active",on);if(on)omni.setAttribute("aria-activedescendant","opt-"+i);});}
-function choose(i){const r=curRes[i];if(!r)return;const w=document.querySelector(".omni-input-wrap");w.style.transition="background .15s";w.style.background="#e7f7ee";live.textContent="Opening "+r.it.title[P().lang];setTimeout(()=>w.style.background="#fff",260);
+function choose(i){const r=curRes[i];if(!r)return;const w=document.querySelector(".omni-input-wrap");w.style.transition="background .15s";w.style.background="#e7f7ee";live.textContent="Opening "+r.it.title[P().lang];setTimeout(()=>{w.style.background="";w.style.transition="";},260);
   if(r.it.ext){logExternal(r.it);window.open(r.it.url,"_blank","noopener");return;}
-  if(r.it.id==="messages"){results.hidden=true;activeTab=L().tabs.length-1;apply();window.scrollTo({top:0,behavior:"smooth"});}}
+  results.hidden=true;omni.setAttribute("aria-expanded","false");
+  if(r.it.id==="messages"){activeTab=L().tabs.length-1;apply();window.scrollTo({top:0,behavior:"smooth"});}else{omni.blur();}}
 /* analytics: which non-IOLA tasks people reach for from inside their account —
    demand signal for what to build into IOLA next */
 function logExternal(it){const KEY="iolaOffsiteDemand";let tally={};
@@ -1065,8 +1068,8 @@ function renderOb(){
     const types=[s.types.notice&&t.obTypeNotice,s.types.refund&&t.obTypeRefund,s.types.payment&&t.obTypePayment].filter(Boolean);
     obBody.innerHTML=`<h2 id="obTitle">${t.obDoneTitle}</h2><p class="lead">${t.obDoneLead}</p>
       <ul class="ob-summary">
-        <li><span class="ok ${s.email?'':'off'}">${s.email?"✓":"–"}</span><div><b>${t.obSumEmail}</b>: ${s.email?t.obSumOn:t.obSumOff}${s.email&&types.length?` — ${types.join(" · ")}`:""}</div></li>
-        <li><span class="ok ${s.paperless?'':'off'}">${s.paperless?"✓":"–"}</span><div><b>${t.obSumPaper}</b>: ${s.paperless?t.obSumOn:t.obSumOff}</div></li>
+        <li><span class="ok ${s.email?'':'off'}">${s.email?IC_CHECK:"–"}</span><div><b>${t.obSumEmail}</b>: ${s.email?t.obSumOn:t.obSumOff}${s.email&&types.length?` — ${types.join(" · ")}`:""}</div></li>
+        <li><span class="ok ${s.paperless?'':'off'}">${s.paperless?IC_CHECK:"–"}</span><div><b>${t.obSumPaper}</b>: ${s.paperless?t.obSumOn:t.obSumOff}</div></li>
       </ul>`;
   }
 }
@@ -1082,7 +1085,7 @@ obSkip.addEventListener("click",()=>closeOb(false));
 function renderSetup(){
   const t=L(),s=ob(),el=document.getElementById("setupCard");
   el.innerHTML=s.done
-    ?`<div class="setup-card done"><span class="si">✓</span><div class="grow"><div class="st">${t.setupDoneTitle}</div><div class="sb">${t.setupDoneBody}</div></div><a id="setupOpen">${t.setupManage}</a></div>`
+    ?`<div class="setup-card done"><span class="si"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="grow"><div class="st">${t.setupDoneTitle}</div><div class="sb">${t.setupDoneBody}</div></div><a id="setupOpen">${t.setupManage}</a></div>`
     :`<div class="setup-card"><span class="si">1·2·3</span><div class="grow"><div class="st">${t.setupTitle}</div><div class="sb">${t.setupBody}</div></div><a class="btn" id="setupOpen">${t.setupCta}</a></div>`;
   document.getElementById("setupOpen").onclick=openOb;
 }
@@ -1159,7 +1162,7 @@ document.querySelectorAll(".acct-opt").forEach(opt=>opt.addEventListener("click"
 
 // editable display name — legal name pulled by default; preferred name saved to localStorage; updates both H1 + trigger
 (function(){
-  const LEGAL="SAHIL LAVINGIA";
+  const LEGAL="JORDAN A. RIVERA";
   const disp=document.getElementById("dispName"),editBtn=document.getElementById("editNameBtn");
   const get=()=>{try{return localStorage.getItem("irsDisplayName");}catch(e){return null;}};
   const render=v=>{disp.textContent=v;}; // only the H1 greeting is personalized; the top-right always shows the legal name
