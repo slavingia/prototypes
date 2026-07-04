@@ -82,12 +82,11 @@
 
   /* omnibar — sticky search pinned under the header */
   .omni{position:relative;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 12px;z-index:5}
-  .omni .olabel{display:block;font-size:13px;font-weight:600;color:var(--ink);margin:0 2px 6px}
-  .omni .ohint{display:block;font-size:12.5px;color:var(--muted);margin:6px 2px 0}
   .omni .field{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface-2);padding:9px 11px;border-radius:4px}
   .omni .field:focus-within{border-color:var(--irs-blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--irs-blue) 25%,transparent)}
   .omni .field .mag{color:var(--muted);flex:0 0 auto;font-size:16px}
   .omni input{flex:1;border:0;background:none;font-family:inherit;font-size:15px;color:var(--ink);outline:none;min-width:0}
+  .omni input::placeholder{color:var(--muted)}
   .omni .clr{border:0;background:none;color:var(--muted);cursor:pointer;padding:2px;display:none;font-size:16px;line-height:0}
   .omni .clr.show{display:inline-flex}
   .omni .results{position:absolute;left:12px;right:12px;top:calc(100% - 2px);background:var(--surface);border:1px solid var(--line);
@@ -199,13 +198,11 @@
       </div>
 
       <div class="omni">
-        <label class="olabel" for="omni-input">Search your account</label>
-        <div class="field">
+        <label class="field">
           <span class="mag" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></g></svg></span>
-          <input id="omni-input" type="text" autocomplete="off" aria-controls="omni-results" aria-describedby="omni-hint" aria-expanded="false" role="combobox">
+          <input id="omni-input" type="text" placeholder="Search balance, payments, records, notices…" autocomplete="off" aria-label="Search your account" aria-controls="omni-results" aria-expanded="false" role="combobox">
           <button class="clr" id="omni-clr" type="button" aria-label="Clear search"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-        </div>
-        <span class="ohint" id="omni-hint">Balance, payments, records, notices, profile</span>
+        </label>
         <div class="results" id="omni-results" role="listbox"></div>
       </div>
 
