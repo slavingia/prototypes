@@ -286,7 +286,7 @@
   <div class="intro">
     <p class="k">Issue #10 · Variant 3</p>
     <h1>IRS mobile app — wallet-first, chat-first</h1>
-    <p>The app opens on a conversation: ask a question (or tap a chip like “Check my refund status”) and the omnibar turns into a chat. <b>Account data is gated:</b> as a guest you can’t see your balance, records, or notices — the assistant explains why and offers to sign in. The one guest-accessible task is <b>Where’s My Refund</b>, because that flow verifies your identity as it goes. And <b>“Make a payment” never assumes you mean your balance</b> — it asks what kind (balance due, estimated tax, extension, amended return, notice, or a plan) first.</p>
+    <p>The app opens on a conversation: ask a question (or tap a chip like “Check my refund status”) and the omnibar turns into a chat. As a <b>guest</b> you can check “Where’s My Refund” the classic way — SSN, filing status, exact amount — or <b>sign in</b> once and never re-enter those details again. Account answers offer one-tap “Open in app” buttons that drop into the wallet card, records, notices, and profile.</p>
   </div>
 
   <div class="stage">
@@ -682,48 +682,7 @@
       }
     }
 
-    // Entering the full account view means entering the *signed-in* app, so it
-    // requires sign-in — the wallet screen shows the balance, which a guest can
-    // never see. This is the backstop behind every "Open in app" button.
-    function openInApp(id,pane){
-      if(!signedIn){
-        botReply("Opening your account means entering the signed-in app \u2014 which shows your balance and records. <b>Sign in</b> to continue.<div class=\"note\">"+IC_LOCK+" A guest never sees the account screen.</div>",
-          [{label:"Sign in & open", act:function(){ signIn(false); setTimeout(function(){ splash.classList.remove("on"); chat.classList.remove("on"); if(jump) jump(id,pane); },350); }, send:false}]);
-        return;
-      }
-      splash.classList.remove("on"); chat.classList.remove("on"); if(jump) jump(id,pane);
-    }
-
-    /* ---- payment: never assume "pay my balance" ---- */
-    // Balance-due payment needs the protected balance, so it requires sign-in.
-    function payBalance(){
-      if(!signedIn){
-        botReply("Paying a <b>balance due</b> means paying the bill on your account \u2014 but I can\u2019t look that balance up without verifying you. <b>Sign in</b> and I\u2019ll load it, or if you already know the amount you can enter it yourself.<div class=\"note\">"+IC_LOCK+" We don\u2019t reveal an account balance to an unverified session.</div>",
-          [{label:"Sign in to pay my balance", act:function(){ signIn(false); setTimeout(payBalance,350); }, send:false},
-           {label:"I\u2019ll enter an amount myself", act:function(){ payReason("Balance due","a bill you already know","your balance due","tax year 2025"); }, send:false}]);
-        return;
-      }
-      botReply("Your <b>balance due</b> is <b>$1,284.50</b> for tax year 2025. Pay it in full, or set up a plan."
-        +'<div>'+inAppBtn("Open pay screen",'t-balance',null)+'</div>',
-        [{label:"Pay $1,284.50 in full", act:function(){ botReply("Opening the pay screen with the full <b>$1,284.50</b> ready to confirm.",[]); setTimeout(function(){openInApp("t-balance",null);},700); }, send:false},
-         {label:"Set up a plan", act:function(){ botReply("A short-term or monthly installment plan can spread this out. I\u2019ll open the plan options."+'<div>'+inAppBtn("Open payment plan",'t-balance',null)+'</div>',defaultReplies()); }, send:false}]);
-    }
-    // Non-balance payment types: no account lookup needed, so a guest can proceed by entering an amount.
-    function payReason(kind,form,desc,period){
-      botReply("Got it \u2014 <b>"+esc(kind)+"</b> ("+esc(form)+"). That\u2019s "+esc(desc)+", so I don\u2019t need to look up your balance \u2014 you tell me the amount. Applying to <b>"+esc(period)+"</b>."
-        +'<div class="note">This payment type doesn\u2019t require signing in \u2014 you can pay without a lookup because you\u2019re entering the amount.</div>',
-        [{label:"Enter $500 (sample)", act:function(){ payConfirm(kind,form,"$500.00",period); }, send:false},
-         {label:"Pick a different payment type", act:function(){ handle("pay"); }, send:false}]);
-    }
-    // Mock confirmation \u2014 stays in chat, never opens the balance-bearing wallet screen.
-    function payConfirm(kind,form,amount,period){
-      botReply("Scheduled a <b>"+esc(kind)+"</b> payment of <b>"+esc(amount)+"</b> ("+esc(form)+") for <b>"+esc(period)+"</b>."
-        +'<div class="stat"><span class="ring" aria-hidden="true">'+IC_CHECK+'</span> Payment scheduled</div>'
-        +'<div class="note">Demo confirmation \u2014 no real payment is made. Direct debit from the account you enter at pay time; you\u2019d get a confirmation number here.</div>',
-        [{label:"Make another payment", act:function(){ handle("pay"); }, send:false},
-         {label:"Anything else", act:function(){ botReply("Sure \u2014 what else can I help with?", defaultReplies()); }, send:false}]);
-    }
-
+    function openInApp(id,pane){ splash.classList.remove("on"); chat.classList.remove("on"); if(jump) jump(id,pane); }
 
     /* ---- intent router ---- */
     function detect(q){
@@ -741,12 +700,6 @@
       if(intent==="refund"){ startRefund(); return; }
       if(intent==="signin"){ if(signedIn){ botReply("You\u2019re already signed in as <b>"+esc(PROFILE.name)+"</b>.",defaultReplies()); } else { signIn(false); } return; }
       if(intent==="balance"){
-        if(!signedIn){
-          botReply("Your <b>balance</b> is protected account information, so I can\u2019t show it without verifying who you are. <b>Sign in</b> and I\u2019ll pull it up instantly \u2014 no SSN or amount to type.<div class=\"note\">"+IC_LOCK+" We never display a balance to an unverified session. The one thing you can check as a guest is your <b>refund status</b>, because that flow verifies your identity as you go.</div>",
-            [{label:"Sign in", act:function(){ signIn(false); setTimeout(function(){handle("balance");},350); }, send:false},
-             {label:"Check refund status instead", act:function(){ handle("refund"); }}]);
-          return;
-        }
         botReply("Your current <b>balance due</b> is <b>$1,284.50</b> for tax year 2025, due Jul 15, 2026 (interest accrues daily)."
           +'<div>'+inAppBtn("Open balance & pay",'t-balance',null)+'</div>',
           [{label:"Make a payment", act:function(){handle("pay");}},
@@ -754,35 +707,19 @@
         return;
       }
       if(intent==="pay"){
-        botReply("Sure \u2014 <b>what kind of payment</b> is this? I won\u2019t assume it\u2019s your balance."
-          +'<div class="note">Different payments post to different places on your account, so the reason matters (this mirrors Direct Pay\u2019s \u201cReason for Payment\u201d).</div>',
-          [{label:"Balance due (a bill I owe)", act:function(){ payBalance(); }, send:false},
-           {label:"Estimated tax (1040-ES)", act:function(){ payReason("Estimated tax","1040-ES","quarterly estimated tax for the current year","Q2 2026"); }, send:false},
-           {label:"Extension (4868)", act:function(){ payReason("Extension","Form 4868","a payment with your automatic filing extension","tax year 2025"); }, send:false},
-           {label:"Amended return (1040-X)", act:function(){ payReason("Amended return","Form 1040-X","a balance from an amended return","tax year 2024"); }, send:false},
-           {label:"Payment on a notice", act:function(){ payReason("Notice payment","CP-series notice","a payment toward a specific notice you received","see the notice for the period"); }, send:false},
-           {label:"Set up an installment plan", act:function(){ botReply("A short-term or monthly installment plan can spread a bill out over time. I\u2019ll open the plan options."+'<div>'+inAppBtn("Open payment plan",'t-balance',null)+'</div>',defaultReplies()); }, send:false}]);
+        botReply("You can pay the <b>$1,284.50</b> balance now, or set up a payment plan. How would you like to pay?"
+          +'<div>'+inAppBtn("Open payment screen",'t-balance',null)+'</div>',
+          [{label:"Pay in full", act:function(){ botReply("Great \u2014 opening the pay screen with the full <b>$1,284.50</b> ready to confirm.",[]); setTimeout(function(){openInApp("t-balance",null);},700); }, send:false},
+           {label:"Set up a plan", act:function(){ botReply("A short-term or monthly installment plan can spread this out. I\u2019ll open the plan options."+'<div>'+inAppBtn("Open payment plan",'t-balance',null)+'</div>',defaultReplies()); }, send:false}]);
         return;
       }
       if(intent==="records"){
-        if(!signedIn){
-          botReply("Your <b>records</b> \u2014 transcripts, wage &amp; income, filed returns \u2014 are protected account data. <b>Sign in</b> to see them.<div class=\"note\">"+IC_LOCK+" We don\u2019t show account records to an unverified session.</div>",
-            [{label:"Sign in", act:function(){ signIn(false); setTimeout(function(){handle("records");},350); }, send:false},
-             {label:"Check refund status instead", act:function(){ handle("refund"); }}]);
-          return;
-        }
         botReply("Here are your <b>records</b>: account transcript (2025\u20132023), wage &amp; income (W-2, 1099), and your filed Form 1040 (2025, Accepted)."
           +'<div>'+inAppBtn("Open records",'t-rec-transcript','p-rec')+'</div>',
           [{label:"My 1040", act:function(){ botReply("Your <b>Form 1040 (2025)</b> was filed Feb 20, 2026 and Accepted."+'<div>'+inAppBtn("Open Form 1040",'t-rec-1040','p-rec')+'</div>',defaultReplies()); }, send:false}]);
         return;
       }
       if(intent==="notices"){
-        if(!signedIn){
-          botReply("Your <b>notices</b> are tied to your account, so I can\u2019t list them without verifying you. <b>Sign in</b> to read them.<div class=\"note\">"+IC_LOCK+" We don\u2019t reveal account notices to an unverified session. If you got a notice in the mail, you can also act on it via \u201cMake a payment \u2192 Payment on a notice\u201d without signing in.</div>",
-            [{label:"Sign in", act:function(){ signIn(false); setTimeout(function(){handle("notices");},350); }, send:false},
-             {label:"Pay on a notice (no sign-in)", act:function(){ handle("pay"); }, send:false}]);
-          return;
-        }
         botReply("You have <b>2 unread notices</b>: <b>CP14</b> (balance due, action needed) and <b>CP49</b> (refund applied, info)."
           +'<div>'+inAppBtn("Open notices",'t-not-cp14','p-not')+'</div>',
           [{label:"Explain CP14", act:function(){ botReply("<b>CP14</b> means the IRS shows a balance due on your account \u2014 here $1,284.50 for 2025. It lists the amount, due date, and how to pay or dispute it."+'<div>'+inAppBtn("Open CP14",'t-not-cp14','p-not')+'</div>',defaultReplies()); }, send:false}]);
