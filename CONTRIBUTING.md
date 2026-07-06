@@ -14,6 +14,19 @@ This repository holds **design prototypes and concept explorations only**.
 - **Prototypes only.** This repo is for HTML/visual concepts and walkthroughs.
   It is not for production code, secrets, infrastructure, or anything that
   touches live taxpayer systems.
+- **Never break the fourth wall.** Every prototype must read as a *real,
+  shipping IRS product*. The visible UI must **never** reference itself as a
+  prototype/mockup/demo/reskin/redesign/concept, compare itself to "the live
+  site" / "the current site" / "the old version", or explain what was changed
+  or why (e.g. "this is a reskin", "on the live site these are cryptic
+  dropdowns", "no money moves in this prototype", "for this demo"). Write
+  realistic product copy a taxpayer would actually see. The **only** permitted
+  acknowledgement that it isn't real is the single italic disclaimer line in the
+  page **footer** (personal hobby project, fictional mock data, not affiliated
+  with any agency). Put any "what changed / why" explanation in the commit
+  message or PR — never in the HTML. This is enforced automatically by
+  [`scripts/check_fourth_wall.py`](scripts/check_fourth_wall.py) in CI; run it
+  locally before committing.
 - **Follow the design system.** Every prototype — new or updated — must match
   [`DESIGN.md`](DESIGN.md), the IRS ODG (USWDS-based) styling standard. This is
   not optional: use its color tokens, Source Sans 3 type ramp, the expandable
