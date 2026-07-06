@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Pay Online — DirectPay (reskin) · Guided</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --step-pend:#5B616B; --accent-blue:#004c97;
+    --btn-disabled-bg:#aebccb; --btn-disabled-ink:#fff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --tint:#20262c; --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --step-pend:#9aa1a9; --accent-blue:#79b4e6;
+      --btn-disabled-bg:#39424c; --btn-disabled-ink:#aeb6bf;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{transition:transform .15s}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;font-size:13px;align-items:flex-start}
+  .gov .gi{color:var(--irs-blue);flex:0 0 auto;margin-top:2px}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 20px}
+
+  /* running plain-English summary sentence */
+  .plain{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint);padding:14px 18px;margin:0 0 22px;font-size:17px;line-height:1.5}
+  .plain .lead{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-blue);display:block;margin:0 0 6px}
+  .plain b{font-weight:800}
+  .plain .un{color:var(--muted);font-style:italic}
+
+  /* progress dots */
+  .dots{display:flex;gap:8px;margin:0 0 22px;list-style:none;padding:0}
+  .dots li{flex:1;height:5px;background:var(--surface-2)}
+  .dots li.done,.dots li.current{background:var(--irs-blue)}
+
+  .panel{border:1px solid var(--line);padding:30px 34px;min-height:420px;background:var(--surface)}
+  .qkicker{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-blue);margin:0 0 6px}
+  .panel h2{font-size:27px;font-weight:800;margin:0 0 8px}
+  .panel .phint{color:var(--muted);font-size:16px;margin:0 0 24px;max-width:60ch}
+
+  .opts{display:flex;flex-direction:column;gap:12px;margin:0 0 8px;max-width:640px}
+  .opt{display:flex;gap:16px;align-items:flex-start;border:1px solid var(--line);padding:16px 18px;cursor:pointer;text-align:left;background:var(--surface);font-family:inherit;width:100%}
+  .opt:hover{border-color:var(--irs-blue);background:var(--tint)}
+  .opt.on{border-color:var(--irs-blue);background:var(--tint-blue);box-shadow:inset 3px 0 0 var(--irs-blue)}
+  .opt .oi{width:44px;height:44px;border-radius:4px;flex:0 0 44px;display:grid;place-items:center;background:var(--irs-blue);color:#fff}
+  .opt .oi svg{width:22px;height:22px}
+  .opt .ot{display:block;font-size:17px;font-weight:500;color:var(--ink);margin:0 0 2px}
+  .opt .od{display:block;font-size:14.5px;color:var(--muted);margin:0}
+  .opt .chk{margin-left:auto;color:var(--irs-blue);opacity:0;flex:0 0 auto}
+  .opt.on .chk{opacity:1}
+
+  .grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:640px}
+  .chip{border:1px solid var(--line);padding:15px 10px;text-align:center;cursor:pointer;background:var(--surface);font-family:inherit;font-size:17px;font-weight:500;color:var(--ink)}
+  .chip:hover{border-color:var(--irs-blue);background:var(--tint)}
+  .chip.on{border-color:var(--irs-blue);background:var(--tint-blue);box-shadow:inset 0 -3px 0 var(--irs-blue)}
+
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:28px;border-top:1px solid var(--line);padding-top:20px}
+  .foot .back{border:0;background:none;color:var(--link);font-family:inherit;font-size:15px;cursor:pointer;text-decoration:underline;display:inline-flex;gap:6px;align-items:center}
+  .foot .back[hidden]{visibility:hidden}
+  .btn{font-size:16px;font-weight:500;border-radius:4px;border:0;background:var(--irs-blue);color:#fff;padding:12px 22px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+  .btn:hover{background:var(--irs-navy)}
+  .btn:disabled{background:var(--btn-disabled-bg);color:var(--btn-disabled-ink);cursor:not-allowed}
+
+  .rr{display:flex;justify-content:flex-start;padding:10px 0;border-bottom:1px solid var(--line);font-size:16px}
+  .rr:last-child{border-bottom:0}
+  .rr .k{color:var(--ink);font-weight:700;width:50%}
+  .rr .v{text-align:left}
+  .ring{width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center}
+  .ring svg{width:30px;height:30px}
+  @media(max-width:600px){.grid2{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Pay Online · DirectPay</span></div>
+    <div class="util"><a>Sign in</a><a>Help</a><a>Español</a></div>
+  </div></div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <a>Pay from your bank account</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Tax Information</p>
+    <h1 class="page">What are you paying?</h1>
+    <p class="sub">The same Tax Information the live DirectPay collects — but asked as plain-language questions, one at a time, with a running summary so you always know what you're telling us. No dropdown-decoding required.</p>
+
+    <div class="plain" id="plain"></div>
+    <ol class="dots" id="dots"></ol>
+
+    <section class="panel">
+      <div id="body"></div>
+      <div class="foot" id="foot">
+        <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+        <button class="btn" id="next">Continue</button>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link);text-decoration:none"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_DOC=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2.5h5l3 3v8h-8z"/><path d="M9 2.5v3h3M5.8 8.5h4.4M5.8 10.8h4.4"/></svg>`;
+const IC_CAL=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10"/><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/></svg>`;
+const IC_COIN=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6.4 6.3h2.4a1.1 1.1 0 0 1 0 2.2H7.2a1.1 1.1 0 0 0 0 2.2h2.4"/></svg>`;
+const IC_WARN=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5 14.5 13.5H1.5z"/><path d="M8 6.8v2.7"/></svg>`;
+
+// Q1: reason. Each carries the form it maps to + a plain sentence fragment.
+const REASONS=[
+  {k:"balance", t:"I got a bill or owe a balance", d:"A notice like CP14/CP501, or tax due from a return I filed.", icon:IC_COIN, form:"Form 1040", sentence:"pay a balance you owe"},
+  {k:"estimated", t:"I'm making an estimated payment", d:"Quarterly payments — self-employment or income without withholding.", icon:IC_CAL, form:"Form 1040-ES", sentence:"make an estimated tax payment"},
+  {k:"extension", t:"I'm paying with an extension", d:"Paying while requesting more time to file (Form 4868).", icon:IC_DOC, form:"Form 4868", sentence:"pay with an extension request"},
+  {k:"amended", t:"I'm paying on an amended return", d:"Additional tax with a corrected return (Form 1040-X).", icon:IC_DOC, form:"Form 1040-X", sentence:"pay on an amended return"},
+  {k:"notice", t:"I'm responding to a notice", d:"A CP2000 or similar notice proposing changes to my tax.", icon:IC_WARN, form:"CP2000 notice", sentence:"respond to a proposed-change notice"}
+];
+const YEARS=["2025","2024","2023","2022","2021"];
+
+let step=0; // 0 reason, 1 confirm form, 2 year, 3 review, 4 done
+const state={reason:"",form:"",year:""};
+
+function reasonObj(){return REASONS.find(r=>r.k===state.reason);}
+
+function renderPlain(){
+  const p=document.getElementById("plain");
+  const r=reasonObj();
+  const sent=r?`You want to <b>${r.sentence}</b>`:`<span class="un">Answer the questions below and we'll build your summary here.</span>`;
+  const form=r?` on <b>${r.form}</b>`:"";
+  const yr=state.year?` for <b>tax year ${state.year}</b>`:"";
+  p.innerHTML=`<span class="lead">In plain English</span>${sent}${form}${yr}${r?".":""}`;
+}
+function renderDots(){
+  const total=4;
+  document.getElementById("dots").innerHTML=Array.from({length:total}).map((_,i)=>{
+    const cls=i<step?"done":(i===step?"current":"");return `<li class="${cls}"></li>`;
+  }).join("");
+}
+
+function renderBody(){
+  const body=document.getElementById("body");
+  const back=document.getElementById("back"),next=document.getElementById("next");
+  back.hidden=(step===0);
+  next.style.display=(step===4)?"none":"";
+  next.innerHTML=(step===3)?`Continue to identity <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`:"Continue";
+
+  if(step===0){
+    body.innerHTML=`<p class="qkicker">Question 1 of 3</p>
+      <h2>What are you paying for?</h2>
+      <p class="phint">Pick the one that fits. We'll figure out the right form and period from your answer.</p>
+      <div class="opts" id="opts" role="radiogroup" aria-label="Reason for payment">
+        ${REASONS.map(r=>`<button class="opt ${r.k===state.reason?"on":""}" data-k="${r.k}" role="radio" aria-checked="${r.k===state.reason}">
+          <span class="oi">${r.icon}</span>
+          <span><span class="ot">${r.t}</span><span class="od">${r.d}</span></span>
+          <span class="chk">${IC_CHECK}</span>
+        </button>`).join("")}
+      </div>`;
+    body.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>{state.reason=o.dataset.k;state.form=reasonObj().form;renderPlain();updateNext();
+      body.querySelectorAll(".opt").forEach(x=>{const on=x.dataset.k===state.reason;x.classList.toggle("on",on);x.setAttribute("aria-checked",on);});}));
+  }
+  else if(step===1){
+    const r=reasonObj();
+    body.innerHTML=`<p class="qkicker">Confirm</p>
+      <h2>This payment applies to ${r.form}</h2>
+      <p class="phint">Based on your reason, we'll file this against the form below. If that's not right, go back and change your answer.</p>
+      <div class="opts"><div class="opt on" style="cursor:default">
+        <span class="oi">${IC_DOC}</span>
+        <span><span class="ot">${r.form}</span><span class="od">${r.d}</span></span>
+        <span class="chk">${IC_CHECK}</span>
+      </div></div>`;
+  }
+  else if(step===2){
+    body.innerHTML=`<p class="qkicker">Question 3 of 3</p>
+      <h2>Which tax year is this for?</h2>
+      <p class="phint">The year the tax applies to — not necessarily the year you're paying in.</p>
+      <div class="grid2" id="years" role="radiogroup" aria-label="Tax year">
+        ${YEARS.map(y=>`<button class="chip ${y===state.year?"on":""}" data-y="${y}" role="radio" aria-checked="${y===state.year}">${y}</button>`).join("")}
+      </div>`;
+    body.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{state.year=c.dataset.y;renderPlain();updateNext();
+      body.querySelectorAll(".chip").forEach(x=>{const on=x.dataset.y===state.year;x.classList.toggle("on",on);x.setAttribute("aria-checked",on);});}));
+  }
+  else if(step===3){
+    const r=reasonObj();
+    body.innerHTML=`<p class="qkicker">Review your tax information</p>
+      <h2>Does this look right?</h2>
+      <p class="phint">This is exactly what the live DirectPay's Tax Information step captures — here, built from your plain-language answers.</p>
+      <div>
+        <div class="rr"><span class="k">Reason for payment</span><span class="v">${r.t}</span></div>
+        <div class="rr"><span class="k">Apply payment to</span><span class="v">${r.form}</span></div>
+        <div class="rr"><span class="k">Tax period</span><span class="v">Tax year ${state.year}</span></div>
+      </div>`;
+  }
+  else{
+    body.innerHTML=`<div style="text-align:center;padding:24px 0">
+      <div class="ring" style="margin:0 auto 16px">${IC_CHECK}</div>
+      <h2 style="margin:0 0 6px">Tax information saved</h2>
+      <p class="phint" style="margin:0 auto;max-width:46ch">Next you'd verify your identity, then enter your bank account and amount. Your answers carry through the rest of the flow — no re-typing.</p>
+    </div>`;
+  }
+}
+
+function stepValid(){
+  if(step===0)return !!state.reason;
+  if(step===2)return !!state.year;
+  return true;
+}
+function updateNext(){document.getElementById("next").disabled=!stepValid();}
+function go(d){
+  if(d>0 && !stepValid())return;
+  step=Math.max(0,Math.min(4,step+d));
+  renderDots();renderBody();renderPlain();updateNext();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("next").addEventListener("click",()=>go(1));
+document.getElementById("back").addEventListener("click",()=>go(-1));
+
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");});
+
+renderDots();renderBody();renderPlain();updateNext();
+</script>
+</body>
+</html>
