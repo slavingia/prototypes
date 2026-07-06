@@ -131,6 +131,53 @@
   .ring{width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;margin:0 0 16px}
   .ring svg{width:30px;height:30px}
   @media(max-width:760px){.shell{grid-template-columns:1fr}.steps{position:static}}
+
+  /* guest / signed-in account bar */
+  .acctbar{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint-blue);padding:13px 18px;margin:0 0 22px}
+  .acctbar.in{border-left-color:var(--green);background:var(--tint)}
+  .acctbar .ab-icon{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:var(--irs-blue);color:#fff;display:grid;place-items:center}
+  .acctbar.in .ab-icon{background:var(--green)}
+  .acctbar .ab-icon svg{width:18px;height:18px}
+  .acctbar .ab-body{flex:1;min-width:0}
+  .acctbar .ab-body b{font-size:15.5px;display:block}
+  .acctbar .ab-body p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+  .acctbar .ab-cta{white-space:nowrap}
+  .btn-outline{display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:15px;font-weight:600;border:1px solid var(--irs-blue);border-radius:4px;background:var(--surface);color:var(--irs-blue);padding:9px 18px;cursor:pointer;text-decoration:none}
+  .btn-outline:hover{background:var(--tint-blue)}
+
+  /* inline upsell inside a step */
+  .upsell{border:1px solid var(--line);background:var(--tint-blue);padding:12px 16px;margin:0 0 22px;display:flex;gap:10px;align-items:center;font-size:14.5px;max-width:640px}
+  .upsell .ui{color:var(--irs-blue);flex:0 0 auto}
+  .upsell a{font-weight:600}
+  .upsell[hidden]{display:none}
+
+  /* prefilled read block */
+  .prefill{border:1px solid var(--line);border-left:4px solid var(--green);background:var(--tint);padding:14px 18px;margin:0 0 22px;max-width:640px}
+  .prefill .pf-lead{font-size:14px;font-weight:700;color:var(--green);display:flex;gap:7px;align-items:center;margin:0 0 10px}
+  .prefill .pf-lead svg{width:16px;height:16px}
+
+  /* two-column form grid */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;max-width:640px}
+  .grid2 .field{max-width:none}
+  .grid2 .col-2{grid-column:1/-1}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+  /* save-account checkbox */
+  .checkrow{display:flex;gap:11px;align-items:flex-start;max-width:640px;border:1px solid var(--line);background:var(--tint-blue);padding:14px 16px;margin:8px 0 0}
+  .checkrow input{margin-top:2px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
+  .checkrow label{font-size:14px;line-height:1.45;color:var(--muted)}
+  .checkrow label b{display:block;font-size:15px;color:var(--ink);margin-bottom:2px;font-weight:600}
+
+  /* create-account hero at confirmation */
+  .acct-hero{border:1px solid var(--irs-blue);background:var(--tint-blue);padding:22px 24px;margin:26px 0 0;text-align:left;display:flex;gap:16px;align-items:flex-start}
+  .acct-hero .ah-icon{width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--irs-blue);color:#fff;display:grid;place-items:center}
+  .acct-hero .ah-icon svg{width:24px;height:24px}
+  .acct-hero h3{margin:0 0 6px;font-size:19px;font-weight:800}
+  .acct-hero p{margin:0 0 12px;font-size:15px;color:var(--muted);max-width:54ch}
+  .acct-hero ul{margin:0 0 16px;padding-left:20px;font-size:14.5px;color:var(--ink)}
+  .acct-hero ul li{margin:5px 0}
+  .acct-hero .ah-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  @media(max-width:560px){.acct-hero{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -156,6 +203,15 @@
     <h1 class="page">Pay from your bank account</h1>
     <p class="sub">Pay your taxes directly from a checking or savings account — free. No sign-in required. It's fast, secure, and you'll get instant confirmation when your payment is scheduled.</p>
 
+    <div class="acctbar" id="acctbar">
+      <span class="ab-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="3"/><path d="M2.5 14c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5"/></svg></span>
+      <div class="ab-body">
+        <b>You're paying as a guest</b>
+        <p>You'll enter your identity and bank details on this device. Nothing is saved for next time.</p>
+      </div>
+      <span class="ab-cta"><a class="btn-outline" id="signinBtn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h6v11h-6M9.5 8H2.5M5 5.5 2.5 8 5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sign in to your Online Account</a></span>
+    </div>
+
     <div class="shell">
       <ol class="steps" id="steps"></ol>
       <section class="panel">
@@ -179,11 +235,18 @@
 <script>
 const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const IC_INFO=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.6"/></g><circle cx="8" cy="4.9" r=".9" fill="currentColor"/></svg>`;
+const IC_STAR=`<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.3 4.3 13.3l.7-4.3-3.1-3 4.3-.6z" fill="currentColor"/></svg>`;
+const IC_LOCK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg>`;
 
 const STEPS=["Tax Information","Verify Identity","Payment","Review & Sign","Confirmation"];
 let step=0;
 
-const state={reason:"",applyTo:"",period:""};
+const state={
+  reason:"",applyTo:"",period:"",
+  fname:"",lname:"",ssn:"",filing:"",addr:"",city:"",estate:"",zip:"",
+  amount:"",routing:"",account:"",acctType:"",saveAcct:false
+};
+const STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
 
 // Reason -> which "apply payment to" forms are valid, with plain-language decode
 const REASONS={
@@ -269,48 +332,152 @@ function renderBody(){
     if(periodEl)periodEl.addEventListener("change",e=>{state.period=e.target.value;renderBody();updateNext();});
   }
   else if(step===1){
+    const filingOpts=[["","— Select —"],["single","Single"],["mfj","Married filing jointly"],["mfs","Married filing separately"],["hoh","Head of household"],["qw","Qualifying surviving spouse"]]
+      .map(([k,v])=>`<option value="${k}" ${k===state.filing?"selected":""}>${v}</option>`).join("");
+    const stOpts=[`<option value="">—</option>`].concat(STATES.map(s=>`<option value="${s}" ${s===state.estate?"selected":""}>${s}</option>`)).join("");
     body.innerHTML=`<h2>Verify Identity</h2>
-      <p class="phint">Confirm your identity using information from a prior-year return. This helps us make sure your payment is applied to the right account.</p>
-      <div class="ph">Enter your <b>filing status</b>, <b>name</b>, <b>SSN or ITIN</b>, <b>date of birth</b>, and <b>address</b> exactly as they appear on the tax year you select.</div>`;
+      <p class="phint">Enter your details exactly as they appear on your most recent tax return. We use this only to make sure your payment is applied to the right account.</p>
+      ${signedIn
+        ? `<div class="prefill"><span class="pf-lead">${IC_CHECK} From your IRS Online Account</span>Your identity is verified — we filled this in for you. Review it and continue.</div>`
+        : `<div class="upsell"><span class="ui">${IC_INFO}</span><span>Signed in to your IRS Online Account? Your identity is already verified — <a id="upsell1">sign in to skip this step</a>.</span></div>`}
+      <div class="grid2">
+        <div class="field"><label for="fname">First name</label><input id="fname" autocomplete="off" value="${state.fname}"></div>
+        <div class="field"><label for="lname">Last name</label><input id="lname" autocomplete="off" value="${state.lname}"></div>
+        <div class="field"><label for="ssn">SSN or ITIN</label><span class="hint">Format: 123-45-6789</span><input id="ssn" inputmode="numeric" placeholder="•••-••-••••" value="${state.ssn}"></div>
+        <div class="field"><label for="filing">Filing status</label><select id="filing">${filingOpts}</select></div>
+        <div class="field col-2"><label for="addr">Street address</label><input id="addr" autocomplete="off" value="${state.addr}"></div>
+        <div class="field"><label for="city">City</label><input id="city" autocomplete="off" value="${state.city}"></div>
+        <div class="field"><label for="estate">State</label><select id="estate">${stOpts}</select></div>
+        <div class="field col-2" style="max-width:200px"><label for="zip">ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" value="${state.zip}"></div>
+      </div>`;
+    const bind=(id,key,transform)=>{const el=body.querySelector("#"+id);if(el)el.addEventListener("input",e=>{state[key]=transform?transform(e.target.value):e.target.value;updateNext();});};
+    bind("fname","fname");bind("lname","lname");bind("addr","addr");bind("city","city");
+    bind("ssn","ssn",v=>{const d=v.replace(/\D/g,"").slice(0,9);return d.replace(/^(\d{3})(\d{0,2})(\d{0,4}).*/,(m,a,b,c)=>c?`${a}-${b}-${c}`:b?`${a}-${b}`:a);});
+    bind("zip","zip",v=>v.replace(/\D/g,"").slice(0,5));
+    body.querySelector("#filing").addEventListener("change",e=>{state.filing=e.target.value;updateNext();});
+    body.querySelector("#estate").addEventListener("change",e=>{state.estate=e.target.value;updateNext();});
+    const u=body.querySelector("#upsell1");if(u)u.addEventListener("click",signIn);
   }
   else if(step===2){
+    const typeOpts=[["","— Select —"],["checking","Checking"],["savings","Savings"]]
+      .map(([k,v])=>`<option value="${k}" ${k===state.acctType?"selected":""}>${v}</option>`).join("");
     body.innerHTML=`<h2>Payment</h2>
-      <p class="phint">Enter the amount and your bank account (routing + account number). Mock values shown.</p>
-      <div class="ph">
-        <div class="rr"><span class="k">Payment amount</span><span class="v">$1,248.00</span></div>
-        <div class="rr"><span class="k">Payment date</span><span class="v">Today</span></div>
-        <div class="rr"><span class="k">Bank routing number</span><span class="v">•••••1234</span></div>
-        <div class="rr"><span class="k">Account number</span><span class="v">••••••5678</span></div>
-      </div>`;
+      <p class="phint">Enter the amount and the bank account you're paying from. Your account isn't stored after this payment unless you choose to save it.</p>
+      ${signedIn
+        ? `<div class="prefill"><span class="pf-lead">${IC_CHECK} From your IRS Online Account</span>We loaded your saved checking account ••••7740. Just enter the amount you're paying.</div>`
+        : `<div class="upsell"><span class="ui">${IC_INFO}</span><span>Signed-in users can pick a saved bank account instead of typing it — <a id="upsell2">sign in</a>.</span></div>`}
+      <div class="grid2">
+        <div class="field col-2" style="max-width:240px"><label for="amount">Payment amount</label><span class="hint">U.S. dollars</span><input id="amount" inputmode="decimal" placeholder="$0.00" value="${state.amount}"></div>
+        <div class="field"><label for="routing">Bank routing number</label><span class="hint">9 digits, bottom-left of a check</span><input id="routing" inputmode="numeric" maxlength="9" value="${state.routing}"></div>
+        <div class="field"><label for="account">Account number</label><input id="account" inputmode="numeric" value="${state.account}"></div>
+        <div class="field col-2" style="max-width:240px"><label for="acctType">Account type</label><select id="acctType">${typeOpts}</select></div>
+      </div>
+      ${signedIn ? "" : `<div class="checkrow">
+        <input type="checkbox" id="saveAcct" ${state.saveAcct?"checked":""}>
+        <label for="saveAcct"><b>Save this bank account to my IRS Online Account</b>Skip re-entering it next time and get email reminders before scheduled payments. You'll confirm your account after this payment.</label>
+      </div>`}`;
+    const amt=body.querySelector("#amount");
+    amt.addEventListener("input",e=>{let d=e.target.value.replace(/[^0-9.]/g,"");state.amount=d;updateNext();});
+    amt.addEventListener("blur",e=>{const n=parseFloat(state.amount);if(!isNaN(n)){state.amount=n.toFixed(2);e.target.value="$"+Number(state.amount).toLocaleString("en-US",{minimumFractionDigits:2});}});
+    body.querySelector("#routing").addEventListener("input",e=>{state.routing=e.target.value.replace(/\D/g,"").slice(0,9);e.target.value=state.routing;updateNext();});
+    body.querySelector("#account").addEventListener("input",e=>{state.account=e.target.value.replace(/\D/g,"").slice(0,17);e.target.value=state.account;updateNext();});
+    body.querySelector("#acctType").addEventListener("change",e=>{state.acctType=e.target.value;updateNext();});
+    const sv=body.querySelector("#saveAcct");if(sv)sv.addEventListener("change",e=>{state.saveAcct=e.target.checked;});
+    const u=body.querySelector("#upsell2");if(u)u.addEventListener("click",signIn);
   }
   else if(step===3){
     const r=state.reason?REASONS[state.reason].label:"—";
     const a=state.applyTo?APPLY[state.applyTo]:"—";
+    const amtDisp=state.amount&&!isNaN(parseFloat(state.amount))?("$"+Number(parseFloat(state.amount)).toLocaleString("en-US",{minimumFractionDigits:2})):"—";
+    const acct=state.account?((state.acctType?state.acctType.charAt(0).toUpperCase()+state.acctType.slice(1):"Account")+" ••••"+state.account.slice(-4)):"—";
     body.innerHTML=`<h2>Review &amp; Sign</h2>
       <p class="phint">Confirm everything, then electronically sign to authorize the payment.</p>
       <div class="ph">
+        <div class="rr"><span class="k">Name</span><span class="v">${(state.fname||state.lname)?`${state.fname} ${state.lname}`.trim():"—"}</span></div>
+        <div class="rr"><span class="k">SSN / ITIN</span><span class="v">${state.ssn?"•••-••-"+state.ssn.replace(/\D/g,"").slice(-4):"—"}</span></div>
         <div class="rr"><span class="k">Reason for payment</span><span class="v">${r}</span></div>
         <div class="rr"><span class="k">Apply payment to</span><span class="v">${a}</span></div>
         <div class="rr"><span class="k">Tax period</span><span class="v">${state.period?("Tax year "+state.period):"—"}</span></div>
-        <div class="rr"><span class="k">Amount</span><span class="v">$1,248.00</span></div>
-        <div class="rr"><span class="k">Bank account</span><span class="v">Checking ••••5678</span></div>
-      </div>`;
+        <div class="rr"><span class="k">Amount</span><span class="v">${amtDisp}</span></div>
+        <div class="rr"><span class="k">Bank account</span><span class="v">${acct}</span></div>
+      </div>
+      ${state.saveAcct?`<div class="upsell" style="margin-top:16px"><span class="ui">${IC_STAR}</span><span>After you sign, we'll help you create your IRS Online Account and save this bank account.</span></div>`:""}`;
   }
   else{
-    body.innerHTML=`<div style="text-align:center;padding:30px 0">
+    const amtDisp=state.amount&&!isNaN(parseFloat(state.amount))?("$"+Number(parseFloat(state.amount)).toLocaleString("en-US",{minimumFractionDigits:2})):"$0.00";
+    body.innerHTML=`<div style="text-align:center;padding:24px 0 8px">
       <div class="ring" style="margin:0 auto 16px">${IC_CHECK}</div>
       <h2 style="margin:0 0 6px">Payment scheduled</h2>
-      <p class="phint" style="margin:0 auto;max-width:44ch">Confirmation number <b>DP-2026-4831-2207</b>. A copy has been sent to your email. You can cancel up to two business days before the payment date.</p>
-    </div>`;
+      <p class="phint" style="margin:0 auto;max-width:46ch">Confirmation number <b>DP-2026-4831-2207</b>. We emailed a copy of your ${amtDisp} payment confirmation. You can cancel up to two business days before the payment date.</p>
+    </div>
+    ${signedIn
+      ? `<div class="acct-hero" style="border-color:var(--green)">
+          <span class="ah-icon" style="background:var(--green)" aria-hidden="true">${IC_CHECK}</span>
+          <div>
+            <h3>Saved to your IRS Online Account</h3>
+            <p>This payment is now in your payment history, and your checking account ••••7740 is ready for next time.</p>
+            <div class="ah-actions"><a class="btn" style="text-decoration:none">Go to your account</a><a>View payment history</a></div>
+          </div>
+        </div>`
+      : `<div class="acct-hero">
+          <span class="ah-icon" aria-hidden="true">${IC_STAR}</span>
+          <div>
+            <h3>Save your information — create your IRS Online Account</h3>
+            <p>You paid as a guest, so nothing was saved. Create a free account and next time you won't have to start from scratch.</p>
+            <ul>
+              <li>Skip identity verification — it's done once</li>
+              <li>Reuse ${state.account?("your "+(state.acctType||"bank")+" account ••••"+state.account.slice(-4)):"your saved bank account"} without re-entering it</li>
+              <li>Track this and past payments, and get reminders before they post</li>
+            </ul>
+            <div class="ah-actions">
+              <a class="btn" style="text-decoration:none">Create your Online Account</a>
+              <a>Not now</a>
+            </div>
+          </div>
+        </div>`}`;
   }
 }
 
 function stepValid(){
   if(step===0)return !!(state.reason && state.applyTo && state.period);
+  if(step===1)return !!(state.fname && state.lname && state.ssn.replace(/\D/g,"").length===9 && state.filing && state.addr && state.city && state.estate && state.zip.length===5);
+  if(step===2){const n=parseFloat(state.amount);return !!(n>0 && state.routing.length===9 && state.account.length>=4 && state.acctType);}
   return true;
 }
 function updateNext(){
-  document.getElementById("next").disabled=!stepValid();
+  const next=document.getElementById("next");
+  next.disabled=!stepValid();
+  next.textContent=(step===3)?"Sign and submit payment":"Continue";
+}
+
+// Simulated "signed in" state: verified identity + a saved bank account on file.
+let signedIn=false;
+function signIn(){
+  if(signedIn)return;
+  signedIn=true;
+  Object.assign(state,{
+    fname:"Jordan",lname:"Rivera",ssn:"400-55-8210",filing:"single",
+    addr:"742 Cedar Hollow Rd",city:"Springfield",estate:"IL",zip:"62704",
+    routing:"071000013",account:"3391827740",acctType:"checking"
+  });
+  const ab=document.getElementById("acctbar");
+  ab.classList.add("in");
+  ab.innerHTML=`<span class="ab-icon" aria-hidden="true">${IC_CHECK}</span>
+    <div class="ab-body"><b>Signed in as Jordan Rivera</b><p>Your identity is verified and a checking account \u20227740 is on file — we'll use them automatically.</p></div>
+    <span class="ab-cta"><a id="signoutBtn">Sign out</a></span>`;
+  document.getElementById("signoutBtn").addEventListener("click",signOut);
+  renderSteps();renderBody();updateNext();
+}
+function signOut(){
+  signedIn=false;
+  Object.assign(state,{fname:"",lname:"",ssn:"",filing:"",addr:"",city:"",estate:"",zip:"",routing:"",account:"",acctType:"",saveAcct:false});
+  const ab=document.getElementById("acctbar");
+  ab.classList.remove("in");
+  ab.innerHTML=`<span class="ab-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="3"/><path d="M2.5 14c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5"/></svg></span>
+    <div class="ab-body"><b>You're paying as a guest</b><p>You'll enter your identity and bank details on this device. Nothing is saved for next time.</p></div>
+    <span class="ab-cta"><a class="btn-outline" id="signinBtn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h6v11h-6M9.5 8H2.5M5 5.5 2.5 8 5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sign in to your Online Account</a></span>`;
+  document.getElementById("signinBtn").addEventListener("click",signIn);
+  renderSteps();renderBody();updateNext();
 }
 function go(d){
   if(d>0 && !stepValid())return;
@@ -323,6 +490,7 @@ document.getElementById("back").addEventListener("click",()=>go(-1));
 
 const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
 howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");});
+document.getElementById("signinBtn").addEventListener("click",signIn);
 
 renderSteps();renderBody();updateNext();
 </script>
