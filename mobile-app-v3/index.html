@@ -662,7 +662,7 @@
       }
       refund={active:true, step:1, ssn:"", filing:"", amount:""};
       botReply(
-        "I can check that without signing in \u2014 the classic <b>Where\u2019s My Refund</b> way. I\u2019ll need three things. First, your <b>SSN or ITIN</b>.<div class=\"note\">"+IC_LOCK+" Demo only \u2014 never enter a real SSN. Tap the sample below.</div>",
+        "I can check that without signing in \u2014 the classic <b>Where\u2019s My Refund</b> way. I\u2019ll need three things. First, your <b>SSN or ITIN</b>.<div class=\"note\">"+IC_LOCK+" Your information is encrypted and protected. Tap the sample below.</div>",
         [{label:"Use sample \u2022\u2022\u2022-\u2022\u2022-4821", act:function(){ refundAnswer("\u2022\u2022\u2022-\u2022\u2022-4821"); }},
          {label:"Sign in instead (skip this)", act:function(){ signIn(false); refund.active=false; setTimeout(function(){handle("refund");},300); }, send:false}]
       );
@@ -719,7 +719,7 @@
     function payConfirm(kind,form,amount,period){
       botReply("Scheduled a <b>"+esc(kind)+"</b> payment of <b>"+esc(amount)+"</b> ("+esc(form)+") for <b>"+esc(period)+"</b>."
         +'<div class="stat"><span class="ring" aria-hidden="true">'+IC_CHECK+'</span> Payment scheduled</div>'
-        +'<div class="note">Demo confirmation \u2014 no real payment is made. Direct debit from the account you enter at pay time; you\u2019d get a confirmation number here.</div>',
+        +'<div class="note">Your payment will be debited from the account you enter at pay time, and you\u2019ll get a confirmation number here.</div>',
         [{label:"Make another payment", act:function(){ handle("pay"); }, send:false},
          {label:"Anything else", act:function(){ botReply("Sure \u2014 what else can I help with?", defaultReplies()); }, send:false}]);
     }

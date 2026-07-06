@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Pay Online — DirectPay (reskin) · Guided</title>
+<title>Pay Online — DirectPay · Guided</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
@@ -135,7 +135,7 @@
   <main class="wrap">
     <p class="crumb"><a>Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <a>Pay from your bank account</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Tax Information</p>
     <h1 class="page">What are you paying?</h1>
-    <p class="sub">The same Tax Information the live DirectPay collects — but asked as plain-language questions, one at a time, with a running summary so you always know what you're telling us. No dropdown-decoding required.</p>
+    <p class="sub">Answer a few plain-language questions, one at a time, with a running summary so you always know what you're telling us. No dropdown-decoding required.</p>
 
     <div class="plain" id="plain"></div>
     <ol class="dots" id="dots"></ol>
@@ -239,7 +239,7 @@ function renderBody(){
     const r=reasonObj();
     body.innerHTML=`<p class="qkicker">Review your tax information</p>
       <h2>Does this look right?</h2>
-      <p class="phint">This is exactly what the live DirectPay's Tax Information step captures — here, built from your plain-language answers.</p>
+      <p class="phint">Here's what we have so far, built from your answers.</p>
       <div>
         <div class="rr"><span class="k">Reason for payment</span><span class="v">${r.t}</span></div>
         <div class="rr"><span class="k">Apply payment to</span><span class="v">${r.form}</span></div>

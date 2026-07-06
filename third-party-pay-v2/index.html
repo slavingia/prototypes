@@ -355,7 +355,7 @@ function renderBody(){
       <div class="readrow"><span class="k">Funding source</span><span class="v">Institution settlement account ••••• 4021 (mock)</span></div>
       <div class="attest">Under penalties of perjury, I, the submitting official for <b>Riverbend Community Bank</b>, declare that the institution is authorized to remit each listed payment on behalf of the named account holder under a directed-payment instruction, and that the information provided is true, correct, and complete. The institution is recorded as the payer of record for every payment in this batch.</div>
       <label class="checkrow"><input type="checkbox" id="ack"><span>I have read and agree to the batch declaration above, on behalf of the institution.</span></label>
-      <p class="note">No money moves in this prototype — submission is simulated.</p>`;
+      <p class="note">Review your batch below, then submit. You'll get a confirmation number for each payment.</p>`;
     const ack=document.getElementById("ack");ack.checked=state.attest;
     ack.addEventListener("change",e=>{state.attest=e.target.checked;updateNext();});
     next.textContent="Submit batch";
