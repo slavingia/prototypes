@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Pay Online — DirectPay (reskin) · Tax Information</title>
+<title>Pay Online — DirectPay · Tax Information</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
@@ -154,7 +154,7 @@
   <main class="wrap">
     <p class="crumb"><a>Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <a>Pay from your bank account</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Tax Information</p>
     <h1 class="page">Pay from your bank account</h1>
-    <p class="sub">Pay your taxes directly from a checking or savings account, free. This is a reskin of DirectPay's five-step flow — the <b>Tax Information</b> step rebuilt to the IRS Online Design Guidelines.</p>
+    <p class="sub">Pay your taxes directly from a checking or savings account — free. No sign-in required. It's fast, secure, and you'll get instant confirmation when your payment is scheduled.</p>
 
     <div class="shell">
       <ol class="steps" id="steps"></ol>
@@ -239,7 +239,6 @@ function renderBody(){
     body.innerHTML=`
       <h2>Tax Information</h2>
       <p class="phint">Tell us what this payment is for. These three answers work together — pick a reason first and we'll show you only the forms that apply.</p>
-      <div class="alert"><span class="ai">${IC_INFO}</span><span>On the live site these are three cryptic stacked dropdowns with no explanation. Here each choice is labeled in plain language and decoded as you go.</span></div>
 
       <div class="field">
         <label for="reason">Reason for payment</label>
@@ -271,8 +270,8 @@ function renderBody(){
   }
   else if(step===1){
     body.innerHTML=`<h2>Verify Identity</h2>
-      <p class="phint">Confirm your identity using information from a prior-year return. (Downstream step — shown here for flow context; not the focus of this reskin.)</p>
-      <div class="ph">On the live DirectPay this collects <b>filing status</b>, <b>name</b>, <b>SSN/ITIN</b>, <b>date of birth</b>, and <b>address</b> from the tax year you select. This prototype focuses on the Tax Information step; identity would follow the same ODG field pattern.</div>`;
+      <p class="phint">Confirm your identity using information from a prior-year return. This helps us make sure your payment is applied to the right account.</p>
+      <div class="ph">Enter your <b>filing status</b>, <b>name</b>, <b>SSN or ITIN</b>, <b>date of birth</b>, and <b>address</b> exactly as they appear on the tax year you select.</div>`;
   }
   else if(step===2){
     body.innerHTML=`<h2>Payment</h2>
