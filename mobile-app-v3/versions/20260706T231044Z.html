@@ -202,26 +202,6 @@
   .field input,.field select,.field .amtwrap{border-radius:var(--r-sm)}
   .pbtn,.wbtn{border-radius:var(--r-sm)}
   .pref + .pref{margin-top:8px;border-top:1px solid var(--line)}
-
-  /* ---- Guest (signed-out) screen: de-chromed for a native app feel ----
-     The signed-out screen was reading like a mobile-web form page: two heavy
-     bordered card boxes stacked with an "or" rule and a wordy sign-in block.
-     Here the fields sit directly on the app surface, the lead is lighter, and
-     sign-in becomes a minimal returning-user section with a single hairline. */
-  #view-guest .lead{margin:0 0 22px}
-  #view-guest .lead .lgo{margin:0 0 16px}
-  #view-guest .lead .lgo svg{height:26px}
-  #view-guest .lead h1{font-size:26px;margin:0 0 5px}
-  #view-guest .lead p{font-size:15px}
-  #view-guest #refund-form{border:0;background:none;padding:0;border-radius:0}
-  #view-guest #refund-form .field{margin-bottom:16px}
-  #view-guest #rf-submit{margin-top:2px}
-  #view-guest .divider{display:none}
-  #view-guest .signin{margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
-  #view-guest .signin .sechead{margin:0 0 12px}
-  #view-guest .signin .sechead h2{font-size:13px;color:var(--muted)}
-  #view-guest #signin-form{border:0;background:none;padding:0;border-radius:0}
-  #view-guest .signin .simple{font-size:14px;margin:0 0 16px}
 </style>
 </head><body class="guest">
   <section class="gov" id="gov" aria-label="Official website of the United States government">
@@ -304,7 +284,7 @@
           <div class="signin">
             <div class="sechead"><h2>Sign in</h2></div>
             <form class="card" id="signin-form" autocomplete="off" novalidate>
-              <p class="simple">Sign in to skip this next time and see your balance, notices, and settings together.</p>
+              <p class="simple">Sign in once and you won't need to enter your SSN and refund amount again. You'll also see your balance, notices, and settings in one place.</p>
               <div class="field">
                 <label for="si-email">Email or username</label>
                 <input id="si-email" type="text" placeholder="you@example.com" enterkeyhint="next">

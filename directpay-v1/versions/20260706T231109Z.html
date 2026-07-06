@@ -54,7 +54,7 @@
   .gov .gi{color:var(--irs-blue);flex:0 0 auto;margin-top:2px}
   @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
 
-  .masthead{background:var(--irs-blue);color:#fff;position:relative}
+  .masthead{background:var(--irs-blue);color:#fff}
   .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
   .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
   .logo .seal{display:flex;align-items:center}
@@ -85,10 +85,8 @@
   .panel{border:1px solid var(--line);padding:26px 30px;min-height:480px;position:relative;background:var(--surface)}
   .panel h2{font-size:24px;font-weight:800;margin:0 0 6px}
   .panel .phint{color:var(--muted);font-size:16px;margin:0 0 22px;max-width:64ch}
-  /* progress line integrated into the blue masthead */
-  .mh-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.18)}
-  .mh-progress i{display:block;height:100%;width:20%;background:linear-gradient(90deg,#7fb3e6,#fff);box-shadow:0 0 8px rgba(255,255,255,.65);transition:width .45s cubic-bezier(.65,0,.35,1)}
-  @media(prefers-reduced-motion:reduce){.mh-progress i{transition:none}}
+  .progress{height:5px;background:var(--surface-2);overflow:hidden;margin-bottom:22px}
+  .progress i{display:block;height:100%;background:var(--irs-blue);transition:width .3s}
 
   /* alert */
   .alert{border:1px solid var(--line-amber);border-left:4px solid var(--amber);background:var(--tint-amber);padding:12px 16px;margin:0 0 22px;display:flex;gap:10px;font-size:15px;align-items:flex-start}
@@ -233,13 +231,10 @@
     </div>
   </section>
 
-  <div class="masthead">
-    <div class="wrap">
+  <div class="masthead"><div class="wrap">
     <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Pay Online · DirectPay</span></div>
     <div class="util"><a>Sign in</a><a>Help</a><a>Español</a></div>
-    </div>
-    <div class="mh-progress" role="progressbar" aria-label="Payment progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1"><i id="bar"></i></div>
-  </div>
+  </div></div>
 
   <main class="wrap">
     <p class="crumb"><a>Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <a>Pay from your bank account</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Tax Information</p>
@@ -258,6 +253,7 @@
     <div class="shell">
       <ol class="steps" id="steps"></ol>
       <section class="panel">
+        <div class="progress"><i id="bar"></i></div>
         <div id="body"></div>
         <div class="foot" id="foot">
           <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
@@ -315,9 +311,7 @@ function renderSteps(){
     const inner=i<step?IC_CHECK:(i+1);
     return `<li class="${cls}"><span class="num">${inner}</span><span class="st">${s}</span></li>`;
   }).join("");
-  document.getElementById("bar").style.width=((step+1)/STEPS.length*100)+"%";
-  const mhp=document.querySelector(".mh-progress");
-  if(mhp)mhp.setAttribute("aria-valuenow",step+1);
+  document.getElementById("bar").style.width=((step)/(STEPS.length-1)*100)+"%";
 }
 
 function taxSummary(){
