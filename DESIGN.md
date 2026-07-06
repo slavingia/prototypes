@@ -233,6 +233,12 @@ Usage rules:
 <!-- search (magnifier — omnibar / find) -->
 <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></g></svg>
 
+<!-- home (bottom-nav home tab) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5 8 3l5.5 4.5M4 6.6V13h8V6.6"/><path d="M6.5 13V9.3h3V13"/></g></svg>
+
+<!-- credit-card (payments tab) -->
+<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="M2 6.5h12M4.5 9.8h3"/></g></svg>
+
 <!-- external-link (opens on another site) -->
 <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 6.5 9.5M7 4H3v9h9V9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
 
