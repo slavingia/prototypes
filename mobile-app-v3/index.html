@@ -310,7 +310,7 @@
 
       <div class="appbody">
 
-      <div class="screen" id="screen">
+      <main class="screen" id="screen" aria-label="IRS mobile app content">
         <!-- ================= GUEST VIEW ================= -->
         <section id="view-guest">
           <div class="greet">
@@ -321,11 +321,12 @@
           <form class="card" id="refund-form" autocomplete="off" novalidate>
             <div class="field">
               <label for="rf-ssn">Social Security number or ITIN</label>
-              <input id="rf-ssn" type="text" inputmode="numeric" placeholder="000-00-0000" enterkeyhint="next">
+              <span class="fhint" id="rf-ssn-hint">Format: 000-00-0000</span>
+              <input id="rf-ssn" name="ssn" type="text" inputmode="numeric" autocomplete="off" aria-describedby="rf-ssn-hint" enterkeyhint="next">
             </div>
             <div class="field">
               <label for="rf-year">Tax year</label>
-              <select id="rf-year">
+              <select id="rf-year" name="tax-year">
                 <option>2025</option>
                 <option>2024</option>
                 <option>2023</option>
@@ -334,7 +335,7 @@
             </div>
             <div class="field">
               <label for="rf-status">Filing status</label>
-              <select id="rf-status">
+              <select id="rf-status" name="filing-status">
                 <option value="">Select filing status</option>
                 <option>Single</option>
                 <option>Married filing jointly</option>
@@ -345,14 +346,14 @@
             </div>
             <div class="field">
               <label for="rf-amt">Exact refund amount</label>
-              <span class="fhint">The whole-dollar amount shown on your return.</span>
-              <div class="amtwrap"><span class="cur" aria-hidden="true">$</span><input id="rf-amt" type="text" inputmode="decimal" placeholder="0" enterkeyhint="go"></div>
+              <span class="fhint" id="rf-amt-hint">The whole-dollar amount shown on your return.</span>
+              <div class="amtwrap"><span class="cur" aria-hidden="true">$</span><input id="rf-amt" name="refund-amount" type="text" inputmode="decimal" aria-describedby="rf-amt-hint" enterkeyhint="go"></div>
             </div>
             <button class="pbtn" id="rf-submit" type="submit"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.8"/><path d="M13.5 2.5v2.2h-2.2"/></g></svg> Check status</button>
             <button class="fill" id="rf-fill" type="button">Use sample values</button>
           </form>
 
-          <div class="statusbox" id="refund-result" hidden>
+          <div class="statusbox" id="refund-result" role="status" aria-live="polite" hidden>
             <div class="sbhead"><span class="wl" style="font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Refund status &middot; Tax year <span id="rf-result-year">2025</span></span><span class="chip ok">Approved</span></div>
             <div style="font-size:22px;font-weight:900;letter-spacing:-.5px;margin:2px 0 2px">$1,004.00</div>
             <p class="sbsub">Direct deposit to account ending 2288.</p>
@@ -371,11 +372,11 @@
               <p class="simple">Sign in to skip this next time and see your balance, notices, and settings together.</p>
               <div class="field">
                 <label for="si-email">Email or username</label>
-                <input id="si-email" type="text" placeholder="you@example.com" enterkeyhint="next">
+                <input id="si-email" name="username" type="text" autocomplete="username" enterkeyhint="next">
               </div>
               <div class="field">
                 <label for="si-pass">Password</label>
-                <input id="si-pass" type="password" placeholder="Password" enterkeyhint="go">
+                <input id="si-pass" name="password" type="password" autocomplete="current-password" enterkeyhint="go">
               </div>
               <button class="pbtn" id="si-submit" type="submit"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg> Sign in</button>
             </form>
@@ -420,14 +421,14 @@
 
           <div class="sechead"><h2>Notices</h2></div>
           <div class="module">
-            <button class="row unread" id="a-cp14"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">CP14 &mdash; Balance due</span><span class="rs">Apr 05, 2026</span></span><span class="reddot" aria-hidden="true"></span><span class="chip warn">Action</span></button>
-            <button class="row unread" id="a-cp49"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">CP49 &mdash; Refund applied</span><span class="rs">Mar 12, 2026</span></span><span class="reddot" aria-hidden="true"></span><span class="chip info">Info</span></button>
+            <button class="row unread" id="a-cp14"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt"><span class="visually-hidden">Unread. </span>CP14 &mdash; Balance due</span><span class="rs">Apr 05, 2026</span></span><span class="reddot" aria-hidden="true"></span><span class="chip warn">Action</span></button>
+            <button class="row unread" id="a-cp49"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt"><span class="visually-hidden">Unread. </span>CP49 &mdash; Refund applied</span><span class="rs">Mar 12, 2026</span></span><span class="reddot" aria-hidden="true"></span><span class="chip info">Info</span></button>
             <button class="row" id="a-accept"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">Return acceptance</span><span class="rs">Feb 28, 2026</span></span><span class="chip ok">Read</span></button>
           </div>
 
         </section>
 
-      </div><!-- /screen -->
+      </main><!-- /screen -->
         <!-- ================= SETTINGS SHEET (avatar → communication prefs + sign out) ================= -->
         <div class="sheet-backdrop" id="settings-backdrop" hidden></div>
         <aside class="sheet" id="settings-sheet" role="dialog" aria-modal="true" aria-label="Settings" hidden>
@@ -443,11 +444,11 @@
           <h3 class="sheet-sub">Communication preferences</h3>
           <div class="pref">
             <span class="pc"><span class="pt">Email notifications</span><span class="ps">Get an email when a new notice or refund update posts.</span></span>
-            <button class="toggle" id="pref-email" type="button" role="switch" aria-checked="true" aria-pressed="true" aria-label="Email notifications"><span class="state">On</span><span class="box" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="toggle" id="pref-email" type="button" role="switch" aria-checked="true" aria-label="Email notifications"><span class="state">On</span><span class="box" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
           </div>
           <div class="pref">
             <span class="pc"><span class="pt">Go paperless</span><span class="ps">Receive notices online instead of by mail.</span></span>
-            <button class="toggle" id="pref-paperless" type="button" role="switch" aria-checked="false" aria-pressed="false" aria-label="Go paperless"><span class="state">Off</span><span class="box" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="toggle" id="pref-paperless" type="button" role="switch" aria-checked="false" aria-label="Go paperless"><span class="state">Off</span><span class="box" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
           </div>
           <button class="lnkbtn signout-sheet" id="a-signout"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11.5 13.5 8 10 4.5M13.5 8H6M6 2.5H3v11h3"/></g></svg> Sign out</button>
         </aside>
@@ -487,7 +488,9 @@
       var yr=document.getElementById("rf-year"), out=document.getElementById("rf-result-year");
       if(yr&&out) out.textContent=yr.value;
       result.hidden=false;
+      result.setAttribute("tabindex","-1");
       result.scrollIntoView({behavior:"smooth",block:"center"});
+      result.focus({preventScroll:true});
     });
     fill.addEventListener("click",function(){
       document.getElementById("rf-ssn").value="•••-••-4821";
@@ -527,15 +530,15 @@
       if(!btn.classList.contains("unread")) return;
       btn.classList.remove("unread");
       var dot=btn.querySelector(".reddot"); if(dot) dot.remove();
+      var sr=btn.querySelector(".rt .visually-hidden"); if(sr) sr.remove();
     }
     ["a-cp14","a-cp49","a-accept"].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener("click",function(){readNotice(b);}); });
 
-    /* ---- preference toggles ---- */
+    /* ---- preference toggles (role=switch → aria-checked) ---- */
     function wireToggle(id){
       var t=document.getElementById(id); if(!t) return;
       t.addEventListener("click",function(){
-        var on=t.getAttribute("aria-pressed")!=="true";
-        t.setAttribute("aria-pressed",on?"true":"false");
+        var on=t.getAttribute("aria-checked")!=="true";
         t.setAttribute("aria-checked",on?"true":"false");
         t.querySelector(".state").textContent=on?"On":"Off";
       });
