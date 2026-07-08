@@ -133,6 +133,13 @@ again. New prototypes must ship with the full banner markup + the flag set to
 ### Layout spacing
 - `.shell` column gap — `24px`.
 - `.formopt` gap — `12px`.
+- **Page-heading top gap.** The first heading in `<main>` needs clear air below
+  the navy masthead/tab bar: `32–36px` of top margin when nothing precedes it.
+  A breadcrumb normally supplies that gap (`.crumb{margin:18px 0 20px}` +
+  `h1{margin-top:4px}`), so views **without** a breadcrumb must not reuse the
+  tight crumb-adjacent margin. Pattern:
+  `h1.page{margin:32px 0 8px}` and `.crumb+h1.page{margin-top:4px}` —
+  the default is roomy; the breadcrumb case opts into the tight gap.
 
 ### Required page furniture
 - A **footer** carrying the project disclaimer (personal hobby project; not
