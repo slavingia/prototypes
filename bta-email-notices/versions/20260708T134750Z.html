@@ -125,6 +125,14 @@
   .alert b{display:block;font-size:16px;margin-bottom:2px}
   .alert .ic{color:var(--green)}
 
+  /* people table */
+  .people{width:100%;border-collapse:collapse;font-size:15px}
+  .people th{text-align:left;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:700;border-bottom:2px solid var(--line);padding:8px 10px 8px 0}
+  .people td{border-bottom:1px solid var(--line);padding:11px 10px 11px 0;vertical-align:top}
+  .people tr:last-child td{border-bottom:0}
+  .people .pn{font-weight:700}
+  .people .pe{font-size:13px;color:var(--muted)}
+
   /* email client screen */
   .mailshell{max-width:760px;margin:28px auto 40px;border:1px solid var(--line);background:var(--surface)}
   .mailbar{display:flex;align-items:center;gap:10px;background:var(--surface-2);border-bottom:1px solid var(--line);padding:10px 16px;font-size:14px;color:var(--muted)}
@@ -230,6 +238,19 @@
         <input type="email" id="email" value="priya.raman@lakeviewprint.com" autocomplete="off"></div>
       <label class="checkrow"><input type="checkbox" id="optin" checked><span>Email me when this business has a new digital notice<span class="cd">You'll still get required paper mail. This setting applies to your access to Lakeview Print &amp; Post LLC only.</span></span></label>
       <button class="btn" id="savePrefs">Save preferences</button>
+    </div>
+
+    <div class="panel">
+      <h2>People with access to this business</h2>
+      <p class="phint">Only people with an <b>active</b> role can turn on email notifications. Users who are pending, in process, or awaiting re-registration can set their preferences once their access becomes active.</p>
+      <table class="people">
+        <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Email notifications</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pn">Priya Raman</span><span class="pe">You</span></td><td>Designated official</td><td><span class="chip ok">Active</span></td><td id="youCell">On</td></tr>
+          <tr><td><span class="pn">Marcus Bell</span></td><td>Designated official</td><td><span class="chip hold">Pending</span></td><td>Not yet available</td></tr>
+          <tr><td><span class="pn">Dana Whitfield</span></td><td>Designated official</td><td><span class="chip hold">Awaiting re-registration</span></td><td>Not yet available</td></tr>
+        </tbody>
+      </table>
     </div>
   </main>
 
@@ -362,6 +383,7 @@ savePrefs.addEventListener("click",()=>{
   const email=document.getElementById("email").value.trim();
   const on=document.getElementById("optin").checked;
   document.getElementById("savedEmail").textContent=email||"your email address";
+  document.getElementById("youCell").textContent=on?"On":"Off";
   const al=document.getElementById("savedAlert");
   al.classList.add("show");
   if(!on){al.querySelector("b").innerHTML='Your notification preferences are saved';al.childNodes[al.childNodes.length-1].textContent=" Email notifications for this business are off. You'll still get required paper mail.";}
