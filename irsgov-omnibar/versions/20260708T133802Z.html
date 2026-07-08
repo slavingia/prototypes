@@ -21,15 +21,15 @@
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#14171a; --surface:#1e2328; --surface-2:#2a3138;
-      --ink:#f1f3f5; --muted:#b4bcc4; --line:#4a545f; --link:#8fc1ee;
-      --green:#6cc496; --amber:#e5bd5e; --red:#f59a94; --teal:#6fcbde; --violet:#bba9f2;
-      --tint-blue:color-mix(in srgb,#8fc1ee 18%,#1e2328);
-      --tint-blue-soft:color-mix(in srgb,#8fc1ee 14%,#1e2328);
-      --answer-bg:color-mix(in srgb,#8fc1ee 12%,#1e2328);
-      --line-blue:color-mix(in srgb,#8fc1ee 36%,#1e2328);
-      --panel-2:#232a31; --line-soft:#39424c;
-      --hero-1:#0e2440; --hero-2:#123256;
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --tint-blue:color-mix(in srgb,#79b4e6 14%,#1e2328);
+      --tint-blue-soft:color-mix(in srgb,#79b4e6 12%,#1e2328);
+      --answer-bg:color-mix(in srgb,#79b4e6 9%,#1e2328);
+      --line-blue:color-mix(in srgb,#79b4e6 28%,#1e2328);
+      --panel-2:#20262c; --line-soft:#2c333b;
+      --hero-1:#0a1f38; --hero-2:#0d2c52;
     }
   }
   *{box-sizing:border-box}
@@ -72,16 +72,8 @@
   @media(max-width:640px){.mnav .langlink{display:none}}
 
   /* Hero + omnibar */
-  .hero{background:linear-gradient(160deg,var(--hero-1),var(--hero-2));color:#fff;padding:54px 0 62px;position:relative;z-index:40;overflow:hidden}
-  .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Cpath d='M21 10l2.6 6.6 7.1.5-5.5 4.5 1.8 6.9-6-3.9-6 3.9 1.8-6.9-5.5-4.5 7.1-.5z' fill='%23ffffff' fill-opacity='.055'/%3E%3Cpath d='M63 52l2.6 6.6 7.1.5-5.5 4.5 1.8 6.9-6-3.9-6 3.9 1.8-6.9-5.5-4.5 7.1-.5z' fill='%23ffffff' fill-opacity='.045'/%3E%3C/svg%3E"),
-    repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 46px, rgba(255,255,255,0) 46px 92px);
-  }
-  .hero::after{content:"";position:absolute;top:-40%;right:-12%;width:56%;height:180%;pointer-events:none;transform:rotate(12deg);
-    background:repeating-linear-gradient(180deg, rgba(178,35,52,.16) 0 34px, rgba(255,255,255,.05) 34px 68px);
-    -webkit-mask-image:linear-gradient(105deg, transparent 0 18%, #000 62%);mask-image:linear-gradient(105deg, transparent 0 18%, #000 62%);
-  }
-  .hero .wrap{max-width:840px;position:relative;z-index:2}
+  .hero{background:linear-gradient(160deg,var(--hero-1),var(--hero-2));color:#fff;padding:54px 0 62px;position:relative;z-index:40}
+  .hero .wrap{max-width:840px}
   .hero h1{font-size:40px;font-weight:900;margin:0 0 8px;line-height:1.12;letter-spacing:-.01em}
   .hero .lede{font-size:18px;font-weight:400;margin:0 0 26px;color:rgba(255,255,255,.9);max-width:60ch}
 
@@ -92,6 +84,9 @@
   .omni-wrap .mag svg{width:24px;height:24px;display:block}
   #omni{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font-family:inherit;font-size:19px;padding:12px 0;font-weight:500}
   #omni::placeholder{color:var(--muted);font-weight:400}
+  .omni-hint{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;font-weight:600;flex:0 0 auto}
+  .omni-hint kbd{font-family:ui-monospace,Menlo,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:2px 7px;line-height:1;background:var(--surface-2)}
+  .omni-wrap:focus-within .omni-hint{display:none}
   .clearbtn{border:0;background:var(--surface-2);color:var(--muted);width:32px;height:32px;border-radius:4px;cursor:pointer;flex:0 0 32px;display:none;place-items:center}
   .clearbtn svg{width:16px;height:16px}
   .clearbtn.show{display:grid}
@@ -114,6 +109,9 @@
   .opt .oplain{font-size:13.5px;color:var(--muted);margin:2px 0 0}
   .opt .answer{margin-top:8px;background:var(--answer-bg);border:1px solid var(--line-blue);padding:9px 12px;font-size:14px;line-height:1.45}
   .opt .answer .big{font-size:20px;font-weight:800;color:var(--link);display:block;margin-bottom:2px}
+  .opt .route{font-size:11px;color:var(--muted);font-family:ui-monospace,Menlo,monospace;margin-top:7px}
+  .opt .kbd{margin-left:auto;align-self:center;flex:0 0 auto}
+  .opt .kbd svg{width:15px;height:15px;color:var(--muted)}
   .opt .ext-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--teal);margin-top:8px}
   .opt .ext-tag svg{width:13px;height:13px}
   .empty{padding:22px 18px;color:var(--muted);font-size:15px}
@@ -123,10 +121,10 @@
 
   /* suggested chips */
   .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-  .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.55);color:#fff;border-radius:999px;padding:8px 15px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
-  .chip:hover{background:rgba(255,255,255,.28)}
+  .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.34);color:#fff;border-radius:999px;padding:8px 15px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+  .chip:hover{background:rgba(255,255,255,.26)}
   .chip svg{width:15px;height:15px;opacity:.9}
-  .chips .lbl{color:rgba(255,255,255,.92);font-size:13px;align-self:center;margin-right:2px}
+  .chips .lbl{color:rgba(255,255,255,.82);font-size:13px;align-self:center;margin-right:2px}
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
   /* main homepage sections */
@@ -349,6 +347,7 @@
         <div class="omni-wrap" id="omniWrap">
           <span class="mag" aria-hidden="true"><svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></g></svg></span>
           <input id="omni" type="text" role="combobox" aria-expanded="false" aria-controls="results" aria-autocomplete="list" autocomplete="off" placeholder="Try &ldquo;where&rsquo;s my refund&rdquo;, &ldquo;make a payment&rdquo;, or &ldquo;get a transcript&rdquo;">
+          <span class="omni-hint" aria-hidden="true"><kbd>/</kbd> to search</span>
           <button class="clearbtn" id="clearBtn" type="button" aria-label="Clear search"><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
           <button class="go" id="goBtn" type="button">Search<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
@@ -565,7 +564,7 @@
           '<p class="otitle">Ask IRS about \u201c'+esc(q)+'\u201d</p>'+
           '<p class="oplain">No page matched exactly. Get a direct answer from the IRS assistant and the right links.</p>'+
           '<div class="ext-tag" style="color:var(--violet)">'+IC.spark+' Opens the assistant</div>'+
-          '</div></a>';
+          '</div><span class="kbd">'+IC.ret+'</span></a>';
       var askOpt = listbox.querySelector(".opt.ask");
       askOpt.addEventListener("click", function(e){ e.preventDefault(); close(); input.blur(); openChat(q); });
       current = [{ask:true, q:q}];
@@ -583,7 +582,8 @@
           '<p class="otitle">'+esc(d.title)+'</p>'+
           '<p class="oplain">'+esc(d.plain)+'</p>';
         if(d.answer) html += '<div class="answer">'+d.answer+'</div>';
-        html += '</div>';
+        html += '<div class="route">irs.gov'+esc(d.route)+'</div></div>'+
+          '<span class="kbd">'+IC.ret+'</span>';
         a.innerHTML = html;
         a.addEventListener("mouseenter", function(){ setActive(i); });
         a.addEventListener("click", function(e){ e.preventDefault(); go(d); });
@@ -684,7 +684,7 @@
     view.innerHTML =
       '<nav class="crumbs" aria-label="Breadcrumb"><a href="#" data-goto="__home">Home</a>'+CHEV+
         '<span class="cur">'+esc(d.title)+'</span></nav>'+
-      '<div class="pagehead">'+
+      '<div class="pagehead"><div class="kick">irs.gov'+esc(d.route)+'</div>'+
         '<h1>'+esc(d.title)+'</h1><p class="intro">'+esc(d.plain)+'</p></div>'+
       '<div class="pgrid"><div class="pbody">'+body+
         '<button class="backlink" type="button" data-goto="__home">'+IC.arrowl+' Back to home</button>'+
@@ -867,7 +867,7 @@
         html += '<p>'+hit.a+'</p>';
         if(hit.cites && hit.cites.length){
           html += '<div class="cites">';
-          hit.cites.forEach(function(id){ var d=byId(id); if(d) html+='<a class="cite" data-goto="'+id+'">'+IC.arrowr+' '+esc(d.title)+'</a>'; });
+          hit.cites.forEach(function(id){ var d=byId(id); if(d) html+='<a class="cite" data-goto="'+id+'">'+IC.arrowr+' '+esc(d.title)+' \u2014 irs.gov'+esc(d.route)+'</a>'; });
           html += '</div>';
         }
       } else {
