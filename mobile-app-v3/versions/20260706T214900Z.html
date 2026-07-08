@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>IRS Mobile — account app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --bg:#fff;
+    --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --teal:#00687d; --violet:#5b3fa0;
+    --surface:#fff; --surface-2:#f0f0f0; --accent:#004c97;
+    --tint-blue-1:#fafcfe; --tint-blue-2:#eef4fb;
+    --page:#e9eaec;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --accent:#79b4e6;
+      --tint-blue-1:color-mix(in srgb, var(--irs-blue) 10%, var(--surface));
+      --tint-blue-2:color-mix(in srgb, var(--irs-blue) 22%, var(--surface));
+      --page:#0c0e10;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link)}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{transition:transform .15s}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink)}
+  .gov .gcol .gi{flex:0 0 22px;color:var(--irs-blue)}
+  @media (prefers-color-scheme: dark){.gov .gcol .gi{color:var(--accent)}}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .intro{max-width:1024px;margin:0 auto;padding:26px 16px 6px}
+  .intro .k{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+  .intro h1{font-size:30px;font-weight:800;margin:0 0 6px}
+  .intro p{font-size:16px;color:var(--muted);max-width:62ch;margin:0}
+
+  .stage{display:flex;justify-content:center;padding:26px 16px 40px}
+  .phone{width:390px;max-width:100%;background:var(--bg);border:1px solid var(--line);
+    box-shadow:0 18px 50px rgba(0,0,0,.22);display:flex;flex-direction:column;
+    height:820px;overflow:hidden;position:relative}
+  @media (prefers-color-scheme: dark){.phone{box-shadow:0 18px 50px rgba(0,0,0,.6)}}
+
+  .statusbar{display:flex;align-items:center;justify-content:space-between;
+    background:var(--irs-navy);color:#fff;font-size:12.5px;font-weight:600;padding:7px 16px}
+  .statusbar .right{display:flex;align-items:center;gap:6px}
+
+  /* app body wraps chrome+screen so the splash overlays exactly it */
+  .appbody{position:relative;flex:1;display:flex;flex-direction:column;min-height:0}
+
+  /* header row */
+  .apphdr{display:flex;align-items:center;gap:10px;background:var(--irs-navy);color:#fff;padding:12px 16px;flex:0 0 auto}
+  .apphdr .seal svg{height:24px;width:auto;display:block}
+  .apphdr .brand{font-size:14px;font-weight:700;line-height:1.05}
+  .apphdr .brand small{display:block;font-size:11.5px;font-weight:500;opacity:.85}
+  .apphdr .spacer{flex:1}
+  .apphdr .ib{width:32px;height:32px;border-radius:4px;display:grid;place-items:center;background:rgba(255,255,255,.16);color:#fff;position:relative;border:0;cursor:pointer;padding:0}
+  .apphdr .ib .badge{position:absolute;top:-4px;right:-4px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:#d4201a;color:#fff;font-size:9.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 1.5px var(--irs-navy)}
+  @media (prefers-color-scheme: dark){.apphdr .ib .badge{background:#e5443b}}
+
+  /* sticky omnibar under header — pure search, no AI */
+  .omni{position:relative;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 12px;flex:0 0 auto;z-index:6}
+  .omni .olabel{display:block;font-size:13px;font-weight:600;color:var(--ink);margin:0 2px 6px}
+  .omni .ohint{display:block;font-size:12.5px;color:var(--muted);margin:6px 2px 0}
+  .omni .field{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface-2);padding:9px 11px;border-radius:4px}
+  .omni .field:focus-within{border-color:var(--irs-blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--irs-blue) 25%,transparent)}
+  .omni .field .mag{color:var(--muted);flex:0 0 auto;font-size:16px}
+  .omni input{flex:1;border:0;background:none;font-family:inherit;font-size:15px;color:var(--ink);outline:none;min-width:0}
+  .omni .clr{border:0;background:none;color:var(--muted);cursor:pointer;padding:2px;display:none;font-size:16px;line-height:0}
+  .omni .clr.show{display:inline-flex}
+  .omni .results{position:absolute;left:12px;right:12px;top:calc(100% - 2px);background:var(--surface);border:1px solid var(--line);
+    box-shadow:0 14px 30px rgba(0,0,0,.18);max-height:360px;overflow-y:auto;display:none;z-index:20}
+  @media (prefers-color-scheme: dark){.omni .results{box-shadow:0 14px 30px rgba(0,0,0,.55)}}
+  .omni .results.show{display:block}
+  .omni .res{display:flex;align-items:center;gap:11px;padding:11px 12px;border-bottom:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;font-family:inherit}
+  .omni .res:last-child{border-bottom:0}
+  .omni .res:hover,.omni .res.act{background:var(--surface-2)}
+  .omni .res .ri{width:30px;height:30px;border-radius:4px;flex:0 0 30px;display:grid;place-items:center;background:var(--tint-blue-2);color:var(--irs-blue);font-size:15px}
+  @media (prefers-color-scheme: dark){.omni .res .ri{color:var(--accent)}}
+  .omni .res .rc{flex:1;min-width:0}
+  .omni .res .rt{font-size:14px;font-weight:600;color:var(--ink);display:block}
+  .omni .res .rt mark{background:color-mix(in srgb,var(--amber) 35%,transparent);color:inherit;padding:0 1px}
+  .omni .res .rs{font-size:12px;color:var(--muted);display:block;margin-top:1px}
+  .omni .res .cat{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);flex:0 0 auto}
+  .omni .empty{padding:14px 12px;font-size:14px;color:var(--muted)}
+  @keyframes flashrow{0%{background:color-mix(in srgb,var(--irs-blue) 22%,transparent)}100%{background:transparent}}
+  .flash{animation:flashrow 1.4s ease-out}
+
+  .screen{flex:1;overflow-y:auto;background:var(--bg);padding:16px 16px 24px}
+  .screen::-webkit-scrollbar{width:0}
+
+  /* wallet balance hero */
+  .wallet{background:var(--irs-blue);color:#fff;padding:22px 20px 20px;position:relative;overflow:hidden}
+  .wallet .wl{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.92}
+  .wallet .wamt{font-size:42px;font-weight:900;letter-spacing:-1px;margin:6px 0 2px}
+  .wallet .wdue{font-size:14px;opacity:.95}
+  .wallet .wdue b{font-weight:800}
+  .wallet .wbtns{display:flex;gap:10px;margin-top:18px}
+  .wbtn{flex:1;font-family:inherit;font-size:15px;font-weight:700;border-radius:4px;padding:12px;
+    border:1px solid #fff;background:#fff;color:var(--irs-blue);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+  .wbtn.ghost{background:transparent;color:#fff}
+  .wallet .wseal{position:absolute;right:-24px;bottom:-24px;opacity:.12;pointer-events:none}
+  .wallet .wseal svg{height:150px;width:auto;display:block;fill:#fff}
+
+  .sechead{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
+  .sechead:first-child{margin-top:0}
+  .sechead h2{font-size:14px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0}
+  .sechead a{font-size:14px;cursor:pointer}
+
+  .module{border:1px solid var(--line);background:var(--surface)}
+  .row{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;font-family:inherit;font-size:16px}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:var(--surface-2)}
+  .row .ri{width:34px;height:34px;border-radius:4px;flex:0 0 34px;display:grid;place-items:center;background:var(--tint-blue-2);color:var(--irs-blue);font-size:16px}
+  @media (prefers-color-scheme: dark){.row .ri{color:var(--accent)}}
+  .row .rc{flex:1;min-width:0}
+  .row .rt{font-size:15px;font-weight:600;display:block}
+  .row .rs{font-size:13px;color:var(--muted);display:block;margin-top:1px}
+  .row .rv{font-size:15px;font-weight:700;text-align:left;white-space:nowrap}
+  .row .chev{color:var(--muted);flex:0 0 auto}
+  .row.unread .rt{font-weight:800}
+  .row .reddot{width:9px;height:9px;border-radius:50%;background:#d4201a;flex:0 0 auto}
+  @media (prefers-color-scheme: dark){.row .reddot{background:#e5443b}}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:2px 8px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+  .chip.warn{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 45%,transparent)}
+  .chip.ok{color:var(--green);border-color:color-mix(in srgb,var(--green) 45%,transparent)}
+  .chip.info{color:var(--teal);border-color:color-mix(in srgb,var(--teal) 45%,transparent)}
+
+  /* attention alert on Home */
+  .alert{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);border-left:4px solid var(--amber);background:var(--surface);padding:13px 14px}
+  .alert .ai{color:var(--amber);flex:0 0 auto;font-size:18px;margin-top:1px}
+  .alert .ac{flex:1;min-width:0}
+  .alert .at{font-size:15px;font-weight:700;display:block}
+  .alert .as{font-size:13.5px;color:var(--muted);display:block;margin-top:2px}
+  .alert .alink{font-size:13.5px;font-weight:600;color:var(--link);background:none;border:0;padding:0;margin-top:7px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+
+  /* quick actions grid on Home */
+  .qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .qtile{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line);background:var(--surface);padding:14px;cursor:pointer;font-family:inherit;text-align:left}
+  .qtile:hover{background:var(--surface-2)}
+  .qtile .qi{width:34px;height:34px;border-radius:4px;display:grid;place-items:center;background:var(--tint-blue-2);color:var(--irs-blue);font-size:17px}
+  @media (prefers-color-scheme: dark){.qtile .qi{color:var(--accent)}}
+  .qtile .qt{font-size:14px;font-weight:600;color:var(--ink)}
+
+  .readrow{display:flex;justify-content:flex-start;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .readrow:last-child{border-bottom:0}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%}
+  .readrow .v{text-align:left;color:var(--ink)}
+  .panelbox{border:1px solid var(--line);background:var(--surface);padding:4px 16px}
+
+  /* pay-reason chips (Payments page) */
+  .payopts{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);background:var(--surface)}
+
+  .pane{display:none}
+  .pane.on{display:block}
+  .pagetitle{font-size:22px;font-weight:800;margin:0 0 4px}
+  .pagesub{font-size:14px;color:var(--muted);margin:0 0 14px}
+
+  /* back-to-home control — only visible on sub-pages (Home is the hub) */
+  .apphdr .ib.back{display:none;margin-right:-2px}
+  .appbody.subpage .apphdr .ib.back{display:grid}
+
+  /* SPLASH — launch screen */
+  .splash{position:absolute;inset:0;background:var(--bg);z-index:30;display:flex;flex-direction:column;
+    justify-content:center;padding:28px 20px;overflow-y:auto;transition:opacity .22s ease}
+  .splash::-webkit-scrollbar{width:0}
+  .splash:not(.on){opacity:0;pointer-events:none;visibility:hidden}
+  .splash.searching{justify-content:flex-start;padding-top:22px}
+  .sp-logo{display:block;text-align:center;margin:0 auto 20px;transition:margin .2s}
+  .sp-logo svg{height:56px;width:auto;fill:var(--irs-blue);transition:height .2s}
+  @media (prefers-color-scheme: dark){.sp-logo svg{fill:var(--accent)}}
+  .splash.searching .sp-logo{margin-bottom:14px}
+  .splash.searching .sp-logo svg{height:30px}
+  .sp-h{text-align:center;font-size:23px;font-weight:800;color:var(--ink);margin:0 0 22px;line-height:1.2;transition:all .2s}
+  .splash.searching .sp-h{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:14px}
+  .sp-field{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface-2);padding:11px 13px;border-radius:4px}
+  .sp-field:focus-within{border-color:var(--irs-blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--irs-blue) 25%,transparent)}
+  .sp-field .mag{color:var(--muted);flex:0 0 auto;font-size:17px}
+  .sp-field input{flex:1;border:0;background:none;font-family:inherit;font-size:16px;color:var(--ink);outline:none;min-width:0}
+  .sp-field .clr{border:0;background:none;color:var(--muted);cursor:pointer;padding:2px;display:none;font-size:16px;line-height:0}
+  .sp-field .clr.show{display:inline-flex}
+  .sp-hint{display:block;font-size:12.5px;color:var(--muted);margin:8px 4px 0;text-align:center}
+  .splash.searching .sp-hint{display:none}
+  .sp-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px}
+  .splash.searching .sp-chips{display:none}
+  .sp-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);
+    border-radius:4px;padding:8px 12px;font-family:inherit;font-size:13px;font-weight:600;color:var(--irs-blue);cursor:pointer}
+  @media (prefers-color-scheme: dark){.sp-chip{color:var(--accent)}}
+  .sp-chip:hover{background:var(--surface-2)}
+  .sp-results{margin-top:14px;background:var(--surface);border:1px solid var(--line);max-height:340px;overflow-y:auto;display:none}
+  .sp-results.show{display:block}
+  .sp-results .res{display:flex;align-items:center;gap:11px;padding:12px 13px;border:0;border-bottom:1px solid var(--line);
+    cursor:pointer;background:none;width:100%;text-align:left;font-family:inherit}
+  .sp-results .res:last-child{border-bottom:0}
+  .sp-results .res:hover,.sp-results .res.act{background:var(--surface-2)}
+  .sp-results .res .ri{width:32px;height:32px;border-radius:4px;flex:0 0 32px;display:grid;place-items:center;background:var(--tint-blue-2);color:var(--irs-blue);font-size:16px}
+  @media (prefers-color-scheme: dark){.sp-results .res .ri{color:var(--accent)}}
+  .sp-results .res .rc{flex:1;min-width:0}
+  .sp-results .res .rt{font-size:15px;font-weight:600;color:var(--ink);display:block}
+  .sp-results .res .rt mark{background:color-mix(in srgb,var(--amber) 35%,transparent);color:inherit;padding:0 1px}
+  .sp-results .res .rs{font-size:12.5px;color:var(--muted);display:block;margin-top:1px}
+  .sp-results .res .cat{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);flex:0 0 auto}
+  .sp-results .empty{padding:14px 13px;font-size:14px;color:var(--muted)}
+  .sp-skip{display:block;margin:18px auto 0;background:none;border:0;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--link);cursor:pointer}
+  .splash.searching .sp-skip{display:none}
+
+  footer{border-top:1px solid var(--line);background:var(--page)}
+  footer .wrap{padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic;max-width:1024px}
+  footer a{color:var(--link);text-decoration:none}
+</style>
+</head><body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="intro">
+    <p class="k">Issue #10 · Variant 3</p>
+    <h1>IRS mobile app — account, search &amp; navigation</h1>
+    <p>An account app covering <b>balance</b>, <b>payments</b>, <b>records</b>, <b>messages</b>, and <b>profile</b> — navigated by a search omnibar instead of a tab bar. Type a few letters, tap a result, and you land on the right page with it highlighted; Home is the hub, and a back control returns you there from any page.</p>
+  </div>
+
+  <div class="stage">
+    <div class="phone" role="application" aria-label="IRS mobile app prototype">
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="right">
+          <span aria-hidden="true"><svg width="17" height="11" viewBox="0 0 17 11" fill="#fff"><rect x="0" y="7" width="3" height="4"/><rect x="4.5" y="5" width="3" height="6"/><rect x="9" y="2.5" width="3" height="8.5"/><rect x="13.5" y="0" width="3" height="11"/></svg></span>
+          <span aria-hidden="true"><svg width="22" height="11" viewBox="0 0 22 11" fill="none" stroke="#fff"><rect x="0.5" y="0.5" width="18" height="10" rx="2"/><rect x="2" y="2" width="14" height="7" fill="#fff"/><rect x="20" y="3.5" width="1.5" height="4" fill="#fff"/></svg></span>
+        </span>
+      </div>
+
+      <div class="appbody">
+
+      <!-- SPLASH launch screen -->
+      <div class="splash on" id="splash">
+        <span class="sp-logo" id="sp-logo" aria-hidden="true"></span>
+        <h1 class="sp-h" id="sp-h">How can we help you today?</h1>
+        <div class="sp-field">
+          <span class="mag" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></g></svg></span>
+          <input id="sp-input" type="text" autocomplete="off" aria-label="Search your account" enterkeyhint="search">
+          <button class="clr" id="sp-clr" type="button" aria-label="Clear"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        </div>
+        <span class="sp-hint">Search for a balance, payment, record, message, or setting</span>
+        <div class="sp-chips" id="sp-chips">
+          <button class="sp-chip" data-tab="tab-home" data-id="t-balance"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6.5 6.2A1.4 1.4 0 0 1 8 5.2h.4a1.3 1.3 0 0 1 0 2.6H8a1.3 1.3 0 0 0 0 2.6h.4a1.4 1.4 0 0 0 1.3-.9"/></g></svg> Balance due</button>
+          <button class="sp-chip" data-tab="tab-pay" data-id="t-pay-history"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg> Make a payment</button>
+          <button class="sp-chip" data-tab="tab-rec" data-id="t-rec-transcript"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg> Records</button>
+          <button class="sp-chip" data-tab="tab-msg" data-id="t-msg-cp14"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg> Messages</button>
+          <button class="sp-chip" data-tab="tab-prof" data-id="t-prof-name"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg> Profile</button>
+        </div>
+        <div class="sp-results" id="sp-results" role="listbox"></div>
+        <button class="sp-skip" id="sp-skip" type="button">Go to my account</button>
+      </div>
+
+      <!-- HEADER -->
+      <div class="apphdr">
+        <button class="ib back" id="hdr-back" type="button" aria-label="Back to home"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <span class="seal" aria-hidden="true"><svg class="irs-logo" fill="#fff" aria-hidden="true" version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="20 218 602 207" style="enable-background:new 0 0 652 652;" xml:space="preserve"><g><path class="st0" d="M240.6,246.9c-2.5-4.4-29.8-16.8-69-24.7c-16.1,17.1-16.1,24.1-16.5,26.9c-0.3,2.8,5.4,10.1,11.1,17.7 c10.8,13.9,13.6,16.5,15.2,20.6c3.2,7.9-1.9,25.6-5.7,41.8c0,0-9.5-34.5-13.9-57c-0.3-2.2,0.3-3.5,0.3-3.2 c-24.1-2.2-40.5-3.5-43.4,9.2c-11.1,0-16.1,3.2-17.4,5.1c-2.8,4.7,0.6,14.6,2.5,19.3c1.6-3.8,11.4-3.2,14.6-3.2 c1.3,0,1.3,0.9,1.9,1.6v46.8H91.9l-24.4,65.5c11.4,5.4,23.4,9.8,31,9.8c7.6,0,26-9.5,28.5-9.8c2.5,0,21.2,9.8,28.5,9.8 c7.3,0,19.3-3.8,31-9.8l-24.7-65.8c0,0-25,0-28.5,0c0-10.4,0-33.9,0-44.3c-0.6-2.8-1.9-3.8-2.8-4.1H145c-2.2-8.5-5.1-14.2-9.2-14.6 c1.3-1.6,1.9-2.2,3.8-3.8h-11.1c1.3-5.7,15.5-3.8,21.8-3.2c6.3,31.7,18.4,73.8,19,74.7c0.6,0.6,10.8,4.4,12,4.7 c6-12.7,14.9-49.7,15.2-58.9c7.3,2.5,4.4,12.3,2.8,22.2c-8.2,51-14.9,66.5-17.1,76c7.3-1.6,12-2.8,12.7-3.8 c1.3-1.3,4.4-9.8,7.6-19.3c4.4-13.9,11.4-49.1,11.1-63c0-3.5-2.8-6.6-7.9-9.2c0,0,2.5-4.4,3.8-7c1.6-3.5,3.2-9.8,3.2-9.8 c2.8,0.9,5.4,2.2,5.7,5.1c1.6,13.3,0.6,14.6-0.9,39.3c-0.6,7.9-3.2,23.4-6,39.9c-5.4,30.1-10.4,42.7-10.4,47.5 c7.9-2.5,13.9-4.4,14.6-5.4c0.6-1.6,6.6-15.8,10.8-37.7c1.9-9.2,3.2-18.7,4.4-28.2c2.2-12.7,2.5-25.6,2.5-36.4 c0-15.8,1.9-15.8-9.8-22.2c4.4-13,3.5-21.5,2.5-23.7c-1.9-4.7-4.4-4.7-14.9-3.8c3.8,3.5,2.5,10.4,1.6,14.6 c-1.9-1.6-1.3-4.4-12.3-4.1c-1.6-18-5.1-19.9-5.4-20.6c-1.6-1.9-10.8-0.9-13.6,0c1.9,1.3,6.3,15.5,4.1,20.9 c-1.3-1.6-16.8-19.3-15.8-22.5c0.6-1.9,1.6-4.1,7-10.4c18.7,3.2,50.3,15.2,51.9,18.4c1.9,4.1,3.8,8.9,5.1,15.8 c1.6,10.4,4.7,35.1,3.2,72.8c-1.6,38.9-6.6,61.1-6.6,59.8c5.7-1.9,15.5-10.8,16.1-12.7c2.5-6.3,3.8-29.4,4.4-50.3 c0.9-20.9-1.3-47.5-2.5-57.3C245.7,258.6,244.1,252.3,240.6,246.9z M98.2,409.3c-5.7,0-14.6-0.9-14.2-0.9l14.2-41.1l13.3,41.5 C111.5,408.7,103.6,409.3,98.2,409.3z M169.7,408.7c0,0-8.9,0.9-14.2,0.9c-5.1,0-13.3-0.9-13.3-0.9l13-41.5L169.7,408.7z M133,376.4v-15.8h12.3l-18.7,51.6l-18.4-51.6h12.3V372c0,0,0,0.9,0.3,1.3c1.6,0.9,1.9,0.9,1.9,0.9L133,376.4z M134.6,292.5h-21.5 c-1.6-5.1,0-6.3,4.4-6.6C126.4,284.9,134,284.9,134.6,292.5z M194.7,269.7c7.9-1.3,4.1,12.7,2.2,18c-2.8-6.6-5.1-10.4-9.8-16.8 C190,270.3,191.9,270.3,194.7,269.7z"/><path class="st0" d="M56.1,384.3c3.8-3.8,17.1-17.4,19-24.7c2.5-8.9,4.4-29.8,4.4-34.5c0,0-13,8.9-19.9,15.8c-2.8,3.2-7,8.5-7,8.5 c-1.3-7.6,0.3-15.8,3.8-20.9c4.4-7,20.6-20.6,22.5-26.3c3.5-8.9,2.8-16.8,5.7-26.6c-10.8,3.5-24.1,11.7-30.1,18.4 c-0.9-10.4,2.5-18,9.5-23.4c10.1-7.6,23.4-12,32.3-14.6c7.6-2.2,19.3-4.7,25.6-7.6c11.1-5.4,21.8-20.6,24.4-28.5 c-3.8,0-16.8-0.9-29.8,4.1c-4.7,1.9-7,6-9.2,9.5c-2.2,3.8-4.4,6.6-6.3,9.2c-5.4,7.9-11.7,11.7-19.9,13.9c0.3-0.6,5.4-3.8,9.2-11.7 c3.2-6.6,7-19.9,7-20.9c-7,0.9-11.4,2.8-18.7,5.7c-7.9,3.2-10.1,6.3-11.7,9.2c-5.1,7.9-3.8,30.1-13.9,38.9 c0.3-11.7,2.8-24.4-1.3-38.9c-21.5,8.2-25.3,15.8-23.7,25c1.9,12,15.5,17.7,21.5,27.5c1.6,2.8,2.5,7,2.5,7.6c0.3,0-4.1,6-2.8,17.4 c0,0-4.4-8.2-8.2-13.6c-6.3-8.2-18.7-20.9-18.7-20.9c-2.5,32.6,1.6,39.3,3.2,42.1c4.1,7,19.6,17.7,22.8,24.4 c1.6,3.5,1.9,4.7,1.9,4.7c0.6,1.3-3.2,5.4-2.5,11.1c0.3,1.9,0.6,4.4,1.3,7.6c0,0-4.4-6.6-10.8-13.9c-5.7-6.6-16.8-14.2-16.8-14.2 c-0.6,3.8,1.3,21.8,1.6,24.7c1.6,9.2,1.9,17.7,9.5,25.6c6.6,6.6,28.2,15.5,32.6,17.1c0,0-0.9-4.1-2.8-10.1 C60.2,394.4,56.1,384.3,56.1,384.3z"/><path class="st0" d="M258.3,240.3h6c4.1,0,7.9,0.9,11.7,3.2c2.5,1.6,4.4,3.2,5.1,5.4c0.9,2.8,1.6,8.5,1.6,17.1v110.2 c0,10.1-0.9,16.8-3.2,19.3c-3.2,4.1-8.2,6-15.2,6h-6v4.7h73.1v-4.7h-6c-4.1,0-7.9-0.9-11.4-3.2c-2.5-1.6-4.4-3.2-5.4-5.4 c-0.9-2.8-1.6-8.5-1.6-17.1V265.9c0-10.1,0.9-16.8,3.2-19.3c3.2-4.1,8.2-6,15.2-6h6v-4.7h-73.1V240.3z"/><path class="st0" d="M616.7,343.1c-3.2-6.3-7.6-11.7-13.6-16.1c-5.7-4.4-16.8-11.1-32.6-19.6c-19.6-10.4-32-19-37-25 c-3.5-4.4-5.4-8.9-5.4-14.2c0-6.6,2.8-13,8.5-18c5.7-5.4,13-7.9,21.5-7.9c7.6,0,15.2,1.9,22.5,6c7.3,3.8,12.7,9.2,16.8,15.8 c3.8,6.6,6.6,15.8,8.2,26.9h4.7v-59.2h-4.7c-0.9,3.8-1.9,6.6-3.5,7.9c-1.3,1.3-3.2,1.9-5.4,1.9c-1.9,0-5.4-0.9-9.8-3.2 c-10.1-4.4-19.6-6.6-28.8-6.6c-14.6,0-26.6,4.4-35.8,13.3c-9.5,8.9-14.2,19.3-14.2,31.7c0,7,1.6,13.6,4.7,19.3 c3.2,6,7.9,11.4,13.9,16.1c6.3,4.7,16.5,11.4,31,19.6s23.4,13.6,26.9,16.1c4.7,3.8,8.5,7.6,10.8,12c2.2,4.4,3.5,8.5,3.5,12.7 c0,7.6-3.2,13.9-9.2,19.6c-6,5.4-14.2,8.2-24.7,8.2c-9.2,0-17.4-1.9-25-6c-7.6-4.1-13.3-9.2-16.8-15.2c-3.8-6-6.6-15.2-8.9-27.5 h-4.7v49.7c-7-1.6-11.4-3.5-16.1-6.6c-5.7-3.8-12.7-11.1-20.9-22.5l-35.1-49.1c14.2-3.2,25-8.5,31.7-16.5 c7-7.6,10.1-16.8,10.1-27.2c0-9.8-2.8-18.4-8.9-25.3c-6-7-13.3-12-21.8-14.6s-21.8-4.1-40.2-4.1h-62v4.7h6.3 c6.3,0,11.4,1.9,14.6,5.4c2.2,2.5,3.5,9.2,3.5,19.9v110.2c0,9.8-0.9,15.8-2.5,18.4c-3.2,4.7-8.2,7-15.5,7h-6.3v4.7h73.1v-4.7h-6.6 c-6.3,0-11.1-1.9-14.2-5.4c-2.2-2.5-3.5-9.2-3.5-19.9v-49.4c1.3,0,2.5,0,3.8,0.3c1.3,0,2.5,0,3.5,0c2.5,0,6,0,10.4-0.3l57.6,79.8 h39.3l0,0h5.4c0.6-1.9,1.3-3.2,1.9-3.8c1.3-1.3,2.8-1.9,5.1-1.9s7.3,1.3,15.5,4.1c8.2,2.5,13.6,4.1,16.1,4.7 c4.4,0.6,8.9,1.3,13.9,1.3c15.8,0,28.8-4.7,38.6-13.9c10.1-9.5,14.9-20.6,14.9-33.2C621.4,355.8,619.8,349.5,616.7,343.1z M402.1,318.8c-0.6,0-1.6,0-2.8,0c-1.3,0-2.5,0-4.1,0v-71.2c8.2-1.6,14.9-2.5,19.6-2.5c11.1,0,19.9,3.5,26.6,10.1 c6.6,6.6,10.1,15.2,10.1,26s-4.1,19.9-12.3,26.9C430.5,315.3,418.5,318.8,402.1,318.8z"/></g></svg></span>
+        <span class="brand">IRS Online<small>Individual account</small></span>
+        <span class="spacer"></span>
+        <button class="ib" id="hdr-msg" type="button" aria-label="Messages, 2 unread"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg><span class="badge">2</span></button>
+        <button class="ib" id="hdr-prof" type="button" aria-label="Profile"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg></button>
+      </div>
+
+      <!-- OMNIBAR (pure search) -->
+      <div class="omni">
+        <label class="olabel" for="omni-input">Search your account</label>
+        <div class="field">
+          <span class="mag" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></g></svg></span>
+          <input id="omni-input" type="text" autocomplete="off" aria-controls="omni-results" aria-describedby="omni-hint" aria-expanded="false" role="combobox">
+          <button class="clr" id="omni-clr" type="button" aria-label="Clear search"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        </div>
+        <span class="ohint" id="omni-hint">Balance, payments, records, messages, profile</span>
+        <div class="results" id="omni-results" role="listbox"></div>
+      </div>
+
+      <div class="screen" id="screen">
+        <!-- HOME -->
+        <section class="pane on" id="tab-home">
+          <div class="wallet" id="t-balance">
+            <span class="wseal" aria-hidden="true"><svg class="irs-logo" fill="#fff" aria-hidden="true" version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="20 218 602 207" style="enable-background:new 0 0 652 652;" xml:space="preserve"><g><path class="st0" d="M240.6,246.9c-2.5-4.4-29.8-16.8-69-24.7c-16.1,17.1-16.1,24.1-16.5,26.9c-0.3,2.8,5.4,10.1,11.1,17.7 c10.8,13.9,13.6,16.5,15.2,20.6c3.2,7.9-1.9,25.6-5.7,41.8c0,0-9.5-34.5-13.9-57c-0.3-2.2,0.3-3.5,0.3-3.2 c-24.1-2.2-40.5-3.5-43.4,9.2c-11.1,0-16.1,3.2-17.4,5.1c-2.8,4.7,0.6,14.6,2.5,19.3c1.6-3.8,11.4-3.2,14.6-3.2 c1.3,0,1.3,0.9,1.9,1.6v46.8H91.9l-24.4,65.5c11.4,5.4,23.4,9.8,31,9.8c7.6,0,26-9.5,28.5-9.8c2.5,0,21.2,9.8,28.5,9.8 c7.3,0,19.3-3.8,31-9.8l-24.7-65.8c0,0-25,0-28.5,0c0-10.4,0-33.9,0-44.3c-0.6-2.8-1.9-3.8-2.8-4.1H145c-2.2-8.5-5.1-14.2-9.2-14.6 c1.3-1.6,1.9-2.2,3.8-3.8h-11.1c1.3-5.7,15.5-3.8,21.8-3.2c6.3,31.7,18.4,73.8,19,74.7c0.6,0.6,10.8,4.4,12,4.7 c6-12.7,14.9-49.7,15.2-58.9c7.3,2.5,4.4,12.3,2.8,22.2c-8.2,51-14.9,66.5-17.1,76c7.3-1.6,12-2.8,12.7-3.8 c1.3-1.3,4.4-9.8,7.6-19.3c4.4-13.9,11.4-49.1,11.1-63c0-3.5-2.8-6.6-7.9-9.2c0,0,2.5-4.4,3.8-7c1.6-3.5,3.2-9.8,3.2-9.8 c2.8,0.9,5.4,2.2,5.7,5.1c1.6,13.3,0.6,14.6-0.9,39.3c-0.6,7.9-3.2,23.4-6,39.9c-5.4,30.1-10.4,42.7-10.4,47.5 c7.9-2.5,13.9-4.4,14.6-5.4c0.6-1.6,6.6-15.8,10.8-37.7c1.9-9.2,3.2-18.7,4.4-28.2c2.2-12.7,2.5-25.6,2.5-36.4 c0-15.8,1.9-15.8-9.8-22.2c4.4-13,3.5-21.5,2.5-23.7c-1.9-4.7-4.4-4.7-14.9-3.8c3.8,3.5,2.5,10.4,1.6,14.6 c-1.9-1.6-1.3-4.4-12.3-4.1c-1.6-18-5.1-19.9-5.4-20.6c-1.6-1.9-10.8-0.9-13.6,0c1.9,1.3,6.3,15.5,4.1,20.9 c-1.3-1.6-16.8-19.3-15.8-22.5c0.6-1.9,1.6-4.1,7-10.4c18.7,3.2,50.3,15.2,51.9,18.4c1.9,4.1,3.8,8.9,5.1,15.8 c1.6,10.4,4.7,35.1,3.2,72.8c-1.6,38.9-6.6,61.1-6.6,59.8c5.7-1.9,15.5-10.8,16.1-12.7c2.5-6.3,3.8-29.4,4.4-50.3 c0.9-20.9-1.3-47.5-2.5-57.3C245.7,258.6,244.1,252.3,240.6,246.9z M98.2,409.3c-5.7,0-14.6-0.9-14.2-0.9l14.2-41.1l13.3,41.5 C111.5,408.7,103.6,409.3,98.2,409.3z M169.7,408.7c0,0-8.9,0.9-14.2,0.9c-5.1,0-13.3-0.9-13.3-0.9l13-41.5L169.7,408.7z M133,376.4v-15.8h12.3l-18.7,51.6l-18.4-51.6h12.3V372c0,0,0,0.9,0.3,1.3c1.6,0.9,1.9,0.9,1.9,0.9L133,376.4z M134.6,292.5h-21.5 c-1.6-5.1,0-6.3,4.4-6.6C126.4,284.9,134,284.9,134.6,292.5z M194.7,269.7c7.9-1.3,4.1,12.7,2.2,18c-2.8-6.6-5.1-10.4-9.8-16.8 C190,270.3,191.9,270.3,194.7,269.7z"/><path class="st0" d="M56.1,384.3c3.8-3.8,17.1-17.4,19-24.7c2.5-8.9,4.4-29.8,4.4-34.5c0,0-13,8.9-19.9,15.8c-2.8,3.2-7,8.5-7,8.5 c-1.3-7.6,0.3-15.8,3.8-20.9c4.4-7,20.6-20.6,22.5-26.3c3.5-8.9,2.8-16.8,5.7-26.6c-10.8,3.5-24.1,11.7-30.1,18.4 c-0.9-10.4,2.5-18,9.5-23.4c10.1-7.6,23.4-12,32.3-14.6c7.6-2.2,19.3-4.7,25.6-7.6c11.1-5.4,21.8-20.6,24.4-28.5 c-3.8,0-16.8-0.9-29.8,4.1c-4.7,1.9-7,6-9.2,9.5c-2.2,3.8-4.4,6.6-6.3,9.2c-5.4,7.9-11.7,11.7-19.9,13.9c0.3-0.6,5.4-3.8,9.2-11.7 c3.2-6.6,7-19.9,7-20.9c-7,0.9-11.4,2.8-18.7,5.7c-7.9,3.2-10.1,6.3-11.7,9.2c-5.1,7.9-3.8,30.1-13.9,38.9 c0.3-11.7,2.8-24.4-1.3-38.9c-21.5,8.2-25.3,15.8-23.7,25c1.9,12,15.5,17.7,21.5,27.5c1.6,2.8,2.5,7,2.5,7.6c0.3,0-4.1,6-2.8,17.4 c0,0-4.4-8.2-8.2-13.6c-6.3-8.2-18.7-20.9-18.7-20.9c-2.5,32.6,1.6,39.3,3.2,42.1c4.1,7,19.6,17.7,22.8,24.4 c1.6,3.5,1.9,4.7,1.9,4.7c0.6,1.3-3.2,5.4-2.5,11.1c0.3,1.9,0.6,4.4,1.3,7.6c0,0-4.4-6.6-10.8-13.9c-5.7-6.6-16.8-14.2-16.8-14.2 c-0.6,3.8,1.3,21.8,1.6,24.7c1.6,9.2,1.9,17.7,9.5,25.6c6.6,6.6,28.2,15.5,32.6,17.1c0,0-0.9-4.1-2.8-10.1 C60.2,394.4,56.1,384.3,56.1,384.3z"/><path class="st0" d="M258.3,240.3h6c4.1,0,7.9,0.9,11.7,3.2c2.5,1.6,4.4,3.2,5.1,5.4c0.9,2.8,1.6,8.5,1.6,17.1v110.2 c0,10.1-0.9,16.8-3.2,19.3c-3.2,4.1-8.2,6-15.2,6h-6v4.7h73.1v-4.7h-6c-4.1,0-7.9-0.9-11.4-3.2c-2.5-1.6-4.4-3.2-5.4-5.4 c-0.9-2.8-1.6-8.5-1.6-17.1V265.9c0-10.1,0.9-16.8,3.2-19.3c3.2-4.1,8.2-6,15.2-6h6v-4.7h-73.1V240.3z"/><path class="st0" d="M616.7,343.1c-3.2-6.3-7.6-11.7-13.6-16.1c-5.7-4.4-16.8-11.1-32.6-19.6c-19.6-10.4-32-19-37-25 c-3.5-4.4-5.4-8.9-5.4-14.2c0-6.6,2.8-13,8.5-18c5.7-5.4,13-7.9,21.5-7.9c7.6,0,15.2,1.9,22.5,6c7.3,3.8,12.7,9.2,16.8,15.8 c3.8,6.6,6.6,15.8,8.2,26.9h4.7v-59.2h-4.7c-0.9,3.8-1.9,6.6-3.5,7.9c-1.3,1.3-3.2,1.9-5.4,1.9c-1.9,0-5.4-0.9-9.8-3.2 c-10.1-4.4-19.6-6.6-28.8-6.6c-14.6,0-26.6,4.4-35.8,13.3c-9.5,8.9-14.2,19.3-14.2,31.7c0,7,1.6,13.6,4.7,19.3 c3.2,6,7.9,11.4,13.9,16.1c6.3,4.7,16.5,11.4,31,19.6s23.4,13.6,26.9,16.1c4.7,3.8,8.5,7.6,10.8,12c2.2,4.4,3.5,8.5,3.5,12.7 c0,7.6-3.2,13.9-9.2,19.6c-6,5.4-14.2,8.2-24.7,8.2c-9.2,0-17.4-1.9-25-6c-7.6-4.1-13.3-9.2-16.8-15.2c-3.8-6-6.6-15.2-8.9-27.5 h-4.7v49.7c-7-1.6-11.4-3.5-16.1-6.6c-5.7-3.8-12.7-11.1-20.9-22.5l-35.1-49.1c14.2-3.2,25-8.5,31.7-16.5 c7-7.6,10.1-16.8,10.1-27.2c0-9.8-2.8-18.4-8.9-25.3c-6-7-13.3-12-21.8-14.6s-21.8-4.1-40.2-4.1h-62v4.7h6.3 c6.3,0,11.4,1.9,14.6,5.4c2.2,2.5,3.5,9.2,3.5,19.9v110.2c0,9.8-0.9,15.8-2.5,18.4c-3.2,4.7-8.2,7-15.5,7h-6.3v4.7h73.1v-4.7h-6.6 c-6.3,0-11.1-1.9-14.2-5.4c-2.2-2.5-3.5-9.2-3.5-19.9v-49.4c1.3,0,2.5,0,3.8,0.3c1.3,0,2.5,0,3.5,0c2.5,0,6,0,10.4-0.3l57.6,79.8 h39.3l0,0h5.4c0.6-1.9,1.3-3.2,1.9-3.8c1.3-1.3,2.8-1.9,5.1-1.9s7.3,1.3,15.5,4.1c8.2,2.5,13.6,4.1,16.1,4.7 c4.4,0.6,8.9,1.3,13.9,1.3c15.8,0,28.8-4.7,38.6-13.9c10.1-9.5,14.9-20.6,14.9-33.2C621.4,355.8,619.8,349.5,616.7,343.1z M402.1,318.8c-0.6,0-1.6,0-2.8,0c-1.3,0-2.5,0-4.1,0v-71.2c8.2-1.6,14.9-2.5,19.6-2.5c11.1,0,19.9,3.5,26.6,10.1 c6.6,6.6,10.1,15.2,10.1,26s-4.1,19.9-12.3,26.9C430.5,315.3,418.5,318.8,402.1,318.8z"/></g></svg></span>
+            <span class="wl">Balance due · Tax year 2025</span>
+            <div class="wamt">$1,284.50</div>
+            <div class="wdue">Due <b>Jul 15, 2026</b> · interest accrues daily</div>
+            <div class="wbtns">
+              <button class="wbtn" id="t-home-pay"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg> Make a payment</button>
+              <button class="wbtn ghost" id="t-home-plan">Payment plan</button>
+            </div>
+          </div>
+
+          <div class="sechead" style="margin-top:16px"><h2>Needs attention</h2></div>
+          <div class="alert" id="t-home-cp14">
+            <span class="ai" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg></span>
+            <span class="ac">
+              <span class="at">Notice CP14 — Balance due</span>
+              <span class="as">Issued Apr 05, 2026. Your account has an unpaid balance for tax year 2025.</span>
+              <button class="alink" id="t-home-cp14-link">Read message <svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </span>
+          </div>
+
+          <div class="sechead"><h2>Account status</h2></div>
+          <div class="module">
+            <button class="row " id="t-refund"><span class="rc"><span class="rt">2024 refund applied</span><span class="rs">Reduced 2025 balance</span></span><span class="rv">$312.00</span></button>
+            <button class="row " id="t-pay-year"><span class="rc"><span class="rt">Payments this year</span><span class="rs">2 payments applied</span></span><span class="rv">$1,250.00</span></button>
+            <button class="row " id="t-estimated"><span class="rc"><span class="rt">Next estimated payment</span><span class="rs">Q2 2026 · 1040-ES</span></span><span class="rv">Jun 15</span></button>
+          </div>
+
+          <div class="sechead"><h2>Quick actions</h2></div>
+          <div class="qgrid">
+            <button class="qtile" id="t-home-q-pay"><span class="qi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg></span><span class="qt">Make a payment</span></button>
+            <button class="qtile" id="t-home-q-tr"><span class="qi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg></span><span class="qt">Get transcript</span></button>
+            <button class="qtile" id="t-home-q-msg"><span class="qi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="qt">Messages</span></button>
+            <button class="qtile" id="t-home-q-refund"><span class="qi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.8"/><path d="M13.5 2.5v2.2h-2.2"/></g></svg></span><span class="qt">Refund status</span></button>
+          </div>
+        </section>
+        <!-- PAYMENTS -->
+        <section class="pane" id="tab-pay">
+          <h1 class="pagetitle">Payments</h1>
+          <p class="pagesub">Pay a balance, make an estimated payment, or set up a plan.</p>
+
+          <div class="wallet" id="t-pay-balance" style="padding:18px 18px 16px">
+            <span class="wl">Balance due · Tax year 2025</span>
+            <div class="wamt" style="font-size:34px">$1,284.50</div>
+            <div class="wdue">Due <b>Jul 15, 2026</b></div>
+            <div class="wbtns"><button class="wbtn" id="t-pay-now"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg> Pay this balance</button></div>
+          </div>
+
+          <div class="sechead"><h2>What are you paying?</h2></div>
+          <div class="payopts">
+            <button class="row " id="t-pay-balance-row"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6.5 6.2A1.4 1.4 0 0 1 8 5.2h.4a1.3 1.3 0 0 1 0 2.6H8a1.3 1.3 0 0 0 0 2.6h.4a1.4 1.4 0 0 0 1.3-.9"/></g></svg></span><span class="rc"><span class="rt">Balance due</span><span class="rs">A bill you owe · tax year 2025</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-pay-est"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6.5 6.2A1.4 1.4 0 0 1 8 5.2h.4a1.3 1.3 0 0 1 0 2.6H8a1.3 1.3 0 0 0 0 2.6h.4a1.4 1.4 0 0 0 1.3-.9"/></g></svg></span><span class="rc"><span class="rt">Estimated tax</span><span class="rs">Form 1040-ES · Q2 2026</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-pay-ext"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6.5 6.2A1.4 1.4 0 0 1 8 5.2h.4a1.3 1.3 0 0 1 0 2.6H8a1.3 1.3 0 0 0 0 2.6h.4a1.4 1.4 0 0 0 1.3-.9"/></g></svg></span><span class="rc"><span class="rt">Extension</span><span class="rs">Form 4868 · with your filing extension</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-pay-amended"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6.5 6.2A1.4 1.4 0 0 1 8 5.2h.4a1.3 1.3 0 0 1 0 2.6H8a1.3 1.3 0 0 0 0 2.6h.4a1.4 1.4 0 0 0 1.3-.9"/></g></svg></span><span class="rc"><span class="rt">Amended return</span><span class="rs">Form 1040-X</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-pay-notice"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">Payment on a notice</span><span class="rs">Toward a CP-series notice you received</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-pay-plan"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="M2 6.5h12M4.5 9.8h3"/></g></svg></span><span class="rc"><span class="rt">Set up a payment plan</span><span class="rs">Short-term or monthly installment agreement</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+          </div>
+
+          <div class="sechead"><h2>Payment history</h2><a>All</a></div>
+          <div class="module">
+            <button class="row " id="t-pay-history"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6.5 6.2A1.4 1.4 0 0 1 8 5.2h.4a1.3 1.3 0 0 1 0 2.6H8a1.3 1.3 0 0 0 0 2.6h.4a1.4 1.4 0 0 0 1.3-.9"/></g></svg></span><span class="rc"><span class="rt">Direct Pay — bank account</span><span class="rs">May 12, 2026 · Processed</span></span><span class="rv">$800.00</span></button>
+            <button class="row " id="t-pay-h2"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="M2 6.5h12M4.5 9.8h3"/></g></svg></span><span class="rc"><span class="rt">Debit card</span><span class="rs">Mar 03, 2026 · Processed</span></span><span class="rv">$450.00</span></button>
+          </div>
+        </section>
+        <!-- RECORDS -->
+        <section class="pane" id="tab-rec">
+          <h1 class="pagetitle">Records</h1>
+          <p class="pagesub">Transcripts, wage &amp; income data, and your filed returns.</p>
+          <div class="module">
+            <button class="row " id="t-rec-transcript"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg></span><span class="rc"><span class="rt">Account transcript</span><span class="rs">2025 · 2024 · 2023</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-rec-return-tr"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg></span><span class="rc"><span class="rt">Return transcript</span><span class="rs">Tax year 2025</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-rec-wage"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.5v9M5 7.5 8 10.5 11 7.5M3 13.5h10"/></g></svg></span><span class="rc"><span class="rt">Wage &amp; income (W-2, 1099)</span><span class="rs">Tax year 2025</span></span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="row " id="t-rec-1040"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5 8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5 8 8l5.5-3M8 8v6"/></g></svg></span><span class="rc"><span class="rt">Form 1040 (2025)</span><span class="rs">Filed Feb 20, 2026</span></span><span class="chip ok">Accepted</span></button>
+            <button class="row " id="t-rec-1040-prev"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5 8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5 8 8l5.5-3M8 8v6"/></g></svg></span><span class="rc"><span class="rt">Form 1040 (2024)</span><span class="rs">Filed Mar 30, 2025</span></span><span class="chip ok">Accepted</span></button>
+          </div>
+        </section>
+        <!-- MESSAGES -->
+        <section class="pane" id="tab-msg">
+          <h1 class="pagetitle">Messages</h1>
+          <p class="pagesub">Notices and letters on your account. 2 unread.</p>
+          <div class="module">
+            <button class="row unread" id="t-msg-cp14"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">CP14 — Balance due</span><span class="rs">Apr 05, 2026</span></span><span class="reddot" aria-hidden="true"></span><span class="chip warn">Action</span></button>
+            <button class="row unread" id="t-msg-cp49"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">CP49 — Refund applied</span><span class="rs">Mar 12, 2026</span></span><span class="reddot" aria-hidden="true"></span><span class="chip info">Info</span></button>
+            <button class="row " id="t-msg-accept"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">Return acceptance</span><span class="rs">Feb 28, 2026</span></span><span class="chip ok">Read</span></button>
+            <button class="row " id="t-msg-idpin"><span class="ri" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span class="rc"><span class="rt">IP PIN issued</span><span class="rs">Jan 08, 2026</span></span><span class="chip ok">Read</span></button>
+          </div>
+        </section>
+        <!-- PROFILE -->
+        <section class="pane" id="tab-prof">
+          <h1 class="pagetitle">Profile</h1>
+          <p class="pagesub">Your contact info, filing details, and security settings.</p>
+          <div class="sechead"><h2>Account</h2><a>Edit</a></div>
+          <div class="panelbox">
+            <div class="readrow" id="t-prof-name"><span class="k">Name</span><span class="v">Jordan A. Vale</span></div>
+            <div class="readrow" id="t-prof-ssn"><span class="k">SSN</span><span class="v">•••-••-4821</span></div>
+            <div class="readrow" id="t-prof-status"><span class="k">Filing status</span><span class="v">Single</span></div>
+            <div class="readrow" id="t-prof-email"><span class="k">Email</span><span class="v">jordan.v@example.com</span></div>
+          </div>
+          <div class="sechead"><h2>Security</h2><a>Manage</a></div>
+          <div class="panelbox">
+            <div class="readrow" id="t-prof-2fa"><span class="k">Two-factor</span><span class="v">On · Authenticator app</span></div>
+            <div class="readrow" id="t-prof-ippin"><span class="k">IP PIN</span><span class="v">Enrolled</span></div>
+          </div>
+        </section>
+      </div><!-- /screen -->
+
+      </div><!-- /appbody -->
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap"><a href="../index.html"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4L6 8l4 4"/></svg> All prototypes</a></div>
+    <div class="wrap">
+    Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, amounts, account numbers, and dates shown are fictional mock data — no real personal or taxpayer information. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+  <script>
+  /* government banner toggle */
+  (function(){
+    var gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+    howbtn.addEventListener("click",function(){
+      var open=gov.classList.toggle("open");
+      howbtn.setAttribute("aria-expanded",open?"true":"false");
+    });
+  })();
+
+  (function(){
+    var splash=document.getElementById("splash"),
+        screen=document.getElementById("screen"),
+        appbody=document.querySelector(".appbody"),
+        hdrBack=document.getElementById("hdr-back");
+
+    /* ---- icons (define once) ---- */
+    var IC_MONEY='<svg class=\"ic\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"8\" cy=\"8\" r=\"5.5\"/><path d=\"M8 5v6M6.5 6.2A1.4 1.4 0 0 1 8 5.2h.4a1.3 1.3 0 0 1 0 2.6H8a1.3 1.3 0 0 0 0 2.6h.4a1.4 1.4 0 0 0 1.3-.9\"/></g></svg>';
+    var IC_LIST='<svg class=\"ic\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"><path d=\"M6 4h7.5M6 8h7.5M6 12h7.5\"/></g><circle cx=\"3\" cy=\"4\" r=\".9\" fill=\"currentColor\"/><circle cx=\"3\" cy=\"8\" r=\".9\" fill=\"currentColor\"/><circle cx=\"3\" cy=\"12\" r=\".9\" fill=\"currentColor\"/></svg>';
+    var IC_ENV='<svg class=\"ic\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"3.5\" width=\"12\" height=\"9\"/><path d=\"m2.5 4.5 5.5 4 5.5-4\"/></g></svg>';
+    var IC_PERSON='<svg class=\"ic\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"8\" cy=\"5.2\" r=\"2.7\"/><path d=\"M3 13.5a5 5 0 0 1 10 0\"/></g></svg>';
+    var IC_BOX='<svg class=\"ic\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2.5 5 8 2l5.5 3v6L8 14l-5.5-3z\"/><path d=\"M2.5 5 8 8l5.5-3M8 8v6\"/></g></svg>';
+    var IC_WAGE='<svg class=\"ic\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 1.5v9M5 7.5 8 10.5 11 7.5M3 13.5h10\"/></g></svg>';
+    var IC_CARD='<svg class=\"ic\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"3.5\" width=\"12\" height=\"9\"/><path d=\"M2 6.5h12M4.5 9.8h3\"/></g></svg>';
+
+    /* ---- search index: every surface, with the tab it lives on ---- */
+    var INDEX=[
+      {id:"t-balance",     tab:"tab-home", cat:"Home",     title:"Balance due — $1,284.50",   sub:"Tax year 2025 · due Jul 15, 2026", kw:"balance due owe amount wallet 1284 status", icon:IC_MONEY},
+      {id:"t-home-cp14",   tab:"tab-home", cat:"Home",     title:"Needs attention — CP14",    sub:"Balance due · action needed",      kw:"attention alert cp14 action needed home", icon:IC_ENV},
+      {id:"t-refund",      tab:"tab-home", cat:"Home",     title:"2024 refund applied",       sub:"Reduced 2025 balance · $312.00",   kw:"refund applied credit 312 2024 status", icon:IC_MONEY},
+      {id:"t-pay-year",    tab:"tab-home", cat:"Home",     title:"Payments this year",        sub:"2 payments applied · $1,250.00",   kw:"payments paid this year 1250 status", icon:IC_MONEY},
+      {id:"t-estimated",   tab:"tab-home", cat:"Home",     title:"Next estimated payment",    sub:"Q2 2026 · Jun 15",                 kw:"estimated payment quarterly q2 jun 15 next 1040-es", icon:IC_MONEY},
+      {id:"t-pay-balance-row", tab:"tab-pay", cat:"Payments", title:"Pay balance due",        sub:"A bill you owe · tax year 2025",   kw:"pay balance due bill make payment", icon:IC_MONEY},
+      {id:"t-pay-est",     tab:"tab-pay",  cat:"Payments", title:"Pay estimated tax",         sub:"Form 1040-ES · Q2 2026",           kw:"estimated tax 1040-es quarterly pay", icon:IC_MONEY},
+      {id:"t-pay-ext",     tab:"tab-pay",  cat:"Payments", title:"Pay with an extension",     sub:"Form 4868",                        kw:"extension 4868 pay filing", icon:IC_MONEY},
+      {id:"t-pay-amended", tab:"tab-pay",  cat:"Payments", title:"Pay an amended return",     sub:"Form 1040-X",                      kw:"amended return 1040-x pay", icon:IC_MONEY},
+      {id:"t-pay-notice",  tab:"tab-pay",  cat:"Payments", title:"Payment on a notice",       sub:"Toward a CP-series notice",        kw:"notice payment cp letter pay", icon:IC_ENV},
+      {id:"t-pay-plan",    tab:"tab-pay",  cat:"Payments", title:"Set up a payment plan",     sub:"Installment agreement",            kw:"payment plan installment agreement monthly short-term", icon:IC_CARD},
+      {id:"t-pay-history", tab:"tab-pay",  cat:"Payments", title:"Payment history",           sub:"Direct Pay · $800.00 · May 12",    kw:"payment history direct pay processed 800", icon:IC_MONEY},
+      {id:"t-rec-transcript", tab:"tab-rec", cat:"Records", title:"Account transcript",       sub:"2025 · 2024 · 2023",               kw:"transcript account records history", icon:IC_LIST},
+      {id:"t-rec-return-tr",  tab:"tab-rec", cat:"Records", title:"Return transcript",        sub:"Tax year 2025",                    kw:"return transcript records 2025", icon:IC_LIST},
+      {id:"t-rec-wage",    tab:"tab-rec",  cat:"Records",  title:"Wage & income (W-2, 1099)", sub:"Tax year 2025",                    kw:"wage income w2 w-2 1099 records", icon:IC_WAGE},
+      {id:"t-rec-1040",    tab:"tab-rec",  cat:"Records",  title:"Form 1040 (2025)",          sub:"Filed Feb 20, 2026 · Accepted",    kw:"1040 return filed accepted form records 2025", icon:IC_BOX},
+      {id:"t-rec-1040-prev",tab:"tab-rec", cat:"Records",  title:"Form 1040 (2024)",          sub:"Filed Mar 30, 2025 · Accepted",    kw:"1040 return filed accepted form records 2024", icon:IC_BOX},
+      {id:"t-msg-cp14",    tab:"tab-msg",  cat:"Messages", title:"CP14 — Balance due",        sub:"Apr 05, 2026 · Action needed",     kw:"cp14 message notice balance due action letter unread", icon:IC_ENV},
+      {id:"t-msg-cp49",    tab:"tab-msg",  cat:"Messages", title:"CP49 — Refund applied",     sub:"Mar 12, 2026 · Info",              kw:"cp49 message notice refund applied info letter unread", icon:IC_ENV},
+      {id:"t-msg-accept",  tab:"tab-msg",  cat:"Messages", title:"Return acceptance",         sub:"Feb 28, 2026 · Read",              kw:"return acceptance message notice read letter", icon:IC_ENV},
+      {id:"t-msg-idpin",   tab:"tab-msg",  cat:"Messages", title:"IP PIN issued",             sub:"Jan 08, 2026 · Read",              kw:"ip pin issued message notice letter identity", icon:IC_ENV},
+      {id:"t-prof-name",   tab:"tab-prof", cat:"Profile",  title:"Name",                      sub:"Jordan A. Vale",                   kw:"name profile jordan vale", icon:IC_PERSON},
+      {id:"t-prof-ssn",    tab:"tab-prof", cat:"Profile",  title:"SSN",                       sub:"•••-••-4821",                      kw:"ssn social security number profile", icon:IC_PERSON},
+      {id:"t-prof-status", tab:"tab-prof", cat:"Profile",  title:"Filing status",             sub:"Single",                           kw:"filing status single profile", icon:IC_PERSON},
+      {id:"t-prof-email",  tab:"tab-prof", cat:"Profile",  title:"Email",                     sub:"jordan.v@example.com",             kw:"email contact profile", icon:IC_PERSON},
+      {id:"t-prof-2fa",    tab:"tab-prof", cat:"Profile",  title:"Two-factor",                sub:"On · Authenticator app",           kw:"two factor 2fa authenticator security profile", icon:IC_PERSON},
+      {id:"t-prof-ippin",  tab:"tab-prof", cat:"Profile",  title:"IP PIN",                    sub:"Enrolled",                         kw:"ip pin identity protection enrolled profile security", icon:IC_PERSON}
+    ];
+
+    function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+    function hi(text,q){ if(!q) return esc(text); var i=text.toLowerCase().indexOf(q.toLowerCase());
+      if(i<0) return esc(text); return esc(text.slice(0,i))+"<mark>"+esc(text.slice(i,i+q.length))+"</mark>"+esc(text.slice(i+q.length)); }
+
+    /* ---- page switching (no tab bar — Home is the hub, omnibar navigates) ---- */
+    function showTab(tabId){
+      document.querySelectorAll(".pane").forEach(function(p){p.classList.toggle("on",p.id===tabId);});
+      /* on any page other than Home, reveal the back-to-home control */
+      appbody.classList.toggle("subpage", tabId!=="tab-home");
+      screen.scrollTop=0;
+    }
+    if(hdrBack) hdrBack.addEventListener("click",function(){ showTab("tab-home"); });
+
+    /* ---- deep-link jump: leave splash, switch tab, highlight item ---- */
+    function jump(id,tab){
+      splash.classList.remove("on");
+      if(tab) showTab(tab);
+      var el=document.getElementById(id);
+      if(el){
+        el.scrollIntoView({behavior:"smooth",block:"center"});
+        el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+      }
+    }
+
+    /* ================= OMNIBAR (in-app search) ================= */
+    (function(){
+      var input=document.getElementById("omni-input"),
+          results=document.getElementById("omni-results"),
+          clr=document.getElementById("omni-clr");
+      var active=-1, current=[];
+      function render(q){
+        var ql=q.trim().toLowerCase();
+        if(!ql){ results.classList.remove("show"); results.innerHTML=""; input.setAttribute("aria-expanded","false"); current=[]; active=-1; return; }
+        current=INDEX.filter(function(it){ return (it.title+" "+it.sub+" "+it.kw+" "+it.cat).toLowerCase().indexOf(ql)>-1; });
+        if(!current.length){ results.innerHTML='<div class="empty">No matches for \u201c'+esc(q)+'\u201d</div>'; results.classList.add("show"); input.setAttribute("aria-expanded","true"); active=-1; return; }
+        results.innerHTML=current.map(function(it,idx){
+          return '<button class="res" role="option" data-id="'+it.id+'" data-tab="'+it.tab+'" data-i="'+idx+'">'
+            +'<span class="ri" aria-hidden="true">'+it.icon+'</span>'
+            +'<span class="rc"><span class="rt">'+hi(it.title,q)+'</span><span class="rs">'+hi(it.sub,q)+'</span></span>'
+            +'<span class="cat">'+esc(it.cat)+'</span></button>';
+        }).join("");
+        results.classList.add("show"); input.setAttribute("aria-expanded","true"); active=-1;
+      }
+      function close(){ results.classList.remove("show"); }
+      function pick(it){ input.value=""; clr.classList.remove("show"); render(""); close(); jump(it.id,it.tab); }
+      input.addEventListener("input",function(){ render(input.value); clr.classList.toggle("show",!!input.value); });
+      input.addEventListener("focus",function(){ if(input.value) render(input.value); });
+      results.addEventListener("mousedown",function(e){ var btn=e.target.closest(".res"); if(!btn) return; e.preventDefault();
+        var it=current[parseInt(btn.dataset.i,10)]; if(it) pick(it); });
+      clr.addEventListener("click",function(){ input.value=""; clr.classList.remove("show"); render(""); input.focus(); });
+      input.addEventListener("keydown",function(e){
+        if(!results.classList.contains("show")||!current.length){ if(e.key==="Escape"){input.blur();close();} return; }
+        if(e.key==="ArrowDown"){ e.preventDefault(); active=(active+1)%current.length; mark(); }
+        else if(e.key==="ArrowUp"){ e.preventDefault(); active=(active-1+current.length)%current.length; mark(); }
+        else if(e.key==="Enter"){ e.preventDefault(); var it=active>=0?current[active]:current[0]; if(it) pick(it); }
+        else if(e.key==="Escape"){ input.blur(); close(); }
+      });
+      function mark(){ var opts=results.querySelectorAll(".res"); opts.forEach(function(o,i){o.classList.toggle("act",i===active);});
+        if(active>=0&&opts[active]) opts[active].scrollIntoView({block:"nearest"}); }
+      document.addEventListener("click",function(e){ if(!e.target.closest(".omni")) close(); });
+    })();
+
+    /* ================= SPLASH search (same index → autocomplete → jump) ================= */
+    (function(){
+      var spInput=document.getElementById("sp-input"),
+          spClr=document.getElementById("sp-clr"),
+          spResults=document.getElementById("sp-results"),
+          spChips=document.getElementById("sp-chips"),
+          spSkip=document.getElementById("sp-skip");
+      var active=-1, current=[];
+      function render(q){
+        var ql=q.trim().toLowerCase();
+        splash.classList.toggle("searching",!!ql);
+        if(!ql){ spResults.classList.remove("show"); spResults.innerHTML=""; current=[]; active=-1; return; }
+        current=INDEX.filter(function(it){ return (it.title+" "+it.sub+" "+it.kw+" "+it.cat).toLowerCase().indexOf(ql)>-1; });
+        if(!current.length){ spResults.innerHTML='<div class="empty">No matches for \u201c'+esc(q)+'\u201d</div>'; spResults.classList.add("show"); active=-1; return; }
+        spResults.innerHTML=current.map(function(it,idx){
+          return '<button class="res" role="option" data-i="'+idx+'">'
+            +'<span class="ri" aria-hidden="true">'+it.icon+'</span>'
+            +'<span class="rc"><span class="rt">'+hi(it.title,q)+'</span><span class="rs">'+hi(it.sub,q)+'</span></span>'
+            +'<span class="cat">'+esc(it.cat)+'</span></button>';
+        }).join("");
+        spResults.classList.add("show"); active=-1;
+      }
+      function pick(it){ spInput.value=""; spClr.classList.remove("show"); splash.classList.remove("searching"); spResults.classList.remove("show"); jump(it.id,it.tab); }
+      spInput.addEventListener("input",function(){ render(spInput.value); spClr.classList.toggle("show",!!spInput.value); });
+      spClr.addEventListener("click",function(){ spInput.value=""; spClr.classList.remove("show"); render(""); spInput.focus(); });
+      spResults.addEventListener("mousedown",function(e){ var btn=e.target.closest(".res"); if(!btn) return; e.preventDefault();
+        var it=current[parseInt(btn.dataset.i,10)]; if(it) pick(it); });
+      spInput.addEventListener("keydown",function(e){
+        if(!spResults.classList.contains("show")||!current.length){ return; }
+        if(e.key==="ArrowDown"){ e.preventDefault(); active=(active+1)%current.length; mark(); }
+        else if(e.key==="ArrowUp"){ e.preventDefault(); active=(active-1+current.length)%current.length; mark(); }
+        else if(e.key==="Enter"){ e.preventDefault(); var it=active>=0?current[active]:current[0]; if(it) pick(it); }
+      });
+      function mark(){ var opts=spResults.querySelectorAll(".res"); opts.forEach(function(o,i){o.classList.toggle("act",i===active);});
+        if(active>=0&&opts[active]) opts[active].scrollIntoView({block:"nearest"}); }
+      spChips.addEventListener("click",function(e){ var b=e.target.closest(".sp-chip"); if(!b) return; jump(b.dataset.id,b.dataset.tab); });
+      spSkip.addEventListener("click",function(){ splash.classList.remove("on"); showTab("tab-home"); });
+    })();
+
+    /* ---- clone the IRS logo from the header into the splash ---- */
+    (function(){
+      var seal=document.querySelector(".apphdr .seal svg"), logo=document.getElementById("sp-logo");
+      if(seal&&logo){ var c=seal.cloneNode(true); c.removeAttribute("class"); logo.appendChild(c); }
+    })();
+
+    /* ---- in-page shortcuts that navigate between tabs / items ---- */
+    function link(id,tab,target){ var el=document.getElementById(id); if(el) el.addEventListener("click",function(){ jump(target||id,tab); }); }
+    // Home CTAs → Payments / Messages
+    link("t-home-pay","tab-pay","t-pay-balance");
+    link("t-home-plan","tab-pay","t-pay-plan");
+    link("t-home-cp14","tab-msg","t-msg-cp14");
+    link("t-home-cp14-link","tab-msg","t-msg-cp14");
+    link("t-refund","tab-msg","t-msg-cp49");
+    link("t-pay-year","tab-pay","t-pay-history");
+    link("t-estimated","tab-pay","t-pay-est");
+    link("t-home-q-pay","tab-pay","t-pay-balance");
+    link("t-home-q-tr","tab-rec","t-rec-transcript");
+    link("t-home-q-msg","tab-msg","t-msg-cp14");
+    link("t-home-q-refund","tab-rec","t-rec-return-tr");
+    // Payments in-page
+    link("t-pay-now","tab-pay","t-pay-balance-row");
+    // header envelope → Messages
+    var hdrMsg=document.getElementById("hdr-msg"); if(hdrMsg) hdrMsg.addEventListener("click",function(){ jump("t-msg-cp14","tab-msg"); });
+    // header avatar → Profile
+    var hdrProf=document.getElementById("hdr-prof"); if(hdrProf) hdrProf.addEventListener("click",function(){ jump("t-prof-name","tab-prof"); });
+  })();
+  </script>
+</body>
+</html>

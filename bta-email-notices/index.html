@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Business Tax Account — Notification preferences &amp; digital notices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
+    --teal:#00687d; --bg:#fff;
+    --surface:#fff; --surface-2:#f0f0f0; --accent:#004c97; --ink-2:#3a3a3a;
+    --tint-blue-1:#fafcfe; --tint-blue-2:#eef4fb;
+    --tint-green:#eef6f0; --tint-green-line:#bcdcc6;
+    --tint-amber:#faf6ea; --tint-amber-line:#e3d5a8;
+    --input-line:#9aa7b5; --btn-disabled:#aebccb;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9;
+      --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f;
+      --teal:#57bfd4; --violet:#ab96ee;
+      --accent:#79b4e6; --ink-2:#c9ced4;
+      --tint-blue-1:color-mix(in srgb, var(--irs-blue) 10%, var(--surface));
+      --tint-blue-2:color-mix(in srgb, var(--irs-blue) 22%, var(--surface));
+      --tint-green:color-mix(in srgb, var(--green) 12%, var(--surface));
+      --tint-green-line:color-mix(in srgb, var(--green) 40%, var(--surface));
+      --tint-amber:color-mix(in srgb, var(--amber) 12%, var(--surface));
+      --tint-amber-line:color-mix(in srgb, var(--amber) 40%, var(--surface));
+      --input-line:#5c6774; --btn-disabled:#49525d;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner */
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-2)}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  nav.tabs{background:var(--irs-navy)}
+  nav.tabs .wrap{display:flex;overflow-x:auto}
+  nav.tabs a{color:#fff;font-size:15px;padding:14px 18px;text-decoration:none;white-space:nowrap}
+  nav.tabs a:hover{background:rgba(255,255,255,.08)}
+  nav.tabs a.active{background:var(--bg);color:var(--irs-navy);font-weight:700}
+  @media (prefers-color-scheme: dark){ nav.tabs a.active{color:#e8eaed;background:var(--surface)} }
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 24px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:32px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 24px}
+
+  .screen{display:none}
+  .screen.active{display:block}
+
+  .panel{border:1px solid var(--line);padding:24px 28px;margin:0 0 22px;background:var(--surface)}
+  .panel h2{font-size:22px;font-weight:800;margin:0 0 6px}
+  .panel .phint{color:var(--muted);font-size:16px;margin:0 0 18px;max-width:62ch}
+  .seclbl{font-size:19px;font-weight:800;margin:22px 0 8px}
+
+  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .readrow:last-child{border-bottom:0}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%}
+  .readrow .v{text-align:left}
+
+  .field{margin:0 0 18px;max-width:460px}
+  .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
+  .field .hint{font-size:14px;color:var(--muted);font-weight:500;display:block}
+  .field input[type=email],.field input[type=text],.field input[type=password]{width:100%;border:1px solid var(--input-line);border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px;background:var(--surface);color:var(--ink)}
+  .field input:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+
+  .checkrow{display:flex;gap:11px;align-items:flex-start;margin:14px 0;font-size:15.5px}
+  .checkrow input{margin-top:3px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
+  .checkrow .cd{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:12px 22px;border-radius:4px;text-decoration:none;cursor:pointer}
+  .btn:hover{background:#003a73}
+  .btn[disabled]{background:var(--btn-disabled);cursor:not-allowed}
+  .btn.ghost{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent)}
+  .btn.ghost:hover{background:var(--tint-blue-2)}
+
+  /* status chips */
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;border-radius:99px;padding:2px 10px;border:1px solid}
+  .chip.ok{color:var(--green);background:var(--tint-green);border-color:var(--tint-green-line)}
+  .chip.hold{color:var(--amber);background:var(--tint-amber);border-color:var(--tint-amber-line)}
+
+  /* success alert (USWDS-style) */
+  .alert{display:none;border-left:6px solid var(--green);background:var(--tint-green);padding:14px 18px;margin:0 0 22px;font-size:15px}
+  .alert.show{display:block}
+  .alert b{display:block;font-size:16px;margin-bottom:2px}
+  .alert .ic{color:var(--green)}
+
+  /* email client screen */
+  .mailshell{max-width:760px;margin:28px auto 40px;border:1px solid var(--line);background:var(--surface)}
+  .mailbar{display:flex;align-items:center;gap:10px;background:var(--surface-2);border-bottom:1px solid var(--line);padding:10px 16px;font-size:14px;color:var(--muted)}
+  .mailbar b{color:var(--ink)}
+  .mailhead{padding:20px 24px 14px;border-bottom:1px solid var(--line)}
+  .mailhead .msub{font-size:20px;font-weight:800;margin:0 0 10px}
+  .mailhead .mrow{display:flex;gap:10px;font-size:13.5px;color:var(--muted);margin:2px 0}
+  .mailhead .mrow b{color:var(--ink);font-weight:700;width:52px;flex:0 0 52px}
+  .mailbody{padding:24px}
+  .mailbody .mhero{background:var(--irs-blue);color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px}
+  .mailbody .mhero img{height:30px;width:auto}
+  .mailbody .mcard{border:1px solid var(--line);border-top:0;padding:22px 20px}
+  .mailbody p{font-size:15px;line-height:1.5;margin:0 0 14px;max-width:60ch}
+  .mailbody .mnote{font-size:12.5px;color:var(--muted);line-height:1.5;margin:18px 0 0;border-top:1px solid var(--line);padding-top:12px}
+
+  /* sign-in screen */
+  .authshell{max-width:440px;margin:40px auto 60px;border:1px solid var(--line);padding:28px 30px;background:var(--surface)}
+  .authshell h2{font-size:24px;font-weight:800;margin:0 0 4px}
+  .authshell .phint{color:var(--muted);font-size:15px;margin:0 0 20px}
+
+  /* account picker */
+  .accounts{display:flex;flex-direction:column;gap:12px;margin:0 0 22px}
+  .acct{display:flex;align-items:center;gap:14px;border:1px solid var(--line);padding:16px 18px;background:var(--surface);cursor:pointer;text-decoration:none;color:var(--ink)}
+  .acct:hover{border-color:var(--accent);background:var(--tint-blue-1)}
+  .acct .ai{width:42px;height:42px;border-radius:4px;flex:0 0 42px;display:grid;place-items:center;color:#fff;font-size:18px}
+  .acct .an{display:block;font-weight:700;font-size:16px}
+  .acct .ad{display:block;font-size:13.5px;color:var(--muted);margin-top:1px}
+  .acct .go{margin-left:auto;color:var(--muted)}
+
+  /* account home cards */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 22px}
+  .card{border:1px solid var(--line);padding:18px 20px;background:var(--surface)}
+  .card h3{font-size:17px;font-weight:800;margin:0 0 4px}
+  .card p{font-size:14px;color:var(--muted);margin:0 0 12px}
+  @media(max-width:700px){.cards{grid-template-columns:1fr}}
+
+  /* notices list */
+  .notice{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);padding:16px 18px;margin:0 0 12px;background:var(--surface)}
+  .notice.unread{border-left:6px solid var(--irs-blue);background:var(--tint-blue-1)}
+  .notice .ni{width:42px;height:42px;border-radius:4px;flex:0 0 42px;display:grid;place-items:center;background:var(--tint-blue-2);color:var(--accent);font-size:18px}
+  .notice .nt{display:block;font-weight:700;font-size:16px}
+  .notice.unread .nt{font-weight:800}
+  .notice .nd{display:block;font-size:13.5px;color:var(--muted);margin-top:2px;max-width:56ch}
+  .notice .nm{margin-left:auto;text-align:right;flex:0 0 auto}
+  .notice .ndate{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;white-space:nowrap}
+
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin:18px 0 0}
+
+  @media(max-width:640px){
+    .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;row-gap:6px}
+    .util{width:100%;justify-content:flex-start;flex-wrap:wrap;font-size:13px}
+    .util > *{border-left:0;padding:0 14px 0 0}
+  }
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead" id="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx" id="mctx">Business Tax Account</span></div>
+    <div class="util" id="mutil">
+      <a>Priya Raman</a>
+      <a>Help</a>
+      <a id="signoutLink">Sign out</a>
+    </div>
+  </div></div>
+
+  <nav class="tabs" id="biznav"><div class="wrap">
+    <a data-nav="home">Account home</a><a data-nav="">Tax records</a><a data-nav="">Payments</a><a data-nav="notices">Digital notices</a><a data-nav="profile" class="active">Profile</a>
+  </div></nav>
+
+  <!-- ============ SCREEN 1: PROFILE / NOTIFICATION PREFERENCES ============ -->
+  <main class="wrap screen active" id="screen-profile">
+    <p class="crumb"><a data-go="home">Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Profile</p>
+    <h1 class="page">Profile</h1>
+    <p class="sub">Your contact information and notification preferences for <b>Lakeview Print &amp; Post LLC</b>.</p>
+
+    <div class="alert" id="savedAlert" role="status"><b><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Your notification preferences are saved</b>
+      We'll email <span id="savedEmail">priya.raman@lakeviewprint.com</span> whenever this business has a new digital notice. You can turn this off anytime.</div>
+
+    <div class="panel">
+      <h2>Your role</h2>
+      <div class="readrow"><span class="k">Name</span><span class="v">Priya Raman</span></div>
+      <div class="readrow"><span class="k">Role</span><span class="v">Designated official</span></div>
+      <div class="readrow"><span class="k">Status</span><span class="v"><span class="chip ok"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Active</span></span></div>
+      <div class="readrow"><span class="k">Identity</span><span class="v"><span class="chip ok"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified — ID.me</span></span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Email notifications</h2>
+      <p class="phint">As an active designated official or sole proprietor, you can get an email when this business has a new digital notice. The email never includes notice details — you'll sign in to read the notice.</p>
+      <div class="field"><label for="email">Notification email <span class="hint">Where we send new-notice alerts for this business</span></label>
+        <input type="email" id="email" value="priya.raman@lakeviewprint.com" autocomplete="off"></div>
+      <label class="checkrow"><input type="checkbox" id="optin" checked><span>Email me when this business has a new digital notice<span class="cd">You'll still get required paper mail. This setting applies to your access to Lakeview Print &amp; Post LLC only.</span></span></label>
+      <button class="btn" id="savePrefs">Save preferences</button>
+    </div>
+  </main>
+
+  <!-- ============ SCREEN 2: THE NOTIFICATION EMAIL ============ -->
+  <div class="screen" id="screen-email">
+    <div class="mailshell">
+      <div class="mailbar"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg> <b>Inbox</b> · priya.raman@lakeviewprint.com</div>
+      <div class="mailhead">
+        <p class="msub">A business you manage has a new digital notice from the IRS</p>
+        <p class="mrow"><b>From</b> Internal Revenue Service &lt;notifications@irs.gov&gt;</p>
+        <p class="mrow"><b>To</b> priya.raman@lakeviewprint.com</p>
+        <p class="mrow"><b>Date</b> Tuesday, September 15 · 9:04 AM</p>
+      </div>
+      <div class="mailbody">
+        <div class="mhero"><img src="assets/irs-logo.svg" alt="IRS">Internal Revenue Service</div>
+        <div class="mcard">
+          <p>Dear Priya Raman,</p>
+          <p><b>Lakeview Print &amp; Post LLC</b> has a new digital notice in its business tax account. Some notices are time-sensitive and may need action.</p>
+          <p>To read it, sign in to your business tax account, choose the business, then go to <b>Digital notices</b>.</p>
+          <p style="margin:20px 0"><a class="btn" id="emailCta">Sign in to your business tax account <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+          <p>For your security, this email doesn't include the notice or a direct link to it. The IRS will never ask for personal or financial information by email.</p>
+          <p class="mnote">You're receiving this because you turned on email notifications for Lakeview Print &amp; Post LLC in your business tax account profile. You can turn these emails off anytime on your profile page. Internal Revenue Service, 1111 Constitution Ave NW, Washington, DC 20224.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 3: SIGN IN ============ -->
+  <div class="screen" id="screen-signin">
+    <div class="authshell">
+      <h2>Sign in</h2>
+      <p class="phint">Use your ID.me account to access your business tax account.</p>
+      <div class="field"><label for="siEmail">Email address</label><input type="text" id="siEmail" value="priya.raman@lakeviewprint.com" autocomplete="off"></div>
+      <div class="field"><label for="siPw">Password</label><input type="password" id="siPw" value="••••••••••" autocomplete="off"></div>
+      <button class="btn" id="signinBtn" style="width:100%;justify-content:center">Sign in with ID.me</button>
+      <p class="note" style="margin-top:16px">Protected by multi-factor authentication.</p>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN 4: ACCOUNT SELECTION ============ -->
+  <main class="wrap screen" id="screen-picker">
+    <h1 class="page" style="margin-top:28px">Choose an account</h1>
+    <p class="sub">You're signed in as <b>Priya Raman</b>. Pick the account you want to work in.</p>
+    <div class="accounts">
+      <a class="acct" data-go="home"><span class="ai" style="background:var(--irs-blue)"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg></span>
+        <span><span class="an">Lakeview Print &amp; Post LLC</span><span class="ad">Business · EIN ending 5937 · Designated official</span></span>
+        <span class="go"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <a class="acct"><span class="ai" style="background:var(--teal)"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg></span>
+        <span><span class="an">Raman Design Studio</span><span class="ad">Sole proprietorship · EIN ending 2214 · Owner</span></span>
+        <span class="go"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <a class="acct"><span class="ai" style="background:var(--violet)"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg></span>
+        <span><span class="an">Priya Raman — Individual</span><span class="ad">Personal account · SSN ending 8841</span></span>
+        <span class="go"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+    </div>
+  </main>
+
+  <!-- ============ SCREEN 5: ACCOUNT HOME ============ -->
+  <main class="wrap screen" id="screen-home">
+    <p class="crumb"><a data-go="picker">Your accounts</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Lakeview Print &amp; Post LLC</p>
+    <h1 class="page">Lakeview Print &amp; Post LLC</h1>
+    <p class="sub">EIN ending 5937 · You're signed in as a designated official.</p>
+    <div class="cards">
+      <div class="card"><h3>Digital notices</h3><p>Read notices and letters the IRS has sent this business.</p><a class="btn ghost" data-go="notices">Go to digital notices <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <div class="card"><h3>Balance &amp; payments</h3><p>View the balance by tax period and make a payment.</p><a class="btn ghost">View balance</a></div>
+      <div class="card"><h3>Tax records</h3><p>Transcripts, filings, and entity information on file.</p><a class="btn ghost">View records</a></div>
+      <div class="card"><h3>Profile</h3><p>Contact information and notification preferences.</p><a class="btn ghost" data-go="profile">Go to profile</a></div>
+    </div>
+  </main>
+
+  <!-- ============ SCREEN 6: DIGITAL NOTICES ============ -->
+  <main class="wrap screen" id="screen-notices">
+    <p class="crumb"><a data-go="home">Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Digital notices</p>
+    <h1 class="page">Digital notices</h1>
+    <p class="sub">Notices and letters for <b>Lakeview Print &amp; Post LLC</b>. Unread notices are highlighted.</p>
+
+    <div class="notice unread">
+      <span class="ni"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span>
+      <span><span class="nt">CP161 — Unpaid balance, Form 941 (Q2 2026)</span><span class="nd">This business has an unpaid balance of $2,415.60 for the June 30, 2026 quarter. Pay by October 5 to limit penalties and interest.</span></span>
+      <span class="nm"><span class="ndate">September 15, 2026 · Unread</span><a class="btn" style="padding:8px 16px;font-size:14.5px">Read notice</a></span>
+    </div>
+    <div class="notice">
+      <span class="ni"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span>
+      <span><span class="nt">CP136 — Deposit requirements for Form 941</span><span class="nd">Your deposit schedule for next year, based on your lookback period.</span></span>
+      <span class="nm"><span class="ndate">June 2, 2026 · Read</span><a class="btn ghost" style="padding:8px 16px;font-size:14.5px">View</a></span>
+    </div>
+    <div class="notice">
+      <span class="ni"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span>
+      <span><span class="nt">CP575 — EIN assignment confirmation</span><span class="nd">Confirmation of the employer identification number assigned to this business.</span></span>
+      <span class="nm"><span class="ndate">March 18, 2024 · Read</span><a class="btn ghost" style="padding:8px 16px;font-size:14.5px">View</a></span>
+    </div>
+    <p class="note">You get an email when a new notice arrives because notifications are on in your <a data-go="profile">profile</a>. Emails never include notice contents.</p>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link,#0050a0);text-decoration:none"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M10 4L6 8l4 4"/></svg> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5">
+      <i>Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, and data shown are fictional mock data — no real personal or taxpayer information. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.</i>
+    </div>
+  </footer>
+
+<script>
+const SCREENS=["profile","email","signin","picker","home","notices"];
+const masthead=document.getElementById("masthead"),biznav=document.getElementById("biznav");
+
+function show(s){
+  SCREENS.forEach(x=>document.getElementById("screen-"+x).classList.toggle("active",x===s));
+  // masthead + business nav only make sense inside the signed-in business account
+  const inBiz=(s==="profile"||s==="home"||s==="notices");
+  const signedIn=(s!=="email"&&s!=="signin");
+  masthead.style.display=signedIn?"":"none";
+  biznav.style.display=inBiz?"":"none";
+  document.querySelectorAll("nav.tabs a").forEach(a=>{
+    a.classList.toggle("active",a.dataset.nav===s);
+  });
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+// nav tab clicks
+document.querySelectorAll("nav.tabs a[data-nav]").forEach(a=>{
+  a.addEventListener("click",()=>{ if(a.dataset.nav) show(a.dataset.nav); });
+});
+// generic data-go links
+document.querySelectorAll("[data-go]").forEach(el=>{
+  el.addEventListener("click",e=>{ e.preventDefault(); show(el.dataset.go); });
+});
+
+// save preferences → confirmation, then the journey continues at the inbox on sign-out
+const savePrefs=document.getElementById("savePrefs");
+savePrefs.addEventListener("click",()=>{
+  const email=document.getElementById("email").value.trim();
+  const on=document.getElementById("optin").checked;
+  document.getElementById("savedEmail").textContent=email||"your email address";
+  const al=document.getElementById("savedAlert");
+  al.classList.add("show");
+  if(!on){al.querySelector("b").innerHTML='Your notification preferences are saved';al.childNodes[al.childNodes.length-1].textContent=" Email notifications for this business are off. You'll still get required paper mail.";}
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+// sign out → (later) the notification email arrives in the inbox
+document.getElementById("signoutLink").addEventListener("click",()=>show("email"));
+// email CTA → login page only (no deep link to the notice or business)
+document.getElementById("emailCta").addEventListener("click",()=>show("signin"));
+// sign in → account selection
+document.getElementById("signinBtn").addEventListener("click",()=>show("picker"));
+
+// USWDS banner toggle
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{
+  const open=gov.classList.toggle("open");
+  howbtn.setAttribute("aria-expanded",open?"true":"false");
+});
+
+show("profile");
+</script>
+</body>
+</html>

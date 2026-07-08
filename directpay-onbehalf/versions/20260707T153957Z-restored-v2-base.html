@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Pay on Behalf — one-page ACH form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --line-strong:#9aa7b5; --accent-blue:#004c97;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --tint:#20262c; --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --line-strong:#4d5866; --accent-blue:#79b4e6;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{transition:transform .15s}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--muted)}
+  .gov .gcol .gi{flex:0 0 22px;color:var(--irs-blue)}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35)}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:32px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:70ch;margin:0 0 20px}
+
+  /* two-column: form + sticky summary */
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:24px;margin-bottom:56px;align-items:start}
+  @media(max-width:860px){.layout{grid-template-columns:1fr}}
+
+  .card{border:1px solid var(--line);padding:20px 22px;margin:0 0 18px;background:var(--surface)}
+  .card h2{font-size:18px;font-weight:800;margin:0 0 3px;display:flex;align-items:center;gap:9px}
+  .card h2 .n{width:24px;height:24px;border-radius:50%;flex:0 0 24px;display:grid;place-items:center;background:var(--irs-blue);color:#fff;font-size:13px;font-weight:800}
+  .card .chint{color:var(--muted);font-size:14px;margin:0 0 16px 33px}
+
+  .field{margin:0 0 14px}
+  .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
+  .field .hint{font-size:14px;color:var(--muted);font-weight:500;display:block}
+  .field input,.field select{width:100%;border:1px solid var(--line-strong);border-radius:0;padding:10px 12px;font-family:inherit;font-size:15.5px;background:var(--surface);color:var(--ink)}
+  .field input:focus,.field select:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  /* payer-type segmented */
+  .segwrap{display:flex;border:1px solid var(--line-strong);margin:0 0 4px}
+  .segwrap button{flex:1;background:var(--surface);color:var(--ink);border:0;border-left:1px solid var(--line-strong);font-family:inherit;font-size:15px;font-weight:500;padding:11px 10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .segwrap button:first-child{border-left:0}
+  .segwrap button.on{background:var(--irs-blue);color:#fff}
+
+  .achbadge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--tint-blue);color:var(--accent-blue);padding:9px 13px;font-size:14px;font-weight:700;margin:0 0 4px}
+
+  /* sticky summary */
+  .summary{position:sticky;top:16px;border:1px solid var(--line);background:var(--tint)}
+  .summary .sh{background:var(--irs-blue);color:#fff;padding:12px 16px;font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .summary .sbody{padding:14px 16px}
+  .readrow{display:flex;justify-content:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .readrow:last-of-type{border-bottom:0}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%}.readrow .v{text-align:left}
+  .amt-big{font-size:26px;font-weight:800;margin:2px 0 12px;color:var(--ink)}
+
+  /* posting forecast */
+  .forecast{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--surface);padding:12px 14px;margin:14px 0 0;font-size:14px;line-height:1.45}
+  .forecast .fh{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;margin:0 0 5px;color:var(--ink)}
+  .forecast .fh .fi{color:var(--irs-blue)}
+  .forecast .fdate{font-weight:800;color:var(--ink)}
+  .forecast .fnote{color:var(--muted);font-size:13px;margin-top:5px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:13px 22px;border-radius:4px;cursor:pointer;margin-top:14px}
+  .btn:hover{background:#003a73}
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin:12px 0 0}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6 8 10.5 12.5 6"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Direct Pay · On behalf of</span></div>
+    <div class="util"><a>Sign in</a><a>Help</a><a>Español</a></div>
+  </div></div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Payments</a> · <a>Direct Pay</a> · Pay on behalf of a taxpayer</p>
+    <h1 class="page">Make a payment on behalf of a taxpayer</h1>
+    <p class="sub">One page, no account required. Enter the taxpayer's full information, choose what you're paying, and pay from a bank account (ACH). The panel on the right shows exactly when the payment is expected to post.</p>
+
+    <div class="layout">
+      <div>
+        <!-- 1. Payment type -->
+        <div class="card">
+          <h2><span class="n">1</span> Payment type</h2>
+          <p class="chint">Individual (IMF) and business (BMF) taxes are both supported. Choosing here sets the taxpayer fields and posting timeline.</p>
+          <div class="segwrap" id="seg">
+            <button data-mf="imf" class="on"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg></span> Individual (IMF)</button>
+            <button data-mf="bmf"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></svg></span> Business (BMF)</button>
+          </div>
+          <div class="grid2" style="margin-top:14px">
+            <div class="field"><label for="reason">Reason for payment</label><select id="reason"></select></div>
+            <div class="field"><label for="period">Tax period</label><select id="period"></select></div>
+          </div>
+        </div>
+
+        <!-- 2. Taxpayer info -->
+        <div class="card">
+          <h2><span class="n">2</span> Taxpayer information</h2>
+          <p class="chint">Full information for the person or business you're paying for — this is who the payment posts to.</p>
+          <div id="idFields"></div>
+        </div>
+
+        <!-- 3. Amount -->
+        <div class="card">
+          <h2><span class="n">3</span> Amount</h2>
+          <p class="chint">Enter the amount and the date you want the ACH debit to occur.</p>
+          <div class="grid2">
+            <div class="field"><label for="amount">Payment amount (USD)</label><input id="amount" value="1,250.00"></div>
+            <div class="field"><label for="date">Payment date</label><input id="date" type="date" value="2026-07-06"></div>
+          </div>
+        </div>
+
+        <!-- 4. Bank -->
+        <div class="card">
+          <h2><span class="n">4</span> Bank account (ACH)</h2>
+          <p class="chint">Payments come directly from a checking or savings account — the only method, and always free.</p>
+          <div class="achbadge"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6 8 2.5 13.5 6z"/><path d="M4 8.5v3M6.7 8.5v3M9.3 8.5v3M12 8.5v3M2.5 13.5h11"/></svg></span> ACH bank debit — no card fees</div>
+          <div class="grid3" style="margin-top:14px">
+            <div class="field"><label for="acctType">Account type</label><select id="acctType"><option>Checking</option><option>Savings</option></select></div>
+            <div class="field"><label for="routing">Routing number <span class="hint">Mock ABA — illustrative.</span></label><input id="routing" placeholder="021000021"></div>
+            <div class="field"><label for="acct">Account number <span class="hint">Mock only.</span></label><input id="acct" placeholder="000123456789"></div>
+          </div>
+          <p class="note">Prototype — no real account is charged and no real taxpayer data is used. Mock values only.</p>
+        </div>
+      </div>
+
+      <!-- sticky summary -->
+      <aside class="summary">
+        <div class="sh">Payment summary</div>
+        <div class="sbody">
+          <div class="amt-big" id="sAmt">$1,250.00</div>
+          <div class="readrow"><span class="k">Paying for</span><span class="v" id="sWho">Individual (IMF)</span></div>
+          <div class="readrow"><span class="k">Reason</span><span class="v" id="sReason">—</span></div>
+          <div class="readrow"><span class="k">Tax period</span><span class="v" id="sPeriod">—</span></div>
+          <div class="readrow"><span class="k">Method</span><span class="v">Bank account (ACH)</span></div>
+          <div class="forecast">
+            <div class="fh"><span class="fi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.8V8l2.3 1.6"/></svg></span> When this posts</div>
+            <div id="fBody"></div>
+          </div>
+          <button class="btn" id="submitBtn">Review &amp; submit <span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5"/></svg></span></button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="text-decoration:none"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5"/></svg></span> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+const REASONS={
+  imf:[
+    {v:"Balance due — Form 1040",periods:["2025","2024","2023","2022"]},
+    {v:"Estimated tax — Form 1040-ES",periods:["2026 Q3","2026 Q2","2026 Q1","2025 Q4"]},
+    {v:"Extension — Form 4868",periods:["2025","2024"]},
+    {v:"Tax notice — CP14 / CP501",periods:["2025","2024","2023"]},
+    {v:"Proposed assessment — CP2000",periods:["2024","2023","2022"]},
+    {v:"Installment agreement payment",periods:["2025","2024","2023"]},
+    {v:"Amended return — Form 1040-X",periods:["2024","2023","2022"]}
+  ],
+  bmf:[
+    {v:"Employment tax — Form 941",periods:["2026 Q2","2026 Q1","2025 Q4","2025 Q3"]},
+    {v:"Unemployment (FUTA) — Form 940",periods:["2025","2024","2023"]},
+    {v:"Agricultural — Form 943",periods:["2025","2024"]},
+    {v:"Annual employment — Form 944",periods:["2025","2024"]},
+    {v:"Nonpayroll withholding — Form 945",periods:["2025","2024"]},
+    {v:"Corporation income — Form 1120",periods:["2025","2024","2023"]},
+    {v:"Heavy vehicle use — Form 2290",periods:["2026","2025"]},
+    {v:"Business notice — CP161",periods:["2025","2024","2023"]}
+  ]
+};
+const state={mf:"imf"};
+const $=id=>document.getElementById(id);
+
+function fillReasons(){
+  const list=REASONS[state.mf];
+  $("reason").innerHTML=list.map(r=>`<option>${r.v}</option>`).join("");
+  fillPeriods();
+}
+function fillPeriods(){
+  const list=REASONS[state.mf];
+  const r=list.find(x=>x.v===$("reason").value)||list[0];
+  $("period").innerHTML=r.periods.map(p=>`<option>${p}</option>`).join("");
+}
+function fillIdFields(){
+  if(state.mf==="bmf"){
+    $("idFields").innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="bname">Business legal name</label><input id="bname" placeholder="e.g. Northgate Logistics LLC"></div>
+        <div class="field"><label for="ein">Employer ID number (EIN) <span class="hint">Mock EIN only.</span></label><input id="ein" placeholder="12-3456789"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="baddr">Business address</label><input id="baddr" placeholder="1450 Market St, Suite 300"></div>
+        <div class="field"><label for="bczip">City, state, ZIP</label><input id="bczip" placeholder="Springfield, IL 62704"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="cname">Contact name (submitting)</label><input id="cname" placeholder="e.g. Dana Okafor"></div>
+        <div class="field"><label for="cphone">Contact phone</label><input id="cphone" placeholder="(555) 010-0143"></div>
+      </div>`;
+  }else{
+    $("idFields").innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="tname">Taxpayer's full name</label><input id="tname" placeholder="e.g. Jordan A. Michaels"></div>
+        <div class="field"><label for="ssn">SSN or ITIN <span class="hint">Mock number only — full entry.</span></label><input id="ssn" placeholder="123-45-6789"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="taddr">Taxpayer's address</label><input id="taddr" placeholder="204 Maple Ave, Apt 5"></div>
+        <div class="field"><label for="tczip">City, state, ZIP</label><input id="tczip" placeholder="Dayton, OH 45402"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="dob">Date of birth</label><input id="dob" type="date" value="1985-04-12"></div>
+        <div class="field"><label for="filing">Filing status on that return</label><select id="filing"><option>Single</option><option>Married filing jointly</option><option>Married filing separately</option><option>Head of household</option></select></div>
+      </div>`;
+  }
+}
+
+function money(v){const n=Number(String(v).replace(/[^0-9.]/g,""))||0;return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function addBusinessDays(d,n){const r=new Date(d);let added=0;while(added<n){r.setDate(r.getDate()+1);const day=r.getDay();if(day!==0&&day!==6)added++;}return r;}
+function nextWeekly(d){const r=new Date(d);const day=r.getDay();let add=(1-day+7)%7;if(add===0)add=7;r.setDate(r.getDate()+add);return r;}
+function fmtDate(d){return d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});}
+
+function updateSummary(){
+  $("sAmt").textContent=money($("amount").value);
+  $("sWho").textContent=state.mf==="bmf"?"Business (BMF)":"Individual (IMF)";
+  $("sReason").textContent=$("reason").value;
+  $("sPeriod").textContent=$("period").value;
+  // posting forecast
+  const base=$("date").value?new Date($("date").value+"T12:00:00"):new Date();
+  if(state.mf==="bmf"){
+    const post=nextWeekly(addBusinessDays(base,1));
+    $("fBody").innerHTML=`Business (BMF) accounts update on a <b>weekly master-file cycle</b>. A payment dated ${fmtDate(base)} is expected to post by <span class="fdate">${fmtDate(post)}</span>.<div class="fnote">ACH debit clears in ~1 business day; the balance then reflects on the next weekly BMF run.</div>`;
+  }else{
+    const post=addBusinessDays(base,2);
+    $("fBody").innerHTML=`Individual (IMF) payments typically post in <b>about 2 business days</b>. A payment dated ${fmtDate(base)} should show on the account by <span class="fdate">${fmtDate(post)}</span>.<div class="fnote">The ACH debit is initiated on your payment date; posting follows once it clears.</div>`;
+  }
+}
+
+$("seg").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  document.querySelectorAll("#seg button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");state.mf=b.dataset.mf;
+  fillReasons();fillIdFields();updateSummary();
+});
+$("reason").addEventListener("change",()=>{fillPeriods();updateSummary();});
+["period","amount","date"].forEach(id=>$(id).addEventListener("input",updateSummary));
+$("period").addEventListener("change",updateSummary);
+$("submitBtn").addEventListener("click",()=>alert("Prototype — the next step would show a full review screen and confirm the ACH authorization. No real payment is processed."));
+
+const gov=$("gov"),howbtn=$("howbtn");
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");});
+
+fillReasons();fillIdFields();updateSummary();
+</script>
+</body>
+</html>

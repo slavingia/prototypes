@@ -1,0 +1,29 @@
+name: Prototype checks
+
+# Automatically enforce repo conventions on every commit to main and every PR.
+# Currently: the fourth-wall check (prototypes must read as real IRS products).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/index.html"
+      - "scripts/check_fourth_wall.py"
+      - ".github/workflows/checks.yml"
+  pull_request:
+    paths:
+      - "**/index.html"
+      - "scripts/check_fourth_wall.py"
+      - ".github/workflows/checks.yml"
+  workflow_dispatch:
+
+jobs:
+  fourth-wall:
+    name: Fourth-wall check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prototypes must read as real IRS products
+        run: python3 scripts/check_fourth_wall.py

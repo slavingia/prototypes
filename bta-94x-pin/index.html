@@ -1,39 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-gov-banner="off">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>Business Tax Account — 94x Online Signature PIN</title>
 <!-- IRS ODG / USWDS type ramp: Source Sans Pro -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,900&display=swap" rel="stylesheet">
 <style>
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
   :root{
+    color-scheme:light dark;
     --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
     --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
     --teal:#00687d; --bg:#fff;
+    --surface:#fff; --surface-2:#f0f0f0; --accent:#004c97; --ink-2:#3a3a3a;
+    --done:#00599C; --current:#002D62; --pending:#5B616B;
+    --tint-blue-1:#fafcfe; --tint-blue-2:#eef4fb;
+    --tint-green:#eef6f0; --tint-green-line:#bcdcc6;
+    --tint-red:#faf3f3; --tint-red-line:#e9cccc;
+    --track:#eef1f5; --input-line:#9aa7b5; --btn-disabled:#aebccb;
+    /* fills stay constant in both schemes: white text sits on them */
+    --teal-fill:#00687d; --green-fill:#1a7f4b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a;        /* page background */
+      --surface:#1e2328;   /* cards, panels, dropdowns */
+      --surface-2:#262c33; /* nested / tinted panels (was #f5f9fd etc.) */
+      --ink:#e8eaed;       --muted:#9aa1a9;
+      --line:#3d4551;      --link:#79b4e6;
+      --green:#55b685;     --amber:#d9ae4a;  --red:#f2857f;
+      --teal:#57bfd4;      --violet:#ab96ee;
+      /* prototype-specific tokens */
+      --accent:#79b4e6;    --ink-2:#c9ced4;  --pending:#9aa1a9;
+      --tint-blue-1:color-mix(in srgb, var(--irs-blue) 10%, var(--surface));
+      --tint-blue-2:color-mix(in srgb, var(--irs-blue) 22%, var(--surface));
+      --tint-green:color-mix(in srgb, var(--green) 12%, var(--surface));
+      --tint-green-line:color-mix(in srgb, var(--green) 40%, var(--surface));
+      --tint-red:color-mix(in srgb, var(--red) 12%, var(--surface));
+      --tint-red-line:color-mix(in srgb, var(--red) 40%, var(--surface));
+      --track:#333b44;     --input-line:#5c6774; --btn-disabled:#49525d;
+    }
   }
   *{box-sizing:border-box}
-  body{margin:0;background:#fff;color:var(--ink);
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
     font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link);text-decoration:underline;cursor:pointer}
   a:hover{text-decoration:none}
   .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
 
   /* USWDS official government banner (IRS ODG) */
-  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov{background:var(--surface-2);font-size:12.5px}
   .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
   .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
   .gov .flag svg{width:16px;height:11px;display:block}
-  .gov .banner-inner .txt{color:#1b1b1b}
+  .gov .banner-inner .txt{color:var(--ink)}
   .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
   .gov .howbtn .chev{font-size:10px;transition:transform .15s}
   .gov[aria-expanded] .howbtn .chev{transform:rotate(180deg)}
   .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
   .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
   .gov.open .howbtn .chev{transform:rotate(180deg)}
-  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:#3a3a3a}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-2)}
   .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
   .gov .gcol b{color:var(--ink)}
   @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
@@ -58,13 +91,13 @@
   nav.tabs a.active{background:#fff;color:var(--irs-navy);font-weight:700}
 
   /* breadcrumb + page head */
-  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 24px}
   .crumb a{color:var(--link)}
   h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
   .sub{font-size:17px;color:var(--muted);max-width:62ch;margin:0 0 22px}
 
   /* business chip */
-  .bizchip{display:inline-flex;align-items:center;gap:11px;border:1px solid var(--line);padding:10px 15px;margin:0 0 26px;background:#fafcfe}
+  .bizchip{display:inline-flex;align-items:center;gap:11px;border:1px solid var(--line);padding:10px 15px;margin:0 0 26px;background:var(--tint-blue-1)}
   .bizchip .bi{width:38px;height:38px;border-radius:4px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex:0 0 38px}
   .bizchip .bn{font-weight:700;font-size:15.5px}
   .bizchip .bd{font-size:13px;color:var(--muted)}
@@ -72,13 +105,13 @@
   /* value strip: old vs new */
   .compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 30px}
   .cmp{border:1px solid var(--line);padding:18px 20px}
-  .cmp.old{background:#faf3f3;border-color:#e9cccc}
-  .cmp.new{background:#eef6f0;border-color:#bcdcc6}
+  .cmp.old{background:var(--tint-red);border-color:var(--tint-red-line)}
+  .cmp.new{background:var(--tint-green);border-color:var(--tint-green-line)}
   .cmp .lbl{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px}
   .cmp.old .lbl{color:var(--muted)} .cmp.new .lbl{color:var(--green)}
   .cmp .big{font-size:26px;font-weight:800;margin:0 0 8px}
   .cmp ul{margin:0;padding-left:18px}
-  .cmp li{font-size:13.5px;color:#3a3a3a;margin:5px 0}
+  .cmp li{font-size:13.5px;color:var(--ink-2);margin:5px 0}
   .cmp .strike{text-decoration:line-through;color:var(--muted)}
 
   /* wizard shell */
@@ -86,10 +119,10 @@
   .steps{position:sticky;top:18px;list-style:none;margin:0;padding:0;border:1px solid var(--line);overflow:hidden}
   .steps li{display:flex;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line);font-size:14px}
   .steps li:first-child{border-top:0}
-  .steps li .num{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:grid;place-items:center;font-size:12.5px;font-weight:800;background:#fff;color:#5B616B;border:1px solid #5B616B}
-  .steps li.done .num{background:#00599C;color:#fff;border-color:#00599C}
-  .steps li.current{background:#eef4fb}
-  .steps li.current .num{background:#002D62;color:#fff;border-color:#002D62}
+  .steps li .num{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:grid;place-items:center;font-size:12.5px;font-weight:800;background:var(--surface);color:var(--pending);border:1px solid var(--pending)}
+  .steps li.done .num{background:var(--done);color:#fff;border-color:var(--done)}
+  .steps li.current{background:var(--tint-blue-2)}
+  .steps li.current .num{background:var(--current);color:#fff;border-color:var(--current)}
   .steps li .st{display:block;font-weight:500;line-height:1.3}
   .steps li.current .st{font-weight:800}
   .steps li .sd{display:block;font-size:12px;color:var(--muted);margin-top:1px}
@@ -97,50 +130,51 @@
   .panel{border:1px solid var(--line);padding:26px 30px;min-height:420px;position:relative}
   .panel h2{font-size:24px;font-weight:800;margin:0 0 6px}
   .panel .phint{color:var(--muted);font-size:16px;margin:0 0 22px;max-width:60ch}
-  .progress{height:5px;background:#eef1f5;border-radius:99px;overflow:hidden;margin-bottom:22px}
-  .progress i{display:block;height:100%;background:var(--irs-blue);transition:width .3s}
+  .panel .lead{font-size:28px;font-weight:800;margin:0 0 8px;line-height:1.2}
+  .panel .leadsub{color:var(--muted);font-size:16px;margin:0 0 20px;max-width:62ch;line-height:1.4}
+  .panel .seclbl{font-size:19px;font-weight:800;margin:22px 0 6px}
 
   /* fields */
   .field{margin:0 0 18px}
   .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
-  .field .hint{font-size:14px;color:#5b616b;font-weight:500;display:block;margin-left:0}
-  .field input[type=text]{width:100%;border:1px solid #9aa7b5;border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px}
+  .field .hint{font-size:14px;color:var(--muted);font-weight:500;display:block;margin-left:0}
+  .field input[type=text]{width:100%;border:1px solid var(--input-line);border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px;background:var(--surface);color:var(--ink)}
   .field input:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
-  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid #D6D7D9;font-size:15px}
+  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
   .readrow:last-child{border-bottom:0}
-  .readrow .k{color:#1b1b1b;font-weight:700;width:50%} .readrow .v{text-align:left}
-  .verified{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--green);background:#eef6f0;border:1px solid #bcdcc6;border-radius:99px;padding:2px 10px}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%} .readrow .v{text-align:left}
+  .verified{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--green);background:var(--tint-green);border:1px solid var(--tint-green-line);border-radius:99px;padding:2px 10px}
 
   /* form checkboxes (94x family) */
   .forms{display:flex;flex-direction:column;gap:10px;margin:0 0 8px}
   .formopt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);padding:13px 15px;cursor:pointer}
-  .formopt:hover{border-color:var(--irs-blue);background:#fafcfe}
-  .formopt.on{border-color:var(--irs-blue);background:#eef4fb}
+  .formopt:hover{border-color:var(--accent);background:var(--tint-blue-1)}
+  .formopt.on{border-color:var(--accent);background:var(--tint-blue-2)}
   .formopt input{margin-top:3px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
   .formopt .fc{display:block;font-weight:800;font-size:15.5px}
   .formopt .fd{display:block;font-size:13px;color:var(--muted);margin-top:1px}
 
   /* attestation */
-  .attest{background:#fafcfe;border:1px solid var(--line);padding:16px 18px;font-size:14px;color:#333;margin:0 0 18px}
+  .attest{background:var(--tint-blue-1);border:1px solid var(--line);padding:16px 18px;font-size:14px;color:var(--ink-2);margin:0 0 18px}
   .attest b{color:var(--ink)}
   .checkrow{display:flex;gap:11px;align-items:flex-start;margin:14px 0;font-size:14.5px}
   .checkrow input{margin-top:3px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
 
   .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:12px 22px;border-radius:4px;text-decoration:none;cursor:pointer}
   .btn:hover{background:#003a73}
-  .btn[disabled]{background:#aebccb;cursor:not-allowed}
-  .btn.ghost{background:#fff;color:var(--irs-blue);border:1.5px solid var(--irs-blue)}
-  .btn.ghost:hover{background:#eef4fb}
-  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:26px;border-top:1px solid var(--line);padding-top:20px}
+  .btn[disabled]{background:var(--btn-disabled);cursor:not-allowed}
+  .btn.ghost{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent)}
+  .btn.ghost:hover{background:var(--tint-blue-2)}
+  .foot{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin-top:26px;border-top:1px solid var(--line);padding-top:20px}
   .foot .back{border:0;background:none;color:var(--link);font-family:inherit;font-size:15px;cursor:pointer;text-decoration:underline}
   .foot .back[hidden]{visibility:hidden}
 
   /* success */
   .done-hero{text-align:center;padding:14px 0 4px}
-  .done-hero .ring{width:74px;height:74px;border-radius:50%;background:#eef6f0;border:2px solid var(--green);color:var(--green);display:grid;place-items:center;font-size:34px;font-weight:800;margin:0 auto 14px}
-  .pinbox{margin:22px auto 8px;max-width:460px;border:2px dashed var(--irs-blue);padding:18px;text-align:center;background:#fafcfe}
+  .done-hero .ring{width:74px;height:74px;border-radius:50%;background:var(--tint-green);border:2px solid var(--green);color:var(--green);display:grid;place-items:center;font-size:34px;font-weight:800;margin:0 auto 14px}
+  .pinbox{margin:22px auto 8px;max-width:460px;border:2px dashed var(--accent);padding:18px;text-align:center;background:var(--tint-blue-1)}
   .pinbox .pl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-  .pinbox .pv{font-size:38px;font-weight:800;letter-spacing:.18em;color:var(--irs-blue);font-family:ui-monospace,Menlo,monospace;margin:6px 0}
+  .pinbox .pv{font-size:38px;font-weight:800;letter-spacing:.18em;color:var(--accent);font-family:ui-monospace,Menlo,monospace;margin:6px 0}
   .pinbox .pn{font-size:12.5px;color:var(--muted)}
   .nextcard{display:flex;gap:14px;align-items:center;border:1px solid var(--line);padding:16px 18px;margin:14px 0;text-align:left}
   .nextcard .ni{width:42px;height:42px;border-radius:4px;flex:0 0 42px;display:grid;place-items:center;font-weight:800;font-size:16px;color:#fff}
@@ -149,15 +183,15 @@
   .nextcard .go{margin-left:auto}
 
   /* mef routing diagram */
-  .route{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fafcfe;border:1px solid var(--line);padding:16px 18px;margin:18px 0 4px;font-size:13px}
+  .route{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--tint-blue-1);border:1px solid var(--line);padding:16px 18px;margin:18px 0 4px;font-size:13px}
   .route .node{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:84px}
   .route .node .dot{width:34px;height:34px;border-radius:4px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:16px}
   .route .node .nl{font-weight:700;font-size:12px}
   .route .node .ns{font-size:10.5px;color:var(--muted)}
-  .route .arr{color:#9aa7b5;font-size:18px;flex:0 0 auto}
+  .route .arr{color:var(--muted);font-size:18px;flex:0 0 auto}
 
   .note{font-size:12px;color:var(--muted);font-style:italic;margin:18px 0 0}
-  .pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--teal);border-radius:6px;padding:2px 8px;vertical-align:middle;margin-left:8px}
+  .pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--teal-fill);border-radius:6px;padding:2px 8px;vertical-align:middle;margin-left:8px}
 
   @media(max-width:820px){.shell{grid-template-columns:1fr}.steps{position:static;display:flex;overflow-x:auto}.steps li{border-top:0;border-left:1px solid var(--line);flex:0 0 auto}.steps li:first-child{border-left:0}.compare{grid-template-columns:1fr}}
 
@@ -168,7 +202,6 @@
     .util > *{border-left:0;padding:0 14px 0 0}
   }
 </style>
-<script src="../assets/flags.js"></script>
 </head>
 <body>
   <section class="gov" id="gov" aria-label="Official website of the United States government">
@@ -178,8 +211,8 @@
       <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
     </div>
     <div class="guidance" id="gov-guidance">
-      <div class="gcol"><span class="gi" aria-hidden="true">🏛️</span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
-      <div class="gcol"><span class="gi" aria-hidden="true">🔒</span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
     </div>
   </section>
 
@@ -198,22 +231,14 @@
 
   <main class="wrap">
     <p class="crumb"><a>Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> <a>e-File &amp; PINs</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> 94x Online Signature PIN</p>
-    <h1 class="page">94x Online Signature PIN</h1>
-    <p class="sub">Request a 10-digit Signature PIN to sign and e-file your employment tax returns — Forms 940, 941, 943, 944, and 945 — as a responsible official of your business. The PIN is tied to this EIN.</p>
-
-    <div class="bizchip">
-      <span class="bi">BH</span>
-      <span><span class="bn">Bright Harbor Logistics LLC</span><br><span class="bd">EIN 47-3920184 · Responsible official signed in</span></span>
-    </div>
 
     <!-- wizard -->
     <div class="shell">
       <ol class="steps" id="steps"></ol>
       <section class="panel">
-        <div class="progress"><i id="bar"></i></div>
         <div id="body"></div>
         <div class="foot" id="foot">
-          <button class="back" id="back" hidden>← Back</button>
+          <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
           <button class="btn" id="next">Continue</button>
         </div>
       </section>
@@ -228,6 +253,8 @@
   </footer>
 
 <script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_ARROW_RIGHT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const STEPS=[
   {t:"Confirm business",d:"EIN & address"},
   {t:"Responsible official",d:"Who signs"},
@@ -238,7 +265,7 @@ const STEPS=[
 const ALL_94X="Forms 940, 941, 943, 944, and 945";
 const state={step:0, attest:false, signName:"", pin:null};
 const steps=document.getElementById("steps"),body=document.getElementById("body"),
-  bar=document.getElementById("bar"),back=document.getElementById("back"),next=document.getElementById("next");
+  back=document.getElementById("back"),next=document.getElementById("next");
 
 function genPin(){ // deterministic 10-digit, no Math.random needed
   let n="";const seed=[7,1,4,9,2,0,3,8,5,6];for(let i=0;i<10;i++)n+=seed[(i*3+7)%10];return n;}
@@ -246,16 +273,17 @@ function genPin(){ // deterministic 10-digit, no Math.random needed
 function renderSteps(){
   steps.innerHTML=STEPS.map((s,i)=>{
     const cls=i<state.step?"done":(i===state.step?"current":"");
-    const num=i<state.step?"✓":(i+1);
+    const num=i<state.step?IC_CHECK:(i+1);
     return `<li class="${cls}"><span class="num">${num}</span><span><span class="st">${s.t}</span><span class="sd">${s.d}</span></span></li>`;
   }).join("");
-  bar.style.width=Math.round(state.step/(STEPS.length-1)*100)+"%";
 }
 
 function renderBody(){
   const s=state.step;
   if(s===0){
-    body.innerHTML=`<h2>Confirm your business</h2>
+    body.innerHTML=`<h1 class="lead">94x Online Signature PIN</h1>
+      <p class="leadsub">Request a 10-digit Signature PIN to sign and e-file your employment tax returns — ${ALL_94X} — as a responsible official of your business. The PIN is tied to this EIN.</p>
+      <h2 class="seclbl">Confirm your business</h2>
       <p class="phint">This is the business on your Business Tax Account. The 94x PIN is tied to this EIN.</p>
       <div class="readrow"><span class="k">Legal name</span><span class="v">Bright Harbor Logistics LLC</span></div>
       <div class="readrow"><span class="k">EIN</span><span class="v">47-3920184</span></div>
@@ -270,8 +298,8 @@ function renderBody(){
       <div class="readrow"><span class="k">Name</span><span class="v">Dana R. Okafor</span></div>
       <div class="readrow"><span class="k">Title</span><span class="v">Managing Member</span></div>
       <div class="readrow"><span class="k">SSN</span><span class="v">•••-••-4471</span></div>
-      <div class="readrow"><span class="k">Identity</span><span class="v"><span class="verified">✓ Verified — ID.me</span></span></div>
-      <div class="readrow"><span class="k">Authority on file</span><span class="v"><span class="verified">✓ Matches EIN responsible party</span></span></div>
+      <div class="readrow"><span class="k">Identity</span><span class="v"><span class="verified">${IC_CHECK} Verified — ID.me</span></span></div>
+      <div class="readrow"><span class="k">Authority on file</span><span class="v"><span class="verified">${IC_CHECK} Matches EIN responsible party</span></span></div>
       <p class="note">Not the responsible official? Only a responsible official can apply for the 94x PIN. <a>See who qualifies</a>.</p>`;
     next.textContent="Confirm — continue";
   }else if(s===2){
@@ -289,7 +317,7 @@ function renderBody(){
     next.textContent="Sign & issue my PIN";
   }else{
     state.pin=state.pin||genPin();
-    body.innerHTML=`<div class="done-hero"><div class="ring">✓</div>
+    body.innerHTML=`<div class="done-hero"><div class="ring">${IC_CHECK}</div>
       <h2>Your 94x Online Signature PIN is active</h2>
       <p class="phint" style="margin:0 auto">Use this PIN to sign ${ALL_94X} when you e-file.</p></div>
       <div class="pinbox"><div class="pl">94x Online Signature PIN</div><div class="pv">${state.pin.replace(/(\d{5})(\d{5})/,"$1 $2")}</div><div class="pn">Keep this private. It's stored in your Business Tax Account under e-File &amp; PINs.</div></div>
@@ -297,20 +325,20 @@ function renderBody(){
       <div class="nextcard">
         <span class="ni" style="background:var(--irs-blue)">941</span>
         <span><span class="nt">File Form 941 for Q2 2026 now</span><span class="nd">Routed straight to MeF with your new PIN — due July 31</span></span>
-        <a class="btn go" id="fileNow">File now →</a>
+        <a class="btn go" id="fileNow">File now ${IC_ARROW_RIGHT}</a>
       </div>
 
       <div class="route">
         <div class="node"><span class="dot" style="background:var(--irs-blue)">BTA</span><span class="nl">Business Tax Account</span><span class="ns">PIN signed</span></div>
-        <span class="arr">→</span>
-        <div class="node"><span class="dot" style="background:var(--teal)">MeF</span><span class="nl">Internal MeF routing</span><span class="ns">No third-party transmitter</span></div>
-        <span class="arr">→</span>
-        <div class="node"><span class="dot" style="background:var(--green)">ACK</span><span class="nl">Acceptance</span><span class="ns">Receipt in minutes</span></div>
+        <span class="arr">${IC_ARROW_RIGHT}</span>
+        <div class="node"><span class="dot" style="background:var(--teal-fill)">MeF</span><span class="nl">Internal MeF routing</span><span class="ns">No third-party transmitter</span></div>
+        <span class="arr">${IC_ARROW_RIGHT}</span>
+        <div class="node"><span class="dot" style="background:var(--green-fill)">ACK</span><span class="nl">Acceptance</span><span class="ns">Receipt in minutes</span></div>
       </div>
       <p class="note">Your PIN is stored in Business Tax Account under e-File &amp; PINs. Keep it confidential — anyone with it can sign employment tax returns for this business.</p>`;
     back.hidden=false;next.textContent="Done";
     const fn=document.getElementById("fileNow");if(fn)fn.addEventListener("click",()=>{
-      fn.textContent="Submitted to MeF ✓";fn.style.background="var(--green)";});
+      fn.innerHTML=`Submitted to MeF ${IC_CHECK}`;fn.style.background="var(--green-fill)";});
   }
   back.hidden=state.step===0;
   updateNext();

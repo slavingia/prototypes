@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Pay Online — DirectPay · Tax Information</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --tint-amber:#fdf6e3; --line-amber:#ecdca0;
+    --step-pend:#5B616B; --accent-blue:#004c97;
+    --btn-disabled-bg:#aebccb; --btn-disabled-ink:#fff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --tint:#20262c;
+      --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --tint-amber:color-mix(in srgb, var(--amber) 14%, var(--surface));
+      --line-amber:color-mix(in srgb, var(--amber) 40%, var(--surface));
+      --step-pend:#9aa1a9; --accent-blue:#79b4e6;
+      --btn-disabled-bg:#39424c; --btn-disabled-ink:#aeb6bf;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner */
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{transition:transform .15s}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;font-size:13px;align-items:flex-start}
+  .gov .gi{color:var(--irs-blue);flex:0 0 auto;margin-top:2px}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  /* sticky header stack: gov banner + blue masthead pin to the top so the
+     masthead progress line stays visible as you scroll the form */
+  .gov{position:sticky;top:0;z-index:60}
+  .masthead{background:var(--irs-blue);color:#fff;position:sticky;top:var(--gov-h,34px);z-index:55}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 18px}
+
+  .shell{display:grid;grid-template-columns:248px 1fr;gap:24px;margin-bottom:60px;align-items:start}
+  .steps{position:sticky;top:var(--rail-top,116px);list-style:none;margin:0;padding:0;border:1px solid var(--line);overflow:hidden}
+  .steps li{display:flex;gap:12px;align-items:center;padding:13px 16px;border-top:1px solid var(--line);font-size:14px}
+  .steps li:first-child{border-top:0}
+  .steps li .num{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:grid;place-items:center;font-size:12.5px;font-weight:800;background:var(--surface);color:var(--step-pend);border:1px solid var(--step-pend)}
+  .steps li.done .num{background:#00599C;color:#fff;border-color:#00599C}
+  .steps li.current{background:var(--tint-blue)}
+  .steps li.current .num{background:#002D62;color:#fff;border-color:#002D62}
+  .steps li .st{display:block;font-weight:500;line-height:1.3}
+  .steps li.current .st{font-weight:800}
+
+  .panel{border:1px solid var(--line);padding:26px 30px;min-height:480px;position:relative;background:var(--surface)}
+  .panel h2{font-size:24px;font-weight:800;margin:0 0 6px}
+  .panel .phint{color:var(--muted);font-size:16px;margin:0 0 22px;max-width:64ch}
+  /* progress line integrated into the blue masthead */
+  .mh-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.18)}
+  .mh-progress i{display:block;height:100%;width:20%;background:linear-gradient(90deg,#7fb3e6,#fff);box-shadow:0 0 8px rgba(255,255,255,.65);transition:width .45s cubic-bezier(.65,0,.35,1)}
+  @media(prefers-reduced-motion:reduce){.mh-progress i{transition:none}}
+
+  /* alert */
+  .alert{border:1px solid var(--line-amber);border-left:4px solid var(--amber);background:var(--tint-amber);padding:12px 16px;margin:0 0 22px;display:flex;gap:10px;font-size:15px;align-items:flex-start}
+  .alert .ai{color:var(--amber);flex:0 0 auto;margin-top:1px}
+
+  /* fields */
+  .field{margin:0 0 20px;max-width:520px}
+  .field label{display:block;font-size:16px;font-weight:500;margin:0 0 4px}
+  .field .hint{display:block;font-size:14px;color:#5b616b;font-weight:500;margin:0 0 8px}
+  @media (prefers-color-scheme: dark){.field .hint{color:var(--muted)}}
+  .field select,.field input{width:100%;font-family:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:0;background:var(--surface);color:var(--ink)}
+  .field select:focus,.field input:focus{outline:2px solid var(--irs-blue);outline-offset:0}
+  .field .decode{font-size:14px;color:var(--muted);margin:8px 0 0;display:flex;gap:8px;align-items:flex-start}
+  .field .decode[hidden]{display:none}
+  .field[hidden]{display:none}
+  .alert[hidden]{display:none}
+  .field .decode .di{color:var(--irs-blue);flex:0 0 auto;margin-top:1px}
+
+  /* summary chip strip */
+  .taxsum{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint);padding:14px 16px;margin:6px 0 26px}
+  .taxsum .lead{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-blue);margin:0 0 8px}
+  .taxsum .readrow{display:flex;justify-content:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .taxsum .readrow:last-child{border-bottom:0}
+  .taxsum .k{color:var(--ink);font-weight:700;width:50%}
+  .taxsum .v{text-align:left}
+  .taxsum .v.pending{color:var(--muted);font-style:italic}
+
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:26px;border-top:1px solid var(--line);padding-top:20px}
+  .foot .back{border:0;background:none;color:var(--link);font-family:inherit;font-size:15px;cursor:pointer;text-decoration:underline;display:inline-flex;gap:6px;align-items:center}
+  .foot .back[hidden]{visibility:hidden}
+  .btn{font-size:16px;font-weight:500;border-radius:4px;border:0;background:var(--irs-blue);color:#fff;padding:12px 22px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+  .btn:hover{background:var(--irs-navy)}
+  .btn:disabled{background:var(--btn-disabled-bg);color:var(--btn-disabled-ink);cursor:not-allowed}
+
+  /* placeholder screens */
+  .ph{border:1px dashed var(--line);padding:26px;color:var(--muted);font-size:15px;background:var(--tint)}
+  .ph b{color:var(--ink)}
+  .rr{display:flex;justify-content:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:16px}
+  .rr:last-child{border-bottom:0}
+  .rr .k{color:var(--ink);font-weight:700;width:50%}
+  .rr .v{text-align:left}
+  .ring{width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;margin:0 0 16px}
+  .ring svg{width:30px;height:30px}
+  @media(max-width:760px){.shell{grid-template-columns:1fr}.steps{position:static}}
+
+  /* guest / signed-in account bar */
+  .acctbar{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint-blue);padding:13px 18px;margin:0 0 22px}
+  .acctbar.in{border-left-color:var(--green);background:var(--tint)}
+  .acctbar .ab-icon{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:var(--irs-blue);color:#fff;display:grid;place-items:center}
+  .acctbar.in .ab-icon{background:var(--green)}
+  .acctbar .ab-icon svg{width:18px;height:18px}
+  .acctbar .ab-body{flex:1;min-width:0}
+  .acctbar .ab-body b{font-size:15.5px;display:block}
+  .acctbar .ab-body p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+  .acctbar .ab-cta{white-space:nowrap}
+  .btn-outline{display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:15px;font-weight:600;border:1px solid var(--irs-blue);border-radius:4px;background:var(--surface);color:var(--irs-blue);padding:9px 18px;cursor:pointer;text-decoration:none}
+  .btn-outline:hover{background:var(--tint-blue)}
+
+  /* inline upsell inside a step */
+  .upsell{border:1px solid var(--line);background:var(--tint-blue);padding:12px 16px;margin:0 0 22px;display:flex;gap:10px;align-items:center;font-size:14.5px;max-width:640px}
+  .upsell .ui{color:var(--irs-blue);flex:0 0 auto}
+  .upsell a{font-weight:600}
+  .upsell[hidden]{display:none}
+
+  /* prefilled read block */
+  .prefill{border:1px solid var(--line);border-left:4px solid var(--green);background:var(--tint);padding:14px 18px;margin:0 0 22px;max-width:640px}
+  .prefill .pf-lead{font-size:14px;font-weight:700;color:var(--green);display:flex;gap:7px;align-items:center;margin:0 0 10px}
+  .prefill .pf-lead svg{width:16px;height:16px}
+
+  /* two-column form grid */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;max-width:640px}
+  .grid2 .field{max-width:none}
+  .grid2 .col-2{grid-column:1/-1}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+  /* save-account checkbox */
+  .checkrow{display:flex;gap:11px;align-items:flex-start;max-width:640px;border:1px solid var(--line);background:var(--tint-blue);padding:14px 16px;margin:8px 0 0}
+  .checkrow input{margin-top:2px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
+  .checkrow label{font-size:14px;line-height:1.45;color:var(--muted)}
+  .checkrow label b{display:block;font-size:15px;color:var(--ink);margin-bottom:2px;font-weight:600}
+
+  /* create-account hero at confirmation */
+  .acct-hero{border:1px solid var(--irs-blue);background:var(--tint-blue);padding:22px 24px;margin:26px 0 0;text-align:left;display:flex;gap:16px;align-items:flex-start}
+  .acct-hero .ah-icon{width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--irs-blue);color:#fff;display:grid;place-items:center}
+  .acct-hero .ah-icon svg{width:24px;height:24px}
+  .acct-hero h3{margin:0 0 6px;font-size:19px;font-weight:800}
+  .acct-hero p{margin:0 0 12px;font-size:15px;color:var(--muted);max-width:54ch}
+  .acct-hero ul{margin:0 0 16px;padding-left:20px;font-size:14.5px;color:var(--ink)}
+  .acct-hero ul li{margin:5px 0}
+  .acct-hero .ah-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  @media(max-width:560px){.acct-hero{flex-direction:column}}
+
+  /* ---- mobile ---- */
+  @media(max-width:640px){
+    .wrap{padding:0 14px}
+    .masthead .wrap{height:auto;flex-direction:column;align-items:stretch;gap:0}
+    .logo{gap:8px;font-size:22px;padding:12px 0 10px}
+    .logo .seal img{height:28px}
+    .logo .ctx{font-size:13px;padding-left:10px}
+    .util{border-top:1px solid rgba(255,255,255,.35);font-size:14px;flex-wrap:wrap}
+    .util > *{padding:9px 14px 9px 0;border-left:0;margin-right:14px}
+    .util > *:last-child{margin-right:0}
+
+    h1.page{font-size:26px;line-height:1.15}
+    .sub{font-size:16px}
+    .crumb{font-size:12.5px;line-height:1.4}
+
+    /* account bar stacks so the CTA never squeezes the copy */
+    .acctbar{flex-wrap:wrap;gap:10px;padding:14px 16px}
+    .acctbar .ab-body{flex:1 1 100%;order:2}
+    .acctbar .ab-icon{order:1}
+    .acctbar .ab-cta{flex:1 1 100%;order:3;white-space:normal}
+    .acctbar .btn-outline{width:100%;justify-content:center}
+
+    /* step rail becomes a compact horizontal strip above the form */
+    .shell{gap:16px}
+    .steps{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line)}
+    .steps li{flex:0 0 auto;border-top:0;border-left:1px solid var(--line);padding:11px 13px;font-size:13px;gap:8px;white-space:nowrap}
+    .steps li:first-child{border-left:0}
+    .steps li .num{width:22px;height:22px;flex:0 0 22px;font-size:11.5px}
+
+    .panel{padding:20px 16px;min-height:0}
+    .panel h2{font-size:21px}
+    /* header is tall when stacked on phones — don't pin it (would eat the screen) */
+    .gov,.masthead{position:static}
+    .field,.grid2,.taxsum,.upsell,.prefill,.checkrow{max-width:none}
+    .field select,.field input{padding:12px}
+    .foot{gap:12px}
+    .btn{padding:12px 18px}
+    .acct-hero{padding:18px 16px}
+  }
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead">
+    <div class="wrap">
+    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Pay Online · DirectPay</span></div>
+    <div class="util"><a>Sign in</a><a>Help</a><a>Español</a></div>
+    </div>
+    <div class="mh-progress" role="progressbar" aria-label="Payment progress" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1"><i id="bar"></i></div>
+  </div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <a>Pay from your bank account</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Tax Information</p>
+    <h1 class="page">Pay from your bank account</h1>
+    <p class="sub">Pay your taxes directly from a checking or savings account — free. No sign-in required. It's fast, secure, and you'll get instant confirmation when your payment is scheduled.</p>
+
+    <div class="acctbar" id="acctbar">
+      <span class="ab-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="3"/><path d="M2.5 14c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5"/></svg></span>
+      <div class="ab-body">
+        <b>You're paying as a guest</b>
+        <p>You'll enter your identity and bank details on this device. Nothing is saved for next time.</p>
+      </div>
+      <span class="ab-cta"><a class="btn-outline" id="signinBtn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h6v11h-6M9.5 8H2.5M5 5.5 2.5 8 5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sign in to your Online Account</a></span>
+    </div>
+
+    <div class="shell">
+      <ol class="steps" id="steps"></ol>
+      <section class="panel">
+        <div id="body"></div>
+        <div class="foot" id="foot">
+          <button class="back" id="back" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+          <button class="btn" id="next">Continue</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="color:var(--link);text-decoration:none"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_INFO=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.6"/></g><circle cx="8" cy="4.9" r=".9" fill="currentColor"/></svg>`;
+const IC_STAR=`<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.3 4.3 13.3l.7-4.3-3.1-3 4.3-.6z" fill="currentColor"/></svg>`;
+const IC_LOCK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg>`;
+
+const STEPS=["Tax Information","Verify Identity","Payment","Review & Sign","Confirmation"];
+let step=0;
+
+const state={
+  reason:"",applyTo:"",period:"",
+  fname:"",lname:"",ssn:"",filing:"",addr:"",city:"",estate:"",zip:"",
+  amount:"",routing:"",account:"",acctType:"",saveAcct:false
+};
+const STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+
+// Reason -> which "apply payment to" forms are valid, with plain-language decode
+const REASONS={
+  "":{label:"— Select —"},
+  "balance":{label:"Balance Due", apply:["1040","1040X"], decode:"You owe money from a filed return or a bill (notice CP14, CP501)."},
+  "estimated":{label:"Estimated Tax", apply:["1040ES"], decode:"Quarterly payments if you're self-employed or have income without withholding."},
+  "extension":{label:"Extension", apply:["4868"], decode:"Paying with a request for more time to file (Form 4868)."},
+  "amended":{label:"Amended Return", apply:["1040X"], decode:"Paying additional tax with a corrected return (Form 1040-X)."},
+  "notice":{label:"Proposed Tax Assessment / Notice", apply:["CP2000"], decode:"Responding to a CP2000 or similar notice proposing changes."}
+};
+const APPLY={
+  "1040":"Form 1040 (current-year return)",
+  "1040X":"Form 1040-X (amended return)",
+  "1040ES":"Form 1040-ES (estimated tax)",
+  "4868":"Form 4868 (extension)",
+  "CP2000":"CP2000 notice"
+};
+const YEARS=["2025","2024","2023","2022","2021"];
+
+function renderSteps(){
+  const ol=document.getElementById("steps");
+  ol.innerHTML=STEPS.map((s,i)=>{
+    const cls=i<step?"done":(i===step?"current":"");
+    const inner=i<step?IC_CHECK:(i+1);
+    return `<li class="${cls}"><span class="num">${inner}</span><span class="st">${s}</span></li>`;
+  }).join("");
+  document.getElementById("bar").style.width=((step+1)/STEPS.length*100)+"%";
+  const mhp=document.querySelector(".mh-progress");
+  if(mhp)mhp.setAttribute("aria-valuenow",step+1);
+}
+
+function taxSummary(){
+  const r=state.reason?REASONS[state.reason].label:"";
+  const a=state.applyTo?APPLY[state.applyTo]:"";
+  const p=state.period||"";
+  return `<div class="taxsum">
+    <p class="lead">Your tax information</p>
+    <div class="readrow"><span class="k">Reason for payment</span><span class="v ${r?"":"pending"}">${r||"Not selected yet"}</span></div>
+    <div class="readrow"><span class="k">Apply payment to</span><span class="v ${a?"":"pending"}">${a||"Not selected yet"}</span></div>
+    <div class="readrow"><span class="k">Tax period</span><span class="v ${p?"":"pending"}">${p?("Tax year "+p):"Not selected yet"}</span></div>
+  </div>`;
+}
+
+function renderBody(){
+  const body=document.getElementById("body");
+  const back=document.getElementById("back"),next=document.getElementById("next");
+  back.hidden=(step===0);
+  next.style.display=(step===STEPS.length-1)?"none":"";
+
+  if(step===0){
+    const reasonOpts=Object.entries(REASONS).map(([k,v])=>`<option value="${k}" ${k===state.reason?"selected":""}>${v.label}</option>`).join("");
+    const applyList=state.reason?REASONS[state.reason].apply:[];
+    const applyOpts=[`<option value="">— Select —</option>`].concat(applyList.map(k=>`<option value="${k}" ${k===state.applyTo?"selected":""}>${APPLY[k]}</option>`)).join("");
+    const yearOpts=[`<option value="">— Select —</option>`].concat(YEARS.map(y=>`<option value="${y}" ${y===state.period?"selected":""}>${y}</option>`)).join("");
+    body.innerHTML=`
+      <h2>Tax Information</h2>
+      <p class="phint">Tell us what this payment is for. These three answers work together — pick a reason first and we'll show you only the forms that apply.</p>
+
+      <div class="field">
+        <label for="reason">Reason for payment</label>
+        <span class="hint">Why are you paying? This determines which forms and periods are available.</span>
+        <select id="reason">${reasonOpts}</select>
+        <p class="decode" id="reasonDecode" ${state.reason?"":"hidden"}><span class="di">${IC_INFO}</span><span>${state.reason?REASONS[state.reason].decode:""}</span></p>
+      </div>
+
+      <div class="field" id="applyField" ${state.reason?"":"hidden"}>
+        <label for="applyTo">Apply payment to</label>
+        <span class="hint">Which tax form or notice does this payment go against?</span>
+        <select id="applyTo">${applyOpts}</select>
+      </div>
+
+      <div class="field" id="periodField" ${state.applyTo?"":"hidden"}>
+        <label for="period">Tax period</label>
+        <span class="hint">The tax year this payment applies to.</span>
+        <select id="period">${yearOpts}</select>
+      </div>
+
+      ${taxSummary()}
+    `;
+    const reasonEl=body.querySelector("#reason");
+    reasonEl.addEventListener("change",e=>{state.reason=e.target.value;state.applyTo="";state.period="";renderBody();updateNext();});
+    const applyEl=body.querySelector("#applyTo");
+    if(applyEl)applyEl.addEventListener("change",e=>{state.applyTo=e.target.value;state.period="";renderBody();updateNext();});
+    const periodEl=body.querySelector("#period");
+    if(periodEl)periodEl.addEventListener("change",e=>{state.period=e.target.value;renderBody();updateNext();});
+  }
+  else if(step===1){
+    const filingOpts=[["","— Select —"],["single","Single"],["mfj","Married filing jointly"],["mfs","Married filing separately"],["hoh","Head of household"],["qw","Qualifying surviving spouse"]]
+      .map(([k,v])=>`<option value="${k}" ${k===state.filing?"selected":""}>${v}</option>`).join("");
+    const stOpts=[`<option value="">—</option>`].concat(STATES.map(s=>`<option value="${s}" ${s===state.estate?"selected":""}>${s}</option>`)).join("");
+    body.innerHTML=`<h2>Verify Identity</h2>
+      <p class="phint">Enter your details exactly as they appear on your most recent tax return. We use this only to make sure your payment is applied to the right account.</p>
+      ${signedIn
+        ? `<div class="prefill"><span class="pf-lead">${IC_CHECK} From your IRS Online Account</span>Your identity is verified — we filled this in for you. Review it and continue.</div>`
+        : `<div class="upsell"><span class="ui">${IC_INFO}</span><span>Signed in to your IRS Online Account? Your identity is already verified — <a id="upsell1">sign in to skip this step</a>.</span></div>`}
+      <div class="grid2">
+        <div class="field"><label for="fname">First name</label><input id="fname" autocomplete="off" value="${state.fname}"></div>
+        <div class="field"><label for="lname">Last name</label><input id="lname" autocomplete="off" value="${state.lname}"></div>
+        <div class="field"><label for="ssn">SSN or ITIN</label><span class="hint">Format: 123-45-6789</span><input id="ssn" inputmode="numeric" placeholder="•••-••-••••" value="${state.ssn}"></div>
+        <div class="field"><label for="filing">Filing status</label><select id="filing">${filingOpts}</select></div>
+        <div class="field col-2"><label for="addr">Street address</label><input id="addr" autocomplete="off" value="${state.addr}"></div>
+        <div class="field"><label for="city">City</label><input id="city" autocomplete="off" value="${state.city}"></div>
+        <div class="field"><label for="estate">State</label><select id="estate">${stOpts}</select></div>
+        <div class="field col-2" style="max-width:200px"><label for="zip">ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" value="${state.zip}"></div>
+      </div>`;
+    const bind=(id,key,transform)=>{const el=body.querySelector("#"+id);if(el)el.addEventListener("input",e=>{state[key]=transform?transform(e.target.value):e.target.value;updateNext();});};
+    bind("fname","fname");bind("lname","lname");bind("addr","addr");bind("city","city");
+    bind("ssn","ssn",v=>{const d=v.replace(/\D/g,"").slice(0,9);return d.replace(/^(\d{3})(\d{0,2})(\d{0,4}).*/,(m,a,b,c)=>c?`${a}-${b}-${c}`:b?`${a}-${b}`:a);});
+    bind("zip","zip",v=>v.replace(/\D/g,"").slice(0,5));
+    body.querySelector("#filing").addEventListener("change",e=>{state.filing=e.target.value;updateNext();});
+    body.querySelector("#estate").addEventListener("change",e=>{state.estate=e.target.value;updateNext();});
+    const u=body.querySelector("#upsell1");if(u)u.addEventListener("click",signIn);
+  }
+  else if(step===2){
+    const typeOpts=[["","— Select —"],["checking","Checking"],["savings","Savings"]]
+      .map(([k,v])=>`<option value="${k}" ${k===state.acctType?"selected":""}>${v}</option>`).join("");
+    body.innerHTML=`<h2>Payment</h2>
+      <p class="phint">Enter the amount and the bank account you're paying from. Your account isn't stored after this payment unless you choose to save it.</p>
+      ${signedIn
+        ? `<div class="prefill"><span class="pf-lead">${IC_CHECK} From your IRS Online Account</span>We loaded your saved checking account ••••7740. Just enter the amount you're paying.</div>`
+        : `<div class="upsell"><span class="ui">${IC_INFO}</span><span>Signed-in users can pick a saved bank account instead of typing it — <a id="upsell2">sign in</a>.</span></div>`}
+      <div class="grid2">
+        <div class="field col-2" style="max-width:240px"><label for="amount">Payment amount</label><span class="hint">U.S. dollars</span><input id="amount" inputmode="decimal" placeholder="$0.00" value="${state.amount}"></div>
+        <div class="field"><label for="routing">Bank routing number</label><span class="hint">9 digits, bottom-left of a check</span><input id="routing" inputmode="numeric" maxlength="9" value="${state.routing}"></div>
+        <div class="field"><label for="account">Account number</label><input id="account" inputmode="numeric" value="${state.account}"></div>
+        <div class="field col-2" style="max-width:240px"><label for="acctType">Account type</label><select id="acctType">${typeOpts}</select></div>
+      </div>
+      ${signedIn ? "" : `<div class="checkrow">
+        <input type="checkbox" id="saveAcct" ${state.saveAcct?"checked":""}>
+        <label for="saveAcct"><b>Save this bank account to my IRS Online Account</b>Skip re-entering it next time and get email reminders before scheduled payments. You'll confirm your account after this payment.</label>
+      </div>`}`;
+    const amt=body.querySelector("#amount");
+    amt.addEventListener("input",e=>{let d=e.target.value.replace(/[^0-9.]/g,"");state.amount=d;updateNext();});
+    amt.addEventListener("blur",e=>{const n=parseFloat(state.amount);if(!isNaN(n)){state.amount=n.toFixed(2);e.target.value="$"+Number(state.amount).toLocaleString("en-US",{minimumFractionDigits:2});}});
+    body.querySelector("#routing").addEventListener("input",e=>{state.routing=e.target.value.replace(/\D/g,"").slice(0,9);e.target.value=state.routing;updateNext();});
+    body.querySelector("#account").addEventListener("input",e=>{state.account=e.target.value.replace(/\D/g,"").slice(0,17);e.target.value=state.account;updateNext();});
+    body.querySelector("#acctType").addEventListener("change",e=>{state.acctType=e.target.value;updateNext();});
+    const sv=body.querySelector("#saveAcct");if(sv)sv.addEventListener("change",e=>{state.saveAcct=e.target.checked;});
+    const u=body.querySelector("#upsell2");if(u)u.addEventListener("click",signIn);
+  }
+  else if(step===3){
+    const r=state.reason?REASONS[state.reason].label:"—";
+    const a=state.applyTo?APPLY[state.applyTo]:"—";
+    const amtDisp=state.amount&&!isNaN(parseFloat(state.amount))?("$"+Number(parseFloat(state.amount)).toLocaleString("en-US",{minimumFractionDigits:2})):"—";
+    const acct=state.account?((state.acctType?state.acctType.charAt(0).toUpperCase()+state.acctType.slice(1):"Account")+" ••••"+state.account.slice(-4)):"—";
+    body.innerHTML=`<h2>Review &amp; Sign</h2>
+      <p class="phint">Confirm everything, then electronically sign to authorize the payment.</p>
+      <div class="ph">
+        <div class="rr"><span class="k">Name</span><span class="v">${(state.fname||state.lname)?`${state.fname} ${state.lname}`.trim():"—"}</span></div>
+        <div class="rr"><span class="k">SSN / ITIN</span><span class="v">${state.ssn?"•••-••-"+state.ssn.replace(/\D/g,"").slice(-4):"—"}</span></div>
+        <div class="rr"><span class="k">Reason for payment</span><span class="v">${r}</span></div>
+        <div class="rr"><span class="k">Apply payment to</span><span class="v">${a}</span></div>
+        <div class="rr"><span class="k">Tax period</span><span class="v">${state.period?("Tax year "+state.period):"—"}</span></div>
+        <div class="rr"><span class="k">Amount</span><span class="v">${amtDisp}</span></div>
+        <div class="rr"><span class="k">Bank account</span><span class="v">${acct}</span></div>
+      </div>
+      ${state.saveAcct?`<div class="upsell" style="margin-top:16px"><span class="ui">${IC_STAR}</span><span>After you sign, we'll help you create your IRS Online Account and save this bank account.</span></div>`:""}`;
+  }
+  else{
+    const amtDisp=state.amount&&!isNaN(parseFloat(state.amount))?("$"+Number(parseFloat(state.amount)).toLocaleString("en-US",{minimumFractionDigits:2})):"$0.00";
+    body.innerHTML=`<div style="text-align:center;padding:24px 0 8px">
+      <div class="ring" style="margin:0 auto 16px">${IC_CHECK}</div>
+      <h2 style="margin:0 0 6px">Payment scheduled</h2>
+      <p class="phint" style="margin:0 auto;max-width:46ch">Confirmation number <b>DP-2026-4831-2207</b>. We emailed a copy of your ${amtDisp} payment confirmation. You can cancel up to two business days before the payment date.</p>
+    </div>
+    ${signedIn
+      ? `<div class="acct-hero" style="border-color:var(--green)">
+          <span class="ah-icon" style="background:var(--green)" aria-hidden="true">${IC_CHECK}</span>
+          <div>
+            <h3>Saved to your IRS Online Account</h3>
+            <p>This payment is now in your payment history, and your checking account ••••7740 is ready for next time.</p>
+            <div class="ah-actions"><a class="btn" style="text-decoration:none">Go to your account</a><a>View payment history</a></div>
+          </div>
+        </div>`
+      : `<div class="acct-hero">
+          <span class="ah-icon" aria-hidden="true">${IC_STAR}</span>
+          <div>
+            <h3>Save your information — create your IRS Online Account</h3>
+            <p>You paid as a guest, so nothing was saved. Create a free account and next time you won't have to start from scratch.</p>
+            <ul>
+              <li>Skip identity verification — it's done once</li>
+              <li>Reuse ${state.account?("your "+(state.acctType||"bank")+" account ••••"+state.account.slice(-4)):"your saved bank account"} without re-entering it</li>
+              <li>Track this and past payments, and get reminders before they post</li>
+            </ul>
+            <div class="ah-actions">
+              <a class="btn" style="text-decoration:none">Create your Online Account</a>
+              <a>Not now</a>
+            </div>
+          </div>
+        </div>`}`;
+  }
+}
+
+function stepValid(){
+  if(step===0)return !!(state.reason && state.applyTo && state.period);
+  if(step===1)return !!(state.fname && state.lname && state.ssn.replace(/\D/g,"").length===9 && state.filing && state.addr && state.city && state.estate && state.zip.length===5);
+  if(step===2){const n=parseFloat(state.amount);return !!(n>0 && state.routing.length===9 && state.account.length>=4 && state.acctType);}
+  return true;
+}
+function updateNext(){
+  const next=document.getElementById("next");
+  next.disabled=!stepValid();
+  next.textContent=(step===3)?"Sign and submit payment":"Continue";
+}
+
+// Simulated "signed in" state: verified identity + a saved bank account on file.
+let signedIn=false;
+function signIn(){
+  if(signedIn)return;
+  signedIn=true;
+  Object.assign(state,{
+    fname:"Jordan",lname:"Rivera",ssn:"400-55-8210",filing:"single",
+    addr:"742 Cedar Hollow Rd",city:"Springfield",estate:"IL",zip:"62704",
+    routing:"071000013",account:"3391827740",acctType:"checking"
+  });
+  const ab=document.getElementById("acctbar");
+  ab.classList.add("in");
+  ab.innerHTML=`<span class="ab-icon" aria-hidden="true">${IC_CHECK}</span>
+    <div class="ab-body"><b>Signed in as Jordan Rivera</b><p>Your identity is verified and a checking account \u20227740 is on file — we'll use them automatically.</p></div>
+    <span class="ab-cta"><a id="signoutBtn">Sign out</a></span>`;
+  document.getElementById("signoutBtn").addEventListener("click",signOut);
+  renderSteps();renderBody();updateNext();
+}
+function signOut(){
+  signedIn=false;
+  Object.assign(state,{fname:"",lname:"",ssn:"",filing:"",addr:"",city:"",estate:"",zip:"",routing:"",account:"",acctType:"",saveAcct:false});
+  const ab=document.getElementById("acctbar");
+  ab.classList.remove("in");
+  ab.innerHTML=`<span class="ab-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="3"/><path d="M2.5 14c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5"/></svg></span>
+    <div class="ab-body"><b>You're paying as a guest</b><p>You'll enter your identity and bank details on this device. Nothing is saved for next time.</p></div>
+    <span class="ab-cta"><a class="btn-outline" id="signinBtn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h6v11h-6M9.5 8H2.5M5 5.5 2.5 8 5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sign in to your Online Account</a></span>`;
+  document.getElementById("signinBtn").addEventListener("click",signIn);
+  renderSteps();renderBody();updateNext();
+}
+function go(d){
+  if(d>0 && !stepValid())return;
+  step=Math.max(0,Math.min(STEPS.length-1,step+d));
+  renderSteps();renderBody();updateNext();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.getElementById("next").addEventListener("click",()=>go(1));
+document.getElementById("back").addEventListener("click",()=>go(-1));
+
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");syncSticky();});
+
+// keep the sticky offsets in sync with the real header height so the blue
+// masthead pins to the top and the step rail tucks just beneath it
+const mastheadEl=document.querySelector(".masthead");
+function syncSticky(){
+  const govH=gov.offsetHeight;
+  const mastH=mastheadEl.offsetHeight;
+  document.documentElement.style.setProperty("--gov-h",govH+"px");
+  document.documentElement.style.setProperty("--rail-top",(govH+mastH+18)+"px");
+}
+window.addEventListener("resize",syncSticky);
+window.addEventListener("load",syncSticky);
+syncSticky();
+document.getElementById("signinBtn").addEventListener("click",signIn);
+
+renderSteps();renderBody();updateNext();
+</script>
+</body>
+</html>

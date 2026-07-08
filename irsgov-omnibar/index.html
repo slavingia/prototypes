@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Internal Revenue Service | An official website of the United States government</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0;
+    --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint-blue:#e7f0fa; --tint-blue-soft:#eef3f9; --answer-bg:#f5f9fd;
+    --line-blue:#dce8f4; --panel-2:#fafcfe; --line-soft:#eef1f4;
+    --hero-1:#002d5c; --hero-2:#004c97;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#2a3138;
+      --ink:#f1f3f5; --muted:#b4bcc4; --line:#4a545f; --link:#8fc1ee;
+      --green:#6cc496; --amber:#e5bd5e; --red:#f59a94; --teal:#6fcbde; --violet:#bba9f2;
+      --tint-blue:color-mix(in srgb,#8fc1ee 18%,#1e2328);
+      --tint-blue-soft:color-mix(in srgb,#8fc1ee 14%,#1e2328);
+      --answer-bg:color-mix(in srgb,#8fc1ee 12%,#1e2328);
+      --line-blue:color-mix(in srgb,#8fc1ee 36%,#1e2328);
+      --panel-2:#232a31; --line-soft:#39424c;
+      --hero-1:#0e2440; --hero-2:#123256;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner */
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{display:inline-flex;transition:transform .15s}
+  .gov .howbtn .chev svg{width:1em;height:1em;vertical-align:-.12em}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink)}
+  .gov .gcol .gi{flex:0 0 22px;color:var(--irs-blue)}
+  .gov .gcol .gi svg{width:20px;height:20px}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  /* Masthead */
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;gap:16px;height:64px}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:28px;letter-spacing:.5px;flex:0 0 auto}
+  .logo .seal{display:flex;align-items:center;flex:0 0 auto}
+  .logo .seal svg{height:34px;width:auto;display:block}
+  .mnav{margin-left:auto;display:flex;align-items:center;gap:22px;flex:0 0 auto}
+  .mnav a{color:#fff;text-decoration:none;font-size:15px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+  .mnav a:hover{text-decoration:underline}
+  .mnav .signin{background:#fff;color:var(--irs-blue);border-radius:4px;padding:8px 16px;font-weight:600}
+  .mnav .signin:hover{background:#eef3f9;text-decoration:none}
+  @media(max-width:640px){.mnav .langlink{display:none}}
+
+  /* Hero + omnibar */
+  .hero{background:linear-gradient(160deg,var(--hero-1),var(--hero-2));color:#fff;padding:54px 0 62px;position:relative;z-index:40;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Cpath d='M21 10l2.6 6.6 7.1.5-5.5 4.5 1.8 6.9-6-3.9-6 3.9 1.8-6.9-5.5-4.5 7.1-.5z' fill='%23ffffff' fill-opacity='.055'/%3E%3Cpath d='M63 52l2.6 6.6 7.1.5-5.5 4.5 1.8 6.9-6-3.9-6 3.9 1.8-6.9-5.5-4.5 7.1-.5z' fill='%23ffffff' fill-opacity='.045'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 46px, rgba(255,255,255,0) 46px 92px);
+  }
+  .hero::after{content:"";position:absolute;top:-40%;right:-12%;width:56%;height:180%;pointer-events:none;transform:rotate(12deg);
+    background:repeating-linear-gradient(180deg, rgba(178,35,52,.16) 0 34px, rgba(255,255,255,.05) 34px 68px);
+    -webkit-mask-image:linear-gradient(105deg, transparent 0 18%, #000 62%);mask-image:linear-gradient(105deg, transparent 0 18%, #000 62%);
+  }
+  .hero .wrap{max-width:840px;position:relative;z-index:2}
+  .hero h1{font-size:40px;font-weight:900;margin:0 0 8px;line-height:1.12;letter-spacing:-.01em}
+  .hero .lede{font-size:18px;font-weight:400;margin:0 0 26px;color:rgba(255,255,255,.9);max-width:60ch}
+
+  .omni{position:relative;z-index:50}
+  .omni-wrap{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--surface);border-radius:12px;padding:0 10px 0 18px;height:62px;box-shadow:0 18px 50px rgba(0,12,34,.34);cursor:text}
+  .omni-wrap:focus-within{box-shadow:0 22px 60px rgba(0,12,34,.5);outline:3px solid rgba(255,255,255,.55);outline-offset:2px}
+  .omni-wrap .mag{width:24px;height:24px;flex:0 0 24px;color:var(--irs-blue)}
+  .omni-wrap .mag svg{width:24px;height:24px;display:block}
+  #omni{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font-family:inherit;font-size:19px;padding:12px 0;font-weight:500}
+  #omni::placeholder{color:var(--muted);font-weight:400}
+  .clearbtn{border:0;background:var(--surface-2);color:var(--muted);width:32px;height:32px;border-radius:4px;cursor:pointer;flex:0 0 32px;display:none;place-items:center}
+  .clearbtn svg{width:16px;height:16px}
+  .clearbtn.show{display:grid}
+  .clearbtn:hover{background:var(--tint-blue);color:var(--link)}
+  .go{border:0;background:var(--irs-blue);color:#fff;border-radius:4px;height:44px;padding:0 20px;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;flex:0 0 auto;display:inline-flex;align-items:center;gap:8px}
+  .go:hover{background:#003a73}
+  .go svg{width:16px;height:16px}
+
+  /* Results panel */
+  .results{position:absolute;left:0;right:0;top:calc(100% + 10px);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 30px 70px rgba(0,12,34,.4);overflow:hidden;z-index:55;max-height:64vh;overflow-y:auto}
+  .results[hidden]{display:none}
+  .res-head{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;padding:13px 18px 6px}
+  .opt{display:flex;gap:14px;align-items:flex-start;padding:13px 18px;cursor:pointer;border-top:1px solid var(--line-soft);text-decoration:none;color:inherit}
+  .opt:first-of-type{border-top:0}
+  .opt.active,.opt:hover{background:var(--tint-blue)}
+  .opt .oicon{width:38px;height:38px;border-radius:4px;flex:0 0 38px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 12%,var(--surface));color:color-mix(in srgb,var(--c) 78%,#000)}
+  .opt .oicon svg{width:20px;height:20px}
+  .opt .obody{flex:1;min-width:0}
+  .opt .otitle{font-size:16px;font-weight:700;margin:0}
+  .opt .oplain{font-size:13.5px;color:var(--muted);margin:2px 0 0}
+  .opt .answer{margin-top:8px;background:var(--answer-bg);border:1px solid var(--line-blue);padding:9px 12px;font-size:14px;line-height:1.45}
+  .opt .answer .big{font-size:20px;font-weight:800;color:var(--link);display:block;margin-bottom:2px}
+  .opt .ext-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--teal);margin-top:8px}
+  .opt .ext-tag svg{width:13px;height:13px}
+  .empty{padding:22px 18px;color:var(--muted);font-size:15px}
+  .empty b{color:var(--ink)}
+  .omni-scrim{position:fixed;inset:0;background:rgba(0,15,36,.42);z-index:45;display:none}
+  .omni-scrim.show{display:block}
+
+  /* suggested chips */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.55);color:#fff;border-radius:999px;padding:8px 15px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+  .chip:hover{background:rgba(255,255,255,.28)}
+  .chip svg{width:15px;height:15px;opacity:.9}
+  .chips .lbl{color:rgba(255,255,255,.92);font-size:13px;align-self:center;margin-right:2px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  /* main homepage sections */
+  main{padding-bottom:60px}
+  .sec{margin:44px 0 0}
+  .sec h2{font-size:24px;font-weight:800;margin:0 0 4px}
+  .sec .sub{font-size:15px;color:var(--muted);margin:0 0 18px}
+  .task-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .task{border:1px solid var(--line);padding:20px;text-decoration:none;color:inherit;display:block;background:var(--surface)}
+  .task:hover{border-color:var(--irs-blue);background:var(--panel-2)}
+  .task .ti{width:40px;height:40px;border-radius:4px;background:var(--tint-blue);color:var(--irs-blue);display:grid;place-items:center;margin-bottom:14px}
+  .task .ti svg{width:22px;height:22px}
+  .task h3{font-size:17px;font-weight:700;margin:0 0 5px}
+  .task p{font-size:14px;color:var(--muted);margin:0}
+  @media(max-width:820px){.task-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.task-grid{grid-template-columns:1fr}}
+
+  .two{display:grid;grid-template-columns:1fr 340px;gap:36px;align-items:start}
+  @media(max-width:820px){.two{grid-template-columns:1fr}}
+  .tools{border:1px solid var(--line);background:var(--surface)}
+  .tools a{display:flex;align-items:center;gap:13px;padding:15px 18px;text-decoration:none;color:var(--ink);border-top:1px solid var(--line-soft)}
+  .tools a:first-child{border-top:0}
+  .tools a:hover{background:var(--tint-blue-soft)}
+  .tools .li{width:34px;height:34px;border-radius:4px;flex:0 0 34px;display:grid;place-items:center;background:var(--tint-blue);color:var(--irs-blue)}
+  .tools .li svg{width:19px;height:19px}
+  .tools .tt{font-weight:600;font-size:15.5px}
+  .tools .td{font-size:13px;color:var(--muted);margin-top:1px}
+  .tools .arr{margin-left:auto;color:var(--muted);flex:0 0 auto}
+  .tools .arr svg{width:16px;height:16px}
+
+  .alerts{border:1px solid var(--line);background:var(--surface);padding:4px 0}
+  .alert{display:flex;gap:12px;padding:14px 18px;border-top:1px solid var(--line-soft)}
+  .alert:first-child{border-top:0}
+  .alert .ab{flex:0 0 30px;width:30px;height:30px;border-radius:4px;display:grid;place-items:center;background:var(--tint-blue);color:var(--irs-blue)}
+  .alert.warn .ab{background:color-mix(in srgb,var(--amber) 16%,var(--surface));color:var(--amber)}
+  .alert .ab svg{width:17px;height:17px}
+  .alert .adate{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .alert .atitle{font-size:15px;font-weight:600;margin:2px 0 0}
+  .alert .atitle a{color:var(--ink)}
+
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:26px 0 40px}
+  footer .cols{display:flex;flex-wrap:wrap;gap:40px;margin-bottom:20px}
+  footer .fcol h4{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 10px}
+  footer .fcol a{display:block;color:var(--ink);text-decoration:none;font-size:14.5px;margin:6px 0}
+  footer .fcol a:hover{text-decoration:underline}
+  .disclaimer{font-size:12.5px;color:var(--muted);font-style:italic;border-top:1px solid var(--line-soft);padding-top:16px;margin:0}
+
+  @media(max-width:640px){.hero h1{font-size:30px}.hero{padding:38px 0 46px}#omni{font-size:17px}.go span{display:none}.go{padding:0 14px}}
+
+  /* Utility bar (top, above masthead) */
+  .util{background:var(--surface-2);border-bottom:1px solid var(--line);font-size:13px}
+  .util .wrap{display:flex;align-items:center;gap:2px;height:38px}
+  .util a{color:var(--ink);text-decoration:none;padding:6px 10px;font-weight:500;white-space:nowrap}
+  .util a:hover{text-decoration:underline}
+  .util .spacer{margin-left:auto}
+  .util .lang{color:var(--muted)}
+  @media(max-width:760px){.util .hide-sm{display:none}}
+
+  /* Primary nav (below masthead) */
+  .pnav{background:var(--irs-navy);color:#fff}
+  .pnav .wrap{display:flex;align-items:stretch;gap:0;min-height:46px}
+  .pnav a{color:#fff;text-decoration:none;font-size:15px;font-weight:600;display:inline-flex;align-items:center;padding:0 16px;border-bottom:3px solid transparent}
+  .pnav a:hover{background:rgba(255,255,255,.10)}
+  .pnav a.active{border-bottom-color:#fff;background:rgba(255,255,255,.08)}
+  @media(max-width:760px){.pnav{overflow-x:auto}.pnav a{padding:0 12px;font-size:14px}}
+
+  /* Destination view (inline routed pages) */
+  .view{display:none}
+  body.routed main.home{display:none}
+  body.routed .hero{display:none}
+  body.routed .view{display:block}
+  .crumbs{font-size:14px;color:var(--muted);padding:20px 0 0;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .crumbs a{color:var(--link);text-decoration:none}
+  .crumbs a:hover{text-decoration:underline}
+  .crumbs .ic{width:.85em;height:.85em;color:var(--muted)}
+  .crumbs .cur{color:var(--ink);font-weight:600}
+  .backlink{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:var(--link);text-decoration:none;font-weight:600;margin:14px 0 0;cursor:pointer;background:none;border:0;font-family:inherit;padding:0}
+  .backlink:hover{text-decoration:underline}
+  .backlink svg{width:1em;height:1em}
+  .pagehead{margin:10px 0 22px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+  .pagehead h1{font-size:34px;font-weight:900;margin:8px 0 6px;letter-spacing:-.01em;line-height:1.12}
+  .pagehead .kick{font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--irs-blue)}
+  .pagehead .intro{font-size:17px;color:var(--muted);margin:0;max-width:68ch}
+  .pgrid{display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:start;padding-bottom:20px}
+  @media(max-width:820px){.pgrid{grid-template-columns:1fr}}
+  .pbody h2{font-size:22px;font-weight:800;margin:26px 0 10px}
+  .pbody p{font-size:16px;line-height:1.55;margin:0 0 14px}
+  .pbody ul{margin:0 0 16px;padding-left:20px}
+  .pbody li{margin:6px 0;line-height:1.5}
+  .callout{background:var(--answer-bg);border:1px solid var(--line-blue);border-left:4px solid var(--irs-blue);padding:16px 18px;margin:0 0 20px}
+  .callout .ct{font-weight:800;font-size:16px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .callout .ct svg{width:1.15em;height:1.15em;flex:0 0 auto}
+  .callout .cv{font-size:15px;color:var(--muted);margin:0}
+  .callout.warn{border-left-color:var(--amber)}
+  .callout.warn .ct{color:var(--amber)}
+  .callout .big{font-size:26px;font-weight:900;color:var(--link);display:block;margin:2px 0}
+  .miniform{border:1px solid var(--line);background:var(--surface);padding:20px;margin:0 0 20px}
+  .miniform .field{margin:0 0 14px}
+  .miniform label{display:block;font-size:16px;font-weight:500;margin-bottom:5px}
+  .miniform .fh{font-size:14px;color:var(--muted);font-weight:500;display:block;margin-bottom:6px}
+  .miniform input,.miniform select{width:100%;border:1px solid var(--line);border-radius:0;padding:10px 12px;font-family:inherit;font-size:16px;background:var(--surface);color:var(--ink)}
+  .miniform input:focus,.miniform select:focus{outline:2px solid var(--irs-blue);outline-offset:-1px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.row2{grid-template-columns:1fr}}
+  .btn{border:0;background:var(--irs-blue);color:#fff;border-radius:4px;padding:12px 22px;font-family:inherit;font-size:16px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{background:#003a73}
+  .btn svg{width:1em;height:1em}
+  .btn.sec{background:var(--surface);color:var(--irs-blue);border:1px solid var(--irs-blue)}
+  .btn.sec:hover{background:var(--tint-blue)}
+  /* refund tracker steps */
+  .track{display:flex;gap:0;margin:8px 0 22px;counter-reset:none}
+  .track .tstep{flex:1;text-align:center;position:relative;padding-top:36px}
+  .track .tstep:before{content:"";position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--line)}
+  .track .tstep:first-child:before{display:none}
+  .track .tstep.done:before,.track .tstep.current:before{background:#00599C}
+  .track .num{position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid #5B616B;color:#5B616B;display:grid;place-items:center;font-size:12px;font-weight:700}
+  .track .num svg{width:13px;height:13px}
+  .track .tstep.done .num{background:#00599C;border-color:#00599C;color:#fff}
+  .track .tstep.current .num{background:#002D62;border-color:#002D62;color:#fff}
+  .track .tstep .tl{font-size:13px;font-weight:600;margin-top:6px;display:block}
+  .track .tstep .td2{font-size:12px;color:var(--muted)}
+  .sidecard{border:1px solid var(--line);background:var(--surface);padding:18px}
+  .sidecard h3{font-size:16px;font-weight:800;margin:0 0 12px}
+  .sidecard a{display:block;color:var(--link);text-decoration:none;font-size:15px;margin:8px 0}
+  .sidecard a:hover{text-decoration:underline}
+  .sidecard .related{border-top:1px solid var(--line-soft);margin-top:14px;padding-top:12px}
+  .relrow{display:flex;gap:10px;align-items:center;padding:8px 0;cursor:pointer;color:inherit;text-decoration:none}
+  .relrow:hover .rt{text-decoration:underline}
+  .relrow .rc{width:30px;height:30px;border-radius:4px;flex:0 0 30px;display:grid;place-items:center;background:var(--tint-blue);color:var(--irs-blue)}
+  .relrow .rc svg{width:16px;height:16px}
+  .relrow .rt{font-size:14.5px;font-weight:600}
+
+  /* Agent chat */
+  .opt.ask .oicon{background:color-mix(in srgb,var(--violet) 14%,var(--surface));color:var(--violet)}
+  .chatview{max-width:760px;margin:0 auto}
+  .chathead{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
+  .chathead .ci{width:40px;height:40px;border-radius:4px;background:color-mix(in srgb,var(--violet) 14%,var(--surface));color:var(--violet);display:grid;place-items:center;flex:0 0 40px}
+  .chathead .ci svg{width:22px;height:22px}
+  .chathead h1{font-size:24px;font-weight:800;margin:0}
+  .chathead .cs{font-size:13.5px;color:var(--muted);margin:1px 0 0}
+  .chatlog{margin:20px 0;display:flex;flex-direction:column;gap:16px;min-height:180px}
+  .msg{display:flex;gap:12px;max-width:100%}
+  .msg .av{width:32px;height:32px;border-radius:4px;flex:0 0 32px;display:grid;place-items:center}
+  .msg .av svg{width:18px;height:18px}
+  .msg.user{flex-direction:row-reverse}
+  .msg.user .bub{background:var(--irs-blue);color:#fff;border-radius:10px 10px 2px 10px}
+  .msg.user .av{background:var(--irs-blue);color:#fff}
+  .msg.bot .av{background:color-mix(in srgb,var(--violet) 14%,var(--surface));color:var(--violet)}
+  .msg .bub{background:var(--surface-2);border:1px solid var(--line);padding:12px 15px;font-size:15.5px;line-height:1.5;border-radius:10px 10px 10px 2px;max-width:78%}
+  .msg .bub p{margin:0 0 8px}.msg .bub p:last-child{margin:0}
+  .msg .bub .toolchip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--violet);background:color-mix(in srgb,var(--violet) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--violet) 30%,var(--surface));padding:3px 9px;border-radius:999px;margin:0 0 8px}
+  .msg .bub .toolchip svg{width:13px;height:13px}
+  .msg .bub .cites{margin-top:10px;border-top:1px solid var(--line-soft);padding-top:9px;display:flex;flex-direction:column;gap:6px}
+  .msg .bub .cite{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--link);text-decoration:none;cursor:pointer;font-weight:600}
+  .msg .bub .cite:hover{text-decoration:underline}
+  .msg .bub .cite svg{width:14px;height:14px;flex:0 0 14px}
+  .typing{display:inline-flex;gap:4px;align-items:center}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+  .chatcompose{display:flex;gap:10px;align-items:center;border:1px solid var(--line);background:var(--surface);padding:8px 8px 8px 16px;position:sticky;bottom:14px;box-shadow:0 8px 24px rgba(0,12,34,.10)}
+  .chatcompose input{flex:1;border:0;outline:0;background:transparent;color:var(--ink);font-family:inherit;font-size:16px;padding:8px 0}
+  .chatcompose .send{border:0;background:var(--irs-blue);color:#fff;border-radius:4px;width:44px;height:44px;display:grid;place-items:center;cursor:pointer;flex:0 0 44px}
+  .chatcompose .send:hover{background:#003a73}
+  .chatcompose .send svg{width:18px;height:18px}
+  .chip.sug{background:var(--tint-blue);border:1px solid var(--line-blue);color:var(--link)}
+  .suggrow{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 6px}
+  .suggrow .sq{background:var(--surface);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:7px 14px;font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer}
+  .suggrow .sq:hover{border-color:var(--irs-blue);background:var(--tint-blue-soft)}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="util"><div class="wrap">
+    <a href="#" data-goto="freefile">File your taxes</a>
+    <a href="#" data-goto="refund">Get your refund status</a>
+    <a href="#" data-goto="pay" class="hide-sm">Make a payment</a>
+    <span class="spacer"></span>
+    <a href="#" class="lang">Español</a>
+    <a href="#" class="hide-sm" data-ask="How do I set up an account with ID.me?">Sign in help</a>
+    <a href="#" data-goto="contact">Contact</a>
+  </div></div>
+
+  <div class="masthead"><div class="wrap">
+    <span class="logo"><span class="seal"><svg class="irs-logo" fill="#fff" aria-hidden="true" version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="20 218 602 207" style="enable-background:new 0 0 652 652;" xml:space="preserve"><g><path class="st0" d="M240.6,246.9c-2.5-4.4-29.8-16.8-69-24.7c-16.1,17.1-16.1,24.1-16.5,26.9c-0.3,2.8,5.4,10.1,11.1,17.7 c10.8,13.9,13.6,16.5,15.2,20.6c3.2,7.9-1.9,25.6-5.7,41.8c0,0-9.5-34.5-13.9-57c-0.3-2.2,0.3-3.5,0.3-3.2 c-24.1-2.2-40.5-3.5-43.4,9.2c-11.1,0-16.1,3.2-17.4,5.1c-2.8,4.7,0.6,14.6,2.5,19.3c1.6-3.8,11.4-3.2,14.6-3.2 c1.3,0,1.3,0.9,1.9,1.6v46.8H91.9l-24.4,65.5c11.4,5.4,23.4,9.8,31,9.8c7.6,0,26-9.5,28.5-9.8c2.5,0,21.2,9.8,28.5,9.8 c7.3,0,19.3-3.8,31-9.8l-24.7-65.8c0,0-25,0-28.5,0c0-10.4,0-33.9,0-44.3c-0.6-2.8-1.9-3.8-2.8-4.1H145c-2.2-8.5-5.1-14.2-9.2-14.6 c1.3-1.6,1.9-2.2,3.8-3.8h-11.1c1.3-5.7,15.5-3.8,21.8-3.2c6.3,31.7,18.4,73.8,19,74.7c0.6,0.6,10.8,4.4,12,4.7 c6-12.7,14.9-49.7,15.2-58.9c7.3,2.5,4.4,12.3,2.8,22.2c-8.2,51-14.9,66.5-17.1,76c7.3-1.6,12-2.8,12.7-3.8 c1.3-1.3,4.4-9.8,7.6-19.3c4.4-13.9,11.4-49.1,11.1-63c0-3.5-2.8-6.6-7.9-9.2c0,0,2.5-4.4,3.8-7c1.6-3.5,3.2-9.8,3.2-9.8 c2.8,0.9,5.4,2.2,5.7,5.1c1.6,13.3,0.6,14.6-0.9,39.3c-0.6,7.9-3.2,23.4-6,39.9c-5.4,30.1-10.4,42.7-10.4,47.5 c7.9-2.5,13.9-4.4,14.6-5.4c0.6-1.6,6.6-15.8,10.8-37.7c1.9-9.2,3.2-18.7,4.4-28.2c2.2-12.7,2.5-25.6,2.5-36.4 c0-15.8,1.9-15.8-9.8-22.2c4.4-13,3.5-21.5,2.5-23.7c-1.9-4.7-4.4-4.7-14.9-3.8c3.8,3.5,2.5,10.4,1.6,14.6 c-1.9-1.6-1.3-4.4-12.3-4.1c-1.6-18-5.1-19.9-5.4-20.6c-1.6-1.9-10.8-0.9-13.6,0c1.9,1.3,6.3,15.5,4.1,20.9 c-1.3-1.6-16.8-19.3-15.8-22.5c0.6-1.9,1.6-4.1,7-10.4c18.7,3.2,50.3,15.2,51.9,18.4c1.9,4.1,3.8,8.9,5.1,15.8 c1.6,10.4,4.7,35.1,3.2,72.8c-1.6,38.9-6.6,61.1-6.6,59.8c5.7-1.9,15.5-10.8,16.1-12.7c2.5-6.3,3.8-29.4,4.4-50.3 c0.9-20.9-1.3-47.5-2.5-57.3C245.7,258.6,244.1,252.3,240.6,246.9z M98.2,409.3c-5.7,0-14.6-0.9-14.2-0.9l14.2-41.1l13.3,41.5 C111.5,408.7,103.6,409.3,98.2,409.3z M169.7,408.7c0,0-8.9,0.9-14.2,0.9c-5.1,0-13.3-0.9-13.3-0.9l13-41.5L169.7,408.7z M133,376.4v-15.8h12.3l-18.7,51.6l-18.4-51.6h12.3V372c0,0,0,0.9,0.3,1.3c1.6,0.9,1.9,0.9,1.9,0.9L133,376.4z M134.6,292.5h-21.5 c-1.6-5.1,0-6.3,4.4-6.6C126.4,284.9,134,284.9,134.6,292.5z M194.7,269.7c7.9-1.3,4.1,12.7,2.2,18c-2.8-6.6-5.1-10.4-9.8-16.8 C190,270.3,191.9,270.3,194.7,269.7z"/><path class="st0" d="M56.1,384.3c3.8-3.8,17.1-17.4,19-24.7c2.5-8.9,4.4-29.8,4.4-34.5c0,0-13,8.9-19.9,15.8c-2.8,3.2-7,8.5-7,8.5 c-1.3-7.6,0.3-15.8,3.8-20.9c4.4-7,20.6-20.6,22.5-26.3c3.5-8.9,2.8-16.8,5.7-26.6c-10.8,3.5-24.1,11.7-30.1,18.4 c-0.9-10.4,2.5-18,9.5-23.4c10.1-7.6,23.4-12,32.3-14.6c7.6-2.2,19.3-4.7,25.6-7.6c11.1-5.4,21.8-20.6,24.4-28.5 c-3.8,0-16.8-0.9-29.8,4.1c-4.7,1.9-7,6-9.2,9.5c-2.2,3.8-4.4,6.6-6.3,9.2c-5.4,7.9-11.7,11.7-19.9,13.9c0.3-0.6,5.4-3.8,9.2-11.7 c3.2-6.6,7-19.9,7-20.9c-7,0.9-11.4,2.8-18.7,5.7c-7.9,3.2-10.1,6.3-11.7,9.2c-5.1,7.9-3.8,30.1-13.9,38.9 c0.3-11.7,2.8-24.4-1.3-38.9c-21.5,8.2-25.3,15.8-23.7,25c1.9,12,15.5,17.7,21.5,27.5c1.6,2.8,2.5,7,2.5,7.6c0.3,0-4.1,6-2.8,17.4 c0,0-4.4-8.2-8.2-13.6c-6.3-8.2-18.7-20.9-18.7-20.9c-2.5,32.6,1.6,39.3,3.2,42.1c4.1,7,19.6,17.7,22.8,24.4 c1.6,3.5,1.9,4.7,1.9,4.7c0.6,1.3-3.2,5.4-2.5,11.1c0.3,1.9,0.6,4.4,1.3,7.6c0,0-4.4-6.6-10.8-13.9c-5.7-6.6-16.8-14.2-16.8-14.2 c-0.6,3.8,1.3,21.8,1.6,24.7c1.6,9.2,1.9,17.7,9.5,25.6c6.6,6.6,28.2,15.5,32.6,17.1c0,0-0.9-4.1-2.8-10.1 C60.2,394.4,56.1,384.3,56.1,384.3z"/><path class="st0" d="M258.3,240.3h6c4.1,0,7.9,0.9,11.7,3.2c2.5,1.6,4.4,3.2,5.1,5.4c0.9,2.8,1.6,8.5,1.6,17.1v110.2 c0,10.1-0.9,16.8-3.2,19.3c-3.2,4.1-8.2,6-15.2,6h-6v4.7h73.1v-4.7h-6c-4.1,0-7.9-0.9-11.4-3.2c-2.5-1.6-4.4-3.2-5.4-5.4 c-0.9-2.8-1.6-8.5-1.6-17.1V265.9c0-10.1,0.9-16.8,3.2-19.3c3.2-4.1,8.2-6,15.2-6h6v-4.7h-73.1V240.3z"/><path class="st0" d="M616.7,343.1c-3.2-6.3-7.6-11.7-13.6-16.1c-5.7-4.4-16.8-11.1-32.6-19.6c-19.6-10.4-32-19-37-25 c-3.5-4.4-5.4-8.9-5.4-14.2c0-6.6,2.8-13,8.5-18c5.7-5.4,13-7.9,21.5-7.9c7.6,0,15.2,1.9,22.5,6c7.3,3.8,12.7,9.2,16.8,15.8 c3.8,6.6,6.6,15.8,8.2,26.9h4.7v-59.2h-4.7c-0.9,3.8-1.9,6.6-3.5,7.9c-1.3,1.3-3.2,1.9-5.4,1.9c-1.9,0-5.4-0.9-9.8-3.2 c-10.1-4.4-19.6-6.6-28.8-6.6c-14.6,0-26.6,4.4-35.8,13.3c-9.5,8.9-14.2,19.3-14.2,31.7c0,7,1.6,13.6,4.7,19.3 c3.2,6,7.9,11.4,13.9,16.1c6.3,4.7,16.5,11.4,31,19.6s23.4,13.6,26.9,16.1c4.7,3.8,8.5,7.6,10.8,12c2.2,4.4,3.5,8.5,3.5,12.7 c0,7.6-3.2,13.9-9.2,19.6c-6,5.4-14.2,8.2-24.7,8.2c-9.2,0-17.4-1.9-25-6c-7.6-4.1-13.3-9.2-16.8-15.2c-3.8-6-6.6-15.2-8.9-27.5 h-4.7v49.7c-7-1.6-11.4-3.5-16.1-6.6c-5.7-3.8-12.7-11.1-20.9-22.5l-35.1-49.1c14.2-3.2,25-8.5,31.7-16.5 c7-7.6,10.1-16.8,10.1-27.2c0-9.8-2.8-18.4-8.9-25.3c-6-7-13.3-12-21.8-14.6s-21.8-4.1-40.2-4.1h-62v4.7h6.3 c6.3,0,11.4,1.9,14.6,5.4c2.2,2.5,3.5,9.2,3.5,19.9v110.2c0,9.8-0.9,15.8-2.5,18.4c-3.2,4.7-8.2,7-15.5,7h-6.3v4.7h73.1v-4.7h-6.6 c-6.3,0-11.1-1.9-14.2-5.4c-2.2-2.5-3.5-9.2-3.5-19.9v-49.4c1.3,0,2.5,0,3.8,0.3c1.3,0,2.5,0,3.5,0c2.5,0,6,0,10.4-0.3l57.6,79.8 h39.3l0,0h5.4c0.6-1.9,1.3-3.2,1.9-3.8c1.3-1.3,2.8-1.9,5.1-1.9s7.3,1.3,15.5,4.1c8.2,2.5,13.6,4.1,16.1,4.7 c4.4,0.6,8.9,1.3,13.9,1.3c15.8,0,28.8-4.7,38.6-13.9c10.1-9.5,14.9-20.6,14.9-33.2C621.4,355.8,619.8,349.5,616.7,343.1z M402.1,318.8c-0.6,0-1.6,0-2.8,0c-1.3,0-2.5,0-4.1,0v-71.2c8.2-1.6,14.9-2.5,19.6-2.5c11.1,0,19.9,3.5,26.6,10.1 c6.6,6.6,10.1,15.2,10.1,26s-4.1,19.9-12.3,26.9C430.5,315.3,418.5,318.8,402.1,318.8z"/></g></svg></span></span>
+    <nav class="mnav" aria-label="Primary">
+      <a class="langlink" href="#">Español</a>
+      <a href="#">Help</a>
+      <a class="signin" href="#">Sign in</a>
+    </nav>
+  </div></div>
+
+  <nav class="pnav" aria-label="Main sections"><div class="wrap">
+    <a href="#" data-goto="__home" class="active">Home</a>
+    <a href="#" data-goto="freefile">File</a>
+    <a href="#" data-goto="pay">Pay</a>
+    <a href="#" data-goto="refund">Refunds</a>
+    <a href="#" data-goto="1040">Forms &amp; Instructions</a>
+    <a href="#" data-goto="standard">Credits &amp; Deductions</a>
+    <a href="#" data-goto="contact">Help</a>
+  </div></nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>What can we help you do today?</h1>
+      <p class="lede">Search for a task, a form, or a question in plain language &mdash; and go straight to it.</p>
+      <div class="omni" id="omni-root">
+        <label class="sr-only" for="omni">Search IRS tasks, forms, and answers</label>
+        <div class="omni-wrap" id="omniWrap">
+          <span class="mag" aria-hidden="true"><svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></g></svg></span>
+          <input id="omni" type="text" role="combobox" aria-expanded="false" aria-controls="results" aria-autocomplete="list" autocomplete="off" placeholder="Try &ldquo;where&rsquo;s my refund&rdquo;, &ldquo;make a payment&rdquo;, or &ldquo;get a transcript&rdquo;">
+          <button class="clearbtn" id="clearBtn" type="button" aria-label="Clear search"><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+          <button class="go" id="goBtn" type="button">Search<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+        <div class="results" id="results" hidden>
+          <div class="res-head" id="resHead">Suggested tasks</div>
+          <div id="listbox" role="listbox" aria-label="Results"></div>
+        </div>
+        <span class="sr-only" id="live" aria-live="polite"></span>
+      </div>
+      <div class="chips" id="chips">
+        <span class="lbl">Popular:</span>
+      </div>
+      <div class="chips" style="margin-top:10px">
+        <span class="lbl">Or:</span>
+        <button class="chip sug" type="button" data-ask="I have a question about my taxes">Ask IRS a question<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.4 3.6L13 6.5l-3.6 1.4L8 11.5 6.6 7.9 3 6.5l3.6-1.4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </section>
+  <div class="omni-scrim" id="scrim" aria-hidden="true"></div>
+
+  <main class="wrap home">
+    <section class="sec">
+      <h2>Top tasks</h2>
+      <p class="sub">The things people come here to do most.</p>
+      <div class="task-grid" id="taskGrid"></div>
+    </section>
+
+    <section class="sec two">
+      <div>
+        <h2>Tools</h2>
+        <p class="sub">Check a status or start an application.</p>
+        <div class="tools" id="toolsList"></div>
+      </div>
+      <div>
+        <h2>News &amp; alerts</h2>
+        <p class="sub">Recent updates.</p>
+        <div class="alerts" id="alertsList"></div>
+      </div>
+    </section>
+  </main>
+
+  <section class="view wrap" id="view" aria-live="polite"></section>
+
+  <footer>
+    <div class="wrap">
+      <div class="cols">
+        <div class="fcol"><h4>File</h4><a href="#">Individuals</a><a href="#">Businesses &amp; self-employed</a><a href="#">Charities &amp; nonprofits</a><a href="#">Free File</a></div>
+        <div class="fcol"><h4>Pay</h4><a href="#">Bank account (Direct Pay)</a><a href="#">Payment plan</a><a href="#">Debit or credit card</a><a href="#">View your balance</a></div>
+        <div class="fcol"><h4>Refunds</h4><a href="#">Where&rsquo;s My Refund?</a><a href="#">What to expect</a><a href="#">Direct deposit</a><a href="#">Amended returns</a></div>
+        <div class="fcol"><h4>Help</h4><a href="#">Contact the IRS</a><a href="#">Interactive Tax Assistant</a><a href="#">Taxpayer Advocate</a><a href="#">Local offices</a></div>
+      </div>
+      <p class="disclaimer">Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of any agency. All data is fictional mock data &mdash; no real personal or taxpayer information.</p>
+    </div>
+  </footer>
+
+<script>
+(function(){
+  "use strict";
+  // ---- icon templates (defined once) ----
+  var IC = {
+    refund:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.8"/><path d="M13.5 2.5v2.2h-2.2"/></g></svg>',
+    card:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="M2 6.5h12M4.5 9.8h3"/></g></svg>',
+    doc:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 1.5h5l3 3v10H4z"/><path d="M9 1.5v3h3M6 8h4M6 10.5h4"/></g></svg>',
+    package:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5 8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5 8 8l5.5-3M8 8v6"/></g></svg>',
+    person:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg>',
+    building:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg>',
+    lock:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg>',
+    clock:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.8V8l2.3 1.6"/></g></svg>',
+    envelope:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg>',
+    calc:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="10" height="12"/><path d="M5 4.5h6M5 7.5h1M7.5 7.5h1M10 7.5h1M5 10h1M7.5 10h1M10 10v2"/></g></svg>',
+    help:'<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M6.3 6.2a1.8 1.8 0 1 1 2.4 1.7c-.5.2-.7.6-.7 1.1v.3"/></g><circle cx="8" cy="11.4" r=".8" fill="currentColor"/></svg>',
+    list:'<svg viewBox="0 0 16 16"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg>',
+    warning:'<svg viewBox="0 0 16 16"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg>',
+    ext:'<svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 6.5 9.5M7 4H3v9h9V9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    ret:'<svg viewBox="0 0 16 16"><path d="M13 4v3a2 2 0 0 1-2 2H3M6 6 3 9l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  };
+
+  // ---- catalog of tasks / answers ----
+  // c = accent color for the tile
+  var DATA = [
+    {id:"refund", icon:"refund", c:"#004c97", title:"Check your refund status", plain:"Where\u2019s My Refund? \u2014 track your federal refund", kw:"wheres my refund status track where is track refund deposit money back return status",
+      answer:"<span class='big'>Most refunds arrive within 21 days</span>Track yours with your Social Security number, filing status, and exact refund amount. Direct deposit is fastest.", route:"/refunds"},
+    {id:"pay", icon:"card", c:"#1a7f4b", title:"Make a payment", plain:"Pay directly from your bank account with Direct Pay", kw:"make a payment pay taxes bill balance owe money direct pay debit credit card what i owe",
+      answer:"<span class='big'>Pay your balance in minutes</span>Direct Pay is free from a checking or savings account. Debit and credit cards are accepted for a processing fee.", route:"/payments"},
+    {id:"plan", icon:"clock", c:"#5b3fa0", title:"Set up a payment plan", plain:"Apply online if you can\u2019t pay in full", kw:"payment plan installment agreement cant pay in full owe monthly payments arrange",
+      answer:"", route:"/payments/online-payment-agreement"},
+    {id:"transcript", icon:"doc", c:"#00687d", title:"Get your tax transcript", plain:"View or download a record of your account and returns", kw:"get transcript tax record account wage income return copy download prior year",
+      answer:"", route:"/individuals/get-transcript"},
+    {id:"amended", icon:"package", c:"#8a6d00", title:"Check your amended return", plain:"Where\u2019s My Amended Return? \u2014 status of Form 1040-X", kw:"amended return status 1040x wheres my amended correction fix return",
+      answer:"<span class='big'>Amended returns take up to 3 weeks to appear</span>Processing can take 16 weeks or more. Check the status with your SSN, date of birth, and ZIP code.", route:"/filing/amended-return"},
+    {id:"1040", icon:"doc", c:"#004c97", title:"Form 1040 and instructions", plain:"U.S. Individual Income Tax Return", kw:"form 1040 individual income tax return instructions download pdf 1040 sr schedule",
+      answer:"", route:"/forms-instructions/form-1040"},
+    {id:"ein", icon:"building", c:"#1a7f4b", title:"Apply for an EIN", plain:"Get an Employer Identification Number for your business", kw:"ein employer identification number business apply tax id federal register new business",
+      answer:"", route:"/businesses/apply-for-an-ein"},
+    {id:"ippin", icon:"lock", c:"#5b3fa0", title:"Get an Identity Protection PIN", plain:"A six-digit IP PIN helps stop tax-related identity theft", kw:"ip pin identity protection theft six digit secure account protect",
+      answer:"", route:"/identity-theft/get-an-ip-pin"},
+    {id:"estimated", icon:"calc", c:"#00687d", title:"Pay estimated taxes", plain:"Quarterly payments for self-employment and other income", kw:"estimated taxes quarterly 1040es self employed freelance gig due dates estimate",
+      answer:"<span class='big'>Next quarterly due date: Jan 15, 2026</span>Estimated payments apply to income not subject to withholding \u2014 self-employment, interest, dividends, and more.", route:"/payments/estimated-taxes"},
+    {id:"standard", icon:"help", c:"#8a6d00", title:"Standard deduction amounts", plain:"How much you can deduct for tax year 2025", kw:"standard deduction how much amount 2025 single married filing jointly head household",
+      answer:"<span class='big'>2025: $15,000 single &middot; $30,000 married filing jointly</span>Head of household is $22,500. Most taxpayers take the standard deduction instead of itemizing.", route:"/credits-deductions/standard-deduction"},
+    {id:"freefile", icon:"person", c:"#004c97", title:"File for free with Free File", plain:"Guided tax software if your income is within the limit", kw:"free file taxes online software no cost guided prepare file return",
+      answer:"", route:"/filing/free-file"},
+    {id:"contact", icon:"help", c:"#00687d", title:"Contact the IRS", plain:"Phone numbers, hours, and the fastest ways to get help", kw:"contact phone number call help support hours representative talk to someone customer service",
+      answer:"<span class='big'>Individual help: 800-829-1040</span>Lines are open 7 a.m. to 7 p.m. local time, Monday through Friday. Many questions are answered fastest online.", route:"/help/contact"},
+    {id:"notice", icon:"envelope", c:"#b50909", title:"Understand a notice or letter", plain:"Look up any IRS notice by its number (like CP14)", kw:"notice letter cp14 cp2000 understand received mail why did i get received a letter",
+      answer:"", route:"/individuals/understanding-your-notice"},
+    {id:"eitc", icon:"person", c:"#1a7f4b", title:"Earned Income Tax Credit", plain:"See if you qualify and how much you could get", kw:"eitc earned income tax credit qualify low income refund credit children",
+      answer:"", route:"/credits-deductions/eitc"},
+    {id:"withhold", icon:"calc", c:"#5b3fa0", title:"Check your withholding", plain:"Use the Tax Withholding Estimator to fine-tune your W-4", kw:"withholding estimator w4 paycheck adjust w-4 too much too little tax taken out",
+      answer:"", route:"/individuals/tax-withholding-estimator"}
+  ];
+
+  var TOP = ["refund","pay","transcript","1040","plan","contact"];
+  var TOOLS = ["amended","ein","ippin","withhold","freefile"];
+  var CHIPS = [
+    {id:"refund", label:"Where\u2019s my refund"},
+    {id:"pay", label:"Make a payment"},
+    {id:"transcript", label:"Get a transcript"},
+    {id:"1040", label:"Form 1040"},
+    {id:"plan", label:"Payment plan"}
+  ];
+  var ALERTS = [
+    {warn:true, icon:"warning", date:"Filing season", title:"The 2025 filing season is open \u2014 file early to get your refund faster."},
+    {warn:false, icon:"envelope", date:"Scam alert", title:"The IRS does not text or email asking for payment or personal information."},
+    {warn:false, icon:"clock", date:"Reminder", title:"Fourth-quarter estimated tax payments are due January 15, 2026."}
+  ];
+
+  function byId(id){ for(var i=0;i<DATA.length;i++){ if(DATA[i].id===id) return DATA[i]; } return null; }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  // ---- build homepage sections ----
+  var grid = document.getElementById("taskGrid");
+  TOP.forEach(function(id){
+    var d = byId(id); if(!d) return;
+    var a = document.createElement("a");
+    a.className = "task"; a.href = "#"; a.setAttribute("data-goto", id);
+    a.innerHTML = '<span class="ti">'+IC[d.icon]+'</span><h3>'+esc(d.title)+'</h3><p>'+esc(d.plain)+'</p>';
+    grid.appendChild(a);
+  });
+  var tools = document.getElementById("toolsList");
+  TOOLS.forEach(function(id){
+    var d = byId(id); if(!d) return;
+    var a = document.createElement("a");
+    a.href = "#"; a.setAttribute("data-goto", id);
+    a.innerHTML = '<span class="li">'+IC[d.icon]+'</span><span><span class="tt">'+esc(d.title)+'</span><span class="td">'+esc(d.plain)+'</span></span><span class="arr">'+IC.ext.replace(/currentColor/g,"currentColor")+'</span>';
+    // use chevron-right for arrow
+    a.querySelector(".arr").innerHTML = '<svg viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    tools.appendChild(a);
+  });
+  var al = document.getElementById("alertsList");
+  ALERTS.forEach(function(x){
+    var d = document.createElement("div");
+    d.className = "alert" + (x.warn?" warn":"");
+    d.innerHTML = '<span class="ab">'+IC[x.icon]+'</span><div><div class="adate">'+esc(x.date)+'</div><div class="atitle">'+esc(x.title)+'</div></div>';
+    al.appendChild(d);
+  });
+  var chipsWrap = document.getElementById("chips");
+  CHIPS.forEach(function(c){
+    var b = document.createElement("button");
+    b.className = "chip"; b.type = "button"; b.setAttribute("data-chip", c.id);
+    b.textContent = c.label;
+    chipsWrap.appendChild(b);
+  });
+
+  // ---- omnibar behavior ----
+  var input = document.getElementById("omni");
+  var results = document.getElementById("results");
+  var listbox = document.getElementById("listbox");
+  var resHead = document.getElementById("resHead");
+  var wrap = document.getElementById("omniWrap");
+  var scrim = document.getElementById("scrim");
+  var clearBtn = document.getElementById("clearBtn");
+  var goBtn = document.getElementById("goBtn");
+  var live = document.getElementById("live");
+  var current = [];   // currently rendered items
+  var activeIdx = -1;
+  var toast;
+
+  function score(d, q){
+    if(!q) return 0;
+    var hay = (d.title+" "+d.plain+" "+d.kw).toLowerCase();
+    var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+    var s = 0, all = true;
+    terms.forEach(function(t){
+      var i = hay.indexOf(t);
+      if(i<0){ all=false; return; }
+      s += 10;
+      if(d.title.toLowerCase().indexOf(t)>=0) s += 8;
+      if(i===0 || hay[i-1]===" ") s += 3;
+    });
+    return all ? s : (s>0 ? s*0.3 : 0);
+  }
+
+  function render(q){
+    var items;
+    if(!q){
+      resHead.textContent = "Suggested tasks";
+      items = TOP.map(byId);
+    } else {
+      resHead.textContent = "Results";
+      var scored = DATA.map(function(d){ return {d:d, s:score(d,q)}; })
+                       .filter(function(x){ return x.s>0; })
+                       .sort(function(a,b){ return b.s-a.s; });
+      items = scored.map(function(x){ return x.d; });
+    }
+    current = items;
+    activeIdx = items.length ? 0 : -1;
+    listbox.innerHTML = "";
+    if(!items.length){
+      resHead.textContent = "No page matched \u2014 ask IRS";
+      listbox.innerHTML =
+        '<a class="opt ask" href="#" role="option" data-ask="'+esc(q)+'">'+
+          '<span class="oicon">'+IC.spark+'</span><div class="obody">'+
+          '<p class="otitle">Ask IRS about \u201c'+esc(q)+'\u201d</p>'+
+          '<p class="oplain">No page matched exactly. Get a direct answer from the IRS assistant and the right links.</p>'+
+          '<div class="ext-tag" style="color:var(--violet)">'+IC.spark+' Opens the assistant</div>'+
+          '</div></a>';
+      var askOpt = listbox.querySelector(".opt.ask");
+      askOpt.addEventListener("click", function(e){ e.preventDefault(); close(); input.blur(); openChat(q); });
+      current = [{ask:true, q:q}];
+      activeIdx = 0;
+      live.textContent = "No page matched. Press Enter to ask IRS.";
+    } else {
+      items.forEach(function(d, i){
+        var a = document.createElement("a");
+        a.className = "opt" + (i===activeIdx?" active":"");
+        a.href = "#"; a.setAttribute("role","option");
+        a.setAttribute("data-goto", d.id);
+        a.style.setProperty("--c", d.c);
+        a.setAttribute("aria-selected", i===activeIdx?"true":"false");
+        var html = '<span class="oicon">'+IC[d.icon]+'</span><div class="obody">'+
+          '<p class="otitle">'+esc(d.title)+'</p>'+
+          '<p class="oplain">'+esc(d.plain)+'</p>';
+        if(d.answer) html += '<div class="answer">'+d.answer+'</div>';
+        html += '</div>';
+        a.innerHTML = html;
+        a.addEventListener("mouseenter", function(){ setActive(i); });
+        a.addEventListener("click", function(e){ e.preventDefault(); go(d); });
+        listbox.appendChild(a);
+      });
+      live.textContent = items.length + (items.length===1?" result":" results");
+    }
+  }
+
+  function setActive(i){
+    activeIdx = i;
+    var opts = listbox.querySelectorAll(".opt");
+    opts.forEach(function(o, idx){
+      var on = idx===i;
+      o.classList.toggle("active", on);
+      o.setAttribute("aria-selected", on?"true":"false");
+      if(on) o.scrollIntoView({block:"nearest"});
+    });
+  }
+
+  function open(){ results.hidden=false; scrim.classList.add("show"); input.setAttribute("aria-expanded","true"); }
+  function close(){ results.hidden=true; scrim.classList.remove("show"); input.setAttribute("aria-expanded","false"); }
+
+  function go(d){
+    close();
+    input.blur();
+    if(d && d.ask){ openChat(d.q); return; }
+    if(d && d.id) route(d.id);
+  }
+
+  input.addEventListener("focus", function(){ render(input.value.trim()); open(); });
+  input.addEventListener("input", function(){
+    var q = input.value.trim();
+    clearBtn.classList.toggle("show", !!q);
+    render(q); open();
+  });
+  input.addEventListener("keydown", function(e){
+    if(e.key==="ArrowDown"){ e.preventDefault(); if(current.length){ setActive((activeIdx+1)%current.length); } }
+    else if(e.key==="ArrowUp"){ e.preventDefault(); if(current.length){ setActive((activeIdx-1+current.length)%current.length); } }
+    else if(e.key==="Enter"){ e.preventDefault(); if(activeIdx>=0 && current[activeIdx]) go(current[activeIdx]); }
+    else if(e.key==="Escape"){ if(input.value){ input.value=""; clearBtn.classList.remove("show"); render(""); } else { close(); input.blur(); } }
+  });
+  clearBtn.addEventListener("click", function(){ input.value=""; clearBtn.classList.remove("show"); render(""); input.focus(); });
+  goBtn.addEventListener("click", function(){ if(activeIdx>=0 && current[activeIdx]) go(current[activeIdx]); else input.focus(); });
+  scrim.addEventListener("click", close);
+
+  // "/" global shortcut to focus
+  document.addEventListener("keydown", function(e){
+    if(e.key==="/" && document.activeElement!==input && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
+      e.preventDefault(); input.focus();
+    }
+  });
+
+  // chips + task cards + tools route into the omnibar / toast
+  document.getElementById("chips").addEventListener("click", function(e){
+    var b = e.target.closest("[data-chip]"); if(!b) return;
+    var d = byId(b.getAttribute("data-chip"));
+    var chip = CHIPS.filter(function(c){return c.id===b.getAttribute("data-chip");})[0];
+    input.value = chip ? chip.label : "";
+    input.focus(); clearBtn.classList.add("show"); render(input.value.trim()); open();
+  });
+  document.addEventListener("click", function(e){
+    var ask = e.target.closest("[data-ask]");
+    if(ask){ e.preventDefault(); openChat(ask.getAttribute("data-ask")); return; }
+    var t = e.target.closest("[data-goto]"); if(!t) return;
+    e.preventDefault();
+    var id = t.getAttribute("data-goto");
+    if(id==="__home"){ goHome(); return; }
+    route(id);
+  });
+
+  // ---- routing + inline destination views ----
+  var view = document.getElementById("view");
+  var pnavLinks = document.querySelectorAll(".pnav a");
+  function setNav(id){
+    pnavLinks.forEach(function(a){
+      a.classList.toggle("active", a.getAttribute("data-goto")===id || (id===null && a.getAttribute("data-goto")==="__home"));
+    });
+  }
+  function goHome(){
+    document.body.classList.remove("routed");
+    view.innerHTML = "";
+    setNav(null);
+    if(input) input.value = "";
+    if(clearBtn) clearBtn.classList.remove("show");
+    window.scrollTo(0,0);
+  }
+  function relatedRows(ids){
+    return ids.map(function(id){
+      var d = byId(id); if(!d) return "";
+      return '<a class="relrow" href="#" data-goto="'+id+'"><span class="rc">'+IC[d.icon]+'</span><span class="rt">'+esc(d.title)+'</span></a>';
+    }).join("");
+  }
+  function route(id){
+    var d = byId(id); if(!d){ goHome(); return; }
+    var body = PAGES[id] ? PAGES[id]() : genericPage(d);
+    var rel = (RELATED[id] || TOP.filter(function(x){return x!==id;}).slice(0,3));
+    view.innerHTML =
+      '<nav class="crumbs" aria-label="Breadcrumb"><a href="#" data-goto="__home">Home</a>'+CHEV+
+        '<span class="cur">'+esc(d.title)+'</span></nav>'+
+      '<div class="pagehead">'+
+        '<h1>'+esc(d.title)+'</h1><p class="intro">'+esc(d.plain)+'</p></div>'+
+      '<div class="pgrid"><div class="pbody">'+body+
+        '<button class="backlink" type="button" data-goto="__home">'+IC.arrowl+' Back to home</button>'+
+      '</div><aside>'+
+        '<div class="sidecard"><h3>Related</h3><div class="related">'+relatedRows(rel)+'</div>'+
+          '<div class="related"><a href="#" data-ask="I have a question about '+esc(d.title.toLowerCase())+'">Still have a question? Ask IRS &rarr;</a></div>'+
+        '</div>'+
+      '</aside></div>';
+    document.body.classList.add("routed");
+    setNav(id);
+    window.scrollTo(0,0);
+  }
+
+  function genericPage(d){
+    var ans = d.answer ? '<div class="callout"><div class="ct">'+IC[d.icon]+' Quick answer</div><div class="cv">'+d.answer+'</div></div>' : "";
+    return ans +
+      '<p>'+esc(d.plain)+'. Use the options below to get started, or ask a question and IRS will help you find the right path.</p>'+
+      '<h2>What you can do here</h2>'+
+      '<ul><li>Review eligibility and what you\u2019ll need before you begin.</li>'+
+      '<li>Start the online tool or download the related form.</li>'+
+      '<li>Check the status of a request you already submitted.</li></ul>'+
+      '<p><button class="btn" type="button" data-ask="Help me with '+esc(d.title.toLowerCase())+'">'+IC.gear+' Get step-by-step help</button></p>';
+  }
+
+  // Rich, hand-built destination pages for the highest-traffic tasks
+  var PAGES = {
+    refund: function(){
+      return '<div class="track" aria-label="Refund progress">'+
+          '<div class="tstep done"><span class="num">'+IC.checkmini+'</span><span class="tl">Return received</span><span class="td2">Mar 3</span></div>'+
+          '<div class="tstep current"><span class="num">2</span><span class="tl">Refund approved</span><span class="td2">In progress</span></div>'+
+          '<div class="tstep"><span class="num">3</span><span class="tl">Refund sent</span><span class="td2">Estimated Mar 24</span></div>'+
+        '</div>'+
+        '<div class="callout"><div class="ct">'+IC.refund+' Your refund is approved</div><div class="cv"><span class="big">$1,742</span>Expected by direct deposit to account ending in \u20221049 around <b>March 24</b>. Most refunds arrive within 21 days of e-filing.</div></div>'+
+        '<h2>Check a different return</h2>'+
+        '<div class="miniform"><div class="row2">'+
+          '<div class="field"><label>Filing status</label><select><option>Single</option><option>Married filing jointly</option><option>Head of household</option></select></div>'+
+          '<div class="field"><label>Tax year</label><select><option>2025</option><option>2024</option><option>2023</option></select></div>'+
+        '</div>'+
+        '<div class="field"><label for="rf-amt">Exact refund amount</label><span class="fh">Whole dollars, as shown on your return</span><input id="rf-amt" inputmode="numeric" placeholder="$0"></div>'+
+        '<button class="btn" type="button" data-ask="Where is my refund and when will it arrive?">'+IC.refund+' Check status</button></div>';
+    },
+    pay: function(){
+      return '<div class="callout"><div class="ct">'+IC.card+' Direct Pay</div><div class="cv">Pay directly from a checking or savings account at no cost. Payments post in 1\u20132 business days.</div></div>'+
+        '<div class="miniform">'+
+          '<div class="field"><label for="pay-amt">Payment amount</label><input id="pay-amt" inputmode="decimal" placeholder="$0.00"></div>'+
+          '<div class="row2">'+
+            '<div class="field"><label>Reason for payment</label><select><option>Balance due</option><option>Estimated tax</option><option>Extension</option><option>Amended return</option></select></div>'+
+            '<div class="field"><label>Tax year</label><select><option>2025</option><option>2024</option><option>2023</option></select></div>'+
+          '</div>'+
+          '<button class="btn" type="button" data-ask="How do I make a payment and what are my options?">'+IC.card+' Continue to payment</button> '+
+          '<button class="btn sec" type="button" data-goto="plan">Set up a payment plan instead</button>'+
+        '</div>'+
+        '<h2>Other ways to pay</h2>'+
+        '<ul><li><b>Debit or credit card</b> \u2014 through an authorized processor for a fee.</li>'+
+        '<li><b>Payment plan</b> \u2014 pay monthly if you can\u2019t pay in full today.</li>'+
+        '<li><b>Check or money order</b> \u2014 by mail with a payment voucher.</li></ul>';
+    },
+    plan: function(){
+      return '<div class="callout"><div class="ct">'+IC.clock+' You may qualify to apply online</div><div class="cv">If you owe $50,000 or less in combined tax, penalties, and interest, you can set up a monthly plan in minutes.</div></div>'+
+        '<div class="miniform">'+
+          '<div class="field"><label for="pl-bal">Amount you owe</label><span class="fh">Estimate is fine \u2014 you can adjust later</span><input id="pl-bal" inputmode="decimal" placeholder="$0.00"></div>'+
+          '<div class="field"><label>Preferred monthly payment date</label><select><option>1st of the month</option><option>15th of the month</option><option>28th of the month</option></select></div>'+
+          '<button class="btn" type="button" data-ask="What payment plan options do I qualify for?">'+IC.arrowr+' See my options</button>'+
+        '</div>'+
+        '<h2>Before you apply</h2>'+
+        '<ul><li>Have this year\u2019s return filed, or file it first.</li>'+
+        '<li>Know your balance \u2014 you can look it up in your account.</li>'+
+        '<li>A setup fee may apply and can be reduced with direct debit.</li></ul>';
+    },
+    transcript: function(){
+      return '<p>A transcript is a summary of your return and account activity. Choose the type that matches what you need.</p>'+
+        '<div class="miniform">'+
+          '<div class="field"><label>Transcript type</label><select><option>Return transcript</option><option>Account transcript</option><option>Wage &amp; income transcript</option><option>Record of account</option></select></div>'+
+          '<div class="field"><label>Tax year</label><select><option>2025</option><option>2024</option><option>2023</option><option>2022</option></select></div>'+
+          '<button class="btn" type="button" data-ask="Which transcript do I need and how do I get it?">'+IC.doc+' Get transcript online</button>'+
+        '</div>'+
+        '<h2>Common uses</h2>'+
+        '<ul><li>Applying for a mortgage or student aid.</li>'+
+        '<li>Confirming income for a prior year.</li>'+
+        '<li>Resolving a notice or verifying a filing.</li></ul>';
+    },
+    contact: function(){
+      return '<div class="callout"><div class="ct">'+IC.help+' Individual help line</div><div class="cv"><span class="big">800-829-1040</span>Open 7 a.m. to 7 p.m. local time, Monday through Friday. Wait times are shortest later in the week.</div></div>'+
+        '<h2>Get help faster online</h2>'+
+        '<ul><li><b>Ask IRS</b> \u2014 get an instant answer and the right link below.</li>'+
+        '<li><b>Your online account</b> \u2014 balances, payments, and notices.</li>'+
+        '<li><b>Interactive Tax Assistant</b> \u2014 answers to common tax-law questions.</li></ul>'+
+        '<p><button class="btn" type="button" data-ask="I need help with my taxes">'+IC.gear+' Ask IRS</button></p>';
+    }
+  };
+  var RELATED = {
+    refund:["amended","transcript","pay"], pay:["plan","estimated","notice"],
+    plan:["pay","notice","contact"], transcript:["1040","amended","refund"],
+    contact:["notice","transcript","standard"], amended:["refund","1040","transcript"],
+    "1040":["standard","freefile","transcript"], standard:["1040","eitc","withhold"],
+    freefile:["1040","standard","refund"]
+  };
+
+  // ---- Agent chat fallback ----
+  var CHEV = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  IC.arrowl = '<svg viewBox="0 0 16 16"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  IC.arrowr = '<svg viewBox="0 0 16 16"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  IC.gear = '<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.7 3.7l1.4 1.4M10.9 10.9l1.4 1.4M12.3 3.7l-1.4 1.4M5.1 10.9l-1.4 1.4"/></g></svg>';
+  IC.spark = '<svg viewBox="0 0 16 16"><path d="M8 1.5l1.4 3.6L13 6.5l-3.6 1.4L8 11.5 6.6 7.9 3 6.5l3.6-1.4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+  IC.send = '<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg>';
+  IC.checkmini = '<svg viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // knowledge the assistant can "retrieve" — each answer cites a real page id
+  var KB = [
+    {kw:"account id.me sign in login register create account verify identity", tool:"Searching help topics",
+     a:"To sign in you\u2019ll verify your identity through ID.me, our trusted technology provider. You can use an existing ID.me account or create one with a photo ID and a selfie. Once verified, you can see your balance, payment history, and notices in one place.",
+     cites:["contact"]},
+    {kw:"scam fraud phishing text email fake call spoof irs impersonation", tool:"Checking security guidance",
+     a:"The IRS initiates most contact by mail, and will never demand immediate payment by gift card or wire, threaten arrest, or ask for card numbers over the phone or by text. If you get a suspicious message, don\u2019t click any links \u2014 report it and delete it.",
+     cites:["notice","contact"]},
+    {kw:"extension file late deadline more time october form 4868", tool:"Looking up filing deadlines",
+     a:"You can request an automatic six-month extension to file by submitting Form 4868, which moves your filing deadline to October 15. An extension to file is not an extension to pay \u2014 estimate and pay what you owe by the April deadline to avoid penalties and interest.",
+     cites:["pay","1040"]},
+    {kw:"owe cant pay afford hardship balance too much monthly", tool:"Matching payment options",
+     a:"If you can\u2019t pay in full, you have options. Most people who owe $50,000 or less can set up a monthly payment plan online in a few minutes. Paying something now reduces the penalties and interest that build up on the remaining balance.",
+     cites:["plan","pay"]},
+    {kw:"refund late delayed missing status where 21 days took long", tool:"Checking refund guidance",
+     a:"Most refunds are issued within 21 days of e-filing. Returns that claim certain credits, need corrections, or were filed on paper can take longer. The refund tracker shows exactly which of the three stages your return is in.",
+     cites:["refund","amended"]},
+    {kw:"dependent child claim qualify credit ctc kids", tool:"Reviewing credit rules",
+     a:"You may be able to claim a qualifying child or relative as a dependent, which can unlock credits like the Child Tax Credit and the Earned Income Tax Credit. Eligibility depends on relationship, age, residency, and support tests.",
+     cites:["eitc","standard"]}
+  ];
+  function kbMatch(q){
+    var ql = q.toLowerCase(), best=null, bs=0;
+    KB.forEach(function(e){
+      var s=0; e.kw.split(/\s+/).forEach(function(t){ if(ql.indexOf(t)>=0) s++; });
+      if(s>bs){ bs=s; best=e; }
+    });
+    return bs>0 ? best : null;
+  }
+  var CHAT_SUGS = ["How do I set up an account?","What if I can\u2019t pay what I owe?","Is this message from the IRS a scam?","How do I get an extension to file?"];
+
+  function openChat(seed){
+    document.body.classList.add("routed");
+    setNav(null);
+    close();
+    if(input) input.blur();
+    view.innerHTML =
+      '<nav class="crumbs" aria-label="Breadcrumb"><a href="#" data-goto="__home">Home</a>'+CHEV+'<span class="cur">Ask IRS</span></nav>'+
+      '<div class="chatview">'+
+        '<div class="chathead"><span class="ci">'+IC.spark+'</span><div><h1>Ask IRS</h1><p class="cs">Describe what you need in your own words. Answers are for general guidance.</p></div></div>'+
+        '<div class="chatlog" id="chatlog"></div>'+
+        '<div class="suggrow" id="chatsugs"></div>'+
+        '<form class="chatcompose" id="chatform"><input id="chatin" autocomplete="off" placeholder="Type your question\u2026" aria-label="Your question"><button class="send" type="submit" aria-label="Send">'+IC.send+'</button></form>'+
+      '</div>';
+    var sugWrap = document.getElementById("chatsugs");
+    CHAT_SUGS.forEach(function(s){
+      var b=document.createElement("button"); b.type="button"; b.className="sq"; b.textContent=s;
+      b.addEventListener("click", function(){ submitChat(s); });
+      sugWrap.appendChild(b);
+    });
+    var form=document.getElementById("chatform"), cin=document.getElementById("chatin");
+    form.addEventListener("submit", function(e){ e.preventDefault(); var v=cin.value.trim(); if(v){ cin.value=""; submitChat(v); } });
+    window.scrollTo(0,0);
+    if(seed){ submitChat(seed); } else { cin.focus(); }
+  }
+  function addMsg(role, html){
+    var log=document.getElementById("chatlog");
+    var m=document.createElement("div"); m.className="msg "+role;
+    var av = role==="user" ? IC.person : IC.spark;
+    m.innerHTML='<span class="av">'+av+'</span><div class="bub">'+html+'</div>';
+    log.appendChild(m); log.parentElement && window.scrollTo(0,document.body.scrollHeight);
+    return m;
+  }
+  function submitChat(q){
+    document.getElementById("chatsugs").style.display="none";
+    addMsg("user", esc(q));
+    var hit = kbMatch(q);
+    var tool = hit ? hit.tool : "Searching irs.gov";
+    var thinking = addMsg("bot", '<span class="toolchip">'+IC.gear+' '+esc(tool)+'</span><span class="typing"><span></span><span></span><span></span></span>');
+    setTimeout(function(){
+      var html='<span class="toolchip">'+IC.gear+' '+esc(tool)+'</span>';
+      if(hit){
+        html += '<p>'+hit.a+'</p>';
+        if(hit.cites && hit.cites.length){
+          html += '<div class="cites">';
+          hit.cites.forEach(function(id){ var d=byId(id); if(d) html+='<a class="cite" data-goto="'+id+'">'+IC.arrowr+' '+esc(d.title)+'</a>'; });
+          html += '</div>';
+        }
+      } else {
+        html += '<p>I couldn\u2019t find an exact match for that on irs.gov, but I can point you in the right direction. Here are a few common starting places \u2014 or try rephrasing your question.</p>';
+        html += '<div class="cites">';
+        ["refund","pay","contact"].forEach(function(id){ var d=byId(id); html+='<a class="cite" data-goto="'+id+'">'+IC.arrowr+' '+esc(d.title)+'</a>'; });
+        html += '</div>';
+      }
+      thinking.querySelector(".bub").innerHTML = html;
+      window.scrollTo(0,document.body.scrollHeight);
+    }, 750);
+  }
+
+
+  // gov banner toggle
+  var gov = document.getElementById("gov"), howbtn = document.getElementById("howbtn");
+  howbtn.addEventListener("click", function(){
+    var openNow = gov.classList.toggle("open");
+    howbtn.setAttribute("aria-expanded", openNow?"true":"false");
+  });
+})();
+</script>
+</body>
+</html>

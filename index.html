@@ -1,19 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-gov-banner="off">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>IRS Online Account — Prototypes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{--irs-blue:#004c97;--irs-navy:#002d5c;--ink:#1b1b1b;--muted:#5c5c5c;--link:#0050a0;--line:#d6d7d9}
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
+  :root{color-scheme:light dark;--irs-blue:#004c97;--irs-navy:#002d5c;--ink:#1b1b1b;--muted:#5c5c5c;--link:#0050a0;--line:#d6d7d9;
+    --bg:#fff;--surface:#fff;--surface-2:#f0f0f0;--accent:#004c97;--card-hover:#fafcfe}
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a;        /* page background */
+      --surface:#1e2328;   /* cards, panels, dropdowns */
+      --surface-2:#262c33; /* nested / tinted panels */
+      --ink:#e8eaed;       --muted:#9aa1a9;
+      --line:#3d4551;      --link:#79b4e6;
+      /* prototype-specific tokens */
+      --accent:#79b4e6;
+      --card-hover:color-mix(in srgb, var(--irs-blue) 12%, var(--surface));
+    }
+  }
   *{box-sizing:border-box}
-  body{margin:0;background:#fff;color:var(--ink);font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
   a{color:var(--link)}
   .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
-  .gov{background:#f0f0f0;font-size:12.5px}
+  .gov{background:var(--surface-2);font-size:12.5px}
   .gov .wrap{display:flex;align-items:center;gap:8px;padding:7px 16px}
   .gov .flag svg{width:16px;height:11px;display:block}
   .masthead{background:var(--irs-blue);color:#fff}
@@ -26,8 +42,8 @@
   .sub{font-size:17px;color:var(--muted);max-width:62ch;margin:0 0 28px}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:56px}
   .card{border:1px solid var(--line);padding:22px 24px;text-decoration:none;color:inherit;display:block;position:relative}
-  .card:hover{border-color:var(--irs-blue);background:#fafcfe}
-  .card .k{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--irs-blue);margin:0 0 8px}
+  .card:hover{border-color:var(--accent);background:var(--card-hover)}
+  .card .k{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
   .card h2{font-size:20px;font-weight:800;margin:0 0 6px}
   .card p{font-size:14.5px;color:var(--muted);margin:0}
   .card .updated{font-size:12px;color:var(--muted);margin:14px 0 0}
@@ -35,7 +51,6 @@
   .note{font-size:12.5px;color:var(--muted);font-style:italic}
   @media(max-width:700px){.grid{grid-template-columns:1fr}}
 </style>
-<script src="assets/flags.js"></script>
 </head>
 <!-- Run locally for clean navigation (avoids the file:// folder listing):  ./serve.sh  →  http://localhost:8000 -->
 <body>
@@ -44,12 +59,104 @@
   <main class="wrap">
     <h1>Prototypes</h1>
     <p class="sub">Design prototypes and concept explorations for IRS Taxpayer Services &amp; Online Accounts. Styled to the IRS Online Design Guidelines (ODG) / U.S. Web Design System.</p>
+    <!-- Issue #11 reskin of DirectPay Tax Information step: variants v1 (faithful reskin), v2 (guided one-question), v3 (start-from-notice), v4 (single-page, autofillable). -->
     <div class="grid" id="grid">
+      <a class="card" href="irs-oauth-api/" data-id="irs-oauth-api" data-updated="2026-07-08">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #15</p>
+        <h2>IRS OAuth apps &amp; API platform</h2>
+        <p>One authorization surface for every client beyond IRS.gov: a developer console to register an OAuth app with credentials, PKCE token flow, and plain-language scopes across Individual Online Account (first), IVES income verification, and coming Business/Tax Pro/MeF/TIN-matching APIs; the taxpayer consent screen an app triggers with access/refresh token semantics; and a Connected apps view in Online Account to review scopes and revoke access instantly.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="directpay-onbehalf/index.html" data-id="directpay-onbehalf" data-updated="2026-07-07">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #9</p>
+        <h2>Pay on behalf of a taxpayer</h2>
+        <p>A single-page Direct Pay flow for paying an individual's or business's federal taxes from a bank account. Choose who's paying (individual, business, or financial institution) — businesses and institutions self-certify with no personal SSN — start from a notice or a general payment, enter the account details, and see when the payment posts (about 2 business days for individual/IMF, the weekly cycle for business/BMF). Ends in a downloadable receipt with a status timeline.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="irsgov-omnibar/index.html" data-id="irsgov-omnibar" data-updated="2026-07-07">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #13</p>
+        <h2>irs.gov homepage — omnibar front door</h2>
+        <p>The public irs.gov landing page rebuilt around one focused command-palette omnibar, styled to the IRS front door with a utility bar and primary nav. Type a task, a form number, or a plain-language question and go straight there — clicks open real inline destination views (refund tracker, Direct Pay, payment plan, transcript) with working forms and breadcrumbs. When nothing matches, the omnibar devolves into an Ask IRS assistant that answers and links you to the right page.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="directpay-v4/index.html" data-id="directpay-v4" data-updated="2026-07-07">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #11 · Variant 4</p>
+        <h2>DirectPay reskin — everything on one page</h2>
+        <p>The whole payment collapsed onto a single scrollable page — tax information, your identity, and your bank account as one real form with proper autocomplete tokens, so a browser can fill it all in a single pass. A sticky "Your payment" receipt rail tallies your choices and the running total as you go, then unlocks Sign and submit; a sticky pay bar takes over on mobile.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="directpay-v3/index.html" data-id="directpay-v3" data-updated="2026-07-06">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #11 · Variant 3</p>
+        <h2>DirectPay reskin — start from your notice</h2>
+        <p>Lead with "I got a notice or letter": type the number (CP14, CP501, CP2000) and it pre-fills the whole Tax Information cluster — reason, form, and tax period — off the notice, with a live receipt-style summary panel confirming what you're about to pay. A "no notice" fallback keeps manual entry for everyone else.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="directpay-v2/index.html" data-id="directpay-v2" data-updated="2026-07-06">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #11 · Variant 2</p>
+        <h2>DirectPay reskin — guided, one question at a time</h2>
+        <p>The Tax Information cluster broken into plain-language questions ("What are you paying for?" → confirm the form → "Which tax year?") answered with big tap-friendly option cards. A running "In plain English" summary sentence builds as you go, so nobody has to decode dropdown combinations.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="directpay-v1/index.html" data-id="directpay-v1" data-updated="2026-07-07">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #11 · Variant 1</p>
+        <h2>DirectPay reskin — faithful five-step flow</h2>
+        <p>DirectPay's cramped "Tax Information" screen rebuilt to the ODG: the same Reason for payment → Apply payment to → Tax period cascade, but with a proper step sidebar, plain-language labels and hints, each choice decoded as you pick it, and a live summary of your tax information. Downstream steps sketched for flow context.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="mobile-app-v3/index.html" data-id="mobile-app-v3" data-updated="2026-07-06">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #10 · Variant 3</p>
+        <h2>Mobile app — refund status &amp; account</h2>
+        <p>Opens on a Where's My Refund lookup anyone can use without an account, with Sign in right below so returning taxpayers skip re-entering their SSN and refund amount. Once signed in, a single view shows balance due, refund status, messages, paperless preferences, and sign out.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="mobile-app-v2/index.html" data-id="mobile-app-v2" data-updated="2026-07-04">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #10 · Variant 2</p>
+        <h2>Mobile app — priority home feed</h2>
+        <p>A triage-first phone app: the home screen is a prioritized "needs attention" feed where the balance due and the CP14 notice surface as action cards, followed by horizontal category shortcuts and modular section cards for records, notices, and profile.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="mobile-app-v1/index.html" data-id="mobile-app-v1" data-updated="2026-07-04">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #10 · Variant 1</p>
+        <h2>Mobile app — bottom tab bar</h2>
+        <p>A native phone-app shell with a persistent 5-tab bar: Home (account summary &amp; balance-due hero), Payments, Records, Notices, and Profile. The classic, familiar mobile pattern applied to the taxpayer's core surfaces.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="third-party-pay-v3/index.html" data-id="third-party-pay-v3" data-updated="2026-07-01">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #7 · Variant 3</p>
+        <h2>Payer dashboard — identity-first quick-pay</h2>
+        <p>A returning payer's home: a history of every payment made on others' behalf, plus a single-screen quick-pay panel organized around the verification-tier ladder — your identity tier decides whether a payment posts instantly and lands in your history.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="third-party-pay-v2/index.html" data-id="third-party-pay-v2" data-updated="2026-07-01">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #7 · Variant 2</p>
+        <h2>Bulk submission — institution console</h2>
+        <p>A bank or business paying for many taxpayers at once: CSV upload → validated review grid (ready vs. error rows) → one-declaration batch submit. The institution's identity-proofed identity is bound to every payment as the payer of record.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="third-party-pay-v1/index.html" data-id="third-party-pay-v1" data-updated="2026-07-01">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #7 · Variant 1</p>
+        <h2>Pay on behalf — guided wizard</h2>
+        <p>A step-by-step third-party payment flow: pick payer type, capture the payment reason (notice/form), identify the taxpayer &amp; obligation, set amount + application instructions, then capture payer-type-aware identity. Verification tiers gate submission (limits + immediate vs. flagged posting) and the receipt spells out the payer of record.</p>
+        <p class="updated"></p>
+      </a>
       <a class="card" href="omnibar-in-app/index.html" data-id="omnibar-in-app" data-updated="2026-07-01">
         <span class="new-badge" hidden>New</span>
         <p class="k">Online Account</p>
         <h2>Omni bar (in-app concept)</h2>
-        <p>A unified action/search "omni bar" for the Online Account web app, plus a masthead command-palette variant with an account switcher.</p>
+        <p>A unified action/search "omni bar" in the Online Account masthead — command-palette style with an account switcher, persona scenarios, and bilingual (EN/ES) content.</p>
         <p class="updated"></p>
       </a>
       <a class="card" href="unified-tax-account/index.html" data-id="unified-tax-account" data-updated="2026-07-01">
@@ -59,21 +166,28 @@
         <p>Sign in once, then act as an individual, a business you run or belong to, or a tax pro — with the omni bar integrated everywhere and re-scoping itself to whichever account you switch into.</p>
         <p class="updated"></p>
       </a>
-      <a class="card" href="refund-tracker/index.html" data-id="refund-tracker" data-updated="2026-06-30">
+      <a class="card" href="refund-tracker/index.html" data-id="refund-tracker" data-updated="2026-07-01">
         <span class="new-badge" hidden>New</span>
         <p class="k">Refunds &amp; Returns</p>
         <h2>Where's My Refund? — timeline tracker</h2>
         <p>A delivery-style status tracker that shows every state a refund or amended return has moved through — plus what's expected next — instead of just three vague stages.</p>
         <p class="updated"></p>
       </a>
-      <a class="card" href="ai-agent-chat/index.html" data-id="ai-agent-chat" data-updated="2026-06-29">
+      <a class="card" href="ai-agent-chat/index.html" data-id="ai-agent-chat" data-updated="2026-07-01">
         <span class="new-badge" hidden>New</span>
         <p class="k">Help &amp; Support</p>
         <h2>Taxpayer Assistant (AI agent)</h2>
         <p>A live chat AI agent that uses tools — it looks up your account, fills out forms (8822, 2848), and faxes them to the right unit, narrating each tool call.</p>
         <p class="updated"></p>
       </a>
-      <a class="card" href="bta-94x-pin/index.html" data-id="bta-94x-pin" data-updated="2026-06-29">
+      <a class="card" href="bta-email-notices/index.html" data-id="bta-email-notices" data-updated="2026-07-08">
+        <span class="new-badge" hidden>New</span>
+        <p class="k">Issue #14</p>
+        <h2>Email notifications &amp; digital notices</h2>
+        <p>End-to-end journey for business notice alerts: opt in from the profile screen, get the email (login link only — no deep link), pick the business, and read the notice.</p>
+        <p class="updated"></p>
+      </a>
+      <a class="card" href="bta-94x-pin/index.html" data-id="bta-94x-pin" data-updated="2026-07-01">
         <span class="new-badge" hidden>New</span>
         <p class="k">Business Tax Account</p>
         <h2>94x Online Signature PIN</h2>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Pay on Behalf — Direct Pay payment catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --line-strong:#9aa7b5; --accent-blue:#004c97; --step-pend:#5B616B;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --tint:#20262c; --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --line-strong:#4d5866; --accent-blue:#79b4e6; --step-pend:#9aa1a9;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{transition:transform .15s}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--muted)}
+  .gov .gcol .gi{flex:0 0 22px;color:var(--irs-blue)}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35)}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:32px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:70ch;margin:0 0 18px}
+
+  .obhbar{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint);padding:12px 16px;margin:0 0 20px}
+  .obhbar .lead{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-blue);margin:0 0 4px}
+  .obhbar .seg{font-size:16px}
+  .obhbar .seg b{font-weight:800}
+
+  /* filter controls */
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:0 0 6px}
+  .segbtns{display:flex;border:1px solid var(--line-strong)}
+  .segbtns button{background:var(--surface);color:var(--ink);border:0;border-left:1px solid var(--line-strong);font-family:inherit;font-size:15px;font-weight:500;padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:7px}
+  .segbtns button:first-child{border-left:0}
+  .segbtns button.on{background:var(--irs-blue);color:#fff}
+  .search{flex:1;min-width:220px;position:relative}
+  .search input{width:100%;border:1px solid var(--line-strong);border-radius:0;padding:10px 12px 10px 38px;font-family:inherit;font-size:15.5px;background:var(--surface);color:var(--ink)}
+  .search input:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .search .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+  .count{font-size:13.5px;color:var(--muted);margin:6px 0 14px}
+
+  /* catalog grid */
+  .cat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 40px}
+  @media(max-width:680px){.cat{grid-template-columns:1fr}}
+  .rc{border:1px solid var(--line);padding:15px 17px;cursor:pointer;display:flex;gap:13px;align-items:flex-start;background:var(--surface)}
+  .rc:hover{border-color:var(--irs-blue);background:var(--tint)}
+  .rc .ri{width:38px;height:38px;border-radius:4px;flex:0 0 38px;display:grid;place-items:center;background:var(--irs-blue);color:#fff}
+  .rc.biz .ri{background:var(--teal)}
+  .rc .rt{font-weight:700;font-size:16px;display:block}
+  .rc .rd{font-size:13.5px;color:var(--muted);margin-top:2px;display:block;line-height:1.4}
+  .rc .rmeta{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:11.5px;font-weight:700;border:1px solid var(--line);padding:2px 8px;border-radius:4px;color:var(--ink);background:var(--surface-2)}
+  .chip.mf{color:var(--accent-blue);border-color:color-mix(in srgb,var(--irs-blue) 40%, var(--line))}
+  .empty{border:1px dashed var(--line-strong);padding:26px;text-align:center;color:var(--muted);font-size:15px}
+
+  /* form panel (shown after pick) */
+  .panel{border:1px solid var(--line);padding:24px 28px;margin:0 0 40px}
+  .panel h2{font-size:22px;font-weight:800;margin:0 0 4px}
+  .panel .phint{color:var(--muted);font-size:16px;margin:0 0 18px;max-width:64ch}
+  .selbar{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint);padding:12px 15px;margin:0 0 20px}
+  .selbar .si2{width:34px;height:34px;border-radius:4px;flex:0 0 34px;display:grid;place-items:center;background:var(--irs-blue);color:#fff}
+  .selbar.biz .si2{background:var(--teal)}
+  .selbar .st2{font-weight:800;font-size:16.5px}
+  .selbar .sd2{font-size:13px;color:var(--muted)}
+  .selbar .change{margin-left:auto;font-size:14px}
+
+  .fieldset-lead{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-blue);margin:22px 0 12px;padding-top:14px;border-top:1px solid var(--line)}
+  .fieldset-lead:first-of-type{border-top:0;padding-top:0;margin-top:0}
+  .field{margin:0 0 16px}
+  .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
+  .field .hint{font-size:14px;color:var(--muted);font-weight:500;display:block}
+  .field input,.field select{width:100%;border:1px solid var(--line-strong);border-radius:0;padding:11px 12px;font-family:inherit;font-size:15.5px;background:var(--surface);color:var(--ink)}
+  .field input:focus,.field select:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
+  @media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  .achnote{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);background:var(--tint);padding:12px 14px;font-size:14px;color:var(--muted);margin:4px 0 8px}
+  .achnote .ani{flex:0 0 20px;color:var(--irs-blue)}
+  .achnote b{color:var(--ink)}
+
+  .readrow{display:flex;justify-content:flex-start;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .readrow:last-child{border-bottom:0}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%}.readrow .v{text-align:left}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:12px 22px;border-radius:4px;cursor:pointer}
+  .btn:hover{background:#003a73}
+  .btn.ghost{background:var(--surface);color:var(--accent-blue);border:1.5px solid var(--accent-blue)}
+  .foot{display:flex;justify-content:flex-end;gap:12px;margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+  .note{font-size:12px;color:var(--muted);font-style:italic;margin:16px 0 0}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6 8 10.5 12.5 6"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Direct Pay · On behalf of</span></div>
+    <div class="util"><a>Sign in</a><a>Help</a><a>Español</a></div>
+  </div></div>
+
+  <main class="wrap">
+    <p class="crumb"><a>Payments</a> · <a>Direct Pay</a> · Pay on behalf of a taxpayer</p>
+    <h1 class="page">What are you paying?</h1>
+    <p class="sub">Start by choosing the payment reason — the full Direct Pay catalog for both individual (IMF) and business (BMF) taxes. Pick a reason, then enter the taxpayer's full information and pay by bank account (ACH).</p>
+
+    <div class="obhbar">
+      <p class="lead">Paying on behalf of someone else</p>
+      <span class="seg">You'll enter the taxpayer's own identifying information — this payment posts to <b>their</b> account, not yours. All fields below use fictional mock data.</span>
+    </div>
+
+    <!-- CATALOG VIEW -->
+    <div id="catalogView">
+      <div class="controls">
+        <div class="segbtns" id="segbtns">
+          <button data-f="all" class="on">All</button>
+          <button data-f="imf"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg></span> Individual (IMF)</button>
+          <button data-f="bmf"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></svg></span> Business (BMF)</button>
+        </div>
+        <div class="search">
+          <span class="si ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.3"/><path d="M10.3 10.3 13.5 13.5"/></svg></span>
+          <input id="q" placeholder="Search payment reasons, forms (e.g. 941, estimated, CP2000)" aria-label="Search payment reasons">
+        </div>
+      </div>
+      <p class="count" id="count"></p>
+      <div class="cat" id="cat"></div>
+    </div>
+
+    <!-- FORM VIEW -->
+    <div id="formView" hidden>
+      <div class="panel">
+        <div class="selbar" id="selbar">
+          <span class="si2" id="selIcon" aria-hidden="true"></span>
+          <span><span class="st2" id="selTitle"></span><br><span class="sd2" id="selDesc"></span></span>
+          <a class="change" id="changeReason">Change reason</a>
+        </div>
+
+        <h2>Taxpayer information</h2>
+        <p class="phint">Enter the taxpayer's information exactly as it appears on their return or notice. Because you're paying on their behalf, we match on their full details — not yours.</p>
+
+        <div id="idFields"></div>
+
+        <p class="fieldset-lead">Payment</p>
+        <div class="achnote">
+          <span class="ani ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6 8 2.5 13.5 6z"/><path d="M4 8.5v3M6.7 8.5v3M9.3 8.5v3M12 8.5v3M2.5 13.5h11"/></svg></span>
+          <span><b>Bank account (ACH) only.</b> Payments are made directly from a checking or savings account — free, and the only method at launch. You'll enter routing and account numbers on the next step.</span>
+        </div>
+        <div class="grid3">
+          <div class="field"><label for="amount">Payment amount (USD)</label><input id="amount" value="1,250.00"></div>
+          <div class="field"><label for="year">Tax period</label><select id="year"></select></div>
+          <div class="field"><label for="date">Payment date</label><input id="date" type="date" value="2026-07-06"></div>
+        </div>
+
+        <div class="readrow"><span class="k">Payment reason</span><span class="v" id="rvReason"></span></div>
+        <div class="readrow"><span class="k">Routes to</span><span class="v" id="rvRoute"></span></div>
+        <div class="readrow"><span class="k">Expected to post</span><span class="v" id="rvPost"></span></div>
+
+        <p class="note">Mock catalog and match only — no real account is charged and no real taxpayer data is used. Posting times are illustrative of IRS processing (IMF ≈ 2 business days; BMF master file runs weekly).</p>
+        <div class="foot">
+          <button class="btn ghost" id="backBtn">Back to catalog</button>
+          <button class="btn" id="continueBtn">Continue to bank details <span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5"/></svg></span></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../index.html" style="text-decoration:none"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5"/></svg></span> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+const IC_PERSON=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg>`;
+const IC_BUILDING=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg>`;
+
+// Full Direct Pay-style payment reason catalog. mf = master file (IMF individual / BMF business).
+const CATALOG=[
+  // Individual — IMF
+  {id:"bal-1040",mf:"imf",title:"Balance due",forms:"Form 1040",desc:"Pay the amount owed on a filed individual income tax return.",years:["2025","2024","2023","2022"]},
+  {id:"est-1040es",mf:"imf",title:"Estimated tax",forms:"Form 1040-ES",desc:"Quarterly estimated income tax for individuals.",years:["2026 Q3","2026 Q2","2026 Q1","2025 Q4"]},
+  {id:"ext-4868",mf:"imf",title:"Extension",forms:"Form 4868",desc:"Payment with an automatic extension to file an individual return.",years:["2025","2024"]},
+  {id:"notice-imf",mf:"imf",title:"Tax return or notice",forms:"CP14 / CP501 / CP503",desc:"Pay a balance shown on an IRS notice for an individual account.",years:["2025","2024","2023"]},
+  {id:"cp2000",mf:"imf",title:"Proposed tax assessment",forms:"CP2000 / CP2501 / CP3219A",desc:"Underreporter or proposed-assessment balance for an individual.",years:["2024","2023","2022"]},
+  {id:"ia-imf",mf:"imf",title:"Installment agreement",forms:"Payment plan",desc:"Scheduled or extra payment toward an individual payment plan.",years:["2025","2024","2023"]},
+  {id:"amended-1040x",mf:"imf",title:"Amended return",forms:"Form 1040-X",desc:"Balance due with an amended individual income tax return.",years:["2024","2023","2022"]},
+  {id:"5329",mf:"imf",title:"Retirement / other taxes",forms:"Form 5329",desc:"Additional taxes on IRAs and other tax-favored accounts.",years:["2025","2024","2023"]},
+  // Business — BMF
+  {id:"941",mf:"bmf",title:"Employer's quarterly return",forms:"Form 941",desc:"Federal income, Social Security, and Medicare tax withheld.",years:["2026 Q2","2026 Q1","2025 Q4","2025 Q3"]},
+  {id:"940",mf:"bmf",title:"Federal unemployment (FUTA)",forms:"Form 940",desc:"Annual federal unemployment tax for employers.",years:["2025","2024","2023"]},
+  {id:"943",mf:"bmf",title:"Agricultural employees",forms:"Form 943",desc:"Employment tax for agricultural (farm) workers.",years:["2025","2024"]},
+  {id:"944",mf:"bmf",title:"Employer's annual return",forms:"Form 944",desc:"Annual employment tax for the smallest employers.",years:["2025","2024"]},
+  {id:"945",mf:"bmf",title:"Nonpayroll withholding",forms:"Form 945",desc:"Backup withholding and nonpayroll income tax withheld.",years:["2025","2024"]},
+  {id:"1120",mf:"bmf",title:"Corporation income tax",forms:"Form 1120",desc:"Balance due on a C-corporation income tax return.",years:["2025","2024","2023"]},
+  {id:"1120-est",mf:"bmf",title:"Corporation estimated tax",forms:"Form 1120-W",desc:"Estimated income tax deposits for a corporation.",years:["2026 Q2","2026 Q1","2025 Q4"]},
+  {id:"2290",mf:"bmf",title:"Heavy highway vehicle use",forms:"Form 2290",desc:"Highway use tax for heavy trucks and buses.",years:["2026","2025"]},
+  {id:"notice-bmf",mf:"bmf",title:"Business notice",forms:"CP161 / CP136",desc:"Pay a balance shown on a business tax notice.",years:["2025","2024","2023"]}
+];
+
+const state={filter:"all",q:"",picked:null};
+const catEl=document.getElementById("cat"),countEl=document.getElementById("count");
+
+function matchList(){
+  const q=state.q.trim().toLowerCase();
+  return CATALOG.filter(r=>{
+    if(state.filter!=="all" && r.mf!==state.filter) return false;
+    if(!q) return true;
+    return (r.title+" "+r.forms+" "+r.desc).toLowerCase().includes(q);
+  });
+}
+function renderCatalog(){
+  const list=matchList();
+  const total=CATALOG.length;
+  countEl.textContent=`Showing ${list.length} of ${total} payment reasons`+(state.filter!=="all"?` · ${state.filter==="imf"?"Individual (IMF)":"Business (BMF)"}`:"");
+  if(!list.length){catEl.innerHTML=`<div class="empty" style="grid-column:1/-1">No payment reason matches your search. Try a form number like <b>941</b> or a word like <b>estimated</b>.</div>`;return;}
+  catEl.innerHTML=list.map(r=>{
+    const icon=r.mf==="bmf"?IC_BUILDING:IC_PERSON;
+    const mfLabel=r.mf==="bmf"?"BMF · Business":"IMF · Individual";
+    return `<div class="rc ${r.mf==="bmf"?"biz":""}" data-id="${r.id}" role="button" tabindex="0">
+      <span class="ri" aria-hidden="true">${icon}</span>
+      <span><span class="rt">${r.title}</span><span class="rd">${r.desc}</span>
+        <span class="rmeta"><span class="chip mf">${mfLabel}</span><span class="chip">${r.forms}</span></span>
+      </span></div>`;
+  }).join("");
+  catEl.querySelectorAll(".rc").forEach(c=>{
+    c.addEventListener("click",()=>pick(c.dataset.id));
+    c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick(c.dataset.id);}});
+  });
+}
+
+function pick(id){
+  const r=CATALOG.find(x=>x.id===id);state.picked=r;
+  document.getElementById("catalogView").hidden=true;
+  document.getElementById("formView").hidden=false;
+  const biz=r.mf==="bmf";
+  const selbar=document.getElementById("selbar");selbar.classList.toggle("biz",biz);
+  document.getElementById("selIcon").innerHTML=biz?IC_BUILDING:IC_PERSON;
+  document.getElementById("selTitle").textContent=r.title;
+  document.getElementById("selDesc").textContent=`${biz?"Business (BMF)":"Individual (IMF)"} · ${r.forms}`;
+  // year select
+  const ysel=document.getElementById("year");ysel.innerHTML=r.years.map(y=>`<option>${y}</option>`).join("");
+  // full taxpayer info fields
+  const idFields=document.getElementById("idFields");
+  if(biz){
+    idFields.innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="bname">Business legal name</label><input id="bname" placeholder="e.g. Northgate Logistics LLC"></div>
+        <div class="field"><label for="ein">Employer ID number (EIN) <span class="hint">Mock EIN only — never a real identifier.</span></label><input id="ein" placeholder="12-3456789"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="baddr">Business address</label><input id="baddr" placeholder="1450 Market St, Suite 300"></div>
+        <div class="field"><label for="bcity">City, state, ZIP</label><input id="bcity" placeholder="Springfield, IL 62704"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="ct">Contact name (person submitting)</label><input id="ct" placeholder="e.g. Dana Okafor"></div>
+        <div class="field"><label for="cp">Contact phone</label><input id="cp" placeholder="(555) 010-0143"></div>
+      </div>`;
+  }else{
+    idFields.innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="tname">Taxpayer's full name</label><input id="tname" placeholder="e.g. Jordan A. Michaels"></div>
+        <div class="field"><label for="ssn">Taxpayer SSN or ITIN <span class="hint">Mock number only — full entry, matched to their account.</span></label><input id="ssn" placeholder="123-45-6789"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="taddr">Taxpayer's address</label><input id="taddr" placeholder="204 Maple Ave, Apt 5"></div>
+        <div class="field"><label for="tcity">City, state, ZIP</label><input id="tcity" placeholder="Dayton, OH 45402"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="dob">Taxpayer date of birth</label><input id="dob" type="date" value="1985-04-12"></div>
+        <div class="field"><label for="filing">Filing status on that return</label><select id="filing"><option>Single</option><option>Married filing jointly</option><option>Married filing separately</option><option>Head of household</option></select></div>
+      </div>`;
+  }
+  updateSummary();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function postingLine(biz){
+  return biz
+    ? "Business (BMF) payments post on the master file's weekly cycle — allow up to ~1 week to appear."
+    : "Individual (IMF) payments typically post to the account in about 2 business days.";
+}
+function updateSummary(){
+  const r=state.picked;if(!r)return;const biz=r.mf==="bmf";
+  document.getElementById("rvReason").textContent=`${r.title} · ${r.forms}`;
+  document.getElementById("rvRoute").textContent=biz?"Business Master File (BMF)":"Individual Master File (IMF)";
+  document.getElementById("rvPost").textContent=postingLine(biz);
+}
+
+// filter + search wiring
+document.getElementById("segbtns").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  document.querySelectorAll("#segbtns button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");state.filter=b.dataset.f;renderCatalog();
+});
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;renderCatalog();});
+document.getElementById("backBtn").addEventListener("click",()=>{document.getElementById("formView").hidden=true;document.getElementById("catalogView").hidden=false;window.scrollTo({top:0,behavior:"smooth"});});
+document.getElementById("changeReason").addEventListener("click",()=>{document.getElementById("formView").hidden=true;document.getElementById("catalogView").hidden=false;window.scrollTo({top:0,behavior:"smooth"});});
+document.getElementById("continueBtn").addEventListener("click",()=>{alert("Prototype — the next step would collect routing + account numbers for the ACH debit. No real payment is processed.");});
+
+// gov banner toggle
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");});
+
+renderCatalog();
+</script>
+</body>
+</html>
