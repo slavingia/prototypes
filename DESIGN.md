@@ -76,11 +76,19 @@ text on light backgrounds uses `#5b616b`.
 
 ## Components
 
-### Government banner
+### Government banner (flag-gated — OFF by default)
 Full expandable USWDS banner: flag SVG + "An official website of the United
 States government" + a "Here's how you know" `<button>` that toggles the
 `.gov` / HTTPS guidance. Accessibility attributes are required
 (`aria-label`, `aria-controls`, `aria-expanded`).
+
+The banner markup MUST still be present in every prototype, but it is hidden
+by a flag while this gallery is hosted on a personal GitHub: every page sets
+`data-gov-banner="off"` on `<html>` and includes the CSS rule
+`html[data-gov-banner="off"] .gov{display:none}`. When the gallery moves to an
+official .gov property (IRS-Public/design), flip the attribute to
+`data-gov-banner="on"` (one-line change per file) and the banner renders again.
+New prototypes must ship with the full banner markup + the flag set to "off".
 
 ### Border radius
 | Element | Radius |
