@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>IRS Developer — OAuth applications &amp; APIs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --violet:#5b3fa0;
+    --teal:#00687d; --bg:#fff;
+    --surface:#fff; --surface-2:#f0f0f0; --accent:#004c97; --ink-2:#3a3a3a;
+    --tint-blue-1:#fafcfe; --tint-blue-2:#eef4fb;
+    --tint-green:#eef6f0; --tint-green-line:#bcdcc6;
+    --tint-amber:#faf6ea; --tint-amber-line:#e3d5a8;
+    --input-line:#9aa7b5; --btn-disabled:#aebccb;
+    --code-bg:#1e2328; --code-ink:#dce2e8;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9;
+      --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f;
+      --teal:#57bfd4; --violet:#ab96ee;
+      --accent:#79b4e6; --ink-2:#c9ced4;
+      --tint-blue-1:color-mix(in srgb, var(--irs-blue) 10%, var(--surface));
+      --tint-blue-2:color-mix(in srgb, var(--irs-blue) 22%, var(--surface));
+      --tint-green:color-mix(in srgb, var(--green) 12%, var(--surface));
+      --tint-green-line:color-mix(in srgb, var(--green) 40%, var(--surface));
+      --tint-amber:color-mix(in srgb, var(--amber) 12%, var(--surface));
+      --tint-amber-line:color-mix(in srgb, var(--amber) 40%, var(--surface));
+      --input-line:#5c6774; --btn-disabled:#49525d;
+      --code-bg:#10151a; --code-ink:#c9d2da;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  h1[tabindex="-1"]:focus,h3[tabindex="-1"]:focus{outline:none}
+  .skiplink{position:absolute;left:-9999px;top:0;background:var(--surface);color:var(--link);padding:10px 16px;z-index:20;font-weight:700}
+  .skiplink:focus{left:0}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+/* USWDS official government banner (IRS ODG) */
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov[aria-expanded] .howbtn .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-2)}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+  html[data-gov-banner="off"] .gov{display:none}
+
+  /* empty state */
+  .empty{border:1px solid var(--line);background:var(--surface);padding:48px 32px;text-align:center;margin:0 0 26px}
+  .empty .eic{width:52px;height:52px;border-radius:4px;background:var(--tint-blue-2);color:var(--irs-blue);display:grid;place-items:center;font-size:24px;margin:0 auto 16px}
+  @media (prefers-color-scheme: dark){ .empty .eic{color:var(--link)} }
+  .empty h2{font-size:20px;font-weight:800;margin:0 0 6px}
+  .empty p{font-size:15.5px;color:var(--muted);max-width:56ch;margin:0 auto 20px}
+
+  /* how-it-works strip */
+  .hiw{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:0 0 26px}
+  .hiw .hcard{border:1px solid var(--line);background:var(--surface);padding:18px 20px}
+  .hiw .hn{width:26px;height:26px;border-radius:50%;background:#002D62;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;margin:0 0 10px}
+  .hiw .ht{font-weight:500;font-size:16px;margin:0 0 4px}
+  .hiw .hd{font-size:13.5px;color:var(--muted)}
+  @media(max-width:760px){.hiw{grid-template-columns:1fr}}
+
+  /* registration wizard progress */
+  .wiz{list-style:none;display:flex;padding:0;margin:0 0 26px;border:1px solid var(--line);background:var(--surface)}
+  .wiz li{flex:1;display:flex;align-items:center;gap:10px;padding:13px 16px;border-left:1px solid var(--line);font-size:15px}
+  .wiz li:first-child{border-left:0}
+  .wiz .num{width:26px;height:26px;border-radius:50%;background:var(--surface);color:#5B616B;border:1px solid #5B616B;display:grid;place-items:center;font-size:13px;font-weight:700;flex:0 0 26px}
+  .wiz li.done .num{background:#00599C;color:#fff;border-color:#00599C}
+  .wiz li.current .num{background:#002D62;color:#fff;border-color:#002D62}
+  @media (prefers-color-scheme: dark){
+    .wiz .num{color:var(--muted);border-color:var(--muted)}
+  }
+  .wiz .st{font-weight:500}
+  .wiz li.current .st{font-weight:700}
+  @media(max-width:600px){.wiz .st{font-size:13px}.wiz li{padding:11px 10px;gap:8px}}
+
+  /* form fields */
+  .field{margin:0 0 18px}
+  .field label{display:block;font-size:16px;font-weight:500;margin-bottom:4px}
+  .field .hint{display:block;font-size:14px;color:#5b616b;font-weight:500;margin-bottom:6px}
+  @media (prefers-color-scheme: dark){ .field .hint{color:var(--muted)} }
+  .field input[type="text"],.field input[type="email"],.field input[type="url"],.field textarea{
+    width:100%;border:1px solid var(--input-line);border-radius:0;background:var(--surface);color:var(--ink);
+    font-family:inherit;font-size:16px;padding:10px 12px}
+  .field textarea{resize:vertical;min-height:72px}
+  .formopt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);padding:13px 16px;margin:0 0 10px;cursor:pointer;background:var(--surface)}
+  .formopt input{margin-top:4px;width:16px;height:16px;accent-color:var(--irs-blue);flex:0 0 16px}
+  .formopt .on{font-weight:500;font-size:15.5px;display:block}
+  .formopt .od{font-size:13.5px;color:var(--muted);margin-top:1px;display:block}
+  .attest{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);background:var(--surface-2);padding:14px 16px;font-size:14.5px;margin:18px 0 0}
+  .attest input{margin-top:3px;width:16px;height:16px;accent-color:var(--irs-blue);flex:0 0 16px}
+  .formactions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal svg{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+  .caret{font-size:11px}
+
+  nav.tabs{background:var(--irs-navy)}
+  nav.tabs .wrap{display:flex;overflow-x:auto}
+  nav.tabs a{color:#fff;font-size:15px;padding:14px 18px;text-decoration:none;white-space:nowrap}
+  nav.tabs a:hover{background:rgba(255,255,255,.08)}
+  nav.tabs a.active{background:#fff;color:var(--irs-navy);font-weight:700}
+
+  /* breadcrumb + page head */
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 20px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:32px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:66ch;margin:0 0 24px}
+
+  h2.sect{font-size:22px;font-weight:800;margin:34px 0 6px}
+  .sect-hint{font-size:15px;color:var(--muted);margin:0 0 16px;max-width:70ch}
+
+  /* status chips */
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:2px 9px;border:1px solid var(--line);white-space:nowrap}
+  .chip.live{color:var(--green);border-color:var(--tint-green-line);background:var(--tint-green)}
+  .chip.soon{color:var(--amber);border-color:var(--tint-amber-line);background:var(--tint-amber)}
+  .chip.sandbox{color:var(--teal);border-color:var(--line);background:var(--surface-2)}
+
+  /* app summary card */
+  .appcard{border:1px solid var(--line);background:var(--surface);padding:20px 24px;display:flex;gap:16px;align-items:flex-start;margin:0 0 26px}
+  .appcard .ai{width:44px;height:44px;border-radius:4px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;flex:0 0 44px}
+  .appcard .an{font-weight:700;font-size:18px}
+  .appcard .ad{font-size:14px;color:var(--muted);margin-top:2px}
+  .appcard .meta{margin-left:auto;text-align:right;font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+
+  /* key/value read rows */
+  .readrow{display:flex;justify-content:flex-start;border-bottom:1px solid var(--line);padding:11px 0;font-size:15.5px}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%;flex:0 0 50%}
+  .readrow .v{text-align:left}
+  .readrow .v.mono,.readrow .v .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;overflow-wrap:anywhere}
+
+  .panel{border:1px solid var(--line);background:var(--surface);padding:24px 28px;margin:0 0 24px}
+  .panel h3{font-size:18px;font-weight:800;margin:0 0 4px}
+  .panel .phint{color:var(--muted);font-size:15px;margin:0 0 16px;max-width:66ch}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;border-radius:4px;
+    font-family:inherit;font-size:16px;font-weight:500;padding:11px 22px;cursor:pointer}
+  .btn:hover{background:var(--irs-navy)}
+  .btn.ghost{background:var(--surface);color:var(--link);border:1px solid var(--irs-blue)}
+  @media (prefers-color-scheme: dark){ .btn.ghost{border-color:var(--link)} }
+  .btn.ghost:hover{background:var(--tint-blue-1)}
+  .btn.danger{background:var(--surface);color:var(--red);border:1px solid var(--red)}
+  .btn.danger:hover{background:var(--surface-2)}
+  .btn.sm{padding:7px 14px;font-size:14.5px}
+
+  /* scopes */
+  .scopegroup{border:1px solid var(--line);margin:0 0 14px}
+  .scopegroup .sg-head{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--surface-2);font-weight:700;font-size:15px}
+  .scopegroup .sg-head .chip{margin-left:auto}
+  .scoperow{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-top:1px solid var(--line)}
+  .scoperow input{margin-top:4px;width:16px;height:16px;accent-color:var(--irs-blue)}
+  .scoperow .sn{font-weight:500;font-size:15.5px}
+  .scoperow .sn .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;color:var(--muted)}
+  .scoperow .sd{font-size:13.5px;color:var(--muted);margin-top:1px}
+  .scoperow.disabled{opacity:.55}
+
+  /* API catalog table */
+  table.cat{width:100%;border-collapse:collapse;font-size:15px}
+  table.cat caption{position:absolute;left:-9999px}
+  table.cat th{text-align:left;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:10px 12px;border-bottom:2px solid var(--line)}
+  table.cat td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.cat td .nm{font-weight:700}
+  table.cat td .ds{font-size:13.5px;color:var(--muted);margin-top:2px;max-width:52ch}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13px;line-height:1.55;padding:16px 18px;overflow-x:auto;margin:0}
+  pre.code .c{color:#8a97a5}
+
+  /* consent screen */
+  .consent-wrap{max-width:520px;margin:36px auto 60px;padding:0 16px}
+  .consent{border:1px solid var(--line);background:var(--surface);padding:30px 32px}
+  .consent .capp{display:flex;align-items:center;gap:14px;margin:0 0 18px}
+  .consent .capp .ai{width:48px;height:48px;border-radius:4px;background:var(--violet);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px}
+  .consent h1{font-size:23px;font-weight:800;margin:0 0 6px}
+  .consent .who{font-size:14.5px;color:var(--muted);border:1px solid var(--line);background:var(--surface-2);padding:8px 12px;display:flex;align-items:center;gap:8px;margin:0 0 18px}
+  .consent ul.grants{list-style:none;margin:0 0 18px;padding:0;border:1px solid var(--line)}
+  .consent ul.grants li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-top:1px solid var(--line);font-size:15px}
+  .consent ul.grants li:first-child{border-top:0}
+  .consent ul.grants li .gi{color:var(--irs-blue);font-size:18px;flex:0 0 22px;margin-top:1px}
+  @media (prefers-color-scheme: dark){ .consent ul.grants li .gi{color:var(--link)} }
+  .consent ul.grants li b{display:block}
+  .consent ul.grants li .gd{font-size:13.5px;color:var(--muted)}
+  .consent .fine{font-size:13.5px;color:var(--muted);line-height:1.5;margin:0 0 20px}
+  .consent .actions{display:flex;gap:12px}
+  .consent .actions .btn{flex:1;justify-content:center}
+
+  /* connected apps */
+  .conn{border:1px solid var(--line)}
+  .connrow{display:flex;gap:16px;align-items:flex-start;padding:18px 20px;border-top:1px solid var(--line)}
+  .connrow:first-child{border-top:0}
+  .connrow .ai{width:40px;height:40px;border-radius:4px;color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;flex:0 0 40px}
+  .connrow .cn{font-weight:700;font-size:16px}
+  .connrow .cd{font-size:13.5px;color:var(--muted);margin:2px 0 8px}
+  .connrow .scopes{display:flex;flex-wrap:wrap;gap:6px}
+  .connrow .scopes .chip{font-weight:500}
+  .connrow .act{margin-left:auto;flex:0 0 auto}
+  .connrow.revoked{opacity:.6}
+  .connrow.revoked .cn::after{content:" — access removed";font-weight:500;color:var(--red);font-size:13.5px}
+
+  .alertbox{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint-blue-1);padding:14px 18px;font-size:14.5px;margin:0 0 22px;max-width:72ch}
+  .alertbox.ok{border-left-color:var(--green);background:var(--tint-green)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  @media(max-width:760px){
+    .grid2{grid-template-columns:1fr}
+    .appcard{flex-wrap:wrap}
+    .appcard .meta{margin-left:0;text-align:left;align-items:flex-start}
+    .readrow{flex-direction:column}
+    .readrow .k{width:auto;flex:auto}
+  }
+
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<a class="skiplink" href="#view-apps">Skip to main content</a>
+<section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><svg class="irs-logo" fill="#fff" aria-hidden="true" version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="20 218 602 207" style="enable-background:new 0 0 652 652;" xml:space="preserve"><g><path class="st0" d="M240.6,246.9c-2.5-4.4-29.8-16.8-69-24.7c-16.1,17.1-16.1,24.1-16.5,26.9c-0.3,2.8,5.4,10.1,11.1,17.7 c10.8,13.9,13.6,16.5,15.2,20.6c3.2,7.9-1.9,25.6-5.7,41.8c0,0-9.5-34.5-13.9-57c-0.3-2.2,0.3-3.5,0.3-3.2 c-24.1-2.2-40.5-3.5-43.4,9.2c-11.1,0-16.1,3.2-17.4,5.1c-2.8,4.7,0.6,14.6,2.5,19.3c1.6-3.8,11.4-3.2,14.6-3.2 c1.3,0,1.3,0.9,1.9,1.6v46.8H91.9l-24.4,65.5c11.4,5.4,23.4,9.8,31,9.8c7.6,0,26-9.5,28.5-9.8c2.5,0,21.2,9.8,28.5,9.8 c7.3,0,19.3-3.8,31-9.8l-24.7-65.8c0,0-25,0-28.5,0c0-10.4,0-33.9,0-44.3c-0.6-2.8-1.9-3.8-2.8-4.1H145c-2.2-8.5-5.1-14.2-9.2-14.6 c1.3-1.6,1.9-2.2,3.8-3.8h-11.1c1.3-5.7,15.5-3.8,21.8-3.2c6.3,31.7,18.4,73.8,19,74.7c0.6,0.6,10.8,4.4,12,4.7 c6-12.7,14.9-49.7,15.2-58.9c7.3,2.5,4.4,12.3,2.8,22.2c-8.2,51-14.9,66.5-17.1,76c7.3-1.6,12-2.8,12.7-3.8 c1.3-1.3,4.4-9.8,7.6-19.3c4.4-13.9,11.4-49.1,11.1-63c0-3.5-2.8-6.6-7.9-9.2c0,0,2.5-4.4,3.8-7c1.6-3.5,3.2-9.8,3.2-9.8 c2.8,0.9,5.4,2.2,5.7,5.1c1.6,13.3,0.6,14.6-0.9,39.3c-0.6,7.9-3.2,23.4-6,39.9c-5.4,30.1-10.4,42.7-10.4,47.5 c7.9-2.5,13.9-4.4,14.6-5.4c0.6-1.6,6.6-15.8,10.8-37.7c1.9-9.2,3.2-18.7,4.4-28.2c2.2-12.7,2.5-25.6,2.5-36.4 c0-15.8,1.9-15.8-9.8-22.2c4.4-13,3.5-21.5,2.5-23.7c-1.9-4.7-4.4-4.7-14.9-3.8c3.8,3.5,2.5,10.4,1.6,14.6 c-1.9-1.6-1.3-4.4-12.3-4.1c-1.6-18-5.1-19.9-5.4-20.6c-1.6-1.9-10.8-0.9-13.6,0c1.9,1.3,6.3,15.5,4.1,20.9 c-1.3-1.6-16.8-19.3-15.8-22.5c0.6-1.9,1.6-4.1,7-10.4c18.7,3.2,50.3,15.2,51.9,18.4c1.9,4.1,3.8,8.9,5.1,15.8 c1.6,10.4,4.7,35.1,3.2,72.8c-1.6,38.9-6.6,61.1-6.6,59.8c5.7-1.9,15.5-10.8,16.1-12.7c2.5-6.3,3.8-29.4,4.4-50.3 c0.9-20.9-1.3-47.5-2.5-57.3C245.7,258.6,244.1,252.3,240.6,246.9z M98.2,409.3c-5.7,0-14.6-0.9-14.2-0.9l14.2-41.1l13.3,41.5 C111.5,408.7,103.6,409.3,98.2,409.3z M169.7,408.7c0,0-8.9,0.9-14.2,0.9c-5.1,0-13.3-0.9-13.3-0.9l13-41.5L169.7,408.7z M133,376.4v-15.8h12.3l-18.7,51.6l-18.4-51.6h12.3V372c0,0,0,0.9,0.3,1.3c1.6,0.9,1.9,0.9,1.9,0.9L133,376.4z M134.6,292.5h-21.5 c-1.6-5.1,0-6.3,4.4-6.6C126.4,284.9,134,284.9,134.6,292.5z M194.7,269.7c7.9-1.3,4.1,12.7,2.2,18c-2.8-6.6-5.1-10.4-9.8-16.8 C190,270.3,191.9,270.3,194.7,269.7z"/><path class="st0" d="M56.1,384.3c3.8-3.8,17.1-17.4,19-24.7c2.5-8.9,4.4-29.8,4.4-34.5c0,0-13,8.9-19.9,15.8c-2.8,3.2-7,8.5-7,8.5 c-1.3-7.6,0.3-15.8,3.8-20.9c4.4-7,20.6-20.6,22.5-26.3c3.5-8.9,2.8-16.8,5.7-26.6c-10.8,3.5-24.1,11.7-30.1,18.4 c-0.9-10.4,2.5-18,9.5-23.4c10.1-7.6,23.4-12,32.3-14.6c7.6-2.2,19.3-4.7,25.6-7.6c11.1-5.4,21.8-20.6,24.4-28.5 c-3.8,0-16.8-0.9-29.8,4.1c-4.7,1.9-7,6-9.2,9.5c-2.2,3.8-4.4,6.6-6.3,9.2c-5.4,7.9-11.7,11.7-19.9,13.9c0.3-0.6,5.4-3.8,9.2-11.7 c3.2-6.6,7-19.9,7-20.9c-7,0.9-11.4,2.8-18.7,5.7c-7.9,3.2-10.1,6.3-11.7,9.2c-5.1,7.9-3.8,30.1-13.9,38.9 c0.3-11.7,2.8-24.4-1.3-38.9c-21.5,8.2-25.3,15.8-23.7,25c1.9,12,15.5,17.7,21.5,27.5c1.6,2.8,2.5,7,2.5,7.6c0.3,0-4.1,6-2.8,17.4 c0,0-4.4-8.2-8.2-13.6c-6.3-8.2-18.7-20.9-18.7-20.9c-2.5,32.6,1.6,39.3,3.2,42.1c4.1,7,19.6,17.7,22.8,24.4 c1.6,3.5,1.9,4.7,1.9,4.7c0.6,1.3-3.2,5.4-2.5,11.1c0.3,1.9,0.6,4.4,1.3,7.6c0,0-4.4-6.6-10.8-13.9c-5.7-6.6-16.8-14.2-16.8-14.2 c-0.6,3.8,1.3,21.8,1.6,24.7c1.6,9.2,1.9,17.7,9.5,25.6c6.6,6.6,28.2,15.5,32.6,17.1c0,0-0.9-4.1-2.8-10.1 C60.2,394.4,56.1,384.3,56.1,384.3z"/><path class="st0" d="M258.3,240.3h6c4.1,0,7.9,0.9,11.7,3.2c2.5,1.6,4.4,3.2,5.1,5.4c0.9,2.8,1.6,8.5,1.6,17.1v110.2 c0,10.1-0.9,16.8-3.2,19.3c-3.2,4.1-8.2,6-15.2,6h-6v4.7h73.1v-4.7h-6c-4.1,0-7.9-0.9-11.4-3.2c-2.5-1.6-4.4-3.2-5.4-5.4 c-0.9-2.8-1.6-8.5-1.6-17.1V265.9c0-10.1,0.9-16.8,3.2-19.3c3.2-4.1,8.2-6,15.2-6h6v-4.7h-73.1V240.3z"/><path class="st0" d="M616.7,343.1c-3.2-6.3-7.6-11.7-13.6-16.1c-5.7-4.4-16.8-11.1-32.6-19.6c-19.6-10.4-32-19-37-25 c-3.5-4.4-5.4-8.9-5.4-14.2c0-6.6,2.8-13,8.5-18c5.7-5.4,13-7.9,21.5-7.9c7.6,0,15.2,1.9,22.5,6c7.3,3.8,12.7,9.2,16.8,15.8 c3.8,6.6,6.6,15.8,8.2,26.9h4.7v-59.2h-4.7c-0.9,3.8-1.9,6.6-3.5,7.9c-1.3,1.3-3.2,1.9-5.4,1.9c-1.9,0-5.4-0.9-9.8-3.2 c-10.1-4.4-19.6-6.6-28.8-6.6c-14.6,0-26.6,4.4-35.8,13.3c-9.5,8.9-14.2,19.3-14.2,31.7c0,7,1.6,13.6,4.7,19.3 c3.2,6,7.9,11.4,13.9,16.1c6.3,4.7,16.5,11.4,31,19.6s23.4,13.6,26.9,16.1c4.7,3.8,8.5,7.6,10.8,12c2.2,4.4,3.5,8.5,3.5,12.7 c0,7.6-3.2,13.9-9.2,19.6c-6,5.4-14.2,8.2-24.7,8.2c-9.2,0-17.4-1.9-25-6c-7.6-4.1-13.3-9.2-16.8-15.2c-3.8-6-6.6-15.2-8.9-27.5 h-4.7v49.7c-7-1.6-11.4-3.5-16.1-6.6c-5.7-3.8-12.7-11.1-20.9-22.5l-35.1-49.1c14.2-3.2,25-8.5,31.7-16.5 c7-7.6,10.1-16.8,10.1-27.2c0-9.8-2.8-18.4-8.9-25.3c-6-7-13.3-12-21.8-14.6s-21.8-4.1-40.2-4.1h-62v4.7h6.3 c6.3,0,11.4,1.9,14.6,5.4c2.2,2.5,3.5,9.2,3.5,19.9v110.2c0,9.8-0.9,15.8-2.5,18.4c-3.2,4.7-8.2,7-15.5,7h-6.3v4.7h73.1v-4.7h-6.6 c-6.3,0-11.1-1.9-14.2-5.4c-2.2-2.5-3.5-9.2-3.5-19.9v-49.4c1.3,0,2.5,0,3.8,0.3c1.3,0,2.5,0,3.5,0c2.5,0,6,0,10.4-0.3l57.6,79.8 h39.3l0,0h5.4c0.6-1.9,1.3-3.2,1.9-3.8c1.3-1.3,2.8-1.9,5.1-1.9s7.3,1.3,15.5,4.1c8.2,2.5,13.6,4.1,16.1,4.7 c4.4,0.6,8.9,1.3,13.9,1.3c15.8,0,28.8-4.7,38.6-13.9c10.1-9.5,14.9-20.6,14.9-33.2C621.4,355.8,619.8,349.5,616.7,343.1z M402.1,318.8c-0.6,0-1.6,0-2.8,0c-1.3,0-2.5,0-4.1,0v-71.2c8.2-1.6,14.9-2.5,19.6-2.5c11.1,0,19.9,3.5,26.6,10.1 c6.6,6.6,10.1,15.2,10.1,26s-4.1,19.9-12.3,26.9C430.5,315.3,418.5,318.8,402.1,318.8z"/></g></svg></span><span class="ctx" id="mast-ctx">Developer</span></div>
+    <div class="util" id="mast-util">
+      <a>Documentation</a>
+      <a>Support</a>
+      <a>Sign out</a>
+    </div>
+  </div></div>
+
+  <nav class="tabs" id="devtabs" aria-label="Developer sections"><div class="wrap">
+    <a href="#view-apps" data-nav="apps">Get started</a><a href="#h-catalog" data-nav="console">API catalog</a><a class="active" href="#view-apps" data-nav="apps" aria-current="page">Your applications</a><a href="#view-apps" data-nav="apps">Sandbox</a><a href="#view-apps" data-nav="apps">Release notes</a>
+  </div></nav>
+
+  <!-- ============ VIEW: YOUR APPLICATIONS (empty state / list) ============ -->
+  <main class="wrap" id="view-apps">
+    <h1 class="page" id="h-apps" tabindex="-1">Your applications</h1>
+    <p class="sub">Applications you register here can request taxpayer authorization through OAuth 2.0 and call IRS APIs on their behalf.</p>
+
+    <div id="apps-empty">
+      <div class="empty">
+        <span class="eic" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.7 3.7l1.4 1.4M10.9 10.9l1.4 1.4M12.3 3.7l-1.4 1.4M5.1 10.9l-1.4 1.4"/></g></svg></span>
+        <h2>You haven't registered an application yet</h2>
+        <p>Register an OAuth application to get credentials, choose the scopes it may request, and start calling IRS APIs in the sandbox — no approval needed until you request production access.</p>
+        <button class="btn" data-nav="onboard">Register an application <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+
+      <h2 class="sect" style="margin-top:8px">How it works</h2>
+      <p class="sect-hint">Three steps from registration to your first API call.</p>
+      <div class="hiw">
+        <div class="hcard"><span class="hn" aria-hidden="true">1</span><div class="ht">Set up your developer profile</div><div class="hd">Tell us who is responsible for the application — an individual developer or an organization.</div></div>
+        <div class="hcard"><span class="hn" aria-hidden="true">2</span><div class="ht">Register your application</div><div class="hd">Name it, add a redirect URI, and select the scopes taxpayers will be asked to approve.</div></div>
+        <div class="hcard"><span class="hn" aria-hidden="true">3</span><div class="ht">Get credentials and build</div><div class="hd">Receive a client ID and secret, test in the sandbox, then request production access.</div></div>
+      </div>
+    </div>
+
+    <div id="apps-list" hidden>
+      <div class="alertbox ok" role="status">Your application was created. Sandbox credentials are active now — request production access from the application page when you're ready.</div>
+      <div class="conn">
+        <div class="connrow">
+          <span class="ai" style="background:var(--irs-blue)" aria-hidden="true">LT</span>
+          <div>
+            <div class="cn"><a data-nav="console">Ledgerly Tax Assistant</a></div>
+            <div class="cd">Ledgerly Software LLC · Individual accounts</div>
+            <div class="scopes"><span class="chip">Balance &amp; payments</span><span class="chip">Transcripts</span><span class="chip">Refund status</span><span class="chip">Schedule payments</span></div>
+          </div>
+          <span class="act"><button class="btn ghost sm" data-nav="console">Manage</button></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ VIEW: ONBOARDING + REGISTRATION WIZARD ============ -->
+  <main class="wrap" id="view-register" hidden>
+    <p class="crumb"><a data-nav="apps">Your applications</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Register an application</p>
+    <h1 class="page" id="h-register" tabindex="-1">Register an application</h1>
+    <p class="sub">Complete these steps to get OAuth credentials. Everything starts in the sandbox with test data — production access is a separate review.</p>
+
+    <ol class="wiz" id="wiz">
+      <li id="wz1" class="current"><span class="num" aria-hidden="true">1</span><span class="st">Developer profile</span></li>
+      <li id="wz2"><span class="num" aria-hidden="true">2</span><span class="st">Application details</span></li>
+      <li id="wz3"><span class="num" aria-hidden="true">3</span><span class="st">Scopes</span></li>
+      <li id="wz4"><span class="num" aria-hidden="true">4</span><span class="st">Credentials</span></li>
+    </ol>
+
+    <!-- STEP 1: developer profile -->
+    <section class="panel" id="step-profile" aria-labelledby="h-step1">
+      <h3 id="h-step1" tabindex="-1">Developer profile</h3>
+      <p class="phint">Who is responsible for this application? This appears on the consent screen so taxpayers know who they're authorizing.</p>
+      <label class="formopt"><input type="radio" name="devtype" checked><span><span class="on">Organization</span><span class="od">A company or firm building software for taxpayers or practitioners. Verified against your EIN.</span></span></label>
+      <label class="formopt"><input type="radio" name="devtype"><span><span class="on">Individual developer</span><span class="od">A personal application for your own IRS account — for example, an agent or script that acts only for you.</span></span></label>
+      <div class="field" style="margin-top:18px"><label for="f-org">Organization name</label><span class="hint">As registered with the IRS.</span><input type="text" id="f-org" value="Ledgerly Software LLC"></div>
+      <div class="field"><label for="f-ein">Employer Identification Number (EIN)</label><span class="hint">We verify this against IRS records. Individuals verify with their existing IRS online account instead.</span><input type="text" id="f-ein" value="00-0000000" inputmode="numeric"></div>
+      <div class="field" style="margin-bottom:0"><label for="f-email">Developer contact email</label><span class="hint">Security notices and breaking-change announcements go here.</span><input type="email" id="f-email" value="platform@ledgerly.example"></div>
+      <div class="formactions">
+        <button class="btn ghost" data-nav="apps">Cancel</button>
+        <button class="btn" data-step="2">Continue <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </section>
+
+    <!-- STEP 2: application details -->
+    <section class="panel" id="step-details" aria-labelledby="h-step2" hidden>
+      <h3 id="h-step2" tabindex="-1">Application details</h3>
+      <p class="phint">Taxpayers see the application name and description exactly as you enter them here.</p>
+      <div class="field"><label for="f-name">Application name</label><span class="hint">Shown on the consent screen and in each taxpayer's connected apps list.</span><input type="text" id="f-name" value="Ledgerly Tax Assistant"></div>
+      <div class="field"><label for="f-desc">Description</label><span class="hint">One or two sentences on what the application does for the taxpayer.</span><textarea id="f-desc">Bookkeeping assistant that keeps your tax account, payments, and transcripts in one place.</textarea></div>
+      <div class="field"><label for="f-uri">Redirect URI</label><span class="hint">HTTPS only. Taxpayers return here after they approve or decline access.</span><input type="url" id="f-uri" value="https://app.ledgerly.example/oauth/callback"></div>
+      <label class="formopt" style="margin-top:4px"><input type="radio" name="apptype" checked><span><span class="on">Confidential client</span><span class="od">Server-side application that can keep a client secret. Uses authorization code flow with PKCE.</span></span></label>
+      <label class="formopt"><input type="radio" name="apptype"><span><span class="on">Public client</span><span class="od">Mobile or single-page application that can't hold a secret. PKCE required; no client secret is issued.</span></span></label>
+      <div class="formactions">
+        <button class="btn ghost" data-step="1"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+        <button class="btn" data-step="3">Continue <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </section>
+
+    <!-- STEP 3: scopes -->
+    <section class="panel" id="step-scopes" aria-labelledby="h-step3" hidden>
+      <h3 id="h-step3" tabindex="-1">Scopes</h3>
+      <p class="phint">Select what this application may ask taxpayers to approve. You can change these later; added scopes require taxpayers to re-consent.</p>
+      <div class="scopegroup" role="group" aria-labelledby="rg-iola">
+        <div class="sg-head" id="rg-iola"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg> Individual Online Account <span class="chip live">Available</span></div>
+        <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Account balance and status <span class="mono">individual.account.read</span></span><span class="sd">Balance due, payment history, and account standing for each tax year.</span></span></label>
+        <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Transcripts <span class="mono">individual.transcripts.read</span></span><span class="sd">Return, record of account, and wage &amp; income transcripts.</span></span></label>
+        <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Refund status <span class="mono">individual.refunds.read</span></span><span class="sd">Where's My Refund status for the current and two prior years.</span></span></label>
+        <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Make payments <span class="mono">individual.payments.write</span></span><span class="sd">Schedule and cancel payments from a bank account the taxpayer designates.</span></span></label>
+      </div>
+      <div class="scopegroup" role="group" aria-labelledby="rg-ives">
+        <div class="sg-head" id="rg-ives"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg> Income verification (IVES) <span class="chip live">Available</span></div>
+        <label class="scoperow"><input type="checkbox"><span><span class="sn">Verify income with consent <span class="mono">ives.verification.create</span></span><span class="sd">Request an income verification report the taxpayer explicitly approves.</span></span></label>
+      </div>
+      <div class="attest"><input type="checkbox" id="f-attest" checked><label for="f-attest">I agree to the API terms of service, will request only the data the application needs, and will delete taxpayer data when authorization is removed.</label></div>
+      <div class="formactions">
+        <button class="btn ghost" data-step="2"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+        <button class="btn" id="create-app">Create application</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: credentials issued -->
+    <section class="panel" id="step-issued" aria-labelledby="h-step4" hidden>
+      <h3 id="h-step4" tabindex="-1" style="display:flex;align-items:center;gap:10px"><span style="color:var(--green)"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Ledgerly Tax Assistant is registered</h3>
+      <p class="phint">Sandbox credentials are active now. Copy the client secret — for security, it's shown in full only this once.</p>
+      <div class="readrow"><span class="k">Client ID</span><span class="v mono">irs_app_7f3k2m9qv81d</span></div>
+      <div class="readrow"><span class="k">Client secret</span><span class="v mono">irs.sec.9x2mQ84nH0pLwTz6vRb3eKd1</span></div>
+      <div class="readrow"><span class="k">Environment</span><span class="v">Sandbox — test taxpayers and fictitious data only</span></div>
+      <div class="readrow"><span class="k">Production access</span><span class="v">Request from the application page after sandbox testing</span></div>
+      <div class="formactions">
+        <button class="btn" data-nav="console">Go to your application <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn ghost" data-nav="apps">Back to your applications</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ VIEW: DEVELOPER CONSOLE ============ -->
+  <main class="wrap" id="view-console" hidden>
+    <p class="crumb"><a data-nav="apps">Your applications</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Ledgerly Tax Assistant</p>
+
+    <h1 class="page" id="h-console" tabindex="-1">Ledgerly Tax Assistant</h1>
+    <p class="sub">Manage this application's OAuth credentials, the scopes it can request, and the APIs it calls on behalf of taxpayers who authorize it.</p>
+
+    <div class="appcard">
+      <span class="ai" aria-hidden="true">LT</span>
+      <div>
+        <div class="an">Ledgerly Tax Assistant</div>
+        <div class="ad">Registered by Ledgerly Software LLC · Individual accounts</div>
+      </div>
+      <div class="meta">
+        <span class="chip live"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Approved for production</span>
+        <span>Created March 14, 2026</span>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <section class="panel" aria-labelledby="h-creds">
+        <h3 id="h-creds">Credentials</h3>
+        <p class="phint">Use these to request tokens at the authorization server. Keep the client secret confidential — rotate it immediately if it may have been exposed.</p>
+        <div class="readrow"><span class="k">Client ID</span><span class="v mono">irs_app_7f3k2m9qv81d</span></div>
+        <div class="readrow"><span class="k">Client secret</span><span class="v mono" id="secret">••••••••••••••••</span></div>
+        <div class="readrow"><span class="k">Redirect URI</span><span class="v mono">https://app.ledgerly.example/oauth/callback</span></div>
+        <div class="readrow"><span class="k">Token lifetime</span><span class="v">Access 60 minutes · Refresh 90 days</span></div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+          <button class="btn ghost sm" id="reveal">Show secret</button>
+          <button class="btn ghost sm" id="rotate">Rotate secret</button>
+        </div>
+        <p id="rotated" class="fine" role="status" aria-live="polite" style="font-size:13.5px;color:var(--green);margin:10px 0 0" hidden>New secret issued. The previous secret stops working in 24 hours.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="h-token">
+        <h3 id="h-token">Requesting a token</h3>
+        <p class="phint">Authorization code flow with PKCE. After the taxpayer approves access, exchange the code for an access and refresh token.</p>
+        <pre class="code"><span class="c"># Exchange an authorization code</span>
+POST /oauth/v1/token
+Host: api.irs.gov
+
+grant_type=authorization_code
+&amp;code=SplxlOBeZQQYbYS6WxSbIA
+&amp;client_id=irs_app_7f3k2m9qv81d
+&amp;code_verifier=dBjftJeZ4CVP...
+&amp;redirect_uri=https://app.ledgerly
+  .example/oauth/callback</pre>
+        <div style="margin-top:14px">
+          <button class="btn sm" data-nav="consent">Preview the consent screen <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </section>
+    </div>
+
+    <h2 class="sect" id="h-scopes">Scopes</h2>
+    <p class="sect-hint">Select the scopes this application may request. Taxpayers see each scope in plain language on the consent screen and can decline any request. Scopes you don't select here can never be requested.</p>
+
+    <div class="scopegroup" role="group" aria-labelledby="sg-iola">
+      <div class="sg-head" id="sg-iola"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg> Individual Online Account <span class="chip live">Available</span></div>
+      <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Account balance and status <span class="mono">individual.account.read</span></span><span class="sd">Balance due, payment history, and account standing for each tax year.</span></span></label>
+      <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Transcripts <span class="mono">individual.transcripts.read</span></span><span class="sd">Return, record of account, and wage &amp; income transcripts.</span></span></label>
+      <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Refund status <span class="mono">individual.refunds.read</span></span><span class="sd">Where's My Refund status for the current and two prior years.</span></span></label>
+      <label class="scoperow"><input type="checkbox" checked><span><span class="sn">Make payments <span class="mono">individual.payments.write</span></span><span class="sd">Schedule and cancel payments from a bank account the taxpayer designates.</span></span></label>
+      <label class="scoperow"><input type="checkbox"><span><span class="sn">Notices and letters <span class="mono">individual.notices.read</span></span><span class="sd">Digital copies of notices and their response deadlines.</span></span></label>
+    </div>
+
+    <div class="scopegroup" role="group" aria-labelledby="sg-ives">
+      <div class="sg-head" id="sg-ives"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg> Income verification (IVES) <span class="chip live">Available</span></div>
+      <label class="scoperow"><input type="checkbox"><span><span class="sn">Verify income with consent <span class="mono">ives.verification.create</span></span><span class="sd">Request an income verification report the taxpayer explicitly approves — replaces mailed Form 4506-C.</span></span></label>
+    </div>
+
+    <div class="scopegroup" role="group" aria-labelledby="sg-bta">
+      <div class="sg-head" id="sg-bta"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></g></svg> Business Tax Account <span class="chip soon">Coming soon</span></div>
+      <label class="scoperow disabled"><input type="checkbox" disabled><span><span class="sn">Business account and filings <span class="mono">business.account.read</span></span><span class="sd">Balances, filing requirements, and 94x filing status for authorized businesses.</span></span></label>
+      <label class="scoperow disabled"><input type="checkbox" disabled><span><span class="sn">Federal tax deposits <span class="mono">business.payments.write</span></span><span class="sd">Schedule federal tax deposits and estimated payments.</span></span></label>
+    </div>
+
+    <div class="scopegroup" role="group" aria-labelledby="sg-pro">
+      <div class="sg-head" id="sg-pro"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg> Tax professionals <span class="chip soon">Coming soon</span></div>
+      <label class="scoperow disabled"><input type="checkbox" disabled><span><span class="sn">Client roster and authorizations <span class="mono">taxpro.clients.read</span></span><span class="sd">Active POA/TIA authorizations and client account summaries.</span></span></label>
+    </div>
+
+    <h2 class="sect" id="h-catalog">API catalog</h2>
+    <p class="sect-hint">Every API is versioned REST with JSON responses and OAuth 2.0 bearer tokens. One authorization model across individual, business, tax professional, and transmitter surfaces.</p>
+
+    <table class="cat">
+      <caption>APIs available on the platform, their base paths, and availability status</caption>
+      <thead><tr><th scope="col">API</th><th scope="col">Base path</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="nm">Individual Account API</span><div class="ds">Balances, payment activity, transcripts, refund status, and notices for individual taxpayers.</div></td><td class="mono">/v1/individual</td><td><span class="chip live">Available</span></td></tr>
+        <tr><td><span class="nm">Payments API</span><div class="ds">Create, schedule, and cancel Direct Pay payments with taxpayer authorization.</div></td><td class="mono">/v1/payments</td><td><span class="chip live">Available</span></td></tr>
+        <tr><td><span class="nm">Income Verification (IVES) API</span><div class="ds">Consent-based income verification for lenders — report delivered in minutes, not days.</div></td><td class="mono">/v1/ives</td><td><span class="chip live">Available</span></td></tr>
+        <tr><td><span class="nm">Transcript Delivery API</span><div class="ds">Transcript retrieval for authorized tax professionals and reporting agents.</div></td><td class="mono">/v1/transcripts</td><td><span class="chip soon">Coming soon</span></td></tr>
+        <tr><td><span class="nm">MeF Submission API</span><div class="ds">Modernized e-File return submission and acknowledgements over REST for transmitters.</div></td><td class="mono">/v1/mef</td><td><span class="chip soon">Coming soon</span></td></tr>
+        <tr><td><span class="nm">TIN Matching API</span><div class="ds">Real-time payee TIN/name matching for payers and their software.</div></td><td class="mono">/v1/tin-match</td><td><span class="chip soon">Coming soon</span></td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <!-- ============ VIEW: CONSENT SCREEN ============ -->
+  <main id="view-consent" hidden>
+    <div class="consent-wrap">
+      <div class="consent" id="consent-card">
+        <div class="capp"><span class="ai" aria-hidden="true">LT</span>
+          <div><div style="font-weight:700;font-size:16px">Ledgerly Tax Assistant</div><div style="font-size:13.5px;color:var(--muted)">app.ledgerly.example</div></div>
+        </div>
+        <h1 id="h-consent" tabindex="-1">Ledgerly Tax Assistant wants to access your IRS account</h1>
+        <div class="who"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg> Signed in as <b>&nbsp;Avery Morales</b>&nbsp;· <a>Use a different account</a></div>
+
+        <ul class="grants">
+          <li><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h7.5M6 8h7.5M6 12h7.5"/></g><circle cx="3" cy="4" r=".9" fill="currentColor"/><circle cx="3" cy="8" r=".9" fill="currentColor"/><circle cx="3" cy="12" r=".9" fill="currentColor"/></svg></span><span><b>View your account balance and payment history</b><span class="gd">Balance due and payments for each tax year.</span></span></li>
+          <li><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span><span><b>View your transcripts</b><span class="gd">Return and wage &amp; income transcripts.</span></span></li>
+          <li><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.8"/><path d="M13.5 2.5v2.2h-2.2"/></g></svg></span><span><b>View your refund status</b><span class="gd">Status for the current and two prior years.</span></span></li>
+          <li><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="M2 6.5h12M4.5 9.8h3"/></g></svg></span><span><b>Schedule payments you approve</b><span class="gd">From a bank account you designate. Each payment requires your confirmation in Ledgerly.</span></span></li>
+        </ul>
+
+        <p class="fine">Ledgerly Tax Assistant will have access until you remove it. Access renews automatically for up to 90 days at a time; after that you'll sign in here again. You can review or remove this connection any time under <a data-nav="connected">Connected apps</a> in your IRS online account. The IRS never shares your password with this application.</p>
+
+        <div class="actions">
+          <button class="btn ghost" data-nav="console">Cancel</button>
+          <button class="btn" id="allow">Allow access</button>
+        </div>
+      </div>
+
+      <div class="consent" id="consent-done" hidden role="status" aria-live="polite">
+        <h1 style="display:flex;align-items:center;gap:10px"><span style="color:var(--green)"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Access allowed</h1>
+        <p style="font-size:15.5px;margin:6px 0 18px">Returning you to <b>Ledgerly Tax Assistant</b>. It can now act on the permissions you approved — nothing more.</p>
+        <div class="readrow"><span class="k">Connected</span><span class="v" id="conn-date">Today</span></div>
+        <div class="readrow"><span class="k">Access renews</span><span class="v">Automatically, up to 90 days at a time</span></div>
+        <div class="readrow" style="border-bottom:0"><span class="k">Manage anytime</span><span class="v"><a data-nav="connected">Connected apps in your online account</a></span></div>
+        <div class="actions" style="margin-top:18px">
+          <button class="btn ghost" data-nav="console">Done</button>
+          <button class="btn" data-nav="connected">Review connected apps</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ VIEW: CONNECTED APPS ============ -->
+  <main class="wrap" id="view-connected" hidden>
+    <p class="crumb"><a>Profile</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Connected apps</p>
+    <h1 class="page" id="h-connected" tabindex="-1">Connected apps</h1>
+    <p class="sub">Applications you've allowed to access your IRS account. Each app can only do what you approved on its consent screen — remove its access here at any time.</p>
+
+    <div class="alertbox ok" id="conn-alert" role="status" aria-live="polite" hidden></div>
+
+    <div class="conn" id="connlist">
+      <div class="connrow" data-app="Ledgerly Tax Assistant">
+        <span class="ai" style="background:var(--violet)" aria-hidden="true">LT</span>
+        <div>
+          <div class="cn">Ledgerly Tax Assistant</div>
+          <div class="cd">Connected today · Last activity today · Ledgerly Software LLC</div>
+          <div class="scopes"><span class="chip">Balance &amp; payments</span><span class="chip">Transcripts</span><span class="chip">Refund status</span><span class="chip">Schedule payments</span></div>
+        </div>
+        <span class="act"><button class="btn danger sm" aria-label="Remove access for Ledgerly Tax Assistant">Remove access</button></span>
+      </div>
+      <div class="connrow" data-app="TurboPrep">
+        <span class="ai" style="background:var(--teal-fill,#00687d)" aria-hidden="true">TP</span>
+        <div>
+          <div class="cn">TurboPrep</div>
+          <div class="cd">Connected February 2, 2026 · Last activity April 15, 2026 · TurboPrep Inc.</div>
+          <div class="scopes"><span class="chip">Transcripts</span><span class="chip">Refund status</span></div>
+        </div>
+        <span class="act"><button class="btn danger sm" aria-label="Remove access for TurboPrep">Remove access</button></span>
+      </div>
+      <div class="connrow" data-app="Morales Household Agent">
+        <span class="ai" style="background:var(--irs-navy)" aria-hidden="true">MA</span>
+        <div>
+          <div class="cn">Morales Household Agent</div>
+          <div class="cd">Connected May 20, 2026 · Last activity yesterday · Personal app registered by Avery Morales</div>
+          <div class="scopes"><span class="chip">Balance &amp; payments</span><span class="chip">Notices</span><span class="chip">Schedule payments</span></div>
+        </div>
+        <span class="act"><button class="btn danger sm" aria-label="Remove access for Morales Household Agent">Remove access</button></span>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);margin-top:16px">Removing an app cancels its access and refresh tokens immediately. Payments the app already scheduled stay scheduled — cancel those under <a>Payment activity</a>.</p>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);margin-top:40px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../../index.html" style="color:var(--link,#0050a0);text-decoration:none"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M10 4L6 8l4 4"/></svg> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5">
+      <i>Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, companies, applications, credentials, and data shown are fictional mock data — no real personal or taxpayer information. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.</i>
+    </div>
+  </footer>
+
+<script>
+// view switching
+const VIEWS={
+  apps:{el:"view-apps",ctx:"Developer",tabs:true},
+  register:{el:"view-register",ctx:"Developer",tabs:true},
+  console:{el:"view-console",ctx:"Developer",tabs:true},
+  consent:{el:"view-consent",ctx:"Authorize",tabs:false},
+  connected:{el:"view-connected",ctx:"Online Account",tabs:false}
+};
+function show(name){
+  for(const [k,v] of Object.entries(VIEWS)){
+    document.getElementById(v.el).hidden=(k!==name);
+  }
+  const v=VIEWS[name];
+  document.getElementById("mast-ctx").textContent=v.ctx;
+  document.getElementById("devtabs").hidden=!v.tabs;
+  document.getElementById("mast-util").innerHTML = v.tabs
+    ? `<a>Documentation</a><a>Support</a><a>Sign out</a>`
+    : `<a>Help</a><a>Sign out</a>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+  const h={apps:"h-apps",register:"h-register",console:"h-console",consent:"h-consent",connected:"h-connected"}[name];
+  const hEl=document.getElementById(h);
+  if(hEl)hEl.focus({preventScroll:true});
+}
+
+// registration wizard
+const STEPS={1:"step-profile",2:"step-details",3:"step-scopes",4:"step-issued"};
+function goStep(n){
+  for(const [k,id] of Object.entries(STEPS)){
+    document.getElementById(id).hidden=(+k!==n);
+    const li=document.getElementById("wz"+k);
+    li.classList.toggle("current",+k===n);
+    li.classList.toggle("done",+k<n);
+  }
+  window.scrollTo({top:0,behavior:"smooth"});
+  const hd=document.getElementById(["h-step1","h-step2","h-step3","h-step4"][n-1]);
+  if(hd)hd.focus({preventScroll:true});
+}
+document.getElementById("create-app").addEventListener("click",()=>{
+  document.getElementById("apps-empty").hidden=true;
+  document.getElementById("apps-list").hidden=false;
+  goStep(4);
+});
+
+document.addEventListener("click",e=>{
+  const s=e.target.closest("[data-step]");
+  if(s){e.preventDefault();goStep(+s.dataset.step);return;}
+  const t=e.target.closest("[data-nav]");
+  if(!t)return;
+  e.preventDefault();
+  if(t.dataset.nav==="onboard"){goStep(1);show("register");return;}
+  if(t.dataset.nav==="consent"){
+    document.getElementById("consent-card").hidden=false;
+    document.getElementById("consent-done").hidden=true;
+  }
+  show(t.dataset.nav);
+});
+
+// consent allow
+document.getElementById("allow").addEventListener("click",()=>{
+  document.getElementById("consent-card").hidden=true;
+  document.getElementById("consent-done").hidden=false;
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+// credentials
+const secret=document.getElementById("secret");
+let revealed=false;
+document.getElementById("reveal").addEventListener("click",e=>{
+  revealed=!revealed;
+  secret.textContent=revealed?"irs.sec.9x2mQ84nH0pLwTz6vRb3eKd1":"••••••••••••••••";
+  e.target.textContent=revealed?"Hide secret":"Show secret";
+});
+document.getElementById("rotate").addEventListener("click",()=>{
+  secret.textContent=revealed?"irs.sec.4tJq71cVnY5sXw2gPa8hMz0f":"••••••••••••••••";
+  document.getElementById("rotated").hidden=false;
+});
+
+// connected apps: revoke
+document.getElementById("connlist").addEventListener("click",e=>{
+  const btn=e.target.closest("button.danger");
+  if(!btn)return;
+  const row=btn.closest(".connrow");
+  const name=row.dataset.app;
+  row.classList.add("revoked");
+  btn.remove();
+  const al=document.getElementById("conn-alert");
+  al.textContent=`${name} can no longer access your IRS account. Its tokens were cancelled immediately.`;
+  al.hidden=false;
+});
+
+// USWDS official-government banner toggle
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{
+  const open=gov.classList.toggle("open");
+  howbtn.setAttribute("aria-expanded",open?"true":"false");
+});
+</script>
+</body>
+</html>
