@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Tax Pro Account — Secure messages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff;
+    --surface:#fff; --surface-2:#f0f0f0; --accent:#004c97; --ink-2:#3a3a3a;
+    --tint-blue-1:#fafcfe; --tint-blue-2:#eef4fb;
+    --tint-green:#eef6f0; --tint-green-line:#bcdcc6;
+    --tint-amber:#faf6ea; --tint-amber-line:#e3d5a8;
+    --tint-red:#fbf0ef; --tint-red-line:#e8b9b5;
+    --input-line:#9aa7b5; --btn-disabled:#aebccb;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9;
+      --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f;
+      --teal:#57bfd4; --violet:#ab96ee;
+      --accent:#79b4e6; --ink-2:#c9ced4;
+      --tint-blue-1:color-mix(in srgb, var(--irs-blue) 10%, var(--surface));
+      --tint-blue-2:color-mix(in srgb, var(--irs-blue) 22%, var(--surface));
+      --tint-green:color-mix(in srgb, var(--green) 12%, var(--surface));
+      --tint-green-line:color-mix(in srgb, var(--green) 40%, var(--surface));
+      --tint-amber:color-mix(in srgb, var(--amber) 12%, var(--surface));
+      --tint-amber-line:color-mix(in srgb, var(--amber) 40%, var(--surface));
+      --tint-red:color-mix(in srgb, var(--red) 12%, var(--surface));
+      --tint-red-line:color-mix(in srgb, var(--red) 40%, var(--surface));
+      --input-line:#5c6774; --btn-disabled:#49525d;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus{outline:none}
+  .skiplink{position:absolute;left:-9999px;top:0;background:var(--surface);color:var(--link);padding:10px 16px;z-index:20;font-weight:700}
+  .skiplink:focus{left:0}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner (flag-gated off on this host) */
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-2)}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+  html[data-gov-banner="off"] .gov{display:none}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal svg{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+  @media(max-width:700px){.util .hide-m{display:none}.logo{font-size:22px}}
+
+  nav.tabs{background:var(--irs-navy)}
+  nav.tabs .wrap{display:flex;overflow-x:auto}
+  nav.tabs a{color:#fff;font-size:15px;padding:14px 18px;text-decoration:none;white-space:nowrap}
+  nav.tabs a:hover{background:rgba(255,255,255,.08)}
+  nav.tabs a.active{background:var(--bg);color:var(--irs-navy);font-weight:700}
+  @media (prefers-color-scheme: dark){ nav.tabs a.active{color:var(--ink)} }
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 20px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:32px;font-weight:800;margin:32px 0 8px}
+  .crumb+h1.page{margin-top:4px}
+  .sub{font-size:17px;color:var(--muted);max-width:66ch;margin:0 0 24px}
+
+  /* field */
+  .field{margin:0 0 22px;max-width:440px}
+  .field label{display:block;font-size:16px;font-weight:500;margin-bottom:4px}
+  .field .hint{display:block;font-size:14px;color:#5b616b;font-weight:500;margin-bottom:6px}
+  @media (prefers-color-scheme: dark){ .field .hint{color:var(--muted)} }
+  .field select{width:100%;border:1px solid var(--input-line);border-radius:0;background:var(--surface);color:var(--ink);
+    font-family:inherit;font-size:16px;padding:10px 12px}
+
+  /* alerts */
+  .alert{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-left:6px solid var(--irs-blue);background:var(--tint-blue-1);padding:16px 18px;margin:0 0 22px;font-size:15.5px}
+  .alert .ai{flex:0 0 20px;font-size:20px;line-height:1.2;color:var(--irs-blue)}
+  .alert b{display:block;font-size:16px;margin-bottom:2px}
+  .alert p{margin:4px 0 0;color:var(--ink-2)}
+  .alert.warn{border-left-color:var(--amber);background:var(--tint-amber)}
+  .alert.warn .ai{color:var(--amber)}
+  .alert.error{border-left-color:var(--red);background:var(--tint-red)}
+  .alert.error .ai{color:var(--red)}
+  @media (prefers-color-scheme: dark){ .alert .ai{color:var(--link)} .alert.warn .ai{color:var(--amber)} .alert.error .ai{color:var(--red)} }
+
+  /* message table */
+  .tablewrap{border:1px solid var(--line);background:var(--surface)}
+  .tabletop{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .tabletop .count{font-size:14.5px;color:var(--muted)}
+  .tabletop .legend{margin-left:auto;font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .unreaddot{width:8px;height:8px;border-radius:50%;background:var(--irs-blue);display:inline-block}
+  @media (prefers-color-scheme: dark){ .unreaddot{background:var(--link)} }
+  table.msgs{width:100%;border-collapse:collapse;font-size:15px}
+  table.msgs caption{position:absolute;left:-9999px}
+  table.msgs th{text-align:left;padding:0;border-bottom:2px solid var(--line)}
+  table.msgs th button{display:flex;align-items:center;gap:6px;width:100%;background:none;border:0;font-family:inherit;cursor:pointer;
+    font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:10px 12px;text-align:left}
+  table.msgs th button:hover{color:var(--ink)}
+  table.msgs th .sortic{visibility:hidden}
+  table.msgs th[aria-sort] button{color:var(--ink)}
+  table.msgs th[aria-sort] .sortic{visibility:visible}
+  table.msgs td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.msgs tbody tr{cursor:pointer}
+  table.msgs tbody tr:hover{background:var(--tint-blue-1)}
+  table.msgs tbody tr:last-child td{border-bottom:0}
+  table.msgs .subj a{font-weight:500;text-decoration:none}
+  table.msgs .subj a:hover{text-decoration:underline}
+  table.msgs tr.unread .subj a{font-weight:700}
+  table.msgs .from .tp{font-weight:500}
+  table.msgs .from .tin{font-size:13px;color:var(--muted);display:block;margin-top:1px}
+  table.msgs td.st{white-space:nowrap}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:2px 9px;border:1px solid var(--line);white-space:nowrap}
+  .chip.unread{color:var(--irs-blue);border-color:var(--tint-blue-2);background:var(--tint-blue-1)}
+  @media (prefers-color-scheme: dark){ .chip.unread{color:var(--link)} }
+  .chip.read{color:var(--muted);background:var(--surface-2)}
+  .chip.closed{color:var(--green);border-color:var(--tint-green-line);background:var(--tint-green)}
+  @media(max-width:700px){
+    table.msgs .col-date-hd,table.msgs .col-date{display:none}
+    table.msgs td{padding:12px 10px}
+  }
+
+  /* pagination */
+  .pager{display:flex;align-items:center;gap:6px;padding:12px 16px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .pager .stat{font-size:14px;color:var(--muted);margin-right:auto}
+  .pager button{background:var(--surface);border:1px solid var(--line);border-radius:4px;color:var(--link);
+    font-family:inherit;font-size:14.5px;font-weight:500;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .pager button:hover:not(:disabled){border-color:var(--irs-blue)}
+  .pager button[aria-current="page"]{background:var(--irs-navy);border-color:var(--irs-navy);color:#fff;cursor:default}
+  .pager button:disabled{color:var(--btn-disabled);cursor:default}
+
+  /* accordions (help content) */
+  .acc{border:1px solid var(--line);border-bottom:0;background:var(--surface)}
+  .acc:last-of-type{border-bottom:1px solid var(--line)}
+  .acc > button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;font-family:inherit;cursor:pointer;
+    font-size:16px;font-weight:500;color:var(--ink);padding:15px 18px;text-align:left}
+  .acc > button:hover{background:var(--tint-blue-1)}
+  .acc > button .chev{margin-left:auto;transition:transform .15s;color:var(--muted)}
+  .acc.open > button .chev{transform:rotate(180deg)}
+  .acc .accbody{display:none;padding:2px 18px 18px;font-size:15px;color:var(--ink-2);max-width:75ch}
+  .acc.open .accbody{display:block}
+  .acc .accbody p{margin:0 0 10px}
+  .acc .accbody ol,.acc .accbody ul{margin:0 0 10px;padding-left:22px}
+  .acc .accbody li{margin-bottom:5px}
+
+  h2.sect{font-size:22px;font-weight:800;margin:32px 0 6px}
+  .sect-hint{font-size:15px;color:var(--muted);margin:0 0 16px;max-width:70ch}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--irs-blue);color:#fff;border:0;border-radius:4px;
+    font-family:inherit;font-size:16px;font-weight:500;padding:11px 22px;cursor:pointer;text-decoration:none}
+  .btn:hover{background:var(--irs-navy)}
+  .btn.ghost{background:var(--surface);color:var(--link);border:1px solid var(--irs-blue)}
+  @media (prefers-color-scheme: dark){ .btn.ghost{border-color:var(--link)} }
+  .btn.ghost:hover{background:var(--tint-blue-1)}
+  .btn.sm{padding:7px 14px;font-size:14.5px}
+
+  /* message detail */
+  .msghead{border:1px solid var(--line);background:var(--surface);padding:22px 26px;margin:0 0 18px}
+  .msghead h2{font-size:22px;font-weight:800;margin:0 0 14px}
+  .readrow{display:flex;justify-content:flex-start;border-bottom:1px solid var(--line);padding:10px 0;font-size:15.5px}
+  .readrow:last-child{border-bottom:0}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%;flex:0 0 50%}
+  .readrow .v{text-align:left}
+  .thread{border:1px solid var(--line);background:var(--surface);margin:0 0 18px}
+  .msgitem{padding:20px 26px;border-top:1px solid var(--line)}
+  .msgitem:first-child{border-top:0}
+  .msgitem .mh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .msgitem .who{font-weight:700;font-size:15.5px}
+  .msgitem .who.irs{color:var(--irs-blue)}
+  @media (prefers-color-scheme: dark){ .msgitem .who.irs{color:var(--link)} }
+  .msgitem .when{font-size:13.5px;color:var(--muted)}
+  .msgitem .mb{font-size:15.5px;color:var(--ink-2);max-width:75ch}
+  .msgitem .mb p{margin:0 0 10px}
+  .attach{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface-2);padding:8px 14px;font-size:14px;margin-top:6px;text-decoration:none;color:var(--link)}
+  .replybox{border:1px solid var(--line);background:var(--surface);padding:20px 26px}
+  .replybox label{display:block;font-size:16px;font-weight:500;margin-bottom:4px}
+  .replybox .hint{display:block;font-size:14px;color:#5b616b;font-weight:500;margin-bottom:8px}
+  @media (prefers-color-scheme: dark){ .replybox .hint{color:var(--muted)} }
+  .replybox textarea{width:100%;border:1px solid var(--input-line);border-radius:0;background:var(--surface);color:var(--ink);
+    font-family:inherit;font-size:16px;padding:10px 12px;resize:vertical;min-height:96px}
+  .replyactions{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;align-items:center}
+  .replyactions .note{font-size:13.5px;color:var(--muted)}
+
+  /* taxpayer details */
+  .tphead{border:1px solid var(--line);background:var(--surface);padding:22px 26px;margin:0 0 0;display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+  .tphead .ti{width:44px;height:44px;border-radius:4px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;flex:0 0 44px}
+  .tphead .tn{font-weight:800;font-size:20px}
+  .tphead .td{font-size:14px;color:var(--muted);margin-top:2px}
+  .subtabs{display:flex;border:1px solid var(--line);border-top:0;background:var(--surface);overflow-x:auto}
+  .subtabs button{background:none;border:0;border-bottom:3px solid transparent;font-family:inherit;font-size:15.5px;font-weight:500;
+    color:var(--link);padding:13px 18px;cursor:pointer;white-space:nowrap}
+  .subtabs button[aria-selected="true"]{color:var(--ink);font-weight:700;border-bottom-color:var(--irs-blue)}
+  .subtabs button:hover{background:var(--tint-blue-1)}
+  .tabpanel{border:1px solid var(--line);border-top:0;background:var(--surface);padding:24px 26px;margin:0 0 24px}
+
+  /* empty state */
+  .empty{padding:44px 32px;text-align:center}
+  .empty .eic{width:52px;height:52px;border-radius:4px;background:var(--tint-blue-2);color:var(--irs-blue);display:grid;place-items:center;font-size:24px;margin:0 auto 16px}
+  @media (prefers-color-scheme: dark){ .empty .eic{color:var(--link)} }
+  .empty h3{font-size:19px;font-weight:800;margin:0 0 6px}
+  .empty p{font-size:15px;color:var(--muted);max-width:52ch;margin:0 auto}
+
+  footer{border-top:1px solid var(--line);margin-top:44px}
+</style>
+</head>
+<body>
+<a class="skiplink" href="#main">Skip to main content</a>
+<section class="gov" id="gov" aria-label="Official website of the United States government">
+  <div class="banner-inner">
+    <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+    <span class="txt">An official website of the United States government</span>
+    <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
+  </div>
+  <div class="guidance" id="gov-guidance">
+    <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+    <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+  </div>
+</section>
+
+<div class="masthead"><div class="wrap">
+  <div class="logo"><span class="seal"><svg class="irs-logo" fill="#fff" aria-hidden="true" viewBox="20 218 602 207" xmlns="http://www.w3.org/2000/svg"><g><path d="M240.6,246.9c-2.5-4.4-29.8-16.8-69-24.7c-16.1,17.1-16.1,24.1-16.5,26.9c-0.3,2.8,5.4,10.1,11.1,17.7 c10.8,13.9,13.6,16.5,15.2,20.6c3.2,7.9-1.9,25.6-5.7,41.8c0,0-9.5-34.5-13.9-57c-0.3-2.2,0.3-3.5,0.3-3.2 c-24.1-2.2-40.5-3.5-43.4,9.2c-11.1,0-16.1,3.2-17.4,5.1c-2.8,4.7,0.6,14.6,2.5,19.3c1.6-3.8,11.4-3.2,14.6-3.2 c1.3,0,1.3,0.9,1.9,1.6v46.8H91.9l-24.4,65.5c11.4,5.4,23.4,9.8,31,9.8c7.6,0,26-9.5,28.5-9.8c2.5,0,21.2,9.8,28.5,9.8 c7.3,0,19.3-3.8,31-9.8l-24.7-65.8c0,0-25,0-28.5,0c0-10.4,0-33.9,0-44.3c-0.6-2.8-1.9-3.8-2.8-4.1H145c-2.2-8.5-5.1-14.2-9.2-14.6 c1.3-1.6,1.9-2.2,3.8-3.8h-11.1c1.3-5.7,15.5-3.8,21.8-3.2c6.3,31.7,18.4,73.8,19,74.7c0.6,0.6,10.8,4.4,12,4.7 c6-12.7,14.9-49.7,15.2-58.9c7.3,2.5,4.4,12.3,2.8,22.2c-8.2,51-14.9,66.5-17.1,76c7.3-1.6,12-2.8,12.7-3.8 c1.3-1.3,4.4-9.8,7.6-19.3c4.4-13.9,11.4-49.1,11.1-63c0-3.5-2.8-6.6-7.9-9.2c0,0,2.5-4.4,3.8-7c1.6-3.5,3.2-9.8,3.2-9.8 c2.8,0.9,5.4,2.2,5.7,5.1c1.6,13.3,0.6,14.6-0.9,39.3c-0.6,7.9-3.2,23.4-6,39.9c-5.4,30.1-10.4,42.7-10.4,47.5 c7.9-2.5,13.9-4.4,14.6-5.4c0.6-1.6,6.6-15.8,10.8-37.7c1.9-9.2,3.2-18.7,4.4-28.2c2.2-12.7,2.5-25.6,2.5-36.4 c0-15.8,1.9-15.8-9.8-22.2c4.4-13,3.5-21.5,2.5-23.7c-1.9-4.7-4.4-4.7-14.9-3.8c3.8,3.5,2.5,10.4,1.6,14.6 c-1.9-1.6-1.3-4.4-12.3-4.1c-1.6-18-5.1-19.9-5.4-20.6c-1.6-1.9-10.8-0.9-13.6,0c1.9,1.3,6.3,15.5,4.1,20.9 c-1.3-1.6-16.8-19.3-15.8-22.5c0.6-1.9,1.6-4.1,7-10.4c18.7,3.2,50.3,15.2,51.9,18.4c1.9,4.1,3.8,8.9,5.1,15.8 c1.6,10.4,4.7,35.1,3.2,72.8c-1.6,38.9-6.6,61.1-6.6,59.8c5.7-1.9,15.5-10.8,16.1-12.7c2.5-6.3,3.8-29.4,4.4-50.3 c0.9-20.9-1.3-47.5-2.5-57.3C245.7,258.6,244.1,252.3,240.6,246.9z M98.2,409.3c-5.7,0-14.6-0.9-14.2-0.9l14.2-41.1l13.3,41.5 C111.5,408.7,103.6,409.3,98.2,409.3z M169.7,408.7c0,0-8.9,0.9-14.2,0.9c-5.1,0-13.3-0.9-13.3-0.9l13-41.5L169.7,408.7z M133,376.4v-15.8h12.3l-18.7,51.6l-18.4-51.6h12.3V372c0,0,0,0.9,0.3,1.3c1.6,0.9,1.9,0.9,1.9,0.9L133,376.4z M134.6,292.5h-21.5 c-1.6-5.1,0-6.3,4.4-6.6C126.4,284.9,134,284.9,134.6,292.5z M194.7,269.7c7.9-1.3,4.1,12.7,2.2,18c-2.8-6.6-5.1-10.4-9.8-16.8 C190,270.3,191.9,270.3,194.7,269.7z"/><path d="M56.1,384.3c3.8-3.8,17.1-17.4,19-24.7c2.5-8.9,4.4-29.8,4.4-34.5c0,0-13,8.9-19.9,15.8c-2.8,3.2-7,8.5-7,8.5 c-1.3-7.6,0.3-15.8,3.8-20.9c4.4-7,20.6-20.6,22.5-26.3c3.5-8.9,2.8-16.8,5.7-26.6c-10.8,3.5-24.1,11.7-30.1,18.4 c-0.9-10.4,2.5-18,9.5-23.4c10.1-7.6,23.4-12,32.3-14.6c7.6-2.2,19.3-4.7,25.6-7.6c11.1-5.4,21.8-20.6,24.4-28.5 c-3.8,0-16.8-0.9-29.8,4.1c-4.7,1.9-7,6-9.2,9.5c-2.2,3.8-4.4,6.6-6.3,9.2c-5.4,7.9-11.7,11.7-19.9,13.9c0.3-0.6,5.4-3.8,9.2-11.7 c3.2-6.6,7-19.9,7-20.9c-7,0.9-11.4,2.8-18.7,5.7c-7.9,3.2-10.1,6.3-11.7,9.2c-5.1,7.9-3.8,30.1-13.9,38.9 c0.3-11.7,2.8-24.4-1.3-38.9c-21.5,8.2-25.3,15.8-23.7,25c1.9,12,15.5,17.7,21.5,27.5c1.6,2.8,2.5,7,2.5,7.6c0.3,0-4.1,6-2.8,17.4 c0,0-4.4-8.2-8.2-13.6c-6.3-8.2-18.7-20.9-18.7-20.9c-2.5,32.6,1.6,39.3,3.2,42.1c4.1,7,19.6,17.7,22.8,24.4 c1.6,3.5,1.9,4.7,1.9,4.7c0.6,1.3-3.2,5.4-2.5,11.1c0.3,1.9,0.6,4.4,1.3,7.6c0,0-4.4-6.6-10.8-13.9c-5.7-6.6-16.8-14.2-16.8-14.2 c-0.6,3.8,1.3,21.8,1.6,24.7c1.6,9.2,1.9,17.7,9.5,25.6c6.6,6.6,28.2,15.5,32.6,17.1c0,0-0.9-4.1-2.8-10.1 C60.2,394.4,56.1,384.3,56.1,384.3z"/><path d="M258.3,240.3h6c4.1,0,7.9,0.9,11.7,3.2c2.5,1.6,4.4,3.2,5.1,5.4c0.9,2.8,1.6,8.5,1.6,17.1v110.2 c0,10.1-0.9,16.8-3.2,19.3c-3.2,4.1-8.2,6-15.2,6h-6v4.7h73.1v-4.7h-6c-4.1,0-7.9-0.9-11.4-3.2c-2.5-1.6-4.4-3.2-5.4-5.4 c-0.9-2.8-1.6-8.5-1.6-17.1V265.9c0-10.1,0.9-16.8,3.2-19.3c3.2-4.1,8.2-6,15.2-6h6v-4.7h-73.1V240.3z"/><path d="M616.7,343.1c-3.2-6.3-7.6-11.7-13.6-16.1c-5.7-4.4-16.8-11.1-32.6-19.6c-19.6-10.4-32-19-37-25 c-3.5-4.4-5.4-8.9-5.4-14.2c0-6.6,2.8-13,8.5-18c5.7-5.4,13-7.9,21.5-7.9c7.6,0,15.2,1.9,22.5,6c7.3,3.8,12.7,9.2,16.8,15.8 c3.8,6.6,6.6,15.8,8.2,26.9h4.7v-59.2h-4.7c-0.9,3.8-1.9,6.6-3.5,7.9c-1.3,1.3-3.2,1.9-5.4,1.9c-1.9,0-5.4-0.9-9.8-3.2 c-10.1-4.4-19.6-6.6-28.8-6.6c-14.6,0-26.6,4.4-35.8,13.3c-9.5,8.9-14.2,19.3-14.2,31.7c0,7,1.6,13.6,4.7,19.3 c3.2,6,7.9,11.4,13.9,16.1c6.3,4.7,16.5,11.4,31,19.6s23.4,13.6,26.9,16.1c4.7,3.8,8.5,7.6,10.8,12c2.2,4.4,3.5,8.5,3.5,12.7 c0,7.6-3.2,13.9-9.2,19.6c-6,5.4-14.2,8.2-24.7,8.2c-9.2,0-17.4-1.9-25-6c-7.6-4.1-13.3-9.2-16.8-15.2c-3.8-6-6.6-15.2-8.9-27.5 h-4.7v49.7c-7-1.6-11.4-3.5-16.1-6.6c-5.7-3.8-12.7-11.1-20.9-22.5l-35.1-49.1c14.2-3.2,25-8.5,31.7-16.5 c7-7.6,10.1-16.8,10.1-27.2c0-9.8-2.8-18.4-8.9-25.3c-6-7-13.3-12-21.8-14.6s-21.8-4.1-40.2-4.1h-62v4.7h6.3 c6.3,0,11.4,1.9,14.6,5.4c2.2,2.5,3.5,9.2,3.5,19.9v110.2c0,9.8-0.9,15.8-2.5,18.4c-3.2,4.7-8.2,7-15.5,7h-6.3v4.7h73.1v-4.7h-6.6 c-6.3,0-11.1-1.9-14.2-5.4c-2.2-2.5-3.5-9.2-3.5-19.9v-49.4c1.3,0,2.5,0,3.8,0.3c1.3,0,2.5,0,3.5,0c2.5,0,6,0,10.4-0.3l57.6,79.8 h39.3l0,0h5.4c0.6-1.9,1.3-3.2,1.9-3.8c1.3-1.3,2.8-1.9,5.1-1.9s7.3,1.3,15.5,4.1c8.2,2.5,13.6,4.1,16.1,4.7 c4.4,0.6,8.9,1.3,13.9,1.3c15.8,0,28.8-4.7,38.6-13.9c10.1-9.5,14.9-20.6,14.9-33.2C621.4,355.8,619.8,349.5,616.7,343.1z M402.1,318.8c-0.6,0-1.6,0-2.8,0c-1.3,0-2.5,0-4.1,0v-71.2c8.2-1.6,14.9-2.5,19.6-2.5c11.1,0,19.9,3.5,26.6,6.6 c6.6,6.6,10.1,15.2,10.1,26s-4.1,19.9-12.3,26.9C430.5,315.3,418.5,318.8,402.1,318.8z"/></g></svg></span><span class="ctx">Tax Pro Account</span></div>
+  <div class="util">
+    <a class="hide-m">Help</a>
+    <a class="hide-m"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></g></svg> Alex Ferraro, CPA</a>
+    <a>Sign out</a>
+  </div>
+</div></div>
+
+<nav class="tabs" aria-label="Tax Pro Account sections"><div class="wrap">
+  <a data-nav="home">Home</a>
+  <a data-nav="home">Authorizations</a>
+  <a class="active" data-nav="messages" aria-current="page">Secure messages</a>
+  <a data-nav="home">Payments</a>
+  <a data-nav="home">Your profile</a>
+</div></nav>
+
+<div aria-live="polite" class="skiplink" id="live"></div>
+
+<!-- ================= VIEW: SECURE MESSAGES ================= -->
+<main class="wrap" id="main">
+<section id="view-messages">
+  <h1 class="page" id="h-messages" tabindex="-1">Secure messages</h1>
+  <p class="sub">Send and receive messages with the IRS about the taxpayers you're authorized to represent. Messages are retained for one year after the case closes.</p>
+
+  <div class="field">
+    <label for="cafsel">CAF number</label>
+    <span class="hint" id="cafhint">Select the Centralized Authorization File (CAF) number whose messages you want to view.</span>
+    <select id="cafsel" aria-describedby="cafhint">
+      <option value="caf1" selected>0304-88214 — Ferraro Tax Advisors, Hartford CT</option>
+      <option value="caf2">0517-33902 — Ferraro Tax Advisors, Springfield MA</option>
+      <option value="caf3">0791-46117 — Alex Ferraro (individual)</option>
+    </select>
+  </div>
+
+  <!-- linked CAF: message table -->
+  <div id="msgs-linked">
+    <div class="tablewrap">
+      <div class="tabletop">
+        <span class="count" id="msgcount"></span>
+        <span class="legend"><span class="unreaddot" aria-hidden="true"></span> Unread</span>
+      </div>
+      <table class="msgs" id="msgtable">
+        <caption>Secure messages for the selected CAF number</caption>
+        <thead>
+          <tr>
+            <th scope="col" id="th-taxpayer"><button data-sort="taxpayer">Taxpayer <span class="sortic" aria-hidden="true"></span></button></th>
+            <th scope="col" id="th-subject"><button data-sort="subject">Subject <span class="sortic" aria-hidden="true"></span></button></th>
+            <th scope="col" class="col-date-hd" id="th-date"><button data-sort="date">Received <span class="sortic" aria-hidden="true"></span></button></th>
+            <th scope="col" id="th-status"><button data-sort="status">Status <span class="sortic" aria-hidden="true"></span></button></th>
+          </tr>
+        </thead>
+        <tbody id="msgbody"></tbody>
+      </table>
+      <div class="pager" id="pager">
+        <span class="stat" id="pagerstat"></span>
+        <button id="pg-prev"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Previous</button>
+        <span id="pg-nums" style="display:inline-flex;gap:6px"></span>
+        <button id="pg-next">Next <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- unlinked CAF: help content -->
+  <div id="msgs-unlinked" hidden>
+    <div class="alert warn">
+      <span class="ai" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg></span>
+      <div><b>This CAF number isn't linked to secure messaging yet</b>
+      <p>CAF number 0791-46117 can't send or receive secure messages until it's linked to your Tax Pro Account. Linking confirms you own the CAF number and usually takes one business day.</p>
+      <p style="margin-top:10px"><a class="btn sm" href="#" onclick="return false">Link this CAF number</a></p></div>
+    </div>
+
+    <h2 class="sect">Common questions</h2>
+    <p class="sect-hint">Answers about CAF numbers and getting access to secure messaging.</p>
+
+    <div class="acc">
+      <button aria-expanded="false" aria-controls="acc1"><span>What is a CAF number and why do I need one?</span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <div class="accbody" id="acc1">
+        <p>A Centralized Authorization File (CAF) number is a nine-digit number the IRS assigns the first time you file a third-party authorization, such as Form 2848 (Power of Attorney) or Form 8821 (Tax Information Authorization). It identifies you as an authorized representative.</p>
+        <p>Secure messaging uses your CAF number to determine which taxpayers' cases you can discuss, so every message is tied to an active authorization on file.</p>
+      </div>
+    </div>
+    <div class="acc">
+      <button aria-expanded="false" aria-controls="acc2"><span>How do I link a CAF number to my account?</span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <div class="accbody" id="acc2">
+        <ol>
+          <li>Select <b>Link this CAF number</b> above, or go to <b>Your profile</b> and choose <b>CAF numbers</b>.</li>
+          <li>Verify the CAF number and the name and address the IRS has on file for it. They must match your CAF record exactly.</li>
+          <li>Answer the identity confirmation questions. Most requests are confirmed within one business day.</li>
+        </ol>
+        <p>Once linked, the CAF number appears in the selector on this page and its messages load automatically.</p>
+      </div>
+    </div>
+    <div class="acc">
+      <button aria-expanded="false" aria-controls="acc3"><span>Why don't I see messages for a taxpayer I represent?</span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <div class="accbody" id="acc3">
+        <p>Messages appear only when all of the following are true:</p>
+        <ul>
+          <li>Your authorization (Form 2848 or 8821) for that taxpayer is active and recorded on the CAF you selected.</li>
+          <li>The IRS office handling the case has started a secure-message conversation, or you've started one from the taxpayer's page.</li>
+          <li>The tax matters and periods on your authorization cover the case being discussed.</li>
+        </ul>
+        <p>If an authorization was filed recently, allow up to two weeks for it to be recorded.</p>
+      </div>
+    </div>
+    <div class="acc">
+      <button aria-expanded="false" aria-controls="acc4"><span>Who can use secure messaging?</span><span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+      <div class="accbody" id="acc4">
+        <p>Attorneys, CPAs, enrolled agents, and other representatives with an active CAF number can use secure messaging after linking the CAF number to their Tax Pro Account and verifying their identity.</p>
+        <p>Each linked CAF number keeps its own inbox, so firms with multiple office locations can keep casework separate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VIEW: MESSAGE DETAILS ================= -->
+<section id="view-detail" hidden>
+  <p class="crumb"><a data-nav="messages">Secure messages</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span id="crumb-subj"></span></p>
+  <h1 class="page" id="h-detail" tabindex="-1"></h1>
+
+  <div class="msghead">
+    <div class="readrow"><span class="k">Taxpayer</span><span class="v" id="d-taxpayer"></span></div>
+    <div class="readrow"><span class="k">Case reference</span><span class="v" id="d-case"></span></div>
+    <div class="readrow"><span class="k">Tax matter</span><span class="v" id="d-matter"></span></div>
+    <div class="readrow"><span class="k">IRS office</span><span class="v" id="d-office"></span></div>
+    <div class="readrow"><span class="k">Status</span><span class="v" id="d-status"></span></div>
+  </div>
+
+  <div class="thread" id="d-thread"></div>
+
+  <div class="replybox" id="d-replybox">
+    <label for="reply">Reply</label>
+    <span class="hint">Don't include full Social Security numbers or bank account numbers — the case reference above already identifies the taxpayer.</span>
+    <textarea id="reply"></textarea>
+    <div class="replyactions">
+      <button class="btn" id="sendbtn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8 13.5 2.5 11 13.5 7.5 9.5z"/><path d="M7.5 9.5 13.5 2.5"/></g></svg> Send message</button>
+      <button class="btn ghost">Add attachment</button>
+      <span class="note">Attachments: PDF, JPG, or PNG, up to 15 MB each.</span>
+    </div>
+  </div>
+
+  <p style="margin:22px 0 0"><a data-nav="taxpayer" id="d-tplink">View taxpayer details</a></p>
+</section>
+
+<!-- ================= VIEW: TAXPAYER DETAILS ================= -->
+<section id="view-taxpayer" hidden>
+  <p class="crumb"><a data-nav="messages">Secure messages</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Taxpayer details</p>
+  <h1 class="page" id="h-taxpayer" tabindex="-1">Taxpayer details</h1>
+
+  <div class="tphead">
+    <span class="ti" aria-hidden="true" id="tp-initials"></span>
+    <div>
+      <div class="tn" id="tp-name"></div>
+      <div class="td" id="tp-meta"></div>
+    </div>
+  </div>
+  <div class="subtabs" role="tablist" aria-label="Taxpayer sections">
+    <button role="tab" aria-selected="false" id="tab-overview" aria-controls="panel-overview">Overview</button>
+    <button role="tab" aria-selected="false" id="tab-auth" aria-controls="panel-auth">Authorizations</button>
+    <button role="tab" aria-selected="true" id="tab-messages" aria-controls="panel-messages">Messages</button>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" hidden>
+    <div class="readrow"><span class="k">Authorization type</span><span class="v" id="tp-authtype"></span></div>
+    <div class="readrow"><span class="k">Tax matters</span><span class="v" id="tp-matters"></span></div>
+    <div class="readrow"><span class="k">Periods covered</span><span class="v" id="tp-periods"></span></div>
+  </div>
+  <div class="tabpanel" role="tabpanel" id="panel-auth" aria-labelledby="tab-auth" hidden>
+    <div class="readrow"><span class="k">Form on file</span><span class="v" id="tp-form"></span></div>
+    <div class="readrow"><span class="k">Recorded on CAF</span><span class="v" id="tp-caf"></span></div>
+    <div class="readrow"><span class="k">Effective date</span><span class="v" id="tp-effective"></span></div>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="panel-messages" aria-labelledby="tab-messages">
+    <!-- state: has messages -->
+    <div id="tpmsg-list" hidden>
+      <table class="msgs">
+        <caption>Messages for this taxpayer</caption>
+        <thead><tr>
+          <th scope="col"><button style="cursor:default">Subject</button></th>
+          <th scope="col" class="col-date-hd"><button style="cursor:default">Received</button></th>
+          <th scope="col"><button style="cursor:default">Status</button></th>
+        </tr></thead>
+        <tbody id="tpmsg-body"></tbody>
+      </table>
+    </div>
+    <!-- state: no messages -->
+    <div id="tpmsg-empty" hidden>
+      <div class="empty">
+        <span class="eic" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></g></svg></span>
+        <h3>No messages yet</h3>
+        <p>There are no secure messages for this taxpayer. Start a conversation and the IRS office assigned to the case will respond here.</p>
+        <p style="margin-top:16px"><a class="btn sm" href="#" onclick="return false">Start a new message</a></p>
+      </div>
+    </div>
+    <!-- state: service unavailable -->
+    <div id="tpmsg-down" hidden aria-live="polite">
+      <div class="alert error" style="margin:0">
+        <span class="ai" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg></span>
+        <div><b>Messages are temporarily unavailable</b>
+        <p>We can't load secure messages right now. Your messages are safe and nothing has been lost — try again in a few minutes.</p>
+        <p style="margin-top:10px"><a class="btn sm ghost" href="#" onclick="return false">Try again</a></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../../index.html" style="color:var(--link);text-decoration:none"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M10 4L6 8l4 4"/></svg> All prototypes</a></div>
+  <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5">
+    <i>Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, firms, CAF numbers, case references, and data shown are fictional mock data — no real personal or taxpayer information. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.</i>
+  </div>
+</footer>
+
+<script>
+// ---------- mock data ----------
+const TAXPAYERS = {
+  t1:{name:"Jordan Michaels", initials:"JM", meta:"Individual · Authorization on file since Mar 2025",
+      authtype:"Form 2848 — Power of Attorney", matters:"Form 1040 — Income tax", periods:"2022, 2023, 2024",
+      form:"Form 2848", caf:"0304-88214", effective:"March 12, 2025", msgState:"list"},
+  t2:{name:"Rivera & Sons Landscaping LLC", initials:"RS", meta:"Business · Authorization on file since Jan 2024",
+      authtype:"Form 2848 — Power of Attorney", matters:"Form 941 — Employment tax", periods:"Q1 2023 – Q4 2024",
+      form:"Form 2848", caf:"0304-88214", effective:"January 8, 2024", msgState:"list"},
+  t3:{name:"Priya Natarajan", initials:"PN", meta:"Individual · Authorization on file since Jun 2026",
+      authtype:"Form 8821 — Tax Information Authorization", matters:"Form 1040 — Income tax", periods:"2024, 2025",
+      form:"Form 8821", caf:"0304-88214", effective:"June 2, 2026", msgState:"empty"},
+  t4:{name:"Beacon Hill Bakery Inc.", initials:"BH", meta:"Business · Authorization on file since Sep 2024",
+      authtype:"Form 2848 — Power of Attorney", matters:"Form 1120 — Corporate income tax", periods:"2023, 2024",
+      form:"Form 2848", caf:"0517-33902", effective:"September 19, 2024", msgState:"down"},
+  t5:{name:"Marcus Webb", initials:"MW", meta:"Individual · Authorization on file since Feb 2025",
+      authtype:"Form 2848 — Power of Attorney", matters:"Form 1040 — Income tax", periods:"2021, 2022, 2023",
+      form:"Form 2848", caf:"0304-88214", effective:"February 27, 2025", msgState:"list"},
+};
+
+const MESSAGES = {
+caf1:[
+  {id:"m1", tp:"t1", taxpayer:"Jordan Michaels", subject:"Additional documentation needed — Schedule C expenses", date:"2026-07-10", dateShown:"Jul 10, 2026", status:"Unread",
+   caseRef:"EXM-2026-041173", matter:"Form 1040 · Tax year 2024", office:"Examination — Andover, MA",
+   thread:[
+     {who:"IRS Examination", irs:true, when:"July 10, 2026 · 9:42 a.m.", body:["<p>We've reviewed the records you submitted for the Schedule C examination. To complete our review of vehicle expenses, please provide a mileage log or equivalent records covering January through December 2024.</p><p>You can reply to this message with the records attached. If we don't receive them by August 8, 2026, we'll issue our report based on the information we have.</p>"], attach:null},
+   ]},
+  {id:"m2", tp:"t2", taxpayer:"Rivera & Sons Landscaping LLC", subject:"Response received — Form 941 deposit schedule", date:"2026-07-08", dateShown:"Jul 8, 2026", status:"Unread",
+   caseRef:"COL-2026-118052", matter:"Form 941 · Q4 2024", office:"Collection — Hartford, CT",
+   thread:[
+     {who:"You", irs:false, when:"July 3, 2026 · 2:15 p.m.", body:["<p>Requesting confirmation that the deposit schedule change to semiweekly was applied for Q1 2025 onward, per our June call.</p>"], attach:null},
+     {who:"IRS Collection", irs:true, when:"July 8, 2026 · 11:03 a.m.", body:["<p>Confirmed — the semiweekly deposit schedule is effective beginning with the first quarter of 2025. No further action is needed. The attached letter documents the change for your records.</p>"], attach:"Letter 3064C — Deposit schedule confirmation.pdf"},
+   ]},
+  {id:"m3", tp:"t5", taxpayer:"Marcus Webb", subject:"Installment agreement — financial statement review", date:"2026-07-01", dateShown:"Jul 1, 2026", status:"Read",
+   caseRef:"COL-2026-097714", matter:"Form 1040 · Tax years 2021–2023", office:"Collection — Andover, MA",
+   thread:[
+     {who:"IRS Collection", irs:true, when:"July 1, 2026 · 8:20 a.m.", body:["<p>We received Form 433-A for the proposed installment agreement. The monthly amount of $425 is acceptable based on the financial statement. We'll mail the agreement terms to the taxpayer; setup takes about 30 days.</p>"], attach:null},
+   ]},
+  {id:"m4", tp:"t1", taxpayer:"Jordan Michaels", subject:"Examination opened — tax year 2024 return", date:"2026-06-24", dateShown:"Jun 24, 2026", status:"Read",
+   caseRef:"EXM-2026-041173", matter:"Form 1040 · Tax year 2024", office:"Examination — Andover, MA",
+   thread:[
+     {who:"IRS Examination", irs:true, when:"June 24, 2026 · 10:05 a.m.", body:["<p>An examination has been opened on the 2024 Form 1040 for the taxpayer above, limited to Schedule C gross receipts and expenses. The initial document request is attached. Records are due by July 24, 2026.</p>"], attach:"Form 4564 — Information Document Request.pdf"},
+   ]},
+  {id:"m5", tp:"t2", taxpayer:"Rivera & Sons Landscaping LLC", subject:"Penalty abatement request — decision", date:"2026-06-18", dateShown:"Jun 18, 2026", status:"Read",
+   caseRef:"COL-2026-118052", matter:"Form 941 · Q4 2024", office:"Collection — Hartford, CT",
+   thread:[
+     {who:"You", irs:false, when:"June 10, 2026 · 4:41 p.m.", body:["<p>Submitting a first-time abatement request for the Q4 2024 failure-to-deposit penalty. The business has a clean compliance history for the prior three years.</p>"], attach:null},
+     {who:"IRS Collection", irs:true, when:"June 18, 2026 · 1:12 p.m.", body:["<p>The first-time abatement request is approved. The failure-to-deposit penalty of $612.40 and related interest will be removed within 2–3 weeks. An adjusted notice will be mailed to the taxpayer.</p>"], attach:null},
+   ]},
+  {id:"m6", tp:"t5", taxpayer:"Marcus Webb", subject:"Notice CP504 — collection alternatives", date:"2026-06-11", dateShown:"Jun 11, 2026", status:"Read",
+   caseRef:"COL-2026-097714", matter:"Form 1040 · Tax years 2021–2023", office:"Collection — Andover, MA",
+   thread:[
+     {who:"You", irs:false, when:"June 11, 2026 · 9:02 a.m.", body:["<p>The taxpayer received Notice CP504. We intend to submit Form 433-A and propose an installment agreement within two weeks. Requesting a hold on enforcement action while it's under review.</p>"], attach:null},
+   ]},
+  {id:"m7", tp:"t1", taxpayer:"Jordan Michaels", subject:"Address update confirmed", date:"2026-05-30", dateShown:"May 30, 2026", status:"Read",
+   caseRef:"ACS-2026-201559", matter:"Form 1040 · Account maintenance", office:"Accounts Management — Fresno, CA",
+   thread:[
+     {who:"IRS Accounts Management", irs:true, when:"May 30, 2026 · 3:27 p.m.", body:["<p>The address change submitted on Form 8822 has been processed. Future notices for this taxpayer will be mailed to the new address on file.</p>"], attach:null},
+   ]},
+  {id:"m8", tp:"t2", taxpayer:"Rivera & Sons Landscaping LLC", subject:"Q1 2025 Form 941 — processing question resolved", date:"2026-05-22", dateShown:"May 22, 2026", status:"Read",
+   caseRef:"AM-2026-155201", matter:"Form 941 · Q1 2025", office:"Accounts Management — Cincinnati, OH",
+   thread:[
+     {who:"IRS Accounts Management", irs:true, when:"May 22, 2026 · 10:48 a.m.", body:["<p>The duplicate-filing indicator on the Q1 2025 Form 941 has been resolved. The return is processed and the account balance is correct. This conversation is now closed.</p>"], attach:null},
+   ]},
+  {id:"m9", tp:"t5", taxpayer:"Marcus Webb", subject:"Transcript request fulfilled", date:"2026-05-15", dateShown:"May 15, 2026", status:"Read",
+   caseRef:"ACS-2026-198310", matter:"Form 1040 · Tax years 2021–2023", office:"Accounts Management — Fresno, CA",
+   thread:[
+     {who:"IRS Accounts Management", irs:true, when:"May 15, 2026 · 1:55 p.m.", body:["<p>Account transcripts for tax years 2021 through 2023 are attached, as requested.</p>"], attach:"Account transcripts 2021-2023.pdf"},
+   ]},
+  {id:"m10", tp:"t1", taxpayer:"Jordan Michaels", subject:"Estimated payment misapplied — corrected", date:"2026-05-06", dateShown:"May 6, 2026", status:"Read",
+   caseRef:"AM-2026-149877", matter:"Form 1040 · Tax year 2025", office:"Accounts Management — Fresno, CA",
+   thread:[
+     {who:"You", irs:false, when:"April 29, 2026 · 11:19 a.m.", body:["<p>The taxpayer's Q1 2026 estimated payment of $2,400 posted to tax year 2025 instead of 2026. Requesting it be moved to the correct period.</p>"], attach:null},
+     {who:"IRS Accounts Management", irs:true, when:"May 6, 2026 · 2:33 p.m.", body:["<p>The payment has been transferred to tax year 2026 as requested. Allow one week for the account to reflect the change.</p>"], attach:null},
+   ]},
+  {id:"m11", tp:"t2", taxpayer:"Rivera & Sons Landscaping LLC", subject:"EFTPS enrollment assistance", date:"2026-04-27", dateShown:"Apr 27, 2026", status:"Read",
+   caseRef:"AM-2026-140095", matter:"Form 941 · Account maintenance", office:"Accounts Management — Cincinnati, OH",
+   thread:[
+     {who:"IRS Accounts Management", irs:true, when:"April 27, 2026 · 9:14 a.m.", body:["<p>The EFTPS enrollment issue has been referred to the EFTPS help desk. They'll contact the responsible party directly within 5 business days.</p>"], attach:null},
+   ]},
+  {id:"m12", tp:"t5", taxpayer:"Marcus Webb", subject:"Levy release confirmation", date:"2026-04-18", dateShown:"Apr 18, 2026", status:"Read",
+   caseRef:"COL-2026-097714", matter:"Form 1040 · Tax years 2021–2023", office:"Collection — Andover, MA",
+   thread:[
+     {who:"IRS Collection", irs:true, when:"April 18, 2026 · 4:02 p.m.", body:["<p>The wage levy has been released as of today. The release (Form 668-D) was faxed to the employer and a copy is attached.</p>"], attach:"Form 668-D — Release of levy.pdf"},
+   ]},
+  {id:"m13", tp:"t1", taxpayer:"Jordan Michaels", subject:"Identity verification complete", date:"2026-04-09", dateShown:"Apr 9, 2026", status:"Read",
+   caseRef:"TPP-2026-088123", matter:"Form 1040 · Tax year 2025", office:"Taxpayer Protection Program",
+   thread:[
+     {who:"IRS Taxpayer Protection", irs:true, when:"April 9, 2026 · 12:20 p.m.", body:["<p>Identity verification for the 2025 return is complete. Processing has resumed; allow up to nine weeks for the refund to be issued.</p>"], attach:null},
+   ]},
+],
+caf2:[
+  {id:"m14", tp:"t4", taxpayer:"Beacon Hill Bakery Inc.", subject:"Form 1120 amended return — status", date:"2026-07-06", dateShown:"Jul 6, 2026", status:"Unread",
+   caseRef:"AM-2026-161448", matter:"Form 1120 · Tax year 2023", office:"Accounts Management — Ogden, UT",
+   thread:[
+     {who:"IRS Accounts Management", irs:true, when:"July 6, 2026 · 10:31 a.m.", body:["<p>The amended 2023 Form 1120 is in processing. Current processing time is 12–16 weeks from the June 15 receipt date. No action is needed.</p>"], attach:null},
+   ]},
+  {id:"m15", tp:"t4", taxpayer:"Beacon Hill Bakery Inc.", subject:"Estimated tax penalty recalculated", date:"2026-06-20", dateShown:"Jun 20, 2026", status:"Read",
+   caseRef:"AM-2026-161448", matter:"Form 1120 · Tax year 2024", office:"Accounts Management — Ogden, UT",
+   thread:[
+     {who:"IRS Accounts Management", irs:true, when:"June 20, 2026 · 2:47 p.m.", body:["<p>The Form 2220 annualized method has been applied and the estimated tax penalty was reduced from $1,840 to $312. An adjusted notice will be mailed.</p>"], attach:null},
+   ]},
+],
+};
+
+// ---------- state ----------
+const PAGE_SIZE = 6;
+let currentCaf = "caf1";
+let sortKey = "date", sortDir = "desc";
+let page = 1;
+let currentMsg = null;
+const readIds = new Set();
+
+const $ = id => document.getElementById(id);
+const live = $("live");
+
+// ---------- view switching ----------
+const VIEWS = {messages:"view-messages", detail:"view-detail", taxpayer:"view-taxpayer", home:"view-messages"};
+function show(name){
+  for(const [k,el] of Object.entries({messages:"view-messages",detail:"view-detail",taxpayer:"view-taxpayer"}))
+    $(el).hidden = (VIEWS[name]!==el);
+  const h = {messages:"h-messages",detail:"h-detail",taxpayer:"h-taxpayer"}[name==="home"?"messages":name];
+  const hd = $(h); if(hd){ hd.focus({preventScroll:false}); window.scrollTo(0,0); }
+}
+document.addEventListener("click",e=>{
+  const nav = e.target.closest("[data-nav]");
+  if(!nav) return;
+  e.preventDefault();
+  const name = nav.dataset.nav;
+  if(name==="taxpayer" && currentMsg) openTaxpayer(currentMsg.tp);
+  else show(name==="home"?"messages":name);
+});
+
+// ---------- CAF selector ----------
+$("cafsel").addEventListener("change",e=>{
+  currentCaf = e.target.value;
+  page = 1;
+  if(currentCaf==="caf3"){
+    $("msgs-linked").hidden = true;
+    $("msgs-unlinked").hidden = false;
+    live.textContent = "This CAF number isn't linked to secure messaging. Help content is shown.";
+  }else{
+    $("msgs-unlinked").hidden = true;
+    $("msgs-linked").hidden = false;
+    renderTable();
+    live.textContent = "Messages loaded for the selected CAF number.";
+  }
+});
+
+// ---------- sorting ----------
+document.querySelectorAll("#msgtable th button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const key = btn.dataset.sort;
+    if(sortKey===key) sortDir = sortDir==="asc"?"desc":"asc";
+    else { sortKey = key; sortDir = key==="date"?"desc":"asc"; }
+    page = 1;
+    renderTable();
+  });
+});
+
+function sorted(list){
+  const dir = sortDir==="asc"?1:-1;
+  return [...list].sort((a,b)=>{
+    let av=a[sortKey], bv=b[sortKey];
+    if(sortKey==="status"){ av = (readIds.has(a.id)&&a.status==="Unread")?"Read":a.status; bv = (readIds.has(b.id)&&b.status==="Unread")?"Read":b.status; }
+    return av<bv?-dir:av>bv?dir:0;
+  });
+}
+
+const UP='<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5v-11M3.5 7 8 2.5 12.5 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const DOWN='<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v11M3.5 9 8 13.5 12.5 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+// ---------- table + pagination ----------
+function renderTable(){
+  const list = sorted(MESSAGES[currentCaf]||[]);
+  const total = list.length;
+  const pages = Math.max(1, Math.ceil(total/PAGE_SIZE));
+  if(page>pages) page = pages;
+  const start = (page-1)*PAGE_SIZE;
+  const slice = list.slice(start, start+PAGE_SIZE);
+  const unread = list.filter(m=>m.status==="Unread"&&!readIds.has(m.id)).length;
+
+  $("msgcount").textContent = `${total} message${total===1?"":"s"} · ${unread} unread`;
+
+  // header sort state
+  const ths = {taxpayer:"th-taxpayer",subject:"th-subject",date:"th-date",status:"th-status"};
+  for(const [k,id] of Object.entries(ths)){
+    const th = $(id);
+    if(k===sortKey){
+      th.setAttribute("aria-sort", sortDir==="asc"?"ascending":"descending");
+      th.querySelector(".sortic").innerHTML = sortDir==="asc"?UP:DOWN;
+    }else{
+      th.removeAttribute("aria-sort");
+      th.querySelector(".sortic").innerHTML = "";
+    }
+  }
+
+  const tb = $("msgbody");
+  tb.innerHTML = "";
+  for(const m of slice){
+    const isRead = readIds.has(m.id) || m.status!=="Unread";
+    const tr = document.createElement("tr");
+    if(!isRead) tr.className = "unread";
+    tr.innerHTML = `
+      <td class="from"><span class="tp">${m.taxpayer}</span></td>
+      <td class="subj"><a href="#" data-open="${m.id}">${m.subject}</a></td>
+      <td class="col-date">${m.dateShown}</td>
+      <td class="st"><span class="chip ${isRead?"read":"unread"}">${isRead?"Read":"Unread"}</span></td>`;
+    tr.addEventListener("click",e=>{ e.preventDefault(); openMessage(m.id); });
+    tb.appendChild(tr);
+  }
+
+  // pager
+  $("pagerstat").textContent = total? `Showing ${start+1}–${Math.min(start+PAGE_SIZE,total)} of ${total}` : "No messages";
+  $("pg-prev").disabled = page<=1;
+  $("pg-next").disabled = page>=pages;
+  const nums = $("pg-nums"); nums.innerHTML = "";
+  for(let p=1;p<=pages;p++){
+    const b = document.createElement("button");
+    b.textContent = p;
+    b.setAttribute("aria-label",`Page ${p}`);
+    if(p===page) b.setAttribute("aria-current","page");
+    b.addEventListener("click",()=>{ page=p; renderTable(); });
+    nums.appendChild(b);
+  }
+}
+$("pg-prev").addEventListener("click",()=>{ if(page>1){page--; renderTable();} });
+$("pg-next").addEventListener("click",()=>{ page++; renderTable(); });
+
+// ---------- message details ----------
+function findMsg(id){
+  for(const list of Object.values(MESSAGES)){ const m=list.find(x=>x.id===id); if(m) return m; }
+  return null;
+}
+function openMessage(id){
+  const m = findMsg(id); if(!m) return;
+  currentMsg = m;
+  readIds.add(m.id);
+  $("crumb-subj").textContent = m.subject;
+  $("h-detail").textContent = m.subject;
+  $("d-taxpayer").textContent = m.taxpayer;
+  $("d-case").textContent = m.caseRef;
+  $("d-matter").textContent = m.matter;
+  $("d-office").textContent = m.office;
+  const closed = /closed/i.test(m.thread[m.thread.length-1].body.join(" "));
+  $("d-status").innerHTML = closed? '<span class="chip closed">Closed</span>' : '<span class="chip unread">Open</span>';
+  $("d-replybox").style.display = closed? "none":"";
+  const th = $("d-thread"); th.innerHTML = "";
+  for(const item of m.thread){
+    const div = document.createElement("div");
+    div.className = "msgitem";
+    div.innerHTML = `<div class="mh"><span class="who${item.irs?" irs":""}">${item.who}</span><span class="when">${item.when}</span></div>
+      <div class="mb">${item.body.join("")}</div>
+      ${item.attach?`<a class="attach" href="#" onclick="return false"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h4M6 8h4M6 10.5h2.5"/></g></svg> ${item.attach}</a>`:""}`;
+    th.appendChild(div);
+  }
+  $("reply").value = "";
+  show("detail");
+}
+$("sendbtn").addEventListener("click",()=>{
+  const txt = $("reply").value.trim();
+  if(!txt) { live.textContent="Enter a message before sending."; return; }
+  const now = new Date();
+  const when = now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+  currentMsg.thread.push({who:"You", irs:false, when:`${when}`, body:[`<p>${txt.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</p>`], attach:null});
+  openMessage(currentMsg.id);
+  live.textContent = "Your message was sent. The assigned IRS office typically responds within 3 business days.";
+});
+
+// ---------- taxpayer details ----------
+function openTaxpayer(tpId){
+  const tp = TAXPAYERS[tpId]; if(!tp) return;
+  $("tp-initials").textContent = tp.initials;
+  $("tp-name").textContent = tp.name;
+  $("tp-meta").textContent = tp.meta;
+  $("tp-authtype").textContent = tp.authtype;
+  $("tp-matters").textContent = tp.matters;
+  $("tp-periods").textContent = tp.periods;
+  $("tp-form").textContent = tp.form;
+  $("tp-caf").textContent = tp.caf;
+  $("tp-effective").textContent = tp.effective;
+  selectTab("messages");
+  // messages tab state
+  $("tpmsg-list").hidden = true; $("tpmsg-empty").hidden = true; $("tpmsg-down").hidden = true;
+  if(tp.msgState==="empty"){ $("tpmsg-empty").hidden = false; }
+  else if(tp.msgState==="down"){ $("tpmsg-down").hidden = false; }
+  else{
+    const list = (MESSAGES[currentCaf]||[]).filter(m=>m.tp===tpId);
+    const tb = $("tpmsg-body"); tb.innerHTML = "";
+    for(const m of list){
+      const isRead = readIds.has(m.id) || m.status!=="Unread";
+      const tr = document.createElement("tr");
+      if(!isRead) tr.className = "unread";
+      tr.innerHTML = `<td class="subj"><a href="#" data-open="${m.id}">${m.subject}</a></td>
+        <td class="col-date">${m.dateShown}</td>
+        <td class="st"><span class="chip ${isRead?"read":"unread"}">${isRead?"Read":"Unread"}</span></td>`;
+      tr.addEventListener("click",e=>{ e.preventDefault(); openMessage(m.id); });
+      tb.appendChild(tr);
+    }
+    $("tpmsg-list").hidden = false;
+  }
+  show("taxpayer");
+}
+const TABS = ["overview","auth","messages"];
+function selectTab(name){
+  for(const t of TABS){
+    $("tab-"+t).setAttribute("aria-selected", t===name?"true":"false");
+    $("panel-"+t).hidden = (t!==name);
+  }
+}
+TABS.forEach(t=>$("tab-"+t).addEventListener("click",()=>selectTab(t)));
+
+// ---------- banner toggle ----------
+const gov=$("gov"),howbtn=$("howbtn");
+howbtn.addEventListener("click",()=>{
+  const open=gov.classList.toggle("open");
+  howbtn.setAttribute("aria-expanded",open?"true":"false");
+});
+
+// ---------- accordions ----------
+document.querySelectorAll(".acc > button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const acc = btn.parentElement;
+    const open = acc.classList.toggle("open");
+    btn.setAttribute("aria-expanded", open?"true":"false");
+  });
+});
+
+// init
+renderTable();
+</script>
+</body>
+</html>
