@@ -114,3 +114,34 @@ flows. Screenshots are generated (see `CONTRIBUTING.md`); this file records the
   they depict the older chrome. They are point-in-time PR records; no living
   page embeds them. The archive gallery's images depict the archived pages
   themselves and still match.
+
+## 2026-08-25 — rebase third-party payments onto the approved base (#19)
+
+**Wrong base caught.** The #19 feedback rounds had been applied to the old
+issue-#7 `third-party-pay` lineage — which still carried the verification-tier
+concept that was already dropped when the flow moved to `directpay-onbehalf`
+v3 (issue #9, the most recent approved on-behalf prototype: one page,
+left/right with a sticky payment summary, posting forecast instead of tiers,
+"account balances are never shown"). The just-built `third-party-pay/`
+one-pager was removed; `directpay-onbehalf` is the single current prototype
+(v3 hoisted to `directpay-onbehalf/index.html`, v1/v2 subdirs removed —
+history keeps them).
+
+**#19 feedback applied to the right base:**
+- "Levy or lien payment" now really has a **lien branch**: choose notice of
+  levy vs. federal tax lien; the lien path is keyed by the **lien serial
+  number** and carries the payoff-letter callout (filed amount is a
+  snapshot).
+- **No TIN needed for a lien** — a lien payer often doesn't have one. In lien
+  mode, step 3 asks only for the name as printed on the lien (+ optional
+  address); verification becomes "Match lien record" against the serial
+  number and name. No SSN/ITIN/EIN field at all.
+- **Tax periods removed everywhere** — the general-payment mode's optional
+  "Tax period" input is gone; the payment is applied to the correct period on
+  the account after it's received.
+- Summary and receipt carry the lien serial and "applied as provided by law";
+  levy-response receipt steps only appear for actual levies; recurring
+  schedule stays levy-only (668-W).
+- `.shots/19/onbehalf-*` regenerated for this design; the `onepage-*` shots
+  of the removed wrong-base page were dropped from main (PR #21's body links
+  them by pinned SHA, so its history still renders).
