@@ -87,3 +87,30 @@ flows. Screenshots are generated (see `CONTRIBUTING.md`); this file records the
 - Partial or outdated lien information; taxpayer name variations vs. the name
   printed on the levy/lien; multiple liens for one taxpayer; concurrent levy
   payments from multiple financial institutions.
+
+## 2026-08-25 — one-page layout + screenshot audit (#19)
+
+**Third-party payments consolidated (`third-party-pay/`)**
+- The versioned variants are gone from the active tree — one current
+  prototype remains. The stepped wizard became a **single page**: all five
+  form sections (payer type, reason, taxpayer identifiers, payment details,
+  payer identity) stacked on the left, with a **sticky live payer-of-record
+  summary** on the right that carries the attestation and submit. No
+  show/hide steps; the receipt renders after submitting.
+- Retired to `archive/`: `third-party-pay-wizard-steps` (the stepped flow)
+  and `third-party-pay-dashboard` (the payer dashboard variant), joining
+  `third-party-pay-bulk`. Their asset/footer paths were fixed for the new
+  depth.
+
+**Screenshot audit**
+- **Dead PR images (fixed):** PR #18 and PR #20 embedded screenshots via
+  their branch URLs; both branches were deleted on merge, so every image
+  404'd. Both PR bodies now pin images to the merge-commit SHA, and
+  CONTRIBUTING.md documents the rule.
+- `.shots/19/onepage-*` added for the current one-page design (levy, lien,
+  receipt, dark, mobile at 390px — no horizontal scroll).
+- Historical note: shots under `.shots/7–12` predate the 2026-07-08
+  design-system passes (dark mode, SVG icon library, gov-banner flag), so
+  they depict the older chrome. They are point-in-time PR records; no living
+  page embeds them. The archive gallery's images depict the archived pages
+  themselves and still match.
