@@ -250,7 +250,12 @@
         <!-- 3. Whose account -->
         <div class="card">
           <h2><span class="n">3</span> Whose tax account is this for?</h2>
-          <p class="chint" id="tpHint">Full information for the person or business you're paying for — this is the account the payment applies to.</p>
+          <p class="chint">Any payer can pay for a person or a business — a bank answering a wage levy pays for an individual; a family member can pay for a family business.</p>
+          <div class="segwrap" id="forTypeSeg">
+            <button data-for="imf" class="on"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg></span> An individual taxpayer</button>
+            <button data-for="bmf"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></svg></span> A business taxpayer</button>
+          </div>
+          <p class="chint" id="tpHint" style="margin-top:12px">Full information for the person or business you're paying for — this is the account the payment applies to.</p>
           <div id="taxpayerFields"></div>
           <div class="vrow" id="verifyRow">
             <button class="vbtn" id="verifyBtn" type="button"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg></span> Verify taxpayer identity</button>
@@ -277,8 +282,8 @@
           <div class="achbadge"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6 8 2.5 13.5 6z"/><path d="M4 8.5v3M6.7 8.5v3M9.3 8.5v3M12 8.5v3M2.5 13.5h11"/></svg></span> Bank account (ACH) — no fee</div>
           <div class="grid3" style="margin-top:14px">
             <div class="field"><label for="acctType">Account type</label><select id="acctType"><option>Checking</option><option>Savings</option></select></div>
-            <div class="field"><label for="routing">Routing number</label><input id="routing" placeholder="021000021"></div>
-            <div class="field"><label for="acct">Account number</label><input id="acct" placeholder="000123456789"></div>
+            <div class="field"><label for="routing">Routing number</label><input id="routing" placeholder="021000021" data-fill="021000021"></div>
+            <div class="field"><label for="acct">Account number</label><input id="acct" placeholder="000123456789" data-fill="000123456789"></div>
           </div>
 
           <div class="attest" id="attestBox">
@@ -299,7 +304,7 @@
           <div class="readrow"><span class="k">Reason</span><span class="v" id="sReason">—</span></div>
           <div class="readrow" id="sLevyRow" style="display:none"><span class="k">Levy form</span><span class="v" id="sLevy">—</span></div>
           <div class="readrow" id="sSchedRow" style="display:none"><span class="k">Schedule</span><span class="v" id="sSched">One-time</span></div>
-          <div class="readrow"><span class="k">Method</span><span class="v">Bank account (ACH)</span></div>
+          <div class="readrow"><span class="k">Method</span><span class="v" id="sMethod">Bank account (ACH)</span></div>
           <div class="forecast">
             <div class="fh"><span class="fi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.8V8l2.3 1.6"/></svg></span> When this posts</div>
             <div id="fBody"></div>
@@ -420,8 +425,6 @@ function fillReasonFields(){
   }else{
     const formOpts=Object.entries(LEVY_FORMS).map(([k,v])=>`<option value="${k}"${k===state.levyForm?" selected":""}>${v.label}</option>`).join("");
     const isW=state.levyForm==="668-W";
-    const acctSel = state.payer==="institution" ? `
-      <div class="field"><label for="levyAcct">Account levied</label><select id="levyAcct"><option>Individual account</option><option>Business account</option></select><span class="hint">Levies on both individual and business accounts can be answered here.</span></div>` : "";
     $("reasonFields").innerHTML=`
       <div class="grid2">
         <div class="field"><label for="levyForm">Levy form received</label><select id="levyForm">${formOpts}</select></div>
@@ -429,7 +432,7 @@ function fillReasonFields(){
       </div>
       <div class="grid2">
         <div class="field"><label for="levySerial">Levy serial number</label><input id="levySerial" placeholder="e.g. 668-00214937" data-fill="668-00214937"></div>
-        ${acctSel || `<div class="field"><label for="levyOffice">IRS office on the levy</label><input id="levyOffice" placeholder="e.g. Cincinnati, OH" data-fill="Cincinnati, OH"></div>`}
+        <div class="field"><label for="levyOffice">IRS office on the levy</label><input id="levyOffice" placeholder="e.g. Cincinnati, OH" data-fill="Cincinnati, OH"></div>
       </div>
       <p class="field hint" style="margin-top:-6px">The serial number is printed in the upper right of the levy form.</p>
 
@@ -631,8 +634,13 @@ function updateSummary(){
     const post=addBusinessDays(base,2);
     $("fBody").innerHTML=`Individual (IMF) payments post in <b>about 2 business days</b>. A payment dated ${fmtDate(base)} should show on the account by <span class="fdate">${fmtDate(post)}</span>.<div class="fnote">The bank debit is initiated on your payment date; the balance updates once it clears.</div>`;
   }
-  $("submitBtn").disabled=!$("attestCheck").checked || !state.verified;
-  $("submitBtn").title=state.verified?"":"Verify the taxpayer's identity in step 3 first";
+  const noFunds=$("lvNoFunds"), responseOnly=state.collKind==="levy" && !!(noFunds&&noFunds.checked);
+  const routing=($("routing").value||"").replace(/\D/g,""), acct=($("acct").value||"").replace(/\D/g,"");
+  const bankOk=responseOnly || (routing.length===9 && acct.length>=4);
+  $("sMethod").textContent=responseOnly ? "Levy response only — no payment" : ("Bank account (ACH)"+(acct.length>=4?" ····"+acct.slice(-4):""));
+  $("submitBtn").disabled=!$("attestCheck").checked || !state.verified || !bankOk;
+  $("submitBtn").title=!state.verified ? "Verify the taxpayer's identity in step 3 first"
+    : (!bankOk ? "Enter the bank routing and account numbers in step 5 to process the payment" : "");
 }
 
 /* ---------- autofill (sign-in) ---------- */
@@ -653,12 +661,15 @@ function signIn(){
   applyAutofill();
 }
 
-/* ---------- infer forType from payer default (individual→imf, business/inst→bmf but keep editable via reason type) ---------- */
-/* forType tracks the account being paid, driven by the reason list. We map:
-   individual payer defaults to IMF account; business/institution default to BMF, but the
-   reason dropdown covers both so we key forType off payer choice for the sensible default. */
+/* forType = whose account is being paid. The payer choice only seeds a sensible
+   default (individual payer→IMF, business/institution→BMF); the step-3 toggle
+   owns it — any payer can pay for an individual or a business taxpayer. */
 function syncForType(){
   state.forType = (state.payer==="individual") ? "imf" : "bmf";
+  paintForTypeSeg();
+}
+function paintForTypeSeg(){
+  document.querySelectorAll("#forTypeSeg button").forEach(b=>b.classList.toggle("on",b.dataset.for===state.forType));
 }
 
 /* ---------- receipt ---------- */
@@ -674,8 +685,14 @@ function buildReceipt(){
   $("rReason").textContent=currentReason()||"—";
   const base=$("date").value?new Date($("date").value+"T12:00:00"):new Date();
   $("rDate").textContent=fmtDate(base);
-  const at=$("acctType").value, an=($("acct").value||"000123456789").slice(-4);
-  $("rBank").textContent=`${at} \u2022\u2022\u2022\u2022${an}`;
+  const noFunds=$("lvNoFunds"), responseOnly=state.collKind==="levy" && !!(noFunds&&noFunds.checked);
+  if(responseOnly){
+    $("rAmt").textContent="$0.00 — levy response only";
+    $("rBank").textContent="No bank debit — no attachable funds reported";
+  }else{
+    const at=$("acctType").value, an=($("acct").value||"000123456789").slice(-4);
+    $("rBank").textContent=`${at} \u2022\u2022\u2022\u2022${an}`;
+  }
   $("rConf").textContent="TPP-2026-"+String(Math.floor(1000+Math.random()*9000))+"-"+String(Math.floor(100+Math.random()*900));
 
   /* levy / lien rows on the receipt */
@@ -730,9 +747,16 @@ $("reasonMode").addEventListener("click",e=>{
   c.classList.add("on");state.collKind=c.dataset.kind;
   fillReasonFields();fillTaxpayerFields();
 });
-["amount","date"].forEach(id=>$(id).addEventListener("input",updateSummary));
+["amount","date","routing","acct"].forEach(id=>$(id).addEventListener("input",updateSummary));
+document.getElementById("reasonFields").addEventListener("change",e=>{ if(e.target && e.target.id==="lvNoFunds") updateSummary(); });
 $("date").addEventListener("change",updateSummary);
 $("attestCheck").addEventListener("change",updateSummary);
+$("forTypeSeg").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  state.forType=b.dataset.for;
+  paintForTypeSeg();
+  fillTaxpayerFields();updateSummary();
+});
 $("verifyBtn").addEventListener("click",verifyTaxpayer);
 $("taxpayerFields").addEventListener("input",()=>{ if(state.verified) setVerified(false); });
 $("signInBtn").addEventListener("click",signIn);

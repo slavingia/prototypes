@@ -162,3 +162,20 @@ history keeps them).
   later rather than shipping in it.
 - `.shots/19/mvp-*` generated (levy, lien, lien receipt, dark, mobile at
   390px — no horizontal scroll).
+
+## 2026-08-25 — bank details required + cross-type payer/taxpayer (#19)
+
+- **Bank account is now required to submit** — routing (9 digits) + account
+  number gate the submit button, with the tooltip saying what's missing; the
+  summary's Method row shows the account last-4 once entered. Sign-in
+  autofill fills the bank fields too. Exception: a 668 levy response filed
+  with "no attachable funds" sends no payment, so no bank details are
+  required and the receipt says so ($0.00 — levy response only).
+- **Any payer can pay for an individual or a business taxpayer.** Step 3 now
+  has an explicit individual/business toggle instead of inferring the
+  taxpayer type from the payer (a bank answering a wage levy pays for an
+  individual). The payer choice only seeds the default; the toggle drives
+  the taxpayer fields, summary, forecast, and receipt. The redundant
+  institution-only "Account levied" select is gone.
+- `.shots/19/mvp-*` regenerated; added `mvp-bank-for-individual` showing the
+  cross-type case.
