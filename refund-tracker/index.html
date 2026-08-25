@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Where's My Refund? — Refund &amp; Return Status Tracker</title>
+<title>Track My Return — Refund &amp; Return Status</title>
 <!-- IRS ODG / USWDS type ramp: Source Sans 3 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,19 +22,16 @@
     --surface:#fff; --surface-2:#f0f0f0; --accent:#004c97; --ink-2:#3a3a3a;
     --line-soft:#e9eaec;
     --tint-blue-1:#fafcfe; --tint-blue-2:#eef4fb; --tint-amber:#fdf8ec;
-    /* fills stay constant in both schemes: white text sits on them */
-    --amber-fill:#8a6d00; --red-fill:#b50909; --violet-fill:#5b3fa0;
   }
   @media (prefers-color-scheme: dark){
     :root{
       --bg:#14171a;        /* page background */
       --surface:#1e2328;   /* cards, panels, dropdowns */
-      --surface-2:#262c33; /* nested / tinted panels (was #f5f9fd etc.) */
+      --surface-2:#262c33; /* nested / tinted panels */
       --ink:#e8eaed;       --muted:#9aa1a9;
       --line:#3d4551;      --link:#79b4e6;
       --green:#55b685;     --amber:#d9ae4a;  --red:#f2857f;
       --teal:#57bfd4;      --violet:#ab96ee;
-      /* prototype-specific tokens */
       --accent:#79b4e6;    --ink-2:#c9ced4;  --pending:#9aa1a9;
       --current-ink:#9cc2ef;
       --line-soft:#333b44;
@@ -89,19 +86,22 @@
   .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
   .crumb a{color:var(--link)}
   h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
-  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 22px}
+  .sub{font-size:17px;color:var(--muted);max-width:70ch;margin:0 0 10px}
+  .sample{font-size:14px;color:var(--muted);margin:0 0 26px}
+  .sample b{color:var(--ink-2);font-weight:700}
 
-  /* return picker chips */
-  .picker{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 24px}
-  .rchip{flex:1 1 240px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:13px 16px;text-align:left;cursor:pointer;font-family:inherit;display:flex;gap:12px;align-items:flex-start}
-  .rchip:hover{border-color:var(--accent);background:var(--tint-blue-1)}
-  .rchip.on{border-color:var(--accent);background:var(--tint-blue-2);box-shadow:inset 3px 0 0 var(--accent)}
-  .rchip .ri{width:38px;height:38px;border-radius:4px;flex:0 0 38px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:12.5px}
-  .rchip .rn{display:block;font-weight:700;font-size:15.5px}
-  .rchip .rd{display:block;font-size:13px;color:var(--muted);margin-top:1px}
+  /* tax year tabs (Where's My Refund layout) */
+  .yearlabel{display:block;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .yeartabs{display:flex;gap:6px;border-bottom:2px solid var(--irs-blue);margin:0}
+  .ytab{font-family:inherit;font-size:16px;font-weight:600;padding:11px 26px;cursor:pointer;
+    background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);border-bottom:0;border-radius:4px 4px 0 0}
+  .ytab:hover{background:var(--tint-blue-2)}
+  .ytab.on{background:var(--irs-blue);color:#fff;font-weight:700;border-color:var(--irs-blue)}
+  .yearpanel{margin:0 0 8px}
 
-  /* summary header card */
-  .summary{border:1px solid var(--line);padding:22px 24px;margin:0 0 8px;background:var(--tint-blue-1)}
+  /* top status card — most recent update, drawn to attention */
+  .summary{border:1px solid var(--line);border-top:0;padding:22px 24px;margin:0;background:var(--tint-blue-1)}
+  .summary .stime{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em;margin:0 0 10px}
   .summary .stag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:3px 10px;border-radius:4px;margin-bottom:12px}
   .summary h2{font-size:23px;font-weight:800;margin:0 0 4px}
   .summary .seta{font-size:15px;color:var(--muted);margin:0 0 18px}
@@ -110,55 +110,29 @@
   .sgrid .scell{padding:12px 18px 4px 0}
   .sgrid .sk{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
   .sgrid .sv{display:block;font-size:18px;font-weight:700;margin-top:2px}
+  .summary .inq{font-size:14.5px;color:var(--ink-2);margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line-soft);line-height:1.5}
   @media(max-width:680px){.sgrid{grid-template-columns:1fr 1fr}}
 
-  /* view toggle */
-  .viewbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:26px 0 14px;flex-wrap:wrap}
-  .viewbar .vlabel{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-  .seg{display:inline-flex;border:1px solid var(--accent);overflow:hidden;border-radius:4px}
-  .seg button{font-family:inherit;font-size:14.5px;font-weight:500;padding:8px 16px;border:0;background:var(--surface);color:var(--accent);cursor:pointer;border-left:1px solid var(--accent)}
-  .seg button:first-child{border-left:0}
-  .seg button.on{background:var(--irs-blue);color:#fff;font-weight:700}
+  /* empty year panel */
+  .noyear{border:1px solid var(--line);border-top:0;padding:26px 24px;background:var(--surface)}
+  .noyear h2{font-size:19px;font-weight:700;margin:0 0 6px}
+  .noyear p{font-size:14.5px;color:var(--ink-2);margin:0;max-width:64ch;line-height:1.5}
 
-  /* limiting-note callout */
-  .why{border-left:4px solid var(--amber);background:var(--tint-amber);padding:13px 16px;font-size:14px;color:var(--ink-2);margin:0 0 22px}
-  .why b{color:var(--ink)}
-
-  /* ---- simple "pizza tracker" 3-step view ---- */
-  .simple{border:1px solid var(--line);padding:34px 24px 30px;margin:0 0 8px}
-  .ptrack{display:flex;align-items:flex-start;justify-content:space-between;position:relative;max-width:720px;margin:0 auto}
-  .ptrack .pseg{position:absolute;top:18px;height:3px;background:var(--line);z-index:0}
-  .ptrack .pseg.fill{background:var(--done)}
-  .pstep{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;flex:1 1 0;gap:9px}
-  .pstep .pdot{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:800;background:var(--surface);color:var(--pending);border:2px solid var(--pending)}
-  .pstep.done .pdot{background:var(--done);border-color:var(--done);color:#fff}
-  .pstep.current .pdot{background:var(--current);border-color:var(--current);color:#fff}
-  .pstep .plab{font-size:14.5px;font-weight:700;max-width:15ch}
-  .pstep .psub{font-size:12.5px;color:var(--muted)}
-  .simple .scaption{text-align:center;font-size:13px;color:var(--muted);font-style:italic;margin:26px auto 0;max-width:60ch}
-
-  /* ---- full delivery-style timeline ---- */
+  /* earlier updates — most recent first */
+  .tlhead{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
   .timeline{border:1px solid var(--line);padding:8px 24px 14px}
   .tl{list-style:none;margin:0;padding:0}
   .tl li{position:relative;padding:18px 0 18px 46px}
-  .tl li:not(:last-child)::after{content:"";position:absolute;left:13px;top:34px;bottom:-2px;width:2px;background:var(--line)}
-  .tl li.done:not(:last-child)::after{background:var(--done)}
-  .tl .mk{position:absolute;left:0;top:18px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--surface);color:var(--pending);border:2px solid var(--pending);z-index:1}
-  .tl li.done .mk{background:var(--done);border-color:var(--done);color:#fff}
-  .tl li.current .mk{background:var(--current);border-color:var(--current);color:#fff;box-shadow:0 0 0 0 rgba(0,45,98,.45);animation:pulse 2s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,45,98,.40)}70%{box-shadow:0 0 0 9px rgba(0,45,98,0)}100%{box-shadow:0 0 0 0 rgba(0,45,98,0)}}
-  .tl li.future{opacity:.78}
+  .tl li:not(:last-child)::after{content:"";position:absolute;left:13px;top:34px;bottom:-2px;width:2px;background:var(--done)}
+  .tl .mk{position:absolute;left:0;top:18px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--done);color:#fff;border:2px solid var(--done);z-index:1}
+  .tl li.tgroup{padding:20px 0 0 46px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .tl li.tgroup::after{display:none}
   .tl .ttime{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
-  .tl li.current .ttime{color:var(--current-ink)}
-  .tl li.future .ttime{color:var(--pending)}
-  .tl .ttitle{font-size:17px;font-weight:700;margin:2px 0 0;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-  .tl .tchip{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:4px}
-  .tl .tchip.now{background:var(--current);color:#fff}
-  .tl .tchip.next{background:var(--surface);color:var(--pending);border:1px solid var(--pending)}
+  .tl .ttitle{font-size:17px;font-weight:700;margin:2px 0 0}
   .tl .tdesc{font-size:14.5px;color:var(--ink-2);margin:5px 0 0;max-width:64ch;line-height:1.5}
   .tl .tloc{font-size:12.5px;color:var(--muted);margin-top:5px}
   .tl .tloc b{color:var(--ink);font-weight:700}
-  /* expandable scan detail (package-style) */
+  /* expandable processing detail */
   .tl .detbtn{margin-top:8px;background:none;border:0;font-family:inherit;font-size:13px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
   .tl .detbtn .chev{font-size:10px;transition:transform .15s;display:inline-block}
   .tl li.open .detbtn .chev{transform:rotate(180deg)}
@@ -169,31 +143,17 @@
   .tl .scan .sct{flex:0 0 132px;color:var(--muted);font-weight:700}
   .tl .scan .scd{color:var(--ink-2)}
 
-  /* est. arrival ribbon */
-  .arrival{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-left:4px solid var(--accent);background:var(--tint-blue-1);padding:14px 18px;margin:16px 0 4px}
-  .arrival .ai{width:40px;height:40px;border-radius:4px;flex:0 0 40px;background:var(--irs-blue);color:#fff;display:grid;place-items:center;font-size:20px}
-  .arrival .at{font-size:13px;color:var(--muted)}
-  .arrival .av{font-size:18px;font-weight:800}
-
-  .note{font-size:12px;color:var(--muted);font-style:italic;margin:18px 0 0}
   .help{font-size:14px;color:var(--muted);margin:20px 0 0}
 
   footer{border-top:1px solid var(--line);margin-top:30px}
   footer .wrap{padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic}
-
-  @media(max-width:680px){
-    .ptrack{flex-direction:column;gap:20px;align-items:flex-start}
-    .ptrack .pseg{display:none}
-    .pstep{flex-direction:row;text-align:left;align-items:center;gap:14px}
-    .pstep .plab{max-width:none}
-    .sgrid .scell{padding-right:8px}
-  }
 
   /* mobile: wrap masthead so the utility links get their own row (no overflow) */
   @media(max-width:640px){
     .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;row-gap:6px}
     .util{width:100%;justify-content:flex-start;flex-wrap:wrap;font-size:13px}
     .util > *{border-left:0;padding:0 14px 0 0}
+    .ytab{padding:10px 0;flex:1 1 0;text-align:center}
   }
 </style>
 </head>
@@ -224,35 +184,151 @@
   </div></nav>
 
   <main class="wrap">
-    <p class="crumb"><a>Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> <a>Refunds &amp; returns</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Status tracker</p>
-    <h1 class="page">Where's my refund?</h1>
-    <p class="sub">Track a refund or return the way you'd track a package — every state it has moved through, where it is right now, and what's expected next. No more guessing between three vague stages.</p>
+    <p class="crumb"><a>Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> <a>Refunds &amp; returns</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Track my return</p>
+    <h1 class="page">Track my return</h1>
+    <p class="sub">Track the processing of an original or amended return through a single, integrated application for taxpayers with refunds, no balance, or balances due.</p>
+    <p class="sample">Examples shown: a 2025 <b>e-filed return</b> with a refund, processed without issues — and a 2024 return <b>amended with Form 1040-X</b> after the original refund was issued.</p>
 
-    <!-- which return to track -->
-    <div class="picker" id="picker" role="tablist" aria-label="Choose a return to track"></div>
+    <!-- tax year selection (Where's My Refund layout) -->
+    <span class="yearlabel" id="yearlabel">Tax year</span>
+    <div class="yeartabs" role="tablist" aria-labelledby="yearlabel">
+      <button class="ytab on" data-year="2025" role="tab" aria-selected="true">2025</button>
+      <button class="ytab" data-year="2024" role="tab" aria-selected="false">2024</button>
+      <button class="ytab" data-year="2023" role="tab" aria-selected="false">2023</button>
+    </div>
 
-    <!-- summary header -->
-    <div class="summary" id="summary"></div>
+    <div class="yearpanel" id="panel-2025">
+      <!-- most recent update — top status -->
+      <div class="summary">
+        <p class="stime">Apr 11, 2026 · 5:00 AM</p>
+        <span class="stag" style="background:var(--irs-blue)">Refund sent</span>
+        <h2>Your refund has been sent.</h2>
+        <p class="seta">Estimated deposit date: <b>Tue, Apr 14, 2026</b></p>
+        <div class="sgrid">
+          <span class="scell"><span class="sk">Amount</span><span class="sv">$2,418.00</span></span>
+          <span class="scell"><span class="sk">Method</span><span class="sv">Direct deposit</span></span>
+          <span class="scell"><span class="sk">Going to</span><span class="sv">Checking ••••3192</span></span>
+        </div>
+        <p class="inq">If you haven't received your refund by <b>Sun, Apr 19</b>, follow the steps on our <a href="https://www.irs.gov/faqs/irs-procedures/refund-inquiries">Refund Inquiries page</a>.</p>
+      </div>
 
-    <!-- view toggle -->
-    <div class="viewbar">
-      <span class="vlabel">Status view</span>
-      <div class="seg" role="group" aria-label="Status view detail">
-        <button id="vSimple" aria-pressed="false">3-step view</button>
-        <button id="vFull" class="on" aria-pressed="true">Full timeline</button>
+      <!-- earlier updates, most recent first -->
+      <p class="tlhead">Earlier updates</p>
+      <div class="timeline">
+        <ul class="tl">
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Apr 9, 2026 · 7:20 AM</span>
+            <p class="ttitle">Refund approved</p>
+            <p class="tdesc">Your refund of $2,418.00 was approved and scheduled to be sent to your bank.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Apr 2, 2026 · 6:03 AM</span>
+            <p class="ttitle">Processing your return</p>
+            <p class="tdesc">We reviewed and completed processing your return.</p>
+            <p class="tloc"><b>Account processing</b></p>
+            <button class="detbtn">View detail <span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <div class="scans">
+              <div class="scan"><span class="sct">Mar 30</span><span class="scd">Income &amp; withholding matched against payer records</span></div>
+              <div class="scan"><span class="sct">Apr 1</span><span class="scd">Credits verified (no manual review needed)</span></div>
+              <div class="scan"><span class="sct">Apr 2</span><span class="scd">Refund amount finalized</span></div>
+            </div>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Mar 28, 2026 · 2:15 PM</span>
+            <p class="ttitle">Return accepted</p>
+            <p class="tdesc">Your return was accepted for processing.</p>
+            <p class="tloc"><b>e-file acknowledgment</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Mar 28, 2026 · 9:42 AM</span>
+            <p class="ttitle">Return received</p>
+            <p class="tdesc">We received your e-filed 2025 Form 1040-series return.</p>
+            <p class="tloc"><b>Submission processing · e-file intake</b></p>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <div class="why" id="why"></div>
+    <div class="yearpanel" id="panel-2024" hidden>
+      <!-- most recent update — amended return in progress -->
+      <div class="summary">
+        <p class="stime">Jun 2, 2026</p>
+        <span class="stag" style="background:var(--irs-blue)">Being adjusted</span>
+        <h2>Your amended return is being adjusted.</h2>
+        <p class="seta">Estimated completion: <b>by Aug 31, 2026</b></p>
+        <div class="sgrid">
+          <span class="scell"><span class="sk">Refund claimed</span><span class="sv">$612.00</span></span>
+          <span class="scell"><span class="sk">Method</span><span class="sv">Paper check</span></span>
+          <span class="scell"><span class="sk">Going to</span><span class="sv">Address on file</span></span>
+        </div>
+        <p class="inq">An employee is reviewing your changes and adjusting your account. If we need more information, we'll send you a letter — no action is needed from you right now.</p>
+      </div>
 
-    <!-- the two views -->
-    <div class="simple" id="simpleView" hidden></div>
-    <div class="timeline" id="fullView">
-      <ul class="tl" id="tl"></ul>
-      <div class="arrival" id="arrival"></div>
+      <!-- earlier updates, most recent first -->
+      <p class="tlhead">Earlier updates</p>
+      <div class="timeline">
+        <ul class="tl">
+          <li class="tgroup">Amended return · Form 1040-X</li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">May 12, 2026</span>
+            <p class="ttitle">Amended return received</p>
+            <p class="tdesc">We received your Form 1040-X for tax year 2024. Amended returns are worked in the order received.</p>
+            <p class="tloc"><b>Amended returns unit</b></p>
+          </li>
+          <li class="tgroup">Original return</li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 26, 2025 · 5:00 AM</span>
+            <p class="ttitle">Refund sent</p>
+            <p class="tdesc">Your refund of $1,137.00 was sent to your bank by direct deposit.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 24, 2025 · 7:20 AM</span>
+            <p class="ttitle">Refund approved</p>
+            <p class="tdesc">Your refund was approved and scheduled to be sent to your bank.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 20, 2025 · 6:03 AM</span>
+            <p class="ttitle">Processing your return</p>
+            <p class="tdesc">We reviewed and completed processing your return.</p>
+            <p class="tloc"><b>Account processing</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 3, 2025 · 12:40 PM</span>
+            <p class="ttitle">Return accepted</p>
+            <p class="tdesc">Your return was accepted for processing.</p>
+            <p class="tloc"><b>e-file acknowledgment</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 3, 2025 · 9:18 AM</span>
+            <p class="ttitle">Return received</p>
+            <p class="tdesc">We received your e-filed 2024 Form 1040-series return.</p>
+            <p class="tloc"><b>Submission processing · e-file intake</b></p>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <p class="help">Tracking looks stuck? Most refunds are issued in <b>under 21 days</b> after a return is accepted. Amended returns can take <b>up to 16 weeks</b>. <a>Learn what each status means</a> or <a>contact us</a> if it's been longer.</p>
+    <div class="yearpanel" id="panel-2023" hidden>
+      <div class="noyear">
+        <h2>No return information for tax year 2023</h2>
+        <p>We don't have status information to show for this year. If you filed recently, allow 24 hours after e-filing — or about 4 weeks after mailing a paper return — and check back. You can also view past filings in <a>Tax records</a>.</p>
+      </div>
+    </div>
+
+    <p class="help">Most refunds are issued in <b>under 21 days</b> after a return is accepted. Amended returns can take <b>up to 16 weeks</b>. <a>Learn what each status means</a> or <a>contact us</a> if it's been longer.</p>
   </main>
 
   <footer>
@@ -261,189 +337,17 @@
   </div></footer>
 
 <script>
-const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const IC_DOT=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>`;
-const IC_CHEVDOWN=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const IC_PACKAGE=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5 8 2l5.5 3v6L8 14l-5.5-3z"/><path d="M2.5 5 8 8l5.5-3M8 8v6"/></g></svg>`;
-// ---- mock data: fictional only, no PII ----
-const CASES = [
-  {
-    id:"refund2025",
-    icon:"1040", iconBg:"var(--irs-blue)",
-    name:"2025 Form 1040 refund",
-    desc:"E-filed · Direct deposit",
-    tag:"Refund on the way", tagBg:"var(--irs-blue)",
-    headline:"Your refund is on the way",
-    eta:"Estimated to post by <b>Tue, Apr 14</b>",
-    method:"Direct deposit", account:"Checking ••••3192", amount:"$2,418.00",
-    simpleStep:2, // 0 received,1 approved,2 sent
-    arrival:{label:"Estimated deposit", value:"Tue, Apr 14, 2026"},
-    steps:[
-      {s:"done", time:"Mar 28, 2026 · 9:42 AM", title:"Return received", desc:"We received your e-filed 2025 Form 1040 and confirmed it passed initial validation.", loc:"Submission processing · e-file intake",
-        scans:[["Mar 28 · 9:41 AM","Transmission received from e-file provider"],["Mar 28 · 9:42 AM","Validation checks passed — assigned to processing"]]},
-      {s:"done", time:"Mar 28, 2026 · 2:15 PM", title:"Return accepted", desc:"Your return was accepted for processing. No errors were found that needed your attention.", loc:"e-file acknowledgment",
-        scans:[["Mar 28 · 2:15 PM","Acknowledgment generated — ACCEPTED"]]},
-      {s:"done", time:"Apr 2, 2026 · 6:03 AM", title:"Processing your return", desc:"We reviewed your income, withholding, and credits. Everything matched the information we have on file.", loc:"Account processing",
-        scans:[["Mar 30","Income & withholding matched against payer records"],["Apr 1","Credits verified (no manual review needed)"],["Apr 2","Refund amount finalized"]]},
-      {s:"done", time:"Apr 9, 2026 · 7:20 AM", title:"Refund approved", desc:"Your refund of $2,418.00 was approved and scheduled to be sent to your bank.", loc:"Refund issuance"},
-      {s:"current", time:"Apr 11, 2026 · 5:00 AM", title:"Refund sent", desc:"Your refund was sent to your financial institution by direct deposit. Banks may take a few business days to post it to your account.", loc:"Sent to: Checking ••••3192",
-        scans:[["Apr 11 · 5:00 AM","Direct deposit released to Federal Reserve / ACH"],["Apr 11 · 5:02 AM","Routed to receiving bank"]]},
-      {s:"future", time:"Expected by Apr 14, 2026", title:"Deposit posts to your bank", desc:"Your bank posts the deposit to your account. If you don't see it within 5 business days of this date, contact your bank first.", loc:"Receiving bank — pending"}
-    ]
-  },
-  {
-    id:"amended",
-    icon:"1040-X", iconBg:"var(--violet-fill)",
-    name:"Amended return (Form 1040-X)",
-    desc:"2024 tax year · In progress",
-    tag:"Being adjusted", tagBg:"var(--violet-fill)",
-    headline:"Your amended return is being adjusted",
-    eta:"Most amended returns finish within <b>16 weeks</b> of being received",
-    method:"Paper check (mailed)", account:"On file at home address", amount:"$612.00",
-    simpleStep:1,
-    arrival:{label:"Estimated completion", value:"Week of Jun 22, 2026"},
-    steps:[
-      {s:"done", time:"Mar 4, 2026", title:"Amended return received", desc:"We received your Form 1040-X for tax year 2024. Amended returns are worked in the order received.", loc:"Amended returns unit",
-        scans:[["Mar 4","Form 1040-X logged and imaged"],["Mar 6","Assigned to adjustments queue"]]},
-      {s:"current", time:"Apr 18, 2026", title:"Being adjusted", desc:"An employee is reviewing your changes and adjusting your account. We may send a letter if we need more information — no action is needed from you yet.", loc:"Adjustments · examiner review",
-        scans:[["Apr 1","Pulled from queue for review"],["Apr 18","Recalculating tax, credits, and interest"]]},
-      {s:"future", time:"Expected by Jun 22, 2026", title:"Adjustment completed", desc:"We finish adjusting your account and determine your corrected balance or refund. You'll see the result reflected in your account.", loc:"Account processing — pending"},
-      {s:"future", time:"After completion", title:"Refund issued (if owed)", desc:"If your adjustment results in a refund, we issue it by your chosen method. A paper check is mailed to your address on file.", loc:"Refund issuance — pending"},
-      {s:"future", time:"5–7 days after issue", title:"Check delivered", desc:"Your paper check arrives by mail. Allow extra time for postal delivery before contacting us.", loc:"U.S. Mail — pending"}
-    ]
-  },
-  {
-    id:"review",
-    icon:"REV", iconBg:"var(--amber-fill)",
-    name:"2025 refund — under review",
-    desc:"Identity verification needed",
-    tag:"Action needed", tagBg:"var(--red-fill)",
-    headline:"We need to verify your identity before this refund can continue",
-    eta:"Verify now to avoid up to a <b>9-week</b> delay",
-    method:"Direct deposit", account:"Checking ••••8806", amount:"$1,050.00",
-    simpleStep:0,
-    arrival:{label:"On hold until", value:"Identity verified"},
-    steps:[
-      {s:"done", time:"Mar 22, 2026 · 10:11 AM", title:"Return received", desc:"We received your e-filed 2025 Form 1040 and it passed initial validation.", loc:"Submission processing · e-file intake"},
-      {s:"done", time:"Mar 22, 2026 · 3:48 PM", title:"Return accepted", desc:"Your return was accepted for processing.", loc:"e-file acknowledgment"},
-      {s:"current", time:"Mar 27, 2026", title:"Identity verification required", desc:"To protect you, we paused this refund and need you to confirm your identity. This is a routine fraud-prevention check and doesn't mean anything is wrong.", loc:"Taxpayer protection program",
-        scans:[["Mar 27","Return flagged for identity confirmation"],["Mar 27","Letter 5071C generated to address on file"]]},
-      {s:"future", time:"After you verify", title:"Processing resumes", desc:"Once your identity is confirmed, your return goes back into processing and we finish reviewing your refund.", loc:"Account processing — pending"},
-      {s:"future", time:"~21 days after verifying", title:"Refund approved & sent", desc:"If everything checks out, your refund is approved and sent to your bank by direct deposit.", loc:"Refund issuance — pending"},
-      {s:"future", time:"2–3 days after sent", title:"Deposit posts to your bank", desc:"Your bank posts the deposit to your account.", loc:"Receiving bank — pending"}
-    ]
-  }
-];
+// tax year tabs
+const ytabs=document.querySelectorAll(".ytab");
+ytabs.forEach(t=>t.addEventListener("click",()=>{
+  ytabs.forEach(o=>{o.classList.toggle("on",o===t);o.setAttribute("aria-selected",o===t?"true":"false");});
+  ["2025","2024","2023"].forEach(y=>{document.getElementById("panel-"+y).hidden=(y!==t.dataset.year);});
+}));
 
-const SIMPLE_LABELS = [
-  {l:"Return received", sub:"We got your return"},
-  {l:"Refund approved", sub:"Amount confirmed"},
-  {l:"Refund sent", sub:"On its way to you"}
-];
-
-let current = CASES[0];
-
-const picker=document.getElementById("picker"),
-  summary=document.getElementById("summary"),
-  simpleView=document.getElementById("simpleView"),
-  fullView=document.getElementById("fullView"),
-  tl=document.getElementById("tl"),
-  arrival=document.getElementById("arrival"),
-  why=document.getElementById("why"),
-  vSimple=document.getElementById("vSimple"),
-  vFull=document.getElementById("vFull");
-
-function esc(s){return s;}
-
-function renderPicker(){
-  picker.innerHTML=CASES.map(c=>`
-    <button class="rchip ${c.id===current.id?"on":""}" data-id="${c.id}" role="tab" aria-selected="${c.id===current.id}">
-      <span class="ri" style="background:${c.iconBg}">${c.icon}</span>
-      <span><span class="rn">${c.name}</span><span class="rd">${c.desc}</span></span>
-    </button>`).join("");
-  picker.querySelectorAll(".rchip").forEach(b=>b.addEventListener("click",()=>{
-    current=CASES.find(c=>c.id===b.dataset.id); render();
-    window.scrollTo({top:0,behavior:"smooth"});
-  }));
-}
-
-function renderSummary(){
-  const c=current;
-  summary.innerHTML=`
-    <span class="stag" style="background:${c.tagBg}">${c.tag}</span>
-    <h2>${c.headline}</h2>
-    <p class="seta">${c.eta}</p>
-    <div class="sgrid">
-      <span class="scell"><span class="sk">Amount</span><span class="sv">${c.amount}</span></span>
-      <span class="scell"><span class="sk">Method</span><span class="sv">${c.method}</span></span>
-      <span class="scell"><span class="sk">Going to</span><span class="sv">${c.account}</span></span>
-    </div>`;
-}
-
-function renderWhy(){
-  const total=current.steps.length;
-  why.innerHTML=`<b>Why a timeline?</b> Three states ("received → approved → sent") hides most of what actually happens. This return moves through <b>${total} states</b> — and the tracker shows which are done, where it is right now, and what's still expected, just like tracking a delivery.`;
-}
-
-function renderSimple(){
-  const step=current.simpleStep;
-  const pct=step/(SIMPLE_LABELS.length-1)*100;
-  const dots=SIMPLE_LABELS.map((s,i)=>{
-    const cls=i<step?"done":(i===step?"current":"");
-    const mk=i<step?IC_CHECK:(i+1);
-    return `<div class="pstep ${cls}"><span class="pdot">${mk}</span><span class="plab">${s.l}</span><span class="psub">${s.sub}</span></div>`;
-  }).join("");
-  simpleView.innerHTML=`
-    <div class="ptrack">
-      <div class="pseg" style="left:8%;right:8%"></div>
-      <div class="pseg fill" style="left:8%;width:${(pct*0.84)}%"></div>
-      ${dots}
-    </div>
-    <p class="scaption">A simple three-step view of where your refund stands. For the steps in between, what's coming next, and <i>why</i> a refund may be taking longer, switch to the full timeline.</p>`;
-}
-
-function renderTimeline(){
-  tl.innerHTML=current.steps.map((st,i)=>{
-    const mk=st.s==="done"?IC_CHECK:(st.s==="current"?IC_DOT:(i+1));
-    let chip="";
-    if(st.s==="current")chip=`<span class="tchip now">You are here</span>`;
-    else if(st.s==="future")chip=`<span class="tchip next">Expected</span>`;
-    let scans="";
-    if(st.scans&&st.scans.length){
-      scans=`<button class="detbtn" data-i="${i}">View detail <span class="chev" aria-hidden="true">${IC_CHEVDOWN}</span></button>
-        <div class="scans">${st.scans.map(sc=>`<div class="scan"><span class="sct">${sc[0]}</span><span class="scd">${sc[1]}</span></div>`).join("")}</div>`;
-    }
-    return `<li class="${st.s}">
-      <span class="mk" aria-hidden="true">${mk}</span>
-      <span class="ttime">${st.time}</span>
-      <p class="ttitle">${st.title}${chip}</p>
-      <p class="tdesc">${st.desc}</p>
-      ${st.loc?`<p class="tloc"><b>${st.loc.split(":")[0]}${st.loc.includes(":")?":":""}</b>${st.loc.includes(":")?st.loc.split(":").slice(1).join(":"):""}</p>`:""}
-      ${scans}
-    </li>`;
-  }).join("");
-  tl.querySelectorAll(".detbtn").forEach(b=>b.addEventListener("click",()=>{
-    b.closest("li").classList.toggle("open");
-  }));
-  arrival.innerHTML=`<span class="ai" aria-hidden="true">${IC_PACKAGE}</span>
-    <span><span class="at">${current.arrival.label}</span><br><span class="av">${current.arrival.value}</span></span>`;
-}
-
-function setView(full){
-  fullView.hidden=!full;
-  simpleView.hidden=full;
-  vFull.classList.toggle("on",full);
-  vSimple.classList.toggle("on",!full);
-  vFull.setAttribute("aria-pressed",full?"true":"false");
-  vSimple.setAttribute("aria-pressed",full?"false":"true");
-}
-
-function render(){
-  renderPicker();renderSummary();renderWhy();renderSimple();renderTimeline();
-}
-
-vSimple.addEventListener("click",()=>setView(false));
-vFull.addEventListener("click",()=>setView(true));
+// expandable processing detail
+document.querySelectorAll(".detbtn").forEach(b=>b.addEventListener("click",()=>{
+  b.closest("li").classList.toggle("open");
+}));
 
 // USWDS official-government banner toggle
 const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
@@ -451,9 +355,6 @@ howbtn.addEventListener("click",()=>{
   const open=gov.classList.toggle("open");
   howbtn.setAttribute("aria-expanded",open?"true":"false");
 });
-
-render();
-setView(true);
 </script>
 </body>
 </html>
