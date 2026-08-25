@@ -125,6 +125,8 @@
   .tl li{position:relative;padding:18px 0 18px 46px}
   .tl li:not(:last-child)::after{content:"";position:absolute;left:13px;top:34px;bottom:-2px;width:2px;background:var(--done)}
   .tl .mk{position:absolute;left:0;top:18px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--done);color:#fff;border:2px solid var(--done);z-index:1}
+  .tl li.tgroup{padding:20px 0 0 46px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .tl li.tgroup::after{display:none}
   .tl .ttime{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
   .tl .ttitle{font-size:17px;font-weight:700;margin:2px 0 0}
   .tl .tdesc{font-size:14.5px;color:var(--ink-2);margin:5px 0 0;max-width:64ch;line-height:1.5}
@@ -185,7 +187,7 @@
     <p class="crumb"><a>Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> <a>Refunds &amp; returns</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Track my return</p>
     <h1 class="page">Track my return</h1>
     <p class="sub">Track the processing of an original or amended return through a single, integrated application for taxpayers with refunds, no balance, or balances due.</p>
-    <p class="sample">Example shown: an <b>e-filed original return</b> with a refund, processed without issues.</p>
+    <p class="sample">Examples shown: a 2025 <b>e-filed return</b> with a refund, processed without issues — and a 2024 return <b>amended with Form 1040-X</b> after the original refund was issued.</p>
 
     <!-- tax year selection (Where's My Refund layout) -->
     <span class="yearlabel" id="yearlabel">Tax year</span>
@@ -253,9 +255,69 @@
     </div>
 
     <div class="yearpanel" id="panel-2024" hidden>
-      <div class="noyear">
-        <h2>No return information for tax year 2024</h2>
-        <p>We don't have status information to show for this year. If you filed recently, allow 24 hours after e-filing — or about 4 weeks after mailing a paper return — and check back. You can also view past filings in <a>Tax records</a>.</p>
+      <!-- most recent update — amended return in progress -->
+      <div class="summary">
+        <p class="stime">Jun 2, 2026</p>
+        <span class="stag" style="background:var(--irs-blue)">Being adjusted</span>
+        <h2>Your amended return is being adjusted.</h2>
+        <p class="seta">Estimated completion: <b>by Aug 31, 2026</b></p>
+        <div class="sgrid">
+          <span class="scell"><span class="sk">Refund claimed</span><span class="sv">$612.00</span></span>
+          <span class="scell"><span class="sk">Method</span><span class="sv">Paper check</span></span>
+          <span class="scell"><span class="sk">Going to</span><span class="sv">Address on file</span></span>
+        </div>
+        <p class="inq">An employee is reviewing your changes and adjusting your account. If we need more information, we'll send you a letter — no action is needed from you right now.</p>
+      </div>
+
+      <!-- earlier updates, most recent first -->
+      <p class="tlhead">Earlier updates</p>
+      <div class="timeline">
+        <ul class="tl">
+          <li class="tgroup">Amended return · Form 1040-X</li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">May 12, 2026</span>
+            <p class="ttitle">Amended return received</p>
+            <p class="tdesc">We received your Form 1040-X for tax year 2024. Amended returns are worked in the order received.</p>
+            <p class="tloc"><b>Amended returns unit</b></p>
+          </li>
+          <li class="tgroup">Original return</li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 26, 2025 · 5:00 AM</span>
+            <p class="ttitle">Refund sent</p>
+            <p class="tdesc">Your refund of $1,137.00 was sent to your bank by direct deposit.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 24, 2025 · 7:20 AM</span>
+            <p class="ttitle">Refund approved</p>
+            <p class="tdesc">Your refund was approved and scheduled to be sent to your bank.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 20, 2025 · 6:03 AM</span>
+            <p class="ttitle">Processing your return</p>
+            <p class="tdesc">We reviewed and completed processing your return.</p>
+            <p class="tloc"><b>Account processing</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 3, 2025 · 12:40 PM</span>
+            <p class="ttitle">Return accepted</p>
+            <p class="tdesc">Your return was accepted for processing.</p>
+            <p class="tloc"><b>e-file acknowledgment</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 3, 2025 · 9:18 AM</span>
+            <p class="ttitle">Return received</p>
+            <p class="tdesc">We received your e-filed 2024 Form 1040-series return.</p>
+            <p class="tloc"><b>Submission processing · e-file intake</b></p>
+          </li>
+        </ul>
       </div>
     </div>
 
