@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Third-Party Payments — Pay on Behalf of a Taxpayer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --line-strong:#9aa7b5; --accent-blue:#004c97;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --tint:#20262c; --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --line-strong:#4d5866; --accent-blue:#79b4e6;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{transition:transform .15s}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--muted)}
+  .gov .gcol .gi{flex:0 0 22px;color:var(--irs-blue)}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35)}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:32px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:70ch;margin:0 0 16px}
+
+  /* sign-in nudge */
+  .signin{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint-blue);padding:12px 16px;margin:0 0 22px;font-size:15px}
+  .signin .si-ic{color:var(--irs-blue);flex:0 0 auto;font-size:20px}
+  .signin .si-txt{flex:1}
+  .signin .si-txt b{color:var(--ink)}
+  .signin button{background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:14.5px;font-weight:500;padding:9px 16px;border-radius:4px;cursor:pointer;white-space:nowrap}
+  .signin button:hover{background:#003a73}
+  .signin.done{border-left-color:var(--green);background:color-mix(in srgb, var(--green) 12%, var(--surface))}
+  .signin.done .si-ic{color:var(--green)}
+
+  /* two-column: form + sticky summary */
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:24px;margin-bottom:56px;align-items:start}
+  @media(max-width:860px){.layout{grid-template-columns:1fr}}
+
+  .card{border:1px solid var(--line);padding:20px 22px;margin:0 0 18px;background:var(--surface)}
+  .card h2{font-size:18px;font-weight:800;margin:0 0 3px;display:flex;align-items:center;gap:9px}
+  .card h2 .n{width:24px;height:24px;border-radius:50%;flex:0 0 24px;display:grid;place-items:center;background:var(--irs-blue);color:#fff;font-size:13px;font-weight:800}
+  .card .chint{color:var(--muted);font-size:14px;margin:0 0 16px 33px}
+
+  .field{margin:0 0 14px}
+  .field label{display:block;font-weight:500;font-size:16px;margin-bottom:5px}
+  .field .hint{font-size:14px;color:var(--muted);font-weight:500;display:block}
+  .field input,.field select{width:100%;border:1px solid var(--line-strong);border-radius:0;padding:10px 12px;font-family:inherit;font-size:15.5px;background:var(--surface);color:var(--ink)}
+  .field input:focus,.field select:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  /* payer-type segmented (3-way) */
+  .segwrap{display:flex;border:1px solid var(--line-strong);margin:0 0 4px}
+  .segwrap button{flex:1;background:var(--surface);color:var(--ink);border:0;border-left:1px solid var(--line-strong);font-family:inherit;font-size:14.5px;font-weight:500;padding:11px 10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .segwrap button:first-child{border-left:0}
+  .segwrap button.on{background:var(--irs-blue);color:#fff}
+  @media(max-width:560px){.segwrap{flex-direction:column}.segwrap button{border-left:0;border-top:1px solid var(--line-strong);justify-content:flex-start}.segwrap button:first-child{border-top:0}}
+
+  /* payment reason toggle (notice vs general) */
+  .radiorow{display:flex;gap:10px;margin:0 0 6px;flex-wrap:wrap}
+  .radiocard{flex:1;min-width:200px;border:1px solid var(--line-strong);padding:12px 14px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;background:var(--surface)}
+  .radiocard.on{border-color:var(--irs-blue);background:var(--tint-blue);box-shadow:inset 0 0 0 1px var(--irs-blue)}
+  .radiocard .rc-dot{flex:0 0 16px;width:16px;height:16px;border-radius:50%;border:1px solid var(--line-strong);margin-top:2px;display:grid;place-items:center}
+  .radiocard.on .rc-dot{border-color:var(--irs-blue)}
+  .radiocard.on .rc-dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--irs-blue)}
+  .radiocard .rc-t{font-weight:600;font-size:15px}
+  .radiocard .rc-s{font-size:13px;color:var(--muted);display:block;margin-top:2px}
+
+  .achbadge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--tint-blue);color:var(--accent-blue);padding:9px 13px;font-size:14px;font-weight:700;margin:0 0 4px}
+
+  /* levy response sub-panel */
+  .levypanel{border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--tint);padding:14px 16px;margin:16px 0 0}
+  .levypanel .lp-h{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;margin:0 0 4px;color:var(--ink)}
+  .levypanel .lp-h .lp-i{color:var(--teal)}
+  .levypanel .lp-s{font-size:13.5px;color:var(--muted);margin:0 0 14px}
+  label.check{display:flex;gap:10px;align-items:flex-start;margin-top:6px;cursor:pointer;font-weight:500;font-size:14.5px}
+  label.check input{margin-top:3px;flex:0 0 auto;width:16px;height:16px}
+  .finalnote{font-size:13px;color:var(--muted);margin:6px 0 0 26px}
+
+  /* verify identity */
+  .vrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:4px}
+  .vbtn{display:inline-flex;align-items:center;gap:8px;background:var(--surface);color:var(--irs-blue);border:1px solid var(--irs-blue);font-family:inherit;font-size:15px;font-weight:500;padding:10px 18px;border-radius:4px;cursor:pointer}
+  .vbtn:hover{background:var(--tint-blue)}
+  .vbtn:disabled{color:var(--muted);border-color:var(--line-strong);cursor:not-allowed;background:var(--surface)}
+  .vchip{display:none;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--green);border:1px solid color-mix(in srgb, var(--green) 45%, var(--line));background:color-mix(in srgb, var(--green) 10%, var(--surface));padding:8px 12px}
+  .vchip.show{display:inline-flex}
+  .vhint{font-size:13px;color:var(--muted);flex-basis:100%}
+
+  /* self-cert attestation */
+  .attest{border:1px solid var(--line);border-left:4px solid var(--amber);background:color-mix(in srgb, var(--amber) 9%, var(--surface));padding:14px 16px;margin:4px 0 0;font-size:14px;line-height:1.5}
+  .attest .at-h{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;margin:0 0 6px;color:var(--ink)}
+  .attest .at-h .at-i{color:var(--amber)}
+  .attest label.check{display:flex;gap:10px;align-items:flex-start;margin-top:10px;cursor:pointer;font-weight:500}
+  .attest label.check input{margin-top:3px;flex:0 0 auto;width:16px;height:16px}
+
+  /* sticky summary */
+  .summary{position:sticky;top:16px;border:1px solid var(--line);background:var(--tint)}
+  .summary .sh{background:var(--irs-blue);color:#fff;padding:12px 16px;font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .summary .sbody{padding:14px 16px}
+  .readrow{display:flex;justify-content:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .readrow:last-of-type{border-bottom:0}
+  .readrow .k{color:var(--ink);font-weight:700;width:50%}.readrow .v{text-align:left}
+  .amt-big{font-size:26px;font-weight:800;margin:2px 0 12px;color:var(--ink)}
+
+  /* posting forecast */
+  .forecast{border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--surface);padding:12px 14px;margin:14px 0 0;font-size:14px;line-height:1.45}
+  .forecast .fh{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;margin:0 0 5px;color:var(--ink)}
+  .forecast .fh .fi{color:var(--irs-blue)}
+  .forecast .fdate{font-weight:800;color:var(--ink)}
+  .forecast .fnote{color:var(--muted);font-size:13px;margin-top:5px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--irs-blue);color:#fff;border:0;font-family:inherit;font-size:16px;font-weight:500;padding:13px 22px;border-radius:4px;cursor:pointer;margin-top:14px}
+  .btn:hover{background:#003a73}
+  .btn:disabled{background:var(--line-strong);cursor:not-allowed}
+  .btn.ghost{background:var(--surface);color:var(--irs-blue);border:1px solid var(--irs-blue)}
+  .btn.ghost:hover{background:var(--tint-blue)}
+
+  /* confirmation / receipt */
+  .receipt{max-width:640px;margin:36px auto 60px}
+  .ring{width:64px;height:64px;border-radius:50%;background:color-mix(in srgb, var(--green) 16%, var(--surface));color:var(--green);display:grid;place-items:center;margin:6px auto 14px;font-size:30px}
+  .receipt h1{text-align:center;font-size:28px;font-weight:800;margin:0 0 4px}
+  .receipt .rsub{text-align:center;color:var(--muted);font-size:16px;margin:0 0 22px}
+  .rcard{border:1px solid var(--line);background:var(--surface)}
+  .rcard .rh{background:var(--surface-2);padding:12px 18px;font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--line)}
+  .rcard .rb{padding:6px 18px 12px}
+  .rtrack{display:flex;flex-direction:column;gap:0;margin:18px 0 4px}
+  .rstep{display:flex;gap:12px;align-items:flex-start;padding:0 0 16px;position:relative}
+  .rstep:last-child{padding-bottom:0}
+  .rstep .rdot{flex:0 0 22px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;z-index:1}
+  .rstep .rline{position:absolute;left:10px;top:22px;bottom:-4px;width:2px;background:var(--line)}
+  .rstep:last-child .rline{display:none}
+  .rstep.done .rdot{background:#00599C;color:#fff}
+  .rstep.current .rdot{background:#002D62;color:#fff}
+  .rstep.pending .rdot{background:var(--surface);color:var(--muted);border:1px solid var(--line-strong)}
+  .rstep .rt{font-weight:600;font-size:15px}
+  .rstep .rd{font-size:13.5px;color:var(--muted);margin-top:1px}
+
+  footer{border-top:1px solid var(--line);margin-top:30px}
+  .foot-nav{padding:14px 16px 0;font-size:12.5px}
+  .foot-nav a{text-decoration:none}
+  .disc{padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic}
+  .hide{display:none !important}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6 8 10.5 12.5 6"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><img src="../assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Third-Party Payments</span></div>
+    <div class="util"><a id="signInTop">Sign in</a><a>Help</a><a>Español</a></div>
+  </div></div>
+
+  <!-- ============ FORM VIEW ============ -->
+  <main class="wrap" id="formView">
+    <p class="crumb"><a>Payments</a> · Pay on behalf of a taxpayer</p>
+    <h1 class="page">Make a payment on behalf of a taxpayer</h1>
+    <p class="sub">Respond to an <b>IRS levy</b> or pay toward a <b>federal tax lien</b> for someone else — one payment for one taxpayer, from a bank account. No IRS account is required. Signing in lets us fill in details you've used before.</p>
+
+    <div class="signin" id="signinNudge">
+      <span class="si-ic ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg></span>
+      <span class="si-txt"><b>Sign in to save time.</b> We'll fill in the payer and taxpayer details from your account. You can also continue without signing in.</span>
+      <button id="signInBtn">Sign in &amp; autofill</button>
+    </div>
+
+    <div class="layout">
+      <div>
+        <!-- 1. Who is paying -->
+        <div class="card">
+          <h2><span class="n">1</span> Who is making this payment?</h2>
+          <p class="chint">This is the payer of record. Businesses and financial institutions are not asked for a personal Social Security number.</p>
+          <div class="segwrap" id="payerSeg">
+            <button data-payer="individual" class="on"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.2" r="2.7"/><path d="M3 13.5a5 5 0 0 1 10 0"/></svg></span> Individual</button>
+            <button data-payer="business"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11"/><path d="M6 5.5h1M9 5.5h1M6 8h1M9 8h1M7 13.5v-2.5h2v2.5"/></svg></span> Business</button>
+            <button data-payer="institution"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6 8 2.5 13.5 6z"/><path d="M4 8.5v3M6.7 8.5v3M9.3 8.5v3M12 8.5v3M2.5 13.5h11"/></svg></span> Financial institution</button>
+          </div>
+          <div id="payerFields" style="margin-top:14px"></div>
+        </div>
+
+        <!-- 2. What are you paying -->
+        <div class="card">
+          <h2><span class="n">2</span> What is this payment for?</h2>
+          <p class="chint">Choose the document you received or are acting on — it decides which identifiers we ask for. Individual (IMF) and business (BMF) accounts are both supported.</p>
+          <div class="radiorow" id="reasonMode">
+            <div class="radiocard on" data-kind="levy">
+              <span class="rc-dot"></span>
+              <span><span class="rc-t">Notice of levy</span><span class="rc-s">Form 668-A, 668-W, or 668-B — send the payment with the completed levy response.</span></span>
+            </div>
+            <div class="radiocard" data-kind="lien">
+              <span class="rc-dot"></span>
+              <span><span class="rc-t">Federal tax lien</span><span class="rc-s">Pay toward a Notice of Federal Tax Lien — for example at a sale, closing, or refinance.</span></span>
+            </div>
+          </div>
+          <div id="reasonFields" style="margin-top:14px"></div>
+        </div>
+
+        <!-- 3. Whose account -->
+        <div class="card">
+          <h2><span class="n">3</span> Whose tax account is this for?</h2>
+          <p class="chint" id="tpHint">Full information for the person or business you're paying for — this is the account the payment applies to.</p>
+          <div id="taxpayerFields"></div>
+          <div class="vrow" id="verifyRow">
+            <button class="vbtn" id="verifyBtn" type="button"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg></span> Verify taxpayer identity</button>
+            <span class="vchip" id="verifyChip" role="status"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></span> Identity verified — TIN and name control match IRS records</span>
+            <span class="vhint">We check the TIN and name control against IRS records before you enter payment details. Account balances are never shown.</span>
+          </div>
+        </div>
+
+        <!-- 4. Amount -->
+        <div class="card">
+          <h2><span class="n">4</span> Amount &amp; date</h2>
+          <p class="chint">Enter the amount and the date you want the bank debit to occur.</p>
+          <div class="grid2">
+            <div class="field"><label for="amount">Payment amount (USD)</label><input id="amount" value="1,250.00"></div>
+            <div class="field"><label for="date">Payment date</label><input id="date" type="date" value="2026-07-07"></div>
+          </div>
+          <div id="scheduleFields"></div>
+        </div>
+
+        <!-- 5. Bank -->
+        <div class="card">
+          <h2><span class="n">5</span> Bank account</h2>
+          <p class="chint">Payments come directly from a checking or savings account. There is no processing fee.</p>
+          <div class="achbadge"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6 8 2.5 13.5 6z"/><path d="M4 8.5v3M6.7 8.5v3M9.3 8.5v3M12 8.5v3M2.5 13.5h11"/></svg></span> Bank account (ACH) — no fee</div>
+          <div class="grid3" style="margin-top:14px">
+            <div class="field"><label for="acctType">Account type</label><select id="acctType"><option>Checking</option><option>Savings</option></select></div>
+            <div class="field"><label for="routing">Routing number</label><input id="routing" placeholder="021000021"></div>
+            <div class="field"><label for="acct">Account number</label><input id="acct" placeholder="000123456789"></div>
+          </div>
+
+          <div class="attest" id="attestBox">
+            <div class="at-h"><span class="at-i ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l.8-2.8 7.5-7.5a1.4 1.4 0 0 1 2 2l-7.5 7.5z"/><path d="M10.3 4.2l2 2"/></svg></span> Certification</div>
+            <span id="attestText">By submitting, you certify that you are authorized to make this payment on behalf of the account holder and that the information you entered is accurate. We verify the account against IRS records after the payment is submitted.</span>
+            <label class="check"><input type="checkbox" id="attestCheck"> <span id="attestLabel">I certify the above and authorize this bank debit.</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- sticky summary -->
+      <aside class="summary">
+        <div class="sh">Payment summary</div>
+        <div class="sbody">
+          <div class="amt-big" id="sAmt">$1,250.00</div>
+          <div class="readrow"><span class="k">Payer</span><span class="v" id="sPayer">Individual</span></div>
+          <div class="readrow"><span class="k">Paying for</span><span class="v" id="sFor">Individual (IMF)</span></div>
+          <div class="readrow"><span class="k">Reason</span><span class="v" id="sReason">—</span></div>
+          <div class="readrow" id="sLevyRow" style="display:none"><span class="k">Levy form</span><span class="v" id="sLevy">—</span></div>
+          <div class="readrow" id="sSchedRow" style="display:none"><span class="k">Schedule</span><span class="v" id="sSched">One-time</span></div>
+          <div class="readrow"><span class="k">Method</span><span class="v">Bank account (ACH)</span></div>
+          <div class="forecast">
+            <div class="fh"><span class="fi ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.8V8l2.3 1.6"/></svg></span> When this posts</div>
+            <div id="fBody"></div>
+          </div>
+          <button class="btn" id="submitBtn" disabled>Review &amp; submit <span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5"/></svg></span></button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ============ RECEIPT VIEW ============ -->
+  <main class="wrap hide" id="receiptView">
+    <div class="receipt">
+      <div class="ring ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></div>
+      <h1>Payment submitted</h1>
+      <p class="rsub">Confirmation number <b id="rConf">TPP-2026-4820-117</b></p>
+
+      <div class="rcard">
+        <div class="rh">Payment details</div>
+        <div class="rb">
+          <div class="readrow"><span class="k">Amount</span><span class="v" id="rAmt">$1,250.00</span></div>
+          <div class="readrow"><span class="k">Payer of record</span><span class="v" id="rPayer">Individual</span></div>
+          <div class="readrow"><span class="k">Applied to</span><span class="v" id="rFor">Individual (IMF)</span></div>
+          <div class="readrow"><span class="k">Reason</span><span class="v" id="rReason">—</span></div>
+          <div class="readrow"><span class="k">Bank debit date</span><span class="v" id="rDate">—</span></div>
+          <div class="readrow"><span class="k">Paid from</span><span class="v" id="rBank">Checking ••••6789</span></div>
+          <div id="rLevyRows"></div>
+        </div>
+      </div>
+
+      <div class="rcard" style="margin-top:16px">
+        <div class="rh">What happens next</div>
+        <div class="rb">
+          <div class="rtrack" id="rTrack"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:20px">
+        <button class="btn" id="pdfBtn" style="width:auto;flex:1"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10.5v-8M4.5 6 8 2.5 11.5 6M3 13.5h10"/></svg></span> Download receipt (PDF)</button>
+        <button class="btn ghost" id="anotherBtn" style="width:auto;flex:1">Make another payment</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-nav"><a href="../index.html"><span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5"/></svg></span> All prototypes</a></div>
+    <div class="wrap disc">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, EINs, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<script>
+const LEVY_FORMS={
+  "668-A":{label:"Form 668-A — Bank account or other property",recurring:false},
+  "668-W":{label:"Form 668-W — Wages and other income",recurring:true},
+  "668-B":{label:"Form 668-B — Seizure of property",recurring:false}
+};
+const state={payer:"individual", forType:"imf", signedin:false, verified:false, collKind:"levy", levyForm:"668-A", schedule:"once"};
+const $=id=>document.getElementById(id);
+
+/* ---------- payer fields (SSN only for individual) ---------- */
+function fillPayerFields(){
+  const p=state.payer;
+  let html="";
+  if(p==="individual"){
+    html=`
+      <div class="grid2">
+        <div class="field"><label for="pname">Your full name</label><input id="pname" data-fill="Alex R. Whitman"></div>
+        <div class="field"><label for="pssn">Your SSN or ITIN</label><input id="pssn" placeholder="123-45-6789" data-fill="400-55-9021"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="pemail">Email for confirmation</label><input id="pemail" placeholder="you@example.com" data-fill="alex.whitman@example.com"></div>
+        <div class="field"><label for="pphone">Phone</label><input id="pphone" placeholder="(555) 010-0100" data-fill="(555) 010-0100"></div>
+      </div>`;
+  }else if(p==="business"){
+    html=`
+      <div class="grid2">
+        <div class="field"><label for="bname">Business legal name</label><input id="bname" placeholder="e.g. Northgate Logistics LLC" data-fill="Northgate Logistics LLC"></div>
+        <div class="field"><label for="bein">Business EIN</label><input id="bein" placeholder="12-3456789" data-fill="47-1820094"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="cname">Authorized contact</label><input id="cname" placeholder="e.g. Dana Okafor" data-fill="Dana Okafor"></div>
+        <div class="field"><label for="cemail">Email for confirmation</label><input id="cemail" placeholder="ap@company.com" data-fill="ap@northgate.example"></div>
+      </div>`;
+  }else{
+    html=`
+      <div class="grid2">
+        <div class="field"><label for="iname">Institution name</label><input id="iname" placeholder="e.g. Meridian Trust Bank, N.A." data-fill="Meridian Trust Bank, N.A."></div>
+        <div class="field"><label for="iein">Institution EIN</label><input id="iein" placeholder="12-3456789" data-fill="94-2016558"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="irtn">Originating routing number (ODFI)</label><input id="irtn" placeholder="011000015" data-fill="011000015"></div>
+        <div class="field"><label for="icontact">Authorized contact</label><input id="icontact" placeholder="e.g. Priya Nair" data-fill="Priya Nair"></div>
+      </div>
+      <div class="field"><label for="iemail">Email for confirmation</label><input id="iemail" placeholder="treasury@bank.com" data-fill="treasury.ops@meridian.example"></div>`;
+  }
+  $("payerFields").innerHTML=html;
+  updateAttest();
+  if(state.signedin) applyAutofill();
+}
+
+/* ---------- reason fields ---------- */
+function fillReasonFields(){
+  if(state.collKind==="lien"){
+    $("reasonFields").innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="lienSerial">Lien serial number <span class="hint">Printed near the top of the Notice of Federal Tax Lien.</span></label><input id="lienSerial" placeholder="e.g. 826-441-209" data-fill="826-441-209"></div>
+        <div class="field"><label for="lienDate">Date on the lien</label><input id="lienDate" type="date" value="2026-04-02"></div>
+      </div>
+      <p class="field hint" style="margin-top:-6px">The serial number is all we need to match the account — the taxpayer ID on lien paperwork may be partly masked.</p>
+
+      <div class="levypanel">
+        <div class="lp-h"><span class="lp-i ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2.5h5.5L12 5v8.5H4z"/><path d="M9.5 2.5V5H12M6 8h4M6 10.5h4"/></svg></span> Paying the lien off in full? Get a payoff letter first</div>
+        <p class="lp-s" style="margin:0">The amount printed on a lien filing is the amount owed when the lien was filed — payments, interest, and other charges since then change it. To release the lien, request a <b>lien payoff letter</b> for the current payoff amount, then pay that amount here. Any partial amount is also accepted.</p>
+      </div>`;
+    $("lienSerial").addEventListener("input",updateSummary);
+    if(state.signedin) applyAutofill();
+  }else{
+    const formOpts=Object.entries(LEVY_FORMS).map(([k,v])=>`<option value="${k}"${k===state.levyForm?" selected":""}>${v.label}</option>`).join("");
+    const isW=state.levyForm==="668-W";
+    const acctSel = state.payer==="institution" ? `
+      <div class="field"><label for="levyAcct">Account levied</label><select id="levyAcct"><option>Individual account</option><option>Business account</option></select><span class="hint">Levies on both individual and business accounts can be answered here.</span></div>` : "";
+    $("reasonFields").innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="levyForm">Levy form received</label><select id="levyForm">${formOpts}</select></div>
+        <div class="field"><label for="levyDate">Date on the levy</label><input id="levyDate" type="date" value="2026-06-24"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="levySerial">Levy serial number</label><input id="levySerial" placeholder="e.g. 668-00214937" data-fill="668-00214937"></div>
+        ${acctSel || `<div class="field"><label for="levyOffice">IRS office on the levy</label><input id="levyOffice" placeholder="e.g. Cincinnati, OH" data-fill="Cincinnati, OH"></div>`}
+      </div>
+      <p class="field hint" style="margin-top:-6px">The serial number is printed in the upper right of the levy form.</p>
+
+      <div class="levypanel">
+        <div class="lp-h"><span class="lp-i ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5l.8-2.8 7.5-7.5a1.4 1.4 0 0 1 2 2l-7.5 7.5z"/><path d="M10.3 4.2l2 2"/></svg></span> Levy response — submitted with this payment</div>
+        <p class="lp-s">Complete the response portion of the levy here. It's sent to the IRS electronically together with your payment — no mailing or faxing needed.</p>
+        ${isW?`
+        <div class="grid3">
+          <div class="field"><label for="lvGross">Gross wages</label><input id="lvGross" placeholder="0.00" data-fill="3,480.00"></div>
+          <div class="field"><label for="lvExempt">Exempt amount</label><input id="lvExempt" placeholder="0.00" data-fill="1,153.85"></div>
+          <div class="field"><label for="lvRemit">Amount remitted</label><input id="lvRemit" placeholder="0.00" data-fill="2,326.15"></div>
+        </div>
+        <p class="field hint" style="margin-top:-6px">Gross wages are for this pay period. The exempt amount comes from the tables included in the levy package.</p>
+        <div class="field"><label for="lvPayFreq">Employee pay frequency</label><select id="lvPayFreq"><option>Every two weeks</option><option>Weekly</option><option>Twice a month</option><option>Monthly</option></select></div>`:`
+        <div class="grid3">
+          <div class="field"><label for="lvHeld">Funds or property held</label><input id="lvHeld" placeholder="0.00" data-fill="5,912.40"></div>
+          <div class="field"><label for="lvRemit">Amount remitted</label><input id="lvRemit" placeholder="0.00" data-fill="5,912.40"></div>
+          <div class="field"><label for="lvHold">Holding period ends</label><input id="lvHold" type="date" value="2026-07-15"></div>
+        </div>
+        <p class="field hint" style="margin-top:-6px">Funds are held for 21 days from the date of the levy before they're sent.</p>`}
+        <label class="check"><input type="checkbox" id="lvNoFunds"> <span>No funds, wages, or property are attachable — I'm filing the response only.</span></label>
+      </div>
+
+      <div class="levypanel">
+        <div class="lp-h"><span class="lp-i ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="12" height="9"/><path d="m2.5 4.5 5.5 4 5.5-4"/></svg></span> Assigned IRS employee</div>
+        <p class="lp-s">Enter the IRS contact shown on the levy so they're notified the moment this payment and response arrive.</p>
+        <div class="grid2">
+          <div class="field"><label for="lvEmpName">IRS employee name <span class="hint">From the contact block on the levy.</span></label><input id="lvEmpName" placeholder="e.g. R. Alvarez" data-fill="R. Alvarez"></div>
+          <div class="field"><label for="lvEmpEmail">IRS employee email <span class="hint">Optional if you only have the name.</span></label><input id="lvEmpEmail" placeholder="first.last@irs.gov" data-fill="r.alvarez@irs.gov"></div>
+        </div>
+      </div>`;
+    $("levyForm").addEventListener("change",e=>{state.levyForm=e.target.value;fillReasonFields();fillScheduleFields();});
+    $("levySerial").addEventListener("input",updateSummary);
+    if(state.signedin) applyAutofill();
+  }
+  fillScheduleFields();
+  updateSummary();
+}
+
+/* ---------- payment schedule (recurring for 668-W) ---------- */
+function fillScheduleFields(){
+  const el=$("scheduleFields");
+  if(state.collKind!=="levy" || !LEVY_FORMS[state.levyForm].recurring){
+    state.schedule="once";
+    el.innerHTML="";
+    return;
+  }
+  el.innerHTML=`
+    <div class="radiorow" id="schedMode" style="margin-top:4px">
+      <div class="radiocard${state.schedule==="once"?" on":""}" data-sched="once">
+        <span class="rc-dot"></span>
+        <span><span class="rc-t">One-time payment</span><span class="rc-s">Send this pay period's levy proceeds only.</span></span>
+      </div>
+      <div class="radiocard${state.schedule==="recurring"?" on":""}" data-sched="recurring">
+        <span class="rc-dot"></span>
+        <span><span class="rc-t">Repeat each pay period</span><span class="rc-s">A wage levy continues until it's released. Schedule this amount automatically.</span></span>
+      </div>
+    </div>
+    <div id="schedExtra"></div>`;
+  if(state.schedule==="recurring"){
+    $("schedExtra").innerHTML=`
+      <div class="grid2" style="margin-top:12px">
+        <div class="field"><label for="schedFreq">Frequency</label><select id="schedFreq"><option>Every two weeks</option><option>Weekly</option><option>Twice a month</option><option>Monthly</option></select></div>
+        <div class="field"><label for="schedEnd">Repeat until</label><select id="schedEnd"><option>The levy is released (Form 668-D)</option><option>A date I choose</option></select></div>
+      </div>
+      <p class="field hint" style="margin-top:-4px">Scheduled payments stop automatically when a levy release is recorded on the account, so nothing is sent after the case closes. You can cancel a scheduled payment up to 11:45 PM ET two days before it's sent.</p>`;
+    $("schedFreq").addEventListener("change",updateSummary);
+  }
+  $("schedMode").addEventListener("click",e=>{
+    const c=e.target.closest(".radiocard");if(!c)return;
+    state.schedule=c.dataset.sched;
+    fillScheduleFields();updateSummary();
+  });
+}
+
+/* ---------- taxpayer (account) fields ---------- */
+const IC_SEARCH=`<span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg></span>`;
+const IC_TICK=`<span class="ic" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg></span>`;
+function isLienMode(){return state.collKind==="lien";}
+function fillTaxpayerFields(){
+  if(isLienMode()){
+    // A lien payer often has no TIN — the lien serial number + name are the match key.
+    $("tpHint").textContent="The taxpayer as printed on the Notice of Federal Tax Lien. No SSN, ITIN, or EIN is needed — the lien serial number above and the name are how we match the account.";
+    $("taxpayerFields").innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="tname">Taxpayer's name (person or business) <span class="hint">Exactly as shown on the lien.</span></label><input id="tname" placeholder="e.g. Jordan A. Michaels" data-fill="Jordan A. Michaels"></div>
+        <div class="field"><label for="taddr">Taxpayer's address on the lien <span class="hint">Optional — helps when names are similar.</span></label><input id="taddr" placeholder="204 Maple Ave, Dayton, OH" data-fill="204 Maple Ave, Dayton, OH"></div>
+      </div>`;
+    $("verifyChip").innerHTML=`${IC_TICK} Lien matched — serial number and name match IRS lien records`;
+    $("verifyRow").querySelector(".vhint").textContent="We match the lien serial number and taxpayer name against IRS lien records before you enter payment details. No taxpayer ID is required, and account balances are never shown.";
+    if(state.signedin) applyAutofill();
+    setVerified(false);
+    return;
+  }
+  $("verifyChip").innerHTML=`${IC_TICK} Identity verified — TIN and name control match IRS records`;
+  $("verifyRow").querySelector(".vhint").textContent="We check the TIN and name control against IRS records before you enter payment details. Account balances are never shown.";
+  if(state.forType==="bmf"){
+    $("tpHint").textContent="Full information for the business you're paying for — this is the account the payment applies to.";
+    $("taxpayerFields").innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="tbname">Business legal name</label><input id="tbname" placeholder="e.g. Cedar Peak Roofing Inc." data-fill="Cedar Peak Roofing Inc."></div>
+        <div class="field"><label for="tein">Business EIN</label><input id="tein" placeholder="12-3456789" data-fill="83-4471209"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="tbaddr">Business address</label><input id="tbaddr" placeholder="1450 Market St, Suite 300" data-fill="1450 Market St, Suite 300"></div>
+        <div class="field"><label for="tbczip">City, state, ZIP</label><input id="tbczip" placeholder="Springfield, IL 62704" data-fill="Springfield, IL 62704"></div>
+      </div>`;
+  }else{
+    const isLien = state.collKind==="lien";
+    $("tpHint").textContent=isLien
+      ? "The taxpayer as shown on the lien. If the ID is partly masked on your copy, the lien serial number above is enough to match the account."
+      : "Full information for the person you're paying for — this is the account the payment applies to.";
+    const tinHint = isLien ? ` <span class="hint">May be partly masked on the lien — enter what's shown.</span>` : "";
+    $("taxpayerFields").innerHTML=`
+      <div class="grid2">
+        <div class="field"><label for="tname">Taxpayer's full name</label><input id="tname" placeholder="e.g. Jordan A. Michaels" data-fill="Jordan A. Michaels"></div>
+        <div class="field"><label for="tssn">Taxpayer's SSN or ITIN${tinHint}</label><input id="tssn" placeholder="123-45-6789" data-fill="521-88-3140"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="taddr">Taxpayer's address</label><input id="taddr" placeholder="204 Maple Ave, Apt 5" data-fill="204 Maple Ave, Apt 5"></div>
+        <div class="field"><label for="tczip">City, state, ZIP</label><input id="tczip" placeholder="Dayton, OH 45402" data-fill="Dayton, OH 45402"></div>
+      </div>`;
+  }
+  if(state.signedin) applyAutofill();
+  setVerified(false);
+}
+
+/* ---------- TIN + name control verification ---------- */
+function setVerified(v){
+  state.verified=v;
+  const chip=$("verifyChip"), btn=$("verifyBtn");
+  chip.classList.toggle("show",v);
+  btn.disabled=v;
+  btn.innerHTML=v
+    ? `Verified`
+    : `${IC_SEARCH} ${isLienMode()?"Match lien record":"Verify taxpayer identity"}`;
+  if(v) btn.style.display="none"; else btn.style.display="";
+  updateSummary();
+}
+function verifyTaxpayer(){
+  const btn=$("verifyBtn");
+  btn.disabled=true;btn.textContent=isLienMode()?"Checking IRS lien records…":"Checking IRS records…";
+  setTimeout(()=>setVerified(true),700);
+}
+function updateAttest(){
+  const label=$("attestLabel"), text=$("attestText");
+  if(state.payer==="individual"){
+    text.textContent="By submitting, you certify that you are authorized to make this payment on behalf of the account holder and that the information you entered is accurate. We verify the account against IRS records after the payment is submitted.";
+    label.textContent="I certify the above and authorize this bank debit.";
+  }else if(state.payer==="business"){
+    text.textContent="By submitting, an authorized representative of the business certifies that the business is permitted to make this payment on the account holder's behalf and that the information entered is accurate. No personal Social Security number is required from the business. Verification is completed against IRS records after submission.";
+    label.textContent="I am an authorized representative and certify the above.";
+  }else{
+    text.textContent="By submitting, an authorized officer of the financial institution certifies that the institution is permitted to originate this payment on the account holder's behalf and that the information entered is accurate. No personal Social Security number is required from the institution. Verification and matching are completed against IRS records after submission.";
+    label.textContent="I am an authorized officer and certify the above.";
+  }
+}
+
+/* ---------- summary + posting forecast ---------- */
+function money(v){const n=Number(String(v).replace(/[^0-9.]/g,""))||0;return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function addBusinessDays(d,n){const r=new Date(d);let added=0;while(added<n){r.setDate(r.getDate()+1);const day=r.getDay();if(day!==0&&day!==6)added++;}return r;}
+function nextWeekly(d){const r=new Date(d);const day=r.getDay();let add=(1-day+7)%7;if(add===0)add=7;r.setDate(r.getDate()+add);return r;}
+function fmtDate(d){return d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});}
+
+function currentReason(){
+  if(state.collKind==="lien"){const s=$("lienSerial");return "Federal tax lien"+(s&&s.value?" — serial "+s.value.trim():"");}
+  const s=$("levySerial");return "Levy response — Form "+state.levyForm+(s&&s.value?" ("+s.value.trim()+")":"");
+}
+
+function updateSummary(){
+  $("sAmt").textContent=money($("amount").value);
+  const payerName={individual:"Individual",business:"Business",institution:"Financial institution"}[state.payer];
+  $("sPayer").textContent=payerName;
+  $("sFor").textContent=state.forType==="bmf"?"Business (BMF)":"Individual (IMF)";
+  $("sReason").textContent=currentReason()||"—";
+  const isLevy=state.collKind==="levy";
+  const isLien=state.collKind==="lien";
+  $("sLevyRow").style.display=(isLevy||isLien)?"flex":"none";
+  $("sSchedRow").style.display=isLevy?"flex":"none";
+  if(isLien){
+    const s=$("lienSerial");
+    $("sLevyRow").querySelector(".k").textContent="Lien serial";
+    $("sLevy").textContent=(s&&s.value)?s.value.trim():"—";
+  }else if(isLevy){
+    $("sLevyRow").querySelector(".k").textContent="Levy form";
+    $("sLevy").textContent="Form "+state.levyForm;
+    if(state.schedule==="recurring"){
+      const f=$("schedFreq");
+      $("sSched").textContent="Repeats "+((f?f.value:"Every two weeks").toLowerCase())+" until released";
+    }else{
+      $("sSched").textContent="One-time";
+    }
+  }
+  const base=$("date").value?new Date($("date").value+"T12:00:00"):new Date();
+  if(state.forType==="bmf"){
+    const post=nextWeekly(addBusinessDays(base,1));
+    $("fBody").innerHTML=`Business (BMF) accounts update on a <b>weekly cycle</b>. A payment dated ${fmtDate(base)} is expected to post by <span class="fdate">${fmtDate(post)}</span>.<div class="fnote">The bank debit clears in about 1 business day; the balance updates on the next weekly business master file run.</div>`;
+  }else{
+    const post=addBusinessDays(base,2);
+    $("fBody").innerHTML=`Individual (IMF) payments post in <b>about 2 business days</b>. A payment dated ${fmtDate(base)} should show on the account by <span class="fdate">${fmtDate(post)}</span>.<div class="fnote">The bank debit is initiated on your payment date; the balance updates once it clears.</div>`;
+  }
+  $("submitBtn").disabled=!$("attestCheck").checked || !state.verified;
+  $("submitBtn").title=state.verified?"":"Verify the taxpayer's identity in step 3 first";
+}
+
+/* ---------- autofill (sign-in) ---------- */
+function applyAutofill(){
+  document.querySelectorAll("#formView input[data-fill]").forEach(el=>{
+    if(!el.value || el.value===el.getAttribute("placeholder")) el.value=el.getAttribute("data-fill");
+    else el.value=el.getAttribute("data-fill");
+  });
+  updateSummary();
+}
+function signIn(){
+  state.signedin=true;
+  const n=$("signinNudge");
+  n.classList.add("done");
+  n.querySelector(".si-txt").innerHTML="<b>Signed in.</b> We filled in the payer and taxpayer details you've used before. Review and edit anything before submitting.";
+  const btn=$("signInBtn"); if(btn) btn.remove();
+  $("signInTop").textContent="Signed in";
+  applyAutofill();
+}
+
+/* ---------- infer forType from payer default (individual→imf, business/inst→bmf but keep editable via reason type) ---------- */
+/* forType tracks the account being paid, driven by the reason list. We map:
+   individual payer defaults to IMF account; business/institution default to BMF, but the
+   reason dropdown covers both so we key forType off payer choice for the sensible default. */
+function syncForType(){
+  state.forType = (state.payer==="individual") ? "imf" : "bmf";
+}
+
+/* ---------- receipt ---------- */
+const R_ICONS={
+  check:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.5 12 13 4.5"/></svg>`,
+  dot:`<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>`
+};
+function buildReceipt(){
+  $("rAmt").textContent=money($("amount").value);
+  const payerName={individual:"Individual",business:"Business",institution:"Financial institution"}[state.payer];
+  $("rPayer").textContent=payerName;
+  $("rFor").textContent=state.forType==="bmf"?"Business (BMF)":"Individual (IMF)";
+  $("rReason").textContent=currentReason()||"—";
+  const base=$("date").value?new Date($("date").value+"T12:00:00"):new Date();
+  $("rDate").textContent=fmtDate(base);
+  const at=$("acctType").value, an=($("acct").value||"000123456789").slice(-4);
+  $("rBank").textContent=`${at} \u2022\u2022\u2022\u2022${an}`;
+  $("rConf").textContent="TPP-2026-"+String(Math.floor(1000+Math.random()*9000))+"-"+String(Math.floor(100+Math.random()*900));
+
+  /* levy / lien rows on the receipt */
+  const extra=$("rLevyRows");
+  if(state.collKind==="lien"){
+    const s=$("lienSerial");
+    extra.innerHTML=`
+      <div class="readrow"><span class="k">Lien serial number</span><span class="v">${s&&s.value?s.value.trim():"—"}</span></div>
+      <div class="readrow"><span class="k">How it's applied</span><span class="v">To the taxpayer's account, as provided by law</span></div>`;
+  }else{
+    const emp=$("lvEmpName"), sched=state.schedule==="recurring"
+      ? "Repeats "+(($("schedFreq")?$("schedFreq").value:"Every two weeks").toLowerCase())+" until the levy is released"
+      : "One-time";
+    extra.innerHTML=`
+      <div class="readrow"><span class="k">Levy form</span><span class="v">Form ${state.levyForm}</span></div>
+      <div class="readrow"><span class="k">Levy response</span><span class="v">Submitted electronically with this payment</span></div>
+      <div class="readrow"><span class="k">Schedule</span><span class="v">${sched}</span></div>
+      <div class="readrow"><span class="k">IRS contact notified</span><span class="v">${emp&&emp.value?emp.value:"On file from the levy"}</span></div>`;
+  }
+
+  const debit=addBusinessDays(base,1);
+  let posted;
+  if(state.forType==="bmf") posted=nextWeekly(addBusinessDays(base,1));
+  else posted=addBusinessDays(base,2);
+
+  const steps=[
+    {cls:"done",t:"Payment submitted",d:"Received "+fmtDate(new Date())},
+    ...(state.collKind==="levy"?[{cls:"done",t:"Levy response received",d:"Filed electronically with this payment"},{cls:"done",t:"Assigned IRS employee notified",d:"A payment alert was sent for this case"}]:[]),
+    {cls:"current",t:"Bank debit clears",d:"Around "+fmtDate(debit)},
+    {cls:"pending",t:"Applied to the tax account",d:state.forType==="bmf"?"On the weekly business cycle":"Within about 2 business days"},
+    {cls:"pending",t:"Posted — confirmation available",d:"Expected by "+fmtDate(posted)}
+  ];
+  $("rTrack").innerHTML=steps.map(s=>`
+    <div class="rstep ${s.cls}">
+      <span class="rdot ic" aria-hidden="true">${s.cls==="done"?R_ICONS.check:(s.cls==="current"?R_ICONS.dot:"")}</span>
+      <span class="rline"></span>
+      <span><span class="rt">${s.t}</span><span class="rd">${s.d}</span></span>
+    </div>`).join("");
+}
+
+/* ---------- events ---------- */
+$("payerSeg").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  document.querySelectorAll("#payerSeg button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");state.payer=b.dataset.payer;
+  syncForType();
+  fillPayerFields();fillReasonFields();fillTaxpayerFields();updateSummary();
+});
+$("reasonMode").addEventListener("click",e=>{
+  const c=e.target.closest(".radiocard");if(!c)return;
+  document.querySelectorAll("#reasonMode .radiocard").forEach(x=>x.classList.remove("on"));
+  c.classList.add("on");state.collKind=c.dataset.kind;
+  fillReasonFields();fillTaxpayerFields();
+});
+["amount","date"].forEach(id=>$(id).addEventListener("input",updateSummary));
+$("date").addEventListener("change",updateSummary);
+$("attestCheck").addEventListener("change",updateSummary);
+$("verifyBtn").addEventListener("click",verifyTaxpayer);
+$("taxpayerFields").addEventListener("input",()=>{ if(state.verified) setVerified(false); });
+$("signInBtn").addEventListener("click",signIn);
+$("signInTop").addEventListener("click",e=>{e.preventDefault();if(!state.signedin)signIn();});
+
+$("submitBtn").addEventListener("click",()=>{
+  buildReceipt();
+  $("formView").classList.add("hide");
+  $("receiptView").classList.remove("hide");
+  window.scrollTo({top:0,behavior:"instant"});
+});
+$("anotherBtn").addEventListener("click",()=>{
+  $("receiptView").classList.add("hide");
+  $("formView").classList.remove("hide");
+  window.scrollTo({top:0,behavior:"instant"});
+});
+$("pdfBtn").addEventListener("click",()=>window.print());
+
+const gov=$("gov"),howbtn=$("howbtn");
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");});
+
+/* init */
+syncForType();
+fillPayerFields();fillReasonFields();fillTaxpayerFields();updateSummary();
+</script>
+</body>
+</html>

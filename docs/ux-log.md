@@ -145,3 +145,20 @@ history keeps them).
 - `.shots/19/onbehalf-*` regenerated for this design; the `onepage-*` shots
   of the removed wrong-base page were dropped from main (PR #21's body links
   them by pinned SHA, so its history still renders).
+
+## 2026-08-25 — third-party payments MVP carved out (#19)
+
+- `third-party-pay/` is the **third-party payments MVP**, carved out of the
+  Direct Pay on-behalf page: same one-page left/right design (form + sticky
+  payment summary + posting forecast), scoped to the two collection
+  scenarios — **notice of levy** (668-A/W/B with the electronic levy
+  response; wage levies can repeat each pay period) and **federal tax lien**
+  (matched by lien serial number alone; no TIN asked, since a lien payer may
+  not have one). Own product chrome ("Third-Party Payments", TPP receipt
+  numbers).
+- The full Direct Pay on-behalf page (notice + general-payment modes,
+  Direct Pay branding) moved to `archive/directpay-onbehalf/` as the
+  **deferred design source** — its remaining good design merges into the MVP
+  later rather than shipping in it.
+- `.shots/19/mvp-*` generated (levy, lien, lien receipt, dark, mobile at
+  390px — no horizontal scroll).
