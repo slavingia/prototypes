@@ -6,6 +6,18 @@ index and not maintained — they may predate the current `DESIGN.md` rules
 
 ## Contents
 
+### `third-party-pay-wizard-steps/` — stepped wizard (superseded)
+The former `third-party-pay-v1` variant: the lien/levy pay-on-behalf flow as a
+six-step wizard with show/hide steps. Superseded by the single active
+`third-party-pay/` prototype — the same flow as one page with the form on the
+left and a live payer-of-record summary on the right.
+
+### `third-party-pay-dashboard/` — payer dashboard (superseded)
+The former `third-party-pay-v3` variant (v1/v2 iterations): a returning
+payer's history of payments made on others' behalf plus an identity-first
+quick-pay rail. Retired when the third-party payment prototypes were
+consolidated into the single `third-party-pay/` one-pager.
+
 ### `third-party-pay-bulk/` — bulk institution console (deferred)
 The former `third-party-pay-v2` variant: a bank or business paying for many
 taxpayers at once via CSV upload → validated review grid → one-declaration

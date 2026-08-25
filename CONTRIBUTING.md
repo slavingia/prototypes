@@ -42,6 +42,9 @@ This repository holds **design prototypes and concept explorations only**.
   that leaves a screenshot showing an out-of-date design. New prototypes that
   show screenshots must add a generator script and updated dates. Regenerate with:
   `npm i playwright && npx playwright install chromium` then `node <path>/shots.mjs`.
+  When embedding screenshots in a PR body, link them via the **commit SHA**
+  (`blob/<sha>/.shots/...?raw=true`), never the branch name — merged branches
+  get deleted, and branch-based image URLs 404 afterward.
 - **Keep the index fresh.** When you add or meaningfully change a prototype,
   bump its `data-updated` date in the root `index.html` so the humanized
   "Updated …" label and the "New" badge stay meaningful, and link it from the
