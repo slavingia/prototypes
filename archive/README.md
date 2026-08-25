@@ -6,6 +6,13 @@ index and not maintained — they may predate the current `DESIGN.md` rules
 
 ## Contents
 
+### `directpay-onbehalf/` — Direct Pay on-behalf flow (deferred design source)
+The full Direct Pay "pay on behalf of a taxpayer" page (issue #9): notice and
+general-payment modes, sign-in autofill, Direct Pay branding. The levy/lien
+portion graduated to the active `third-party-pay/` MVP; the rest of this
+page's design is kept here to merge into the MVP later. Earlier iterations of
+this page live in `directpay-onbehalf-v1/…-v3/`.
+
 ### `third-party-pay-wizard-steps/` — stepped wizard (superseded)
 The former `third-party-pay-v1` variant: the lien/levy pay-on-behalf flow as a
 six-step wizard with show/hide steps. Superseded by the single active
