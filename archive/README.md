@@ -6,6 +6,14 @@ index and not maintained — they may predate the current `DESIGN.md` rules
 
 ## Contents
 
+### `third-party-pay-bulk/` — bulk institution console (deferred)
+The former `third-party-pay-v2` variant: a bank or business paying for many
+taxpayers at once via CSV upload → validated review grid → one-declaration
+batch submit. Retired when the third-party payments MVP was constrained to
+**one third party making one payment for one taxpayer** (issue #19) — bulk /
+batch flows are deferred, so the active variants (guided wizard + payer
+dashboard) are single-payment only.
+
 ### `omnibar-in-app/` — earlier omni bar variants
 The headerbar **v3** variant graduated to the active `omnibar-in-app/`
 prototype at the repo root. These earlier explorations remain here:
