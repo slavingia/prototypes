@@ -209,3 +209,17 @@ history keeps them).
 - Non-prototype items in #25 (Firebase analytics, F6/SAT testing, QA/508,
   app readiness, Jira/tooling) are app- and process-scope, tracked outside
   this repo.
+
+## 2026-08-27 — requirements part 3 follow-up (#25): email is the record
+
+- Per the elaboration notes, the confirmation email is the payor's
+  **historical record** (guest flow has no payment history to sign in to).
+  Copy now says so in three places: the email field hint ("Your confirmation
+  — and your record of this payment — is sent here"), the receipt banner
+  ("save it as your record of this payment"), and the status-track step
+  ("Keep it as your record."). Receipt framing stays received-not-processed.
+- Everything else in the notes was already shipped in the prior pass
+  (individual-first, SLID lien path with masked TIN, no period collection,
+  accept any amount with no overpayment messaging, no history/scheduling,
+  guest flow, both copy edits, numeric-only TINs, required-field marking).
+  Standing by for Collection's levy-response language.

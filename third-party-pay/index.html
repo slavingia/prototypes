@@ -360,7 +360,7 @@ function fillPayerFields(){
     html=`
       <div class="grid2">
         <div class="field"><label for="pname">Your full name</label><input id="pname" value="Alex R. Whitman"></div>
-        <div class="field"><label for="pemail">Email for confirmation <span class="hint">We'll email you as soon as the payment is received.</span></label><input id="pemail" value="alex.whitman@example.com"></div>
+        <div class="field"><label for="pemail">Email for confirmation <span class="hint">Your confirmation — and your record of this payment — is sent here.</span></label><input id="pemail" value="alex.whitman@example.com"></div>
       </div>
       <div class="grid2">
         <div class="field"><label for="pphone">Phone <span class="hint">Optional.</span></label><input id="pphone" value="(555) 010-0100"></div>
@@ -635,7 +635,7 @@ function buildReceipt(){
   }
   $("rConf").textContent="TPP-2026-"+String(Math.floor(1000+Math.random()*9000))+"-"+String(Math.floor(100+Math.random()*900));
   const emailEl=$("pemail")||$("cemail")||$("iemail");
-  $("rEmailNote").innerHTML=`A confirmation email is on its way to <b>${emailEl?emailEl.value:"you"}</b>. It confirms we <b>received</b> this payment — processing status appears on the taxpayer's account once it posts.`;
+  $("rEmailNote").innerHTML=`A confirmation email is on its way to <b>${emailEl?emailEl.value:"you"}</b> — save it as your record of this payment. It confirms we <b>received</b> the payment; processing status appears on the taxpayer's account once it posts.`;
 
   /* levy / lien rows on the receipt */
   const extra=$("rLevyRows");
@@ -659,7 +659,7 @@ function buildReceipt(){
 
   const steps=[
     {cls:"done",t:"Payment submitted",d:"Received "+fmtDate(new Date())},
-    {cls:"done",t:"Confirmation email sent",d:"Confirms receipt — not that the payment has processed"},
+    {cls:"done",t:"Confirmation email sent",d:"Confirms receipt — not that the payment has processed. Keep it as your record."},
     ...(state.collKind==="levy"?[{cls:"done",t:"Levy response received",d:"Filed electronically with this payment"},{cls:"done",t:"Assigned IRS employee notified",d:"A payment alert was sent for this case"}]:[]),
     {cls:"current",t:"Bank debit clears",d:"Around "+fmtDate(debit)},
     {cls:"pending",t:"Applied to the tax account",d:state.forType==="bmf"?"On the weekly business cycle":"Within about 2 business days"},
