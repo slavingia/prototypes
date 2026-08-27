@@ -83,6 +83,9 @@
   .field input:focus,.field select:focus{outline:2px solid rgba(0,76,151,.35);border-color:var(--irs-blue)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  /* controls in a grid row bottom-align even when one label carries a taller hint */
+  .grid2 > .field,.grid3 > .field{display:flex;flex-direction:column}
+  .grid2 > .field > input,.grid2 > .field > select,.grid3 > .field > input,.grid3 > .field > select{margin-top:auto}
   @media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr}}
 
   /* payer-type segmented (3-way) */
@@ -169,8 +172,8 @@
   .rstep.done .rdot{background:#00599C;color:#fff}
   .rstep.current .rdot{background:#002D62;color:#fff}
   .rstep.pending .rdot{background:var(--surface);color:var(--muted);border:1px solid var(--line-strong)}
-  .rstep .rt{font-weight:600;font-size:15px}
-  .rstep .rd{font-size:13.5px;color:var(--muted);margin-top:1px}
+  .rstep .rt{display:block;font-weight:600;font-size:15px}
+  .rstep .rd{display:block;font-size:13.5px;color:var(--muted);margin-top:1px}
 
   footer{border-top:1px solid var(--line);margin-top:30px}
   .foot-nav{padding:14px 16px 0;font-size:12.5px}

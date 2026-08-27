@@ -223,3 +223,18 @@ history keeps them).
   accept any amount with no overpayment messaging, no history/scheduling,
   guest flow, both copy edits, numeric-only TINs, required-field marking).
   Standing by for Collection's levy-response language.
+
+## 2026-08-27 — visual audit: input alignment + text kissing
+
+- **Grid inputs now bottom-align.** Wherever one label carried a hint and its
+  row-mate didn't (payer name/email, levy serial/IRS office, the 668-A
+  attached/sending/holding trio, lien serial/date), the controls sat 20–40px
+  apart vertically. Grid fields are now flex columns with the control pushed
+  to the bottom, so every input in a row sits on the same line regardless of
+  hint height. Verified programmatically (bounding-box deltas = 0 across all
+  payer types, 668-A/W, and lien states).
+- **Receipt track text was kissing.** `.rt`/`.rd` rendered inline, so step
+  titles ran into their descriptions ("Payment submittedReceived Thu…").
+  Both are now block-level and stack.
+- The negative-margin hint pull-ups measure an 8px visual gap (by design);
+  mobile single-column and dark mode unaffected.
