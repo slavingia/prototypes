@@ -179,3 +179,33 @@ history keeps them).
   institution-only "Account levied" select is gone.
 - `.shots/19/mvp-*` regenerated; added `mvp-bank-for-individual` showing the
   cross-type case.
+
+## 2026-08-27 — issue #25 feedback pass (prototype items)
+
+- **Guest flow**: removed the sign-in nudge and "Sign in" affordances — the
+  MVP is unauthenticated, low-friction, one-off. Demo values now prefill
+  directly. Individual payers no longer give an SSN (payer identity beyond
+  name/contact is a later enhancement; payer/source data retention for levy
+  research stays a future hook).
+- **Same-day only**: the payment-date field and the recurring 668-W schedule
+  are gone — the bank debit is initiated on submission ("Debit date: Today,
+  when you submit"); scheduling and its manage/cancel surface are deferred.
+- **Email confirmation**: email is required to submit; the receipt and the
+  status track state a confirmation email was sent and that it confirms
+  *receipt*, not processing. No later "processed" email is promised (final
+  step renamed "Posted to the taxpayer's account").
+- **Copy**: section-2 hint trimmed per feedback; levy checkbox now "No funds,
+  wages, or property are owed." (response-only clause removed); funds-held vs
+  amount-remitted relabeled ("Amount the levy attached" / "Amount you're
+  sending") with a plain-language 21-day partial-release explanation.
+- **Validation**: SSN/EIN/routing/account inputs are numeric-only with an
+  inline "Numbers only" error (dark text, red accent rule per DESIGN.md);
+  a top note marks all fields required unless labeled optional, and optional
+  fields (phone, IRS office, taxpayer address on lien, IRS employee email)
+  say so.
+- Rationale noted per feedback: individuals first because the workflow is
+  simplest and single one-off payments are the dominant case. Credit-card
+  payments remain a future capability (bank/ACH only in MVP).
+- Non-prototype items in #25 (Firebase analytics, F6/SAT testing, QA/508,
+  app readiness, Jira/tooling) are app- and process-scope, tracked outside
+  this repo.
