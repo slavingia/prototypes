@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Track My Return — Refund &amp; Return Status</title>
+<!-- IRS ODG / USWDS type ramp: Source Sans 3 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --bg:#fff;
+    --green:#1a7f4b; --amber:#8a6d00; --red:#b50909; --teal:#00687d; --violet:#5b3fa0;
+    --done:#00599C; --current:#002D62; --pending:#5B616B; --current-ink:#002D62;
+    --surface:#fff; --surface-2:#f0f0f0; --accent:#004c97; --ink-2:#3a3a3a;
+    --line-soft:#e9eaec;
+    --tint-blue-1:#fafcfe; --tint-blue-2:#eef4fb; --tint-amber:#fdf8ec;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a;        /* page background */
+      --surface:#1e2328;   /* cards, panels, dropdowns */
+      --surface-2:#262c33; /* nested / tinted panels */
+      --ink:#e8eaed;       --muted:#9aa1a9;
+      --line:#3d4551;      --link:#79b4e6;
+      --green:#55b685;     --amber:#d9ae4a;  --red:#f2857f;
+      --teal:#57bfd4;      --violet:#ab96ee;
+      --accent:#79b4e6;    --ink-2:#c9ced4;  --pending:#9aa1a9;
+      --current-ink:#9cc2ef;
+      --line-soft:#333b44;
+      --tint-blue-1:color-mix(in srgb, var(--irs-blue) 10%, var(--surface));
+      --tint-blue-2:color-mix(in srgb, var(--irs-blue) 22%, var(--surface));
+      --tint-amber:color-mix(in srgb, var(--amber) 12%, var(--surface));
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner (IRS ODG) */
+  .gov{background:var(--surface-2);font-size:12.5px}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;border-radius:1px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .banner-inner .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .howbtn .chev{font-size:10px;transition:transform .15s}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov.open .howbtn .chev{transform:rotate(180deg)}
+  .gov .gcol{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink-2)}
+  .gov .gcol .gi{font-size:18px;flex:0 0 22px;line-height:1.2}
+  .gov .gcol b{color:var(--ink)}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px;letter-spacing:.5px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal svg{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px;letter-spacing:0}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+  .caret{font-size:11px}
+
+  nav.tabs{background:var(--irs-navy)}
+  nav.tabs .wrap{display:flex;overflow-x:auto}
+  nav.tabs a{color:#fff;font-size:15px;padding:14px 18px;text-decoration:none;white-space:nowrap}
+  nav.tabs a:hover{background:rgba(255,255,255,.08)}
+  nav.tabs a.active{background:#fff;color:var(--irs-navy);font-weight:700}
+
+  /* breadcrumb + page head */
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:70ch;margin:0 0 10px}
+  .sample{font-size:14px;color:var(--muted);margin:0 0 26px}
+  .sample b{color:var(--ink-2);font-weight:700}
+
+  /* tax year tabs (Where's My Refund layout) */
+  .yearlabel{display:block;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  .yeartabs{display:flex;gap:6px;border-bottom:2px solid var(--irs-blue);margin:0}
+  .ytab{font-family:inherit;font-size:16px;font-weight:600;padding:11px 26px;cursor:pointer;
+    background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);border-bottom:0;border-radius:4px 4px 0 0}
+  .ytab:hover{background:var(--tint-blue-2)}
+  .ytab.on{background:var(--irs-blue);color:#fff;font-weight:700;border-color:var(--irs-blue)}
+  .yearpanel{margin:0 0 8px}
+
+  /* top status card — most recent update, drawn to attention */
+  .summary{border:1px solid var(--line);border-top:0;padding:22px 24px;margin:0;background:var(--tint-blue-1)}
+  .summary .stime{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em;margin:0 0 10px}
+  .summary .stag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:3px 10px;border-radius:4px;margin-bottom:12px}
+  .summary h2{font-size:23px;font-weight:800;margin:0 0 4px}
+  .summary .seta{font-size:15px;color:var(--muted);margin:0 0 18px}
+  .summary .seta b{color:var(--ink)}
+  .sgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .sgrid .scell{padding:12px 18px 4px 0}
+  .sgrid .sk{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .sgrid .sv{display:block;font-size:18px;font-weight:700;margin-top:2px}
+  .summary .inq{font-size:14.5px;color:var(--ink-2);margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line-soft);line-height:1.5}
+  /* message sections — content headings decoupled from the status label */
+  .msec{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line-soft)}
+  .msec h3{font-size:15px;font-weight:700;margin:0 0 5px}
+  .msec p{font-size:14.5px;color:var(--ink-2);margin:0 0 8px;line-height:1.5;max-width:72ch}
+  .msec p:last-child{margin-bottom:0}
+  .msec ul{margin:4px 0 8px;padding-left:20px}
+  .msec li{font-size:14.5px;color:var(--ink-2);line-height:1.5;margin:0 0 3px}
+  .msec .contact{display:grid;grid-template-columns:auto 1fr;gap:2px 16px;font-size:14.5px;color:var(--ink-2);margin:6px 0 8px}
+  .msec .contact b{color:var(--ink);font-weight:700}
+  @media(max-width:680px){.sgrid{grid-template-columns:1fr 1fr}}
+
+  /* empty year panel */
+  .noyear{border:1px solid var(--line);border-top:0;padding:26px 24px;background:var(--surface)}
+  .noyear h2{font-size:19px;font-weight:700;margin:0 0 6px}
+  .noyear p{font-size:14.5px;color:var(--ink-2);margin:0;max-width:64ch;line-height:1.5}
+
+  /* earlier updates — most recent first */
+  .tlhead{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+  .timeline{border:1px solid var(--line);padding:8px 24px 14px}
+  .tl{list-style:none;margin:0;padding:0}
+  .tl li{position:relative;padding:18px 0 18px 46px}
+  .tl li:not(:last-child)::after{content:"";position:absolute;left:13px;top:34px;bottom:-2px;width:2px;background:var(--done)}
+  .tl .mk{position:absolute;left:0;top:18px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--done);color:#fff;border:2px solid var(--done);z-index:1}
+  .tl li.tgroup{padding:20px 0 0 46px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .tl li.tgroup::after{display:none}
+  .tl .ttime{font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+  .tl .ttitle{font-size:17px;font-weight:700;margin:2px 0 0}
+  .tl .tdesc{font-size:14.5px;color:var(--ink-2);margin:5px 0 0;max-width:64ch;line-height:1.5}
+  .tl .tloc{font-size:12.5px;color:var(--muted);margin-top:5px}
+  .tl .tloc b{color:var(--ink);font-weight:700}
+  /* expandable processing detail */
+  .tl .detbtn{margin-top:8px;background:none;border:0;font-family:inherit;font-size:13px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
+  .tl .detbtn .chev{font-size:10px;transition:transform .15s;display:inline-block}
+  .tl li.open .detbtn .chev{transform:rotate(180deg)}
+  .tl .scans{display:none;margin:10px 0 2px;padding:12px 14px;border:1px solid var(--line);background:var(--tint-blue-1)}
+  .tl li.open .scans{display:block}
+  .tl .scan{display:flex;gap:12px;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line-soft)}
+  .tl .scan:last-child{border-bottom:0}
+  .tl .scan .sct{flex:0 0 132px;color:var(--muted);font-weight:700}
+  .tl .scan .scd{color:var(--ink-2)}
+
+  .help{font-size:14px;color:var(--muted);margin:20px 0 0}
+
+  footer{border-top:1px solid var(--line);margin-top:30px}
+  footer .wrap{padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic}
+
+  /* mobile: wrap masthead so the utility links get their own row (no overflow) */
+  @media(max-width:640px){
+    .masthead .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;row-gap:6px}
+    .util{width:100%;justify-content:flex-start;flex-wrap:wrap;font-size:13px}
+    .util > *{border-left:0;padding:0 14px 0 0}
+    .ytab{padding:10px 0;flex:1 1 0;text-align:center}
+  }
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead"><div class="wrap">
+    <div class="logo"><span class="seal"><svg class="irs-logo" fill="#fff" aria-hidden="true" version="1.1" id="layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="20 218 602 207" style="enable-background:new 0 0 652 652;" xml:space="preserve"><g><path class="st0" d="M240.6,246.9c-2.5-4.4-29.8-16.8-69-24.7c-16.1,17.1-16.1,24.1-16.5,26.9c-0.3,2.8,5.4,10.1,11.1,17.7 c10.8,13.9,13.6,16.5,15.2,20.6c3.2,7.9-1.9,25.6-5.7,41.8c0,0-9.5-34.5-13.9-57c-0.3-2.2,0.3-3.5,0.3-3.2 c-24.1-2.2-40.5-3.5-43.4,9.2c-11.1,0-16.1,3.2-17.4,5.1c-2.8,4.7,0.6,14.6,2.5,19.3c1.6-3.8,11.4-3.2,14.6-3.2 c1.3,0,1.3,0.9,1.9,1.6v46.8H91.9l-24.4,65.5c11.4,5.4,23.4,9.8,31,9.8c7.6,0,26-9.5,28.5-9.8c2.5,0,21.2,9.8,28.5,9.8 c7.3,0,19.3-3.8,31-9.8l-24.7-65.8c0,0-25,0-28.5,0c0-10.4,0-33.9,0-44.3c-0.6-2.8-1.9-3.8-2.8-4.1H145c-2.2-8.5-5.1-14.2-9.2-14.6 c1.3-1.6,1.9-2.2,3.8-3.8h-11.1c1.3-5.7,15.5-3.8,21.8-3.2c6.3,31.7,18.4,73.8,19,74.7c0.6,0.6,10.8,4.4,12,4.7 c6-12.7,14.9-49.7,15.2-58.9c7.3,2.5,4.4,12.3,2.8,22.2c-8.2,51-14.9,66.5-17.1,76c7.3-1.6,12-2.8,12.7-3.8 c1.3-1.3,4.4-9.8,7.6-19.3c4.4-13.9,11.4-49.1,11.1-63c0-3.5-2.8-6.6-7.9-9.2c0,0,2.5-4.4,3.8-7c1.6-3.5,3.2-9.8,3.2-9.8 c2.8,0.9,5.4,2.2,5.7,5.1c1.6,13.3,0.6,14.6-0.9,39.3c-0.6,7.9-3.2,23.4-6,39.9c-5.4,30.1-10.4,42.7-10.4,47.5 c7.9-2.5,13.9-4.4,14.6-5.4c0.6-1.6,6.6-15.8,10.8-37.7c1.9-9.2,3.2-18.7,4.4-28.2c2.2-12.7,2.5-25.6,2.5-36.4 c0-15.8,1.9-15.8-9.8-22.2c4.4-13,3.5-21.5,2.5-23.7c-1.9-4.7-4.4-4.7-14.9-3.8c3.8,3.5,2.5,10.4,1.6,14.6 c-1.9-1.6-1.3-4.4-12.3-4.1c-1.6-18-5.1-19.9-5.4-20.6c-1.6-1.9-10.8-0.9-13.6,0c1.9,1.3,6.3,15.5,4.1,20.9 c-1.3-1.6-16.8-19.3-15.8-22.5c0.6-1.9,1.6-4.1,7-10.4c18.7,3.2,50.3,15.2,51.9,18.4c1.9,4.1,3.8,8.9,5.1,15.8 c1.6,10.4,4.7,35.1,3.2,72.8c-1.6,38.9-6.6,61.1-6.6,59.8c5.7-1.9,15.5-10.8,16.1-12.7c2.5-6.3,3.8-29.4,4.4-50.3 c0.9-20.9-1.3-47.5-2.5-57.3C245.7,258.6,244.1,252.3,240.6,246.9z M98.2,409.3c-5.7,0-14.6-0.9-14.2-0.9l14.2-41.1l13.3,41.5 C111.5,408.7,103.6,409.3,98.2,409.3z M169.7,408.7c0,0-8.9,0.9-14.2,0.9c-5.1,0-13.3-0.9-13.3-0.9l13-41.5L169.7,408.7z M133,376.4v-15.8h12.3l-18.7,51.6l-18.4-51.6h12.3V372c0,0,0,0.9,0.3,1.3c1.6,0.9,1.9,0.9,1.9,0.9L133,376.4z M134.6,292.5h-21.5 c-1.6-5.1,0-6.3,4.4-6.6C126.4,284.9,134,284.9,134.6,292.5z M194.7,269.7c7.9-1.3,4.1,12.7,2.2,18c-2.8-6.6-5.1-10.4-9.8-16.8 C190,270.3,191.9,270.3,194.7,269.7z"/><path class="st0" d="M56.1,384.3c3.8-3.8,17.1-17.4,19-24.7c2.5-8.9,4.4-29.8,4.4-34.5c0,0-13,8.9-19.9,15.8c-2.8,3.2-7,8.5-7,8.5 c-1.3-7.6,0.3-15.8,3.8-20.9c4.4-7,20.6-20.6,22.5-26.3c3.5-8.9,2.8-16.8,5.7-26.6c-10.8,3.5-24.1,11.7-30.1,18.4 c-0.9-10.4,2.5-18,9.5-23.4c10.1-7.6,23.4-12,32.3-14.6c7.6-2.2,19.3-4.7,25.6-7.6c11.1-5.4,21.8-20.6,24.4-28.5 c-3.8,0-16.8-0.9-29.8,4.1c-4.7,1.9-7,6-9.2,9.5c-2.2,3.8-4.4,6.6-6.3,9.2c-5.4,7.9-11.7,11.7-19.9,13.9c0.3-0.6,5.4-3.8,9.2-11.7 c3.2-6.6,7-19.9,7-20.9c-7,0.9-11.4,2.8-18.7,5.7c-7.9,3.2-10.1,6.3-11.7,9.2c-5.1,7.9-3.8,30.1-13.9,38.9 c0.3-11.7,2.8-24.4-1.3-38.9c-21.5,8.2-25.3,15.8-23.7,25c1.9,12,15.5,17.7,21.5,27.5c1.6,2.8,2.5,7,2.5,7.6c0.3,0-4.1,6-2.8,17.4 c0,0-4.4-8.2-8.2-13.6c-6.3-8.2-18.7-20.9-18.7-20.9c-2.5,32.6,1.6,39.3,3.2,42.1c4.1,7,19.6,17.7,22.8,24.4 c1.6,3.5,1.9,4.7,1.9,4.7c0.6,1.3-3.2,5.4-2.5,11.1c0.3,1.9,0.6,4.4,1.3,7.6c0,0-4.4-6.6-10.8-13.9c-5.7-6.6-16.8-14.2-16.8-14.2 c-0.6,3.8,1.3,21.8,1.6,24.7c1.6,9.2,1.9,17.7,9.5,25.6c6.6,6.6,28.2,15.5,32.6,17.1c0,0-0.9-4.1-2.8-10.1 C60.2,394.4,56.1,384.3,56.1,384.3z"/><path class="st0" d="M258.3,240.3h6c4.1,0,7.9,0.9,11.7,3.2c2.5,1.6,4.4,3.2,5.1,5.4c0.9,2.8,1.6,8.5,1.6,17.1v110.2 c0,10.1-0.9,16.8-3.2,19.3c-3.2,4.1-8.2,6-15.2,6h-6v4.7h73.1v-4.7h-6c-4.1,0-7.9-0.9-11.4-3.2c-2.5-1.6-4.4-3.2-5.4-5.4 c-0.9-2.8-1.6-8.5-1.6-17.1V265.9c0-10.1,0.9-16.8,3.2-19.3c3.2-4.1,8.2-6,15.2-6h6v-4.7h-73.1V240.3z"/><path class="st0" d="M616.7,343.1c-3.2-6.3-7.6-11.7-13.6-16.1c-5.7-4.4-16.8-11.1-32.6-19.6c-19.6-10.4-32-19-37-25 c-3.5-4.4-5.4-8.9-5.4-14.2c0-6.6,2.8-13,8.5-18c5.7-5.4,13-7.9,21.5-7.9c7.6,0,15.2,1.9,22.5,6c7.3,3.8,12.7,9.2,16.8,15.8 c3.8,6.6,6.6,15.8,8.2,26.9h4.7v-59.2h-4.7c-0.9,3.8-1.9,6.6-3.5,7.9c-1.3,1.3-3.2,1.9-5.4,1.9c-1.9,0-5.4-0.9-9.8-3.2 c-10.1-4.4-19.6-6.6-28.8-6.6c-14.6,0-26.6,4.4-35.8,13.3c-9.5,8.9-14.2,19.3-14.2,31.7c0,7,1.6,13.6,4.7,19.3 c3.2,6,7.9,11.4,13.9,16.1c6.3,4.7,16.5,11.4,31,19.6s23.4,13.6,26.9,16.1c4.7,3.8,8.5,7.6,10.8,12c2.2,4.4,3.5,8.5,3.5,12.7 c0,7.6-3.2,13.9-9.2,19.6c-6,5.4-14.2,8.2-24.7,8.2c-9.2,0-17.4-1.9-25-6c-7.6-4.1-13.3-9.2-16.8-15.2c-3.8-6-6.6-15.2-8.9-27.5 h-4.7v49.7c-7-1.6-11.4-3.5-16.1-6.6c-5.7-3.8-12.7-11.1-20.9-22.5l-35.1-49.1c14.2-3.2,25-8.5,31.7-16.5 c7-7.6,10.1-16.8,10.1-27.2c0-9.8-2.8-18.4-8.9-25.3c-6-7-13.3-12-21.8-14.6s-21.8-4.1-40.2-4.1h-62v4.7h6.3 c6.3,0,11.4,1.9,14.6,5.4c2.2,2.5,3.5,9.2,3.5,19.9v110.2c0,9.8-0.9,15.8-2.5,18.4c-3.2,4.7-8.2,7-15.5,7h-6.3v4.7h73.1v-4.7h-6.6 c-6.3,0-11.1-1.9-14.2-5.4c-2.2-2.5-3.5-9.2-3.5-19.9v-49.4c1.3,0,2.5,0,3.8,0.3c1.3,0,2.5,0,3.5,0c2.5,0,6,0,10.4-0.3l57.6,79.8 h39.3l0,0h5.4c0.6-1.9,1.3-3.2,1.9-3.8c1.3-1.3,2.8-1.9,5.1-1.9s7.3,1.3,15.5,4.1c8.2,2.5,13.6,4.1,16.1,4.7 c4.4,0.6,8.9,1.3,13.9,1.3c15.8,0,28.8-4.7,38.6-13.9c10.1-9.5,14.9-20.6,14.9-33.2C621.4,355.8,619.8,349.5,616.7,343.1z M402.1,318.8c-0.6,0-1.6,0-2.8,0c-1.3,0-2.5,0-4.1,0v-71.2c8.2-1.6,14.9-2.5,19.6-2.5c11.1,0,19.9,3.5,26.6,10.1 c6.6,6.6,10.1,15.2,10.1,26s-4.1,19.9-12.3,26.9C430.5,315.3,418.5,318.8,402.1,318.8z"/></g></svg></span><span class="ctx">Individual Online Account</span></div>
+    <div class="util">
+      <a>Jordan A. Vale <span class="caret"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></span></a>
+      <a>Help</a>
+      <a>Sign out</a>
+    </div>
+  </div></div>
+
+  <nav class="tabs"><div class="wrap">
+    <a>Account home</a><a>Tax records</a><a class="active">Refunds &amp; returns</a><a>Payments</a><a>Notices</a>
+  </div></nav>
+
+  <main class="wrap">
+    <p class="crumb"><a>Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> <a>Refunds &amp; returns</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Track my return</p>
+    <h1 class="page">Track my return</h1>
+    <p class="sub">Track the processing of an original or amended return through a single, integrated application for taxpayers with refunds, no balance, or balances due.</p>
+    <p class="sample">Examples shown: a 2025 <b>e-filed return</b> with the refund sent by direct deposit, a 2024 return <b>amended with Form 1040-X</b>, and a late-filed 2023 return still <b>processing</b>.</p>
+
+    <!-- tax year selection (Where's My Refund layout) -->
+    <span class="yearlabel" id="yearlabel">Tax year</span>
+    <div class="yeartabs" role="tablist" aria-labelledby="yearlabel">
+      <button class="ytab on" data-year="2025" role="tab" aria-selected="true">2025</button>
+      <button class="ytab" data-year="2024" role="tab" aria-selected="false">2024</button>
+      <button class="ytab" data-year="2023" role="tab" aria-selected="false">2023</button>
+    </div>
+
+    <div class="yearpanel" id="panel-2025">
+      <!-- most recent update — top status -->
+      <div class="summary">
+        <p class="stime">Apr 11, 2026 · 5:00 AM</p>
+        <span class="stag" style="background:var(--irs-blue)">Refund sent</span>
+        <h2>Your refund has been sent.</h2>
+        <p class="seta">Estimated deposit date: <b>Tue, Apr 14, 2026</b></p>
+        <div class="sgrid">
+          <span class="scell"><span class="sk">Amount</span><span class="sv">$2,418.00</span></span>
+          <span class="scell"><span class="sk">Method</span><span class="sv">Direct deposit</span></span>
+          <span class="scell"><span class="sk">Going to</span><span class="sv">Checking ••••3192</span></span>
+        </div>
+        <div class="msec">
+          <h3>When to expect your refund</h3>
+          <p>Your refund was sent by direct deposit to your bank on <b>Sat, Apr 11, 2026</b>. If your refund isn't credited to your account by <b>Thu, Apr 16, 2026</b>, contact your bank or tax preparer. Then take the steps below to request a refund trace.</p>
+        </div>
+        <div class="msec">
+          <h3>What may change</h3>
+          <p>Your refund amount may be reduced to pay a past due debt, such as child support or a federal or state debt. If this happens, you'll get a notice from the Bureau of the Fiscal Service (BFS), which issues IRS refunds. The notice will provide the debt amount and the BFS contact information. The details of the debt offset aren't provided to the IRS.</p>
+          <p><a href="https://www.irs.gov/refunds/reduced-refund">Learn about reduced refunds</a></p>
+        </div>
+        <div class="msec">
+          <h3>If you didn't receive your refund</h3>
+          <p>Request a refund trace. You can file a request with <a href="https://www.irs.gov/forms-pubs/about-form-3911">Form 3911, Taxpayer Statement Regarding Refund</a>, or by phone. We're here Monday through Friday, 7 a.m. to 7 p.m.</p>
+          <div class="contact">
+            <b>Phone</b><span>800-829-0582, ext. 362</span>
+            <b>TTY/TDD</b><span>800-829-4059</span>
+            <b>Outside the U.S.</b><span>+1-267-941-1000</span>
+          </div>
+          <p>When you call:</p>
+          <ul>
+            <li>Have a copy of this page and your tax return</li>
+            <li>Mention reference number 1501 to the customer service representative</li>
+            <li>Tell them the waiting period to receive your refund is expired and you want to file a claim</li>
+          </ul>
+        </div>
+        <div class="msec">
+          <h3>How to get updates</h3>
+          <p>Check back. Or opt in to refund status email notifications in your <a>Profile</a>. You can also check your refund status and access your account on the IRS app.</p>
+          <p>Our customer service representatives won't have additional details about your refund until after <b>Thu, Apr 16, 2026</b>.</p>
+        </div>
+      </div>
+
+      <!-- earlier updates, most recent first -->
+      <p class="tlhead">Earlier updates</p>
+      <div class="timeline">
+        <ul class="tl">
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Apr 9, 2026 · 7:20 AM</span>
+            <p class="ttitle">Refund approved</p>
+            <p class="tdesc">Your refund of $2,418.00 was approved and scheduled to be sent to your bank.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Apr 2, 2026 · 6:03 AM</span>
+            <p class="ttitle">Processing your return</p>
+            <p class="tdesc">We reviewed and completed processing your return.</p>
+            <p class="tloc"><b>Account processing</b></p>
+            <button class="detbtn">View detail <span class="chev" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <div class="scans">
+              <div class="scan"><span class="sct">Mar 30</span><span class="scd">Income &amp; withholding matched against payer records</span></div>
+              <div class="scan"><span class="sct">Apr 1</span><span class="scd">Credits verified (no manual review needed)</span></div>
+              <div class="scan"><span class="sct">Apr 2</span><span class="scd">Refund amount finalized</span></div>
+            </div>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Mar 28, 2026 · 2:15 PM</span>
+            <p class="ttitle">Return accepted</p>
+            <p class="tdesc">Your return was accepted for processing.</p>
+            <p class="tloc"><b>e-file acknowledgment</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Mar 28, 2026 · 9:42 AM</span>
+            <p class="ttitle">Return received</p>
+            <p class="tdesc">We received your e-filed 2025 Form 1040-series return.</p>
+            <p class="tloc"><b>Submission processing · e-file intake</b></p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="yearpanel" id="panel-2024" hidden>
+      <!-- most recent update — amended return in progress -->
+      <div class="summary">
+        <p class="stime">Jun 2, 2026</p>
+        <span class="stag" style="background:var(--irs-blue)">Being adjusted</span>
+        <h2>Your amended return is being adjusted.</h2>
+        <p class="seta">Estimated completion: <b>by Aug 31, 2026</b></p>
+        <div class="sgrid">
+          <span class="scell"><span class="sk">Refund claimed</span><span class="sv">$612.00</span></span>
+          <span class="scell"><span class="sk">Method</span><span class="sv">Paper check</span></span>
+          <span class="scell"><span class="sk">Going to</span><span class="sv">Address on file</span></span>
+        </div>
+        <p class="inq">An employee is reviewing your changes and adjusting your account. If we need more information, we'll send you a letter — no action is needed from you right now.</p>
+      </div>
+
+      <!-- earlier updates, most recent first -->
+      <p class="tlhead">Earlier updates</p>
+      <div class="timeline">
+        <ul class="tl">
+          <li class="tgroup">Amended return · Form 1040-X</li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">May 12, 2026</span>
+            <p class="ttitle">Amended return received</p>
+            <p class="tdesc">We received your Form 1040-X for tax year 2024. Amended returns are worked in the order received.</p>
+            <p class="tloc"><b>Amended returns unit</b></p>
+          </li>
+          <li class="tgroup">Original return</li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 26, 2025 · 5:00 AM</span>
+            <p class="ttitle">Refund sent</p>
+            <p class="tdesc">Your refund of $1,137.00 was sent to your bank by direct deposit.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 24, 2025 · 7:20 AM</span>
+            <p class="ttitle">Refund approved</p>
+            <p class="tdesc">Your refund was approved and scheduled to be sent to your bank.</p>
+            <p class="tloc"><b>Refund issuance</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 20, 2025 · 6:03 AM</span>
+            <p class="ttitle">Processing your return</p>
+            <p class="tdesc">We reviewed and completed processing your return.</p>
+            <p class="tloc"><b>Account processing</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 3, 2025 · 12:40 PM</span>
+            <p class="ttitle">Return accepted</p>
+            <p class="tdesc">Your return was accepted for processing.</p>
+            <p class="tloc"><b>e-file acknowledgment</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Feb 3, 2025 · 9:18 AM</span>
+            <p class="ttitle">Return received</p>
+            <p class="tdesc">We received your e-filed 2024 Form 1040-series return.</p>
+            <p class="tloc"><b>Submission processing · e-file intake</b></p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="yearpanel" id="panel-2023" hidden>
+      <div class="summary">
+        <p class="stime">Aug 24, 2026 · 5:00 AM</p>
+        <span class="stag" style="background:var(--irs-blue)">Processing</span>
+        <h2>We're processing your return.</h2>
+        <p class="seta">Received: <b>Wed, Aug 12, 2026</b></p>
+        <div class="sgrid">
+          <span class="scell"><span class="sk">Refund claimed</span><span class="sv">$1,904.00</span></span>
+          <span class="scell"><span class="sk">Method</span><span class="sv">Direct deposit</span></span>
+          <span class="scell"><span class="sk">Filed</span><span class="sv">e-file (late filing)</span></span>
+        </div>
+        <div class="msec">
+          <h3>When to expect your refund</h3>
+          <p>We're processing your return, received on <b>Wed, Aug 12, 2026</b>.</p>
+          <p>Normally we issue refunds within 3 weeks of the date you e-filed your return or within 6 weeks of the date we received your mailed return. Processing may take longer in certain situations.</p>
+        </div>
+        <div class="msec">
+          <h3>How to get updates</h3>
+          <p>Check back. Or opt in for refund status email notifications in your <a>Profile</a>. You can also check your refund status and access your account on the IRS app.</p>
+        </div>
+      </div>
+
+      <p class="tlhead">Earlier updates</p>
+      <div class="timeline">
+        <ul class="tl">
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Aug 12, 2026 · 3:05 PM</span>
+            <p class="ttitle">Return accepted</p>
+            <p class="tdesc">Your return was accepted for processing.</p>
+            <p class="tloc"><b>e-file acknowledgment</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Aug 12, 2026 · 11:31 AM</span>
+            <p class="ttitle">Return received</p>
+            <p class="tdesc">We received your e-filed 2023 Form 1040-series return.</p>
+            <p class="tloc"><b>Submission processing · e-file intake</b></p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="help">Normally refunds are issued within <b>3 weeks</b> of e-filing or <b>6 weeks</b> of a mailed return. Amended returns can take <b>up to 16 weeks</b>. <a>Learn what each status means</a> or <a>contact us</a> if it's been longer.</p>
+  </main>
+
+  <footer>
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../../index.html" style="color:var(--link,#0050a0);text-decoration:none"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M10 4L6 8l4 4"/></svg> All prototypes</a></div><div class="wrap">
+    Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, amounts, account numbers, and dates shown are fictional mock data — no real personal or taxpayer information. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+  </div></footer>
+
+<script>
+// tax year tabs
+const ytabs=document.querySelectorAll(".ytab");
+ytabs.forEach(t=>t.addEventListener("click",()=>{
+  ytabs.forEach(o=>{o.classList.toggle("on",o===t);o.setAttribute("aria-selected",o===t?"true":"false");});
+  ["2025","2024","2023"].forEach(y=>{document.getElementById("panel-"+y).hidden=(y!==t.dataset.year);});
+}));
+
+// expandable processing detail
+document.querySelectorAll(".detbtn").forEach(b=>b.addEventListener("click",()=>{
+  b.closest("li").classList.toggle("open");
+}));
+
+// USWDS official-government banner toggle
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+howbtn.addEventListener("click",()=>{
+  const open=gov.classList.toggle("open");
+  howbtn.setAttribute("aria-expanded",open?"true":"false");
+});
+</script>
+</body>
+</html>
