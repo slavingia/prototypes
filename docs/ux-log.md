@@ -238,3 +238,20 @@ history keeps them).
   Both are now block-level and stack.
 - The negative-margin hint pull-ups measure an 8px visual gap (by design);
   mobile single-column and dark mode unaffected.
+
+## 2026-08-28 — Track my return: WMR Batch 2 message architecture (#29)
+
+- **Status labels decoupled from messages.** The top status card keeps its
+  small label set (Refund sent / Being adjusted / Processing) while the
+  message body underneath now follows the Batch 2 content model: stacked
+  sections with the overhaul's headings — "When to expect your refund",
+  "What may change", "If you didn't receive your refund", "How to get
+  updates" — using the IOLA-variant copy verbatim with mock dates filled in.
+- **Processing example added.** 2023 is now a late-filed return still
+  processing (the B6 "no other status applies" message + updates section),
+  demonstrating that most Batch 2 messages render under the one Processing
+  label. The 2025 refund-sent panel carries the direct-deposit sent copy
+  including the refund-trace block (Form 3911, phone/TTY/international,
+  reference 1501) and the BFS-offset "What may change" section.
+- Help line updated to the Batch 2 timeframe language (3 weeks e-file /
+  6 weeks mailed). `.shots/29` before/after committed.

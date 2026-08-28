@@ -111,6 +111,15 @@
   .sgrid .sk{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
   .sgrid .sv{display:block;font-size:18px;font-weight:700;margin-top:2px}
   .summary .inq{font-size:14.5px;color:var(--ink-2);margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line-soft);line-height:1.5}
+  /* message sections — content headings decoupled from the status label */
+  .msec{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line-soft)}
+  .msec h3{font-size:15px;font-weight:700;margin:0 0 5px}
+  .msec p{font-size:14.5px;color:var(--ink-2);margin:0 0 8px;line-height:1.5;max-width:72ch}
+  .msec p:last-child{margin-bottom:0}
+  .msec ul{margin:4px 0 8px;padding-left:20px}
+  .msec li{font-size:14.5px;color:var(--ink-2);line-height:1.5;margin:0 0 3px}
+  .msec .contact{display:grid;grid-template-columns:auto 1fr;gap:2px 16px;font-size:14.5px;color:var(--ink-2);margin:6px 0 8px}
+  .msec .contact b{color:var(--ink);font-weight:700}
   @media(max-width:680px){.sgrid{grid-template-columns:1fr 1fr}}
 
   /* empty year panel */
@@ -187,7 +196,7 @@
     <p class="crumb"><a>Account home</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> <a>Refunds &amp; returns</a> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg> Track my return</p>
     <h1 class="page">Track my return</h1>
     <p class="sub">Track the processing of an original or amended return through a single, integrated application for taxpayers with refunds, no balance, or balances due.</p>
-    <p class="sample">Examples shown: a 2025 <b>e-filed return</b> with a refund, processed without issues — and a 2024 return <b>amended with Form 1040-X</b> after the original refund was issued.</p>
+    <p class="sample">Examples shown: a 2025 <b>e-filed return</b> with the refund sent by direct deposit, a 2024 return <b>amended with Form 1040-X</b>, and a late-filed 2023 return still <b>processing</b>.</p>
 
     <!-- tax year selection (Where's My Refund layout) -->
     <span class="yearlabel" id="yearlabel">Tax year</span>
@@ -209,7 +218,35 @@
           <span class="scell"><span class="sk">Method</span><span class="sv">Direct deposit</span></span>
           <span class="scell"><span class="sk">Going to</span><span class="sv">Checking ••••3192</span></span>
         </div>
-        <p class="inq">If you haven't received your refund by <b>Sun, Apr 19</b>, follow the steps on our <a href="https://www.irs.gov/faqs/irs-procedures/refund-inquiries">Refund Inquiries page</a>.</p>
+        <div class="msec">
+          <h3>When to expect your refund</h3>
+          <p>Your refund was sent by direct deposit to your bank on <b>Sat, Apr 11, 2026</b>. If your refund isn't credited to your account by <b>Thu, Apr 16, 2026</b>, contact your bank or tax preparer. Then take the steps below to request a refund trace.</p>
+        </div>
+        <div class="msec">
+          <h3>What may change</h3>
+          <p>Your refund amount may be reduced to pay a past due debt, such as child support or a federal or state debt. If this happens, you'll get a notice from the Bureau of the Fiscal Service (BFS), which issues IRS refunds. The notice will provide the debt amount and the BFS contact information. The details of the debt offset aren't provided to the IRS.</p>
+          <p><a href="https://www.irs.gov/refunds/reduced-refund">Learn about reduced refunds</a></p>
+        </div>
+        <div class="msec">
+          <h3>If you didn't receive your refund</h3>
+          <p>Request a refund trace. You can file a request with <a href="https://www.irs.gov/forms-pubs/about-form-3911">Form 3911, Taxpayer Statement Regarding Refund</a>, or by phone. We're here Monday through Friday, 7 a.m. to 7 p.m.</p>
+          <div class="contact">
+            <b>Phone</b><span>800-829-0582, ext. 362</span>
+            <b>TTY/TDD</b><span>800-829-4059</span>
+            <b>Outside the U.S.</b><span>+1-267-941-1000</span>
+          </div>
+          <p>When you call:</p>
+          <ul>
+            <li>Have a copy of this page and your tax return</li>
+            <li>Mention reference number 1501 to the customer service representative</li>
+            <li>Tell them the waiting period to receive your refund is expired and you want to file a claim</li>
+          </ul>
+        </div>
+        <div class="msec">
+          <h3>How to get updates</h3>
+          <p>Check back. Or opt in to refund status email notifications in your <a>Profile</a>. You can also check your refund status and access your account on the IRS app.</p>
+          <p>Our customer service representatives won't have additional details about your refund until after <b>Thu, Apr 16, 2026</b>.</p>
+        </div>
       </div>
 
       <!-- earlier updates, most recent first -->
@@ -322,13 +359,49 @@
     </div>
 
     <div class="yearpanel" id="panel-2023" hidden>
-      <div class="noyear">
-        <h2>No return information for tax year 2023</h2>
-        <p>We don't have status information to show for this year. If you filed recently, allow 24 hours after e-filing — or about 4 weeks after mailing a paper return — and check back. You can also view past filings in <a>Tax records</a>.</p>
+      <div class="summary">
+        <p class="stime">Aug 24, 2026 · 5:00 AM</p>
+        <span class="stag" style="background:var(--irs-blue)">Processing</span>
+        <h2>We're processing your return.</h2>
+        <p class="seta">Received: <b>Wed, Aug 12, 2026</b></p>
+        <div class="sgrid">
+          <span class="scell"><span class="sk">Refund claimed</span><span class="sv">$1,904.00</span></span>
+          <span class="scell"><span class="sk">Method</span><span class="sv">Direct deposit</span></span>
+          <span class="scell"><span class="sk">Filed</span><span class="sv">e-file (late filing)</span></span>
+        </div>
+        <div class="msec">
+          <h3>When to expect your refund</h3>
+          <p>We're processing your return, received on <b>Wed, Aug 12, 2026</b>.</p>
+          <p>Normally we issue refunds within 3 weeks of the date you e-filed your return or within 6 weeks of the date we received your mailed return. Processing may take longer in certain situations.</p>
+        </div>
+        <div class="msec">
+          <h3>How to get updates</h3>
+          <p>Check back. Or opt in for refund status email notifications in your <a>Profile</a>. You can also check your refund status and access your account on the IRS app.</p>
+        </div>
+      </div>
+
+      <p class="tlhead">Earlier updates</p>
+      <div class="timeline">
+        <ul class="tl">
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Aug 12, 2026 · 3:05 PM</span>
+            <p class="ttitle">Return accepted</p>
+            <p class="tdesc">Your return was accepted for processing.</p>
+            <p class="tloc"><b>e-file acknowledgment</b></p>
+          </li>
+          <li>
+            <span class="mk" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ttime">Aug 12, 2026 · 11:31 AM</span>
+            <p class="ttitle">Return received</p>
+            <p class="tdesc">We received your e-filed 2023 Form 1040-series return.</p>
+            <p class="tloc"><b>Submission processing · e-file intake</b></p>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <p class="help">Most refunds are issued in <b>under 21 days</b> after a return is accepted. Amended returns can take <b>up to 16 weeks</b>. <a>Learn what each status means</a> or <a>contact us</a> if it's been longer.</p>
+    <p class="help">Normally refunds are issued within <b>3 weeks</b> of e-filing or <b>6 weeks</b> of a mailed return. Amended returns can take <b>up to 16 weeks</b>. <a>Learn what each status means</a> or <a>contact us</a> if it's been longer.</p>
   </main>
 
   <footer>
