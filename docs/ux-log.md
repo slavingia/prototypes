@@ -255,3 +255,17 @@ history keeps them).
   reference 1501) and the BFS-offset "What may change" section.
 - Help line updated to the Batch 2 timeframe language (3 weeks e-file /
   6 weeks mailed). `.shots/29` before/after committed.
+
+## 2026-09-09 — Direct Pay completeness and sign-in continuity (#32)
+
+- Expanded the corrected target, Direct Pay v4, to the individual form/reason
+  catalog, dependent payment periods, verification, bank/date/email fields,
+  review/authorization, confirmation and in-session scheduled-payment management.
+- Preserved the entire draft across sign-in, canceled sign-in and sign-out;
+  saved data is applied only through explicit actions.
+- Separated payer identity from the taxpayer receiving credit. Added a local
+  entity-validation adapter with match, mismatch, unavailable and stale-response
+  handling. ITIS and authentication integration requirements remain documented,
+  not connected to live systems; see `docs/directpay-v4.md`.
+- Added automated behavior checks and generated current desktop, verified,
+  review, dark and mobile screenshots under `.shots/32`; refreshed the gallery.

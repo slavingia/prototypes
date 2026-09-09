@@ -110,7 +110,8 @@
   .field[hidden]{display:none}
   .field .decode .di{color:var(--irs-blue);flex:0 0 auto;margin-top:1px}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;max-width:640px}
-  .grid2 .field{max-width:none}
+  .grid2 .field{max-width:none;display:flex;flex-direction:column}
+  .grid2 .field input,.grid2 .field select{margin-top:auto}
   .grid2 .col-2{grid-column:1/-1}
   @media(max-width:560px){.grid2{grid-template-columns:1fr}}
 
@@ -214,6 +215,29 @@
     .field,.grid2,.upsell,.prefill,.checkrow,.alert{max-width:none}
     .field select,.field input{padding:12px}
   }
+  [hidden]{display:none!important}
+  .text-btn{border:0;background:none;color:inherit;font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+  .util .text-btn{padding:0 14px}
+  @media(max-width:640px){.util .text-btn{padding:9px 14px 9px 0}}
+  .btn-outline{color:var(--link);border-color:var(--link);font-size:16px;font-weight:500}
+  .hint,.required-note{color:var(--muted);font-size:14px}
+  .validation-status{margin:14px 0 0;padding:12px 14px;border-left:4px solid var(--line);background:var(--tint);font-size:16px}
+  .validation-status.success{border-left-color:var(--green)}
+  .validation-status.error,.field-error{border-left:4px solid var(--red);color:var(--ink)}
+  .field-error{display:block;padding:8px 10px;margin-top:8px;font-size:14px}
+  [aria-invalid="true"]{border:2px solid var(--red)!important}
+  .receipt .k,.rr .k{flex:0 0 50%;padding-right:12px}
+  .receipt .v,.rr .v{overflow-wrap:anywhere;min-width:0}
+  dialog{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:28px;width:calc(100% - 28px);max-width:660px;max-height:90vh;overflow:auto}
+  dialog::backdrop{background:rgba(0,0,0,.55)}
+  dialog h2{margin-top:0}
+  dialog .field input{width:100%}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+  .actions .btn,.actions .btn-outline{width:auto;flex:1}
+  :focus-visible{outline:3px solid var(--link);outline-offset:3px}
+  .prefill p{margin:0 0 12px}
+  .sec h2{font-weight:500}
+  @media print{.masthead,.gov,.actions,footer,.paybar{display:none!important}.sec{border:0}}
 </style>
 </head>
 <body>
@@ -231,84 +255,84 @@
 
   <div class="masthead">
     <div class="wrap">
-    <div class="logo"><span class="seal"><img src="assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Pay Online · DirectPay</span></div>
-    <div class="util"><a>Sign in</a><a>Help</a><a>Español</a></div>
+    <div class="logo"><span class="seal"><img src="../assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Pay Online · DirectPay</span></div>
+    <div class="util"><button type="button" class="text-btn" id="headerSignin">Sign in</button><a href="https://www.irs.gov/payments/direct-pay-help" target="_blank" rel="noopener">Help</a></div>
     </div>
   </div>
 
   <main class="wrap">
-    <p class="crumb"><a>Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Pay from your bank account</p>
+    <p class="crumb"><a href="https://www.irs.gov/payments">Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Pay from your bank account</p>
     <h1 class="page">Pay from your bank account</h1>
-    <p class="sub">Pay your taxes directly from a checking or savings account — free. Everything's on one page, so your browser can fill it in a single pass. Review the total on the right and pay when you're ready.</p>
+    <p class="sub">Pay individual taxes for yourself or someone else from a U.S. checking or savings account, with no fee. Review your details before authorizing a payment.</p>
 
-    <div class="acctbar" id="acctbar">
-      <span class="ab-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="3"/><path d="M2.5 14c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5"/></svg></span>
-      <div class="ab-body">
-        <b>You're paying as a guest</b>
-        <p>You'll enter your details on this device. Sign in to fill everything from your account instead.</p>
-      </div>
-      <span class="ab-cta"><a class="btn-outline" id="signinBtn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h6v11h-6M9.5 8H2.5M5 5.5 2.5 8 5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sign in to your Online Account</a></span>
-    </div>
+    <div class="acctbar" id="acctbar" aria-live="polite"></div>
+    <p class="required-note">All fields are required unless marked optional.</p>
 
     <div class="shell">
       <form id="payform" autocomplete="on" novalidate>
-        <!-- SECTION 1: Tax information -->
         <section class="sec" id="sec-tax">
           <div class="sechead"><span class="secnum" id="num-tax">1</span><h2>Tax information</h2></div>
-          <p class="phint">Tell us what this payment is for.</p>
-          <div class="field">
-            <label for="reason">Reason for payment</label>
-            <span class="hint">Why are you paying? This determines which forms and periods apply.</span>
-            <select id="reason" name="reason"></select>
-            <p class="decode" id="reasonDecode" hidden><span class="di" id="reasonDecodeIc"></span><span id="reasonDecodeTxt"></span></p>
-          </div>
-          <div class="field" id="applyField" hidden>
-            <label for="applyTo">Apply payment to</label>
-            <span class="hint">Which tax form or notice does this payment go against?</span>
-            <select id="applyTo" name="applyTo"></select>
-          </div>
-          <div class="field" id="periodField" hidden>
-            <label for="period">Tax period</label>
-            <span class="hint">The tax year this payment applies to.</span>
-            <select id="period" name="period"></select>
-          </div>
+          <p class="phint">Choose the form or tax type for the payment. Submit a separate payment for each tax period.</p>
+          <div class="field"><label for="payFor">Who are you paying for?</label><select id="payFor" name="payFor"><option value="self">Myself</option><option value="other">Someone else</option></select></div>
+          <div class="field"><label for="applyTo">Apply payment to</label><span class="hint" id="formHint">Use the form or tax type on the return or notice.</span><select id="applyTo" name="applyTo" aria-describedby="formHint"></select></div>
+          <div class="field" id="reasonField" hidden><label for="reason">Reason for payment</label><select id="reason" name="reason"></select><p class="decode" id="reasonDecode" hidden><span class="di" id="reasonDecodeIc"></span><span id="reasonDecodeTxt"></span></p></div>
+          <div class="field" id="periodField" hidden><label for="period">Tax period</label><span class="hint" id="periodHint">Choose the year this payment applies to.</span><select id="period" name="period" aria-describedby="periodHint"></select></div>
+          <p class="hint">Paying business taxes? <a href="https://www.irs.gov/payments/direct-pay-for-businesses" target="_blank" rel="noopener">Use Direct Pay for businesses</a>.</p>
         </section>
 
-        <!-- SECTION 2: Your identity -->
         <section class="sec" id="sec-id">
-          <div class="sechead"><span class="secnum" id="num-id">2</span><h2>Your identity</h2></div>
-          <p class="phint">Enter your details exactly as they appear on your most recent tax return.</p>
-          <div class="prefill" id="idPrefill" hidden><p class="pf-lead"></p></div>
-          <div class="upsell" id="idUpsell"><span class="ui"></span><span>Signed in to your IRS Online Account? Your identity is already on file — <a id="upsellId">sign in to fill this in</a>.</span></div>
-          <div class="grid2">
-            <div class="field"><label for="fname">First name</label><input id="fname" name="fname" autocomplete="given-name" value=""></div>
-            <div class="field"><label for="lname">Last name</label><input id="lname" name="lname" autocomplete="family-name" value=""></div>
-            <div class="field"><label for="ssn">SSN or ITIN</label><span class="hint">Format: 123-45-6789</span><input id="ssn" name="ssn" inputmode="numeric" autocomplete="off" placeholder="•••-••-••••" value=""></div>
-            <div class="field"><label for="filing">Filing status</label><select id="filing" name="filing"></select></div>
-            <div class="field col-2"><label for="addr">Street address</label><input id="addr" name="addr" autocomplete="street-address" value=""></div>
-            <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" value=""></div>
-            <div class="field"><label for="estate">State</label><select id="estate" name="estate" autocomplete="address-level1"></select></div>
-            <div class="field col-2" style="max-width:200px"><label for="zip">ZIP code</label><input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" value=""></div>
+          <div class="sechead"><span class="secnum" id="num-id">2</span><h2>Taxpayer information</h2></div>
+          <p class="phint" id="identityHint">Enter the information for the taxpayer whose tax account should receive this payment.</p>
+          <div class="upsell" id="idUpsell">Sign in at any time. The information you enter will stay in this payment.</div>
+          <div class="prefill" id="idPrefill" hidden><p>Your saved details are available. Using them will replace the taxpayer fields below.</p><button type="button" class="btn-outline" id="useIdentity">Use my taxpayer details</button></div>
+          <div class="field"><label for="entityType">Taxpayer type</label><select id="entityType" name="entityType"><option value="individual">Individual (SSN or ITIN)</option><option value="entity">Estate or other entity (EIN)</option></select></div>
+          <div class="grid2" id="individualFields">
+            <div class="field"><label for="verifyYear">Tax year for verification</label><span class="hint">Use a filed return. This can differ from the payment year.</span><select id="verifyYear" name="verifyYear"></select></div>
+            <div class="field"><label for="filing">Filing status on that return</label><select id="filing" name="filing"></select></div>
+            <div class="field"><label for="fname">Taxpayer first name</label><input id="fname" name="fname" autocomplete="section-taxpayer given-name"></div>
+            <div class="field"><label for="lname">Taxpayer last name</label><input id="lname" name="lname" autocomplete="section-taxpayer family-name"></div>
+            <div class="field"><label for="ssn">Taxpayer SSN or ITIN</label><input id="ssn" name="ssn" inputmode="numeric" autocomplete="off" maxlength="9" aria-describedby="ssnError"><span class="field-error" id="ssnError" hidden></span></div>
+            <div class="field"><label for="dob">Taxpayer date of birth</label><input id="dob" name="dob" type="date" autocomplete="section-taxpayer bday"></div>
           </div>
+          <div class="grid2" id="entityFields" hidden>
+            <div class="field"><label for="entityName">Legal name on IRS records</label><input id="entityName" name="entityName" autocomplete="off"></div>
+            <div class="field"><label for="ein">EIN</label><input id="ein" name="ein" inputmode="numeric" autocomplete="off" maxlength="9" aria-describedby="einError"><span class="field-error" id="einError" hidden></span></div>
+          </div>
+          <div class="grid2">
+            <div class="field col-2"><label for="addr">Street address on the return</label><input id="addr" name="addr" autocomplete="section-taxpayer street-address"></div>
+            <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="section-taxpayer address-level2"></div>
+            <div class="field"><label for="country">Country</label><select id="country" name="country"><option value="US">United States</option><option value="other">Another country</option></select></div>
+            <div class="field" id="stateField"><label for="estate">State or territory</label><select id="estate" name="estate" autocomplete="section-taxpayer address-level1"></select></div>
+            <div class="field" id="foreignCountryField" hidden><label for="foreignCountry">Country name</label><input id="foreignCountry" name="foreignCountry" autocomplete="section-taxpayer country-name"></div>
+            <div class="field"><label for="zip" id="zipLabel">ZIP code</label><input id="zip" name="zip" autocomplete="section-taxpayer postal-code" maxlength="12"></div>
+          </div>
+          <button type="button" class="btn-outline" id="verifyBtn">Verify taxpayer</button>
+          <div class="validation-status" id="verificationStatus" role="status" aria-live="polite">Verify the taxpayer before continuing to payment.</div>
+          <p class="hint">If you filed jointly, use the taxpayer listed first on the return. <a href="https://www.irs.gov/payments/direct-pay-help" target="_blank" rel="noopener">Get help with verification</a>.</p>
         </section>
 
-        <!-- SECTION 3: Bank account -->
         <section class="sec" id="sec-bank">
-          <div class="sechead"><span class="secnum" id="num-bank">3</span><h2>Bank account</h2></div>
-          <p class="phint">Enter the amount and the checking or savings account you're paying from.</p>
-          <div class="prefill" id="bankPrefill" hidden><p class="pf-lead"></p></div>
-          <div class="upsell" id="bankUpsell"><span class="ui"></span><span>Signed-in users can pick a saved bank account instead of typing it — <a id="upsellBank">sign in</a>.</span></div>
+          <div class="sechead"><span class="secnum" id="num-bank">3</span><h2>Payment details</h2></div>
+          <p class="phint">Use a bank account you are authorized to pay from.</p>
+          <div class="prefill" id="bankPrefill" hidden><p>Your saved checking account ending in 7740 is available. Using it will replace the bank details below.</p><button type="button" class="btn-outline" id="useBank">Use saved bank account</button></div>
           <div class="grid2">
-            <div class="field col-2" style="max-width:240px"><label for="amount">Payment amount</label><span class="hint">U.S. dollars</span><input id="amount" name="amount" inputmode="decimal" autocomplete="off" placeholder="$0.00" value=""></div>
-            <div class="field"><label for="routing">Bank routing number</label><span class="hint">9 digits, bottom-left of a check</span><input id="routing" name="routing" inputmode="numeric" autocomplete="off" maxlength="9" value=""></div>
-            <div class="field"><label for="account">Account number</label><input id="account" name="account" inputmode="numeric" autocomplete="off" value=""></div>
-            <div class="field col-2" style="max-width:240px"><label for="acctType">Account type</label><select id="acctType" name="acctType"></select></div>
+            <div class="field"><label for="amount">Payment amount</label><span class="hint">From $0.01 to $9,999,999.99</span><input id="amount" name="amount" inputmode="decimal" autocomplete="off" placeholder="0.00"></div>
+            <div class="field"><label for="confirmAmount">Confirm payment amount</label><input id="confirmAmount" name="confirmAmount" inputmode="decimal" autocomplete="off"></div>
+            <div class="field col-2"><label for="paymentDate">Payment date</label><span class="hint">Today or up to 365 days from today.</span><input id="paymentDate" name="paymentDate" type="date"></div>
+            <div class="field"><label for="payerName">Bank account holder name</label><input id="payerName" name="payerName" autocomplete="section-payer name"></div>
+            <div class="field"><label for="routing">Bank routing number</label><span class="hint">9 digits</span><input id="routing" name="routing" inputmode="numeric" autocomplete="off" maxlength="9" aria-describedby="routingError"><span class="field-error" id="routingError" hidden></span></div>
+            <div class="field"><label for="account">Account number</label><input id="account" name="account" inputmode="numeric" autocomplete="off" maxlength="17" aria-describedby="accountError"><span class="field-error" id="accountError" hidden></span></div>
+            <div class="field"><label for="confirmAccount">Confirm account number</label><input id="confirmAccount" name="confirmAccount" inputmode="numeric" autocomplete="off" maxlength="17" aria-describedby="confirmAccountError"><span class="field-error" id="confirmAccountError" hidden></span></div>
+            <div class="field"><label for="acctType">Account type</label><select id="acctType" name="acctType"></select></div>
           </div>
-          <div class="checkrow" id="saveRow">
-            <input type="checkbox" id="saveAcct" name="saveAcct">
-            <label for="saveAcct"><b>Save this bank account to my IRS Online Account</b>Skip re-entering it next time and get email reminders before scheduled payments. You'll confirm your account after this payment.</label>
+          <div class="checkrow"><input type="checkbox" id="emailOptIn" name="emailOptIn"><label for="emailOptIn"><b>Email me a payment confirmation (optional)</b>Receive the confirmation number for this payment request.</label></div>
+          <div class="grid2" id="emailFields" hidden style="margin-top:18px">
+            <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="section-payer email"></div>
+            <div class="field"><label for="confirmEmail">Confirm email address</label><input id="confirmEmail" name="confirmEmail" type="email" autocomplete="off"></div>
           </div>
+          <p class="validation-status" id="bankStatus" role="status"></p>
         </section>
+
       </form>
 
       <!-- STICKY RECEIPT RAIL -->
@@ -320,7 +344,7 @@
           </div>
           <div class="rbody" id="rBody"></div>
           <div class="rfoot">
-            <button type="button" class="btn railpay" id="payBtn" disabled>Sign and submit payment</button>
+            <button type="button" class="btn railpay" id="payBtn" disabled>Review payment</button>
             <p class="railmiss" id="rMiss" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg><span id="rMissTxt"></span></p>
             <p class="secure" style="margin-top:12px"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg> Encrypted and processed securely</p>
           </div>
@@ -333,7 +357,7 @@
   <div class="paybar" id="paybar">
     <div class="pb-inner">
       <div class="pb-amt" id="pbAmt"><small>Total</small>$0.00</div>
-      <button type="button" class="btn" id="payBtnMobile" disabled>Sign and pay</button>
+      <button type="button" class="btn" id="payBtnMobile" disabled>Review payment</button>
     </div>
   </div>
 
@@ -344,268 +368,211 @@
     </div>
   </footer>
 
+<dialog id="signinDialog" aria-labelledby="signinTitle"><h2 id="signinTitle">Sign in to your Online Account</h2><p>Your payment stays here while you sign in. Taxpayer and bank details will only change if you choose to use saved information.</p><p>Continue as <b>Jordan Rivera</b>.</p><div class="actions"><button type="button" class="btn" id="finishSignin">Continue</button><button type="button" class="btn-outline" id="cancelSignin">Return as guest</button></div></dialog>
+<dialog id="reviewDialog" aria-labelledby="reviewTitle"><h2 id="reviewTitle">Review and authorize payment</h2><p>Check the taxpayer, tax period, and bank account before submitting.</p><div id="reviewDetails"></div><div class="field" style="margin-top:20px"><label for="signature">Your full name as the person authorizing payment</label><input id="signature" autocomplete="section-payer name"></div><div class="checkrow"><input id="authorize" type="checkbox"><label for="authorize">I authorize this withdrawal from the bank account shown, on the selected date, for the taxpayer listed above.</label></div><p id="reviewError" class="field-error" role="alert" hidden>Enter your full name and authorize the withdrawal.</p><div class="actions"><button type="button" class="btn" id="submitBtn">Submit payment</button><button type="button" class="btn-outline" id="editBtn">Edit payment</button></div></dialog>
 <script>
 const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const IC_INFO=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.6"/></g><circle cx="8" cy="4.9" r=".9" fill="currentColor"/></svg>`;
 const IC_STAR=`<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.3 4.3 13.3l.7-4.3-3.1-3 4.3-.6z" fill="currentColor"/></svg>`;
 
-const state={
-  reason:"",applyTo:"",period:"",
-  fname:"",lname:"",ssn:"",filing:"",addr:"",city:"",estate:"",zip:"",
-  amount:"",routing:"",account:"",acctType:"",saveAcct:false
-};
-const STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
-
-const REASONS={
-  "":{label:"— Select —"},
-  "balance":{label:"Balance Due", apply:["1040","1040X"], decode:"You owe money from a filed return or a bill (notice CP14, CP501)."},
-  "estimated":{label:"Estimated Tax", apply:["1040ES"], decode:"Quarterly payments if you're self-employed or have income without withholding."},
-  "extension":{label:"Extension", apply:["4868"], decode:"Paying with a request for more time to file (Form 4868)."},
-  "amended":{label:"Amended Return", apply:["1040X"], decode:"Paying additional tax with a corrected return (Form 1040-X)."},
-  "notice":{label:"Proposed Tax Assessment / Notice", apply:["CP2000"], decode:"Responding to a CP2000 or similar notice proposing changes."}
-};
+// Public payment catalog reviewed 2026-09-09; sources and integration boundaries:
+// docs/directpay-v4.md. This self-contained prototype has no service connections.
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=new Date();
+const YEAR=today.getFullYear();
+function isoDate(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;}
+const TODAY=isoDate(today),lastDate=new Date(today);
+lastDate.setDate(lastDate.getDate()+365);
+const LAST_DATE=isoDate(lastDate);
 const APPLY={
-  "1040":"Form 1040 (current-year return)",
-  "1040X":"Form 1040-X (amended return)",
-  "1040ES":"Form 1040-ES (estimated tax)",
-  "4868":"Form 4868 (extension)",
-  "CP2000":"CP2000 notice"
+ '1040':'Form 1040 — Individual income tax',health:'Health care — Form 1040',
+ retirement:'Form 5329 — Retirement plans',favored:'Form 5329 — Tax-favored accounts',civil:'Civil penalty',
+ '706':'Form 706 — U.S. estate tax','706A':'Form 706A — Additional estate tax','706GSD':'Form 706GS(D) — Generation-skipping transfer tax',
+ '709':'Form 709 — Gift tax','926':'Form 926 — Transfer to a foreign corporation','6069':'Form 6069 — Black lung benefit trust excise tax',
+ '8288':'Form 8288 — Withholding on foreign dispositions','8404':'Form 8404 — DISC deferred tax interest',
+ '8697':'Form 8697 — Long-term contract look-back interest','8725':'Form 8725 — Greenmail excise tax',
+ '8876':'Form 8876 — Structured settlement excise tax','CT2':'Form CT-2 — Railroad employee representative tax'
 };
-const YEARS=["2025","2024","2023","2022","2021"];
-const FILING=[["","— Select —"],["single","Single"],["mfj","Married filing jointly"],["mfs","Married filing separately"],["hoh","Head of household"],["qw","Qualifying surviving spouse"]];
-const ACCT_TYPE=[["","— Select —"],["checking","Checking"],["savings","Savings"]];
-
-let signedIn=false;
-
-function opt(v,label,sel){return `<option value="${v}" ${v===sel?"selected":""}>${label}</option>`;}
-
-function fillSelects(){
-  document.getElementById("reason").innerHTML=Object.entries(REASONS).map(([k,v])=>opt(k,v.label,state.reason)).join("");
-  const applyList=state.reason?REASONS[state.reason].apply:[];
-  document.getElementById("applyTo").innerHTML=[opt("","— Select —",state.applyTo)].concat(applyList.map(k=>opt(k,APPLY[k],state.applyTo))).join("");
-  document.getElementById("period").innerHTML=[opt("","— Select —",state.period)].concat(YEARS.map(y=>opt(y,y,state.period))).join("");
-  document.getElementById("filing").innerHTML=FILING.map(([k,v])=>opt(k,v,state.filing)).join("");
-  document.getElementById("estate").innerHTML=[opt("","—",state.estate)].concat(STATES.map(s=>opt(s,s,state.estate))).join("");
-  document.getElementById("acctType").innerHTML=ACCT_TYPE.map(([k,v])=>opt(k,v,state.acctType)).join("");
+const FORM_ORDER=['1040','health','retirement','favored','civil','706','706A','706GSD','709','926','6069','8288','8404','8697','8725','8876','CT2'];
+const REASONS={
+ balance:{label:'Balance due',forms:FORM_ORDER.filter(x=>x!=='civil'),hint:'Pay a balance on an original return or a balance-due notice.'},
+ installment:{label:'Payment plan / Installment agreement',forms:['1040','health','civil'],hint:'Use the earliest tax year with an assessed balance covered by your agreement.'},
+ estimated:{label:'Estimated tax',forms:['1040','706','709','8876'],hint:'Pay estimated tax before filing. For individual income tax, this is Form 1040-ES.'},
+ extension:{label:'Extension',forms:['1040','706','706GSD','709','8725','8876'],hint:'An extension gives you more time to file, not more time to pay. Check the original due date for your form.'},
+ amended:{label:'Amended return',forms:['1040','health','706A','6069','8404','8697','8725','8876'],hint:'Pay additional tax on an amended return. For individual income tax, this is Form 1040-X.'},
+ notice:{label:'Notice CP2000 / CP2501 / CP3219A',forms:['1040','health'],hint:'Use this for a full or initial payment on one of these notices.'},
+ proposed:{label:'Proposed tax assessment / Advance payment',forms:['1040','health','civil','706','706A','706GSD','709','926','6069'],hint:'Pay toward a proposed assessment before it is posted to the tax account.'},
+ other:{label:'Other amount due',forms:['civil'],hint:'Pay a civil penalty balance when you do not have an installment agreement.'},
+ oicFee:{label:'Offer in compromise — Application fee',forms:['1040','civil','706'],hint:'Pay the application fee for an offer in compromise.'},
+ oicInitial:{label:'Offer in compromise — Initial payment',forms:['1040','civil','706'],hint:'Make a 20% lump-sum cash payment or an initial periodic payment.'},
+ oicPeriodic:{label:'Offer in compromise — Subsequent periodic payment',forms:['1040','civil','706'],hint:'Make a subsequent payment while your offer is being considered.'},
+ oicAccepted:{label:'Offer in compromise — Accepted offer',forms:['1040','civil','706'],hint:'Make a payment under the terms of an accepted offer.'},
+ offshore:{label:'Offshore voluntary disclosure',forms:['1040','civil'],hint:'Pay tax or penalties associated with offshore voluntary disclosure.'},
+ streamlined:{label:'Offshore streamlined filing compliance',forms:['1040','civil'],hint:'Pay tax or penalties associated with streamlined filing compliance.'},
+ irc965:{label:'IRC 965 — Transition tax',forms:['1040'],hint:'Choose the tax year for the transition tax liability.'},
+ transferee:{label:'IRC 965 — Transferee',forms:['1040'],hint:'Choose the tax year for the transferred transition tax liability.'},
+ bbaModification:{label:'BBA — Partner payment for modification',forms:['1040'],hint:'Pay with a partner amended return or alternative document for modification.'},
+ bbaPushout:{label:'BBA — AAR / Exam push-out prepayment',forms:['1040'],hint:'Prepay your share of a partnership adjustment.'},
+ bbaShare:{label:'BBA — Proportionate share of imputed underpayment',forms:['1040'],hint:'Pay the assessed partner share of a partnership underpayment.'}
+};
+const FILING=[['single','Single'],['mfj','Married filing jointly'],['mfs','Married filing separately'],['hoh','Head of household'],['qw','Qualifying surviving spouse']];
+const STATES='AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY AS GU MP PR VI AA AE AP'.split(' ');
+const identityKeys=['entityType','verifyYear','filing','fname','lname','ssn','dob','entityName','ein','addr','city','country','foreignCountry','estate','zip'];
+const state={payFor:'self',applyTo:'',reason:'',period:'',entityType:'individual',verifyYear:'',filing:'',fname:'',lname:'',ssn:'',dob:'',entityName:'',ein:'',addr:'',city:'',country:'US',foreignCountry:'',estate:'',zip:'',amount:'',confirmAmount:'',paymentDate:TODAY,payerName:'',routing:'',account:'',confirmAccount:'',acctType:'',emailOptIn:false,email:'',confirmEmail:''};
+// Deliberately synthetic fixtures: reserved/invalid TIN ranges; no taxpayer data.
+const SAVED_ID={entityType:'individual',verifyYear:String(YEAR-1),filing:'single',fname:'Jordan',lname:'Rivera',ssn:'900001001',dob:'1986-04-12',entityName:'',ein:'',addr:'100 Example Avenue',city:'Example City',country:'US',foreignCountry:'',estate:'VA',zip:'00000'};
+const OTHER_ID={...SAVED_ID,fname:'Casey',lname:'Morgan',ssn:'900001002',dob:'1979-06-20'};
+const ESTATE_ID={...SAVED_ID,entityType:'entity',entityName:'Estate of Avery Example',ein:'000000001'};
+const SAVED_BANK={payerName:'Jordan Rivera',routing:'071000013',account:'0000007740',confirmAccount:'0000007740',acctType:'checking'};
+let signedIn=false,verification={status:'idle',revision:0},lastPayment=null,editingPayment=false;
+const numericErrors=new Set();
+function options(id,entries,value){$(id).innerHTML='<option value="">— Select —</option>'+entries.map(([k,v])=>`<option value="${esc(k)}">${esc(v)}</option>`).join('');$(id).value=value;}
+function years(from,to){return Array.from({length:Math.max(0,from-to+1)},(_,i)=>String(from-i));}
+function taxPeriods(form=state.applyTo,reason=state.reason,date=today){
+ const year=date.getFullYear();
+ if(!form||!REASONS[reason]?.forms.includes(form))return [];
+ let range;
+ if(reason==='estimated')range=date.getMonth()===0?[String(year),String(year-1)]:[String(year)];
+ else if(reason==='extension')range=form==='1040'?(date.getMonth()<3||(date.getMonth()===3&&date.getDate()<=15)?[String(year-1)]:[]):[String(year)];
+ else if(['irc965','transferee'].includes(reason))range=years(year,2017);
+ else if(reason.startsWith('bba'))range=years(year+(reason==='bbaPushout'?1:0),2015);
+ else range=years(year,year-20);
+ if(form==='CT2')return range.flatMap(y=>[4,3,2,1].filter(q=>Number(y)<year||q<=Math.floor(date.getMonth()/3)+1).map(q=>[`${y}-Q${q}`,`${y} — Quarter ${q}`]));
+ return range.map(y=>[y,y]);
 }
-
+function taxFormLabel(){if(state.applyTo==='1040')return {extension:'Form 4868 — Extension',estimated:'Form 1040-ES — Estimated tax',amended:'Form 1040-X — Amended return'}[state.reason]||APPLY['1040'];if(state.reason==='extension')return `${APPLY[state.applyTo]} (${({'706':'4768','709':'8892'})[state.applyTo]||'7004'} extension)`;return APPLY[state.applyTo]||'';}
 function refreshTaxSection(){
-  // cascade visibility + decode
-  const applyField=document.getElementById("applyField");
-  const periodField=document.getElementById("periodField");
-  const dec=document.getElementById("reasonDecode");
-  if(state.reason){
-    applyField.hidden=false;
-    document.getElementById("reasonDecodeIc").innerHTML=IC_INFO;
-    document.getElementById("reasonDecodeTxt").textContent=REASONS[state.reason].decode;
-    dec.hidden=false;
-  }else{
-    applyField.hidden=true;dec.hidden=true;
-  }
-  periodField.hidden=!state.applyTo;
-  // repopulate dependent selects
-  const applyList=state.reason?REASONS[state.reason].apply:[];
-  document.getElementById("applyTo").innerHTML=[opt("","— Select —",state.applyTo)].concat(applyList.map(k=>opt(k,APPLY[k],state.applyTo))).join("");
+ const reasons=Object.entries(REASONS).filter(([,r])=>r.forms.includes(state.applyTo));
+ if(!reasons.some(([id])=>id===state.reason))state.reason='';
+ const periods=taxPeriods();if(!periods.some(([id])=>id===state.period))state.period='';
+ options('reason',reasons.map(([id,r])=>[id,r.label]),state.reason);options('period',periods,state.period);
+ $('reasonField').hidden=!state.applyTo;$('periodField').hidden=!state.reason;
+ $('reasonDecode').hidden=!state.reason;$('reasonDecodeIc').innerHTML=IC_INFO;
+ $('reasonDecodeTxt').textContent=REASONS[state.reason]?.hint||'';
+ $('periodHint').textContent=state.reason==='extension'&&!periods.length?'The regular Form 4868 payment window has closed. Check IRS guidance for special extensions.':state.applyTo==='CT2'?'Choose the calendar quarter shown on the return.':'Choose the tax year this payment applies to.';
+ $('formHint').textContent=state.applyTo==='1040'?'Includes Forms 1040, 1040-SR, 1040-NR, 1040-PR, 1040 (SP), and prior Forms 1040-A/EZ.':state.applyTo==='706'?'Use the estate’s taxpayer details and the identifier on IRS records.':'Use the form or tax type on the return or notice.';
 }
-
-function money(v){const n=parseFloat(v);return (!isNaN(n)&&n>0)?("$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2})):null;}
-
-function sectionFilled(id){
-  if(id==="tax")return !!(state.reason&&state.applyTo&&state.period);
-  if(id==="id")return !!(state.fname&&state.lname&&state.ssn.replace(/\D/g,"").length===9&&state.filing&&state.addr&&state.city&&state.estate&&state.zip.length===5);
-  if(id==="bank"){const n=parseFloat(state.amount);return !!(n>0&&state.routing.length===9&&state.account.length>=4&&state.acctType);}
-  return false;
+function relevantIdentityKeys(s=state){return (s.entityType==='individual'?['verifyYear','filing','fname','lname','ssn','dob']:['entityName','ein']).concat(['addr','city','country','zip'],s.country==='US'?['estate']:['foreignCountry']);}
+function identityReady(){return relevantIdentityKeys().every(k=>String(state[k]).trim())&&/^\d{9}$/.test(state.entityType==='individual'?state.ssn:state.ein)&&(state.country!=='US'||/^\d{5}(-\d{4})?$/.test(state.zip))&&!numericErrors.has(state.entityType==='individual'?'ssn':'ein');}
+function invalidateIdentity(){verification={status:'idle',revision:verification.revision+1};renderVerification();}
+// ITIS integration seam only. No inferred endpoint or undocumented wire contract.
+// A production server must obtain the authoritative ITIS match for the payee.
+const entityValidator={async validateTaxpayer(snapshot){
+ await new Promise(resolve=>setTimeout(resolve,350));
+ const tin=snapshot.entityType==='individual'?snapshot.ssn:snapshot.ein;
+ if(tin==='900009999')return {status:'unavailable'};
+ const normalize=v=>String(v??'').trim().toUpperCase();
+ const match=[SAVED_ID,OTHER_ID,ESTATE_ID].some(record=>record.entityType===snapshot.entityType&&relevantIdentityKeys(snapshot).every(k=>normalize(record[k])===normalize(snapshot[k])));
+ return {status:match?'verified':'mismatch'};
+}};
+async function verifyTaxpayer(){
+ if(!identityReady()){verification.status='incomplete';renderVerification();renderReceipt();return;}
+ const revision=++verification.revision;verification.status='pending';renderVerification();renderReceipt();
+ try{const result=await entityValidator.validateTaxpayer(Object.fromEntries(identityKeys.map(key=>[key,state[key]])));if(revision!==verification.revision)return;verification.status=['verified','mismatch','unavailable'].includes(result.status)?result.status:'unavailable';}
+ catch{if(revision!==verification.revision)return;verification.status='unavailable';}
+ renderVerification();renderReceipt();
 }
-
-function firstMissing(){
-  if(!sectionFilled("tax"))return "Complete tax information to continue.";
-  if(!sectionFilled("id"))return "Add your identity details to continue.";
-  if(!sectionFilled("bank"))return "Enter your amount and bank account to continue.";
-  return "";
+function renderVerification(){
+ const messages={idle:'Verify the taxpayer before continuing to payment.',incomplete:'Complete the taxpayer fields with the information on the filed return.',pending:'Checking taxpayer information…',verified:'Taxpayer verified. This payment will be applied to the taxpayer listed here.',mismatch:'We could not match this taxpayer. Check the name, identifier, and return information, then try again.',unavailable:'Taxpayer verification is temporarily unavailable. Your entries are still here. Try again later.'};
+ $('verificationStatus').textContent=messages[verification.status];$('verificationStatus').className='validation-status '+(verification.status==='verified'?'success':['mismatch','unavailable','incomplete'].includes(verification.status)?'error':'');
+ $('verifyBtn').disabled=verification.status==='pending';$('verifyBtn').textContent=verification.status==='pending'?'Verifying…':verification.status==='verified'?'Verify again':'Verify taxpayer';
 }
-
+function cents(value){if(!/^\d+(\.\d{1,2})?$/.test(value))return null;const [whole,fraction='']=value.split('.');const n=Number(whole)*100+Number(fraction.padEnd(2,'0'));return Number.isSafeInteger(n)?n:null;}
+function money(value){const n=cents(value);return n!==null&&n>0?(n/100).toLocaleString('en-US',{style:'currency',currency:'USD'}):'';}
+function validRouting(value){if(!/^\d{9}$/.test(value)||/^0+$/.test(value))return false;const d=[...value].map(Number);return (3*(d[0]+d[3]+d[6])+7*(d[1]+d[4]+d[7])+d[2]+d[5]+d[8])%10===0;}
+function bankError(){
+ const n=cents(state.amount);
+ if(n===null||n<1||n>999999999)return 'Enter an amount from $0.01 to $9,999,999.99, with no more than two decimal places.';
+ if(cents(state.confirmAmount)!==n)return 'The payment amounts must match.';
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(state.paymentDate)||state.paymentDate<TODAY||state.paymentDate>LAST_DATE)return 'Choose a payment date from today through 365 days from today.';
+ if(!state.payerName.trim())return 'Enter the bank account holder name.';
+ if(!validRouting(state.routing)||numericErrors.has('routing'))return 'Enter a valid 9-digit bank routing number.';
+ if(!/^\d{4,17}$/.test(state.account)||numericErrors.has('account'))return 'Enter an account number with 4 to 17 digits.';
+ if(state.account!==state.confirmAccount||numericErrors.has('confirmAccount'))return 'The bank account numbers must match.';
+ if(!state.acctType)return 'Select checking or savings.';
+ if(state.emailOptIn&&(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)||state.email!==state.confirmEmail))return 'Enter matching, valid email addresses for your confirmation.';
+ return '';
+}
+function sectionFilled(id){if(id==='tax')return !!(REASONS[state.reason]?.forms.includes(state.applyTo)&&taxPeriods().some(([id])=>id===state.period));if(id==='id')return verification.status==='verified'&&identityReady();if(id==='bank')return !bankError();return false;}
+function firstMissing(){return !sectionFilled('tax')?'Choose a tax form, reason, and period.':!sectionFilled('id')?'Verify the taxpayer to continue.':bankError();}
+function taxpayerName(s=state){return s.entityType==='individual'?`${s.fname} ${s.lname}`.trim():s.entityName;}
+function bankLabel(s=state){return s.account?`${s.acctType==='savings'?'Savings':'Checking'} ••••${s.account.slice(-4)}`:'';}
+function dateLabel(value){return new Date(value+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});}
+function paymentRows(){return [['Amount',money(state.amount)],['Apply to',taxFormLabel()],['Reason',REASONS[state.reason]?.label],['Tax period',state.period],['Taxpayer',taxpayerName()],['Taxpayer ID',(state.entityType==='individual'?state.ssn:state.ein)?'•••••'+(state.entityType==='individual'?state.ssn:state.ein).slice(-4):''],['Paid by',state.payerName],['Bank account',bankLabel()],['Payment date',state.paymentDate?dateLabel(state.paymentDate):''],['Email confirmation',state.emailOptIn?state.email:'Not requested']];}
+function rowsHTML(rows,cls='readrow'){return rows.map(([k,v])=>`<div class="${cls}"><span class="k">${esc(k)}</span><span class="v ${v?'':'pending'}">${esc(v||'—')}</span></div>`).join('');}
 function renderReceipt(){
-  const amtDisp=money(state.amount);
-  const rAmt=document.getElementById("rAmt");
-  if(amtDisp){rAmt.textContent=amtDisp;rAmt.classList.remove("pending");}
-  else{rAmt.textContent="Enter an amount";rAmt.classList.add("pending");}
-
-  const r=state.reason?REASONS[state.reason].label:"";
-  const a=state.applyTo?APPLY[state.applyTo]:"";
-  const p=state.period?("Tax year "+state.period):"";
-  const nm=(state.fname||state.lname)?`${state.fname} ${state.lname}`.trim():"";
-  const acct=state.account?((state.acctType?state.acctType.charAt(0).toUpperCase()+state.acctType.slice(1):"Account")+" ••••"+state.account.slice(-4)):"";
-  const rows=[
-    ["Reason",r],["Apply to",a],["Tax period",p],
-    ["Name",nm],["Bank account",acct]
-  ];
-  document.getElementById("rBody").innerHTML=rows.map(([k,v])=>
-    `<div class="readrow"><span class="k">${k}</span><span class="v ${v?"":"pending"}">${v||"—"}</span></div>`
-  ).join("");
-
-  // section number checks
-  [["tax","num-tax","sec-tax"],["id","num-id","sec-id"],["bank","num-bank","sec-bank"]].forEach(([key,numId,secId])=>{
-    const filled=sectionFilled(key);
-    const sec=document.getElementById(secId);
-    const num=document.getElementById(numId);
-    sec.classList.toggle("filled",filled);
-    num.innerHTML=filled?IC_CHECK:(key==="tax"?"1":key==="id"?"2":"3");
-  });
-
-  const ok=sectionFilled("tax")&&sectionFilled("id")&&sectionFilled("bank");
-  const payBtn=document.getElementById("payBtn");
-  const payBtnM=document.getElementById("payBtnMobile");
-  payBtn.disabled=!ok;payBtnM.disabled=!ok;
-  const miss=document.getElementById("rMiss");
-  if(!ok){miss.hidden=false;document.getElementById("rMissTxt").textContent=firstMissing();}
-  else{miss.hidden=true;}
-
-  // mobile bar amount
-  document.getElementById("pbAmt").innerHTML=`<small>Total</small>${amtDisp||"$0.00"}`;
+ const amount=money(state.amount);$('rAmt').textContent=amount||'Enter an amount';$('rAmt').classList.toggle('pending',!amount);
+ $('rBody').innerHTML=rowsHTML(paymentRows().slice(1));$('pbAmt').innerHTML=`<small>Total</small>${esc(amount||'$0.00')}`;
+ ['tax','id','bank'].forEach((key,i)=>{const done=sectionFilled(key);$('sec-'+key).classList.toggle('filled',done);$('num-'+key).innerHTML=done?IC_CHECK:String(i+1);});
+ const missing=firstMissing();$('payBtn').disabled=!!missing;$('payBtnMobile').disabled=!!missing;$('rMiss').hidden=!missing;$('rMissTxt').textContent=missing;
+ $('bankStatus').textContent=bankError()||'Payment details complete. Review your payment before submitting.';
 }
-
-function bindInput(id,key,transform){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.addEventListener("input",e=>{
-    state[key]=transform?transform(e.target.value,el):e.target.value;
-    if(transform&&el.value!==state[key]&&el.type!=="text"){} // formatted below
-    renderReceipt();
-  });
+function renderIdentity(){
+ $('individualFields').hidden=state.entityType!=='individual';$('entityFields').hidden=state.entityType==='individual';
+ $('stateField').hidden=state.country!=='US';$('foreignCountryField').hidden=state.country==='US';$('zipLabel').textContent=state.country==='US'?'ZIP code':'Postal code';
+ $('identityHint').textContent=state.payFor==='other'?'Enter the taxpayer’s information, not your own. Signing in identifies you as the payer; it does not verify the taxpayer.':'Enter the information for the taxpayer whose tax account should receive this payment.';
+ $('idPrefill').hidden=!signedIn||state.payFor!=='self';$('idUpsell').hidden=signedIn;
+ // Inactive alternate identity fields must not participate in validation/autofill.
+ $('individualFields').querySelectorAll('input,select').forEach(el=>el.disabled=state.entityType!=='individual');
+ $('entityFields').querySelectorAll('input,select').forEach(el=>el.disabled=state.entityType==='individual');
 }
-
-function wire(){
-  document.getElementById("reason").addEventListener("change",e=>{state.reason=e.target.value;state.applyTo="";state.period="";refreshTaxSection();renderReceipt();});
-  document.getElementById("applyTo").addEventListener("change",e=>{state.applyTo=e.target.value;state.period="";document.getElementById("periodField").hidden=!state.applyTo;document.getElementById("period").value="";renderReceipt();});
-  document.getElementById("period").addEventListener("change",e=>{state.period=e.target.value;renderReceipt();});
-
-  bindInput("fname","fname");bindInput("lname","lname");bindInput("addr","addr");bindInput("city","city");
-  const ssn=document.getElementById("ssn");
-  ssn.addEventListener("input",e=>{const d=e.target.value.replace(/\D/g,"").slice(0,9);const f=d.replace(/^(\d{3})(\d{0,2})(\d{0,4}).*/,(m,a,b,c)=>c?`${a}-${b}-${c}`:b?`${a}-${b}`:a);state.ssn=f;e.target.value=f;renderReceipt();});
-  const zip=document.getElementById("zip");
-  zip.addEventListener("input",e=>{state.zip=e.target.value.replace(/\D/g,"").slice(0,5);e.target.value=state.zip;renderReceipt();});
-  document.getElementById("filing").addEventListener("change",e=>{state.filing=e.target.value;renderReceipt();});
-  document.getElementById("estate").addEventListener("change",e=>{state.estate=e.target.value;renderReceipt();});
-
-  const amt=document.getElementById("amount");
-  amt.addEventListener("input",e=>{state.amount=e.target.value.replace(/[^0-9.]/g,"");renderReceipt();});
-  amt.addEventListener("blur",e=>{const n=parseFloat(state.amount);if(!isNaN(n)){state.amount=n.toFixed(2);e.target.value="$"+Number(state.amount).toLocaleString("en-US",{minimumFractionDigits:2});}});
-  document.getElementById("routing").addEventListener("input",e=>{state.routing=e.target.value.replace(/\D/g,"").slice(0,9);e.target.value=state.routing;renderReceipt();});
-  document.getElementById("account").addEventListener("input",e=>{state.account=e.target.value.replace(/\D/g,"").slice(0,17);e.target.value=state.account;renderReceipt();});
-  document.getElementById("acctType").addEventListener("change",e=>{state.acctType=e.target.value;renderReceipt();});
-  const sv=document.getElementById("saveAcct");if(sv)sv.addEventListener("change",e=>{state.saveAcct=e.target.checked;});
-
-  document.getElementById("payBtn").addEventListener("click",submitPayment);
-  document.getElementById("payBtnMobile").addEventListener("click",submitPayment);
-
-  document.getElementById("signinBtn").addEventListener("click",signIn);
-  document.getElementById("upsellId").addEventListener("click",signIn);
-  document.getElementById("upsellBank").addEventListener("click",signIn);
-
-  // upsell icons
-  document.querySelectorAll(".upsell .ui").forEach(el=>el.innerHTML=IC_INFO);
+function writeInputs(){Object.entries(state).forEach(([key,value])=>{const el=$(key);if(el){if(el.type==='checkbox')el.checked=value;else el.value=value;}});renderIdentity();refreshTaxSection();$('emailFields').hidden=!state.emailOptIn;renderReceipt();}
+function accountBar(){
+ $('acctbar').classList.toggle('in',signedIn);
+ $('acctbar').innerHTML=`<div class="ab-body"><b>${signedIn?'Signed in as Jordan Rivera':"You're paying as a guest"}</b><p>${signedIn?'Your payment entries have been kept. Saved details are available to use below.':'Sign in whenever you’re ready. Keep all the information you’ve entered.'}</p></div><span class="ab-cta"><button type="button" class="btn-outline" id="${signedIn?'signoutBtn':'signinBtn'}">${signedIn?'Sign out':'Sign in to your Online Account'}</button></span>`;
+ $(signedIn?'signoutBtn':'signinBtn').addEventListener('click',signedIn?signOut:signIn);
+ $('bankPrefill').hidden=!signedIn;$('headerSignin').textContent=signedIn?'Sign out':'Sign in';renderIdentity();
 }
-
-function writeInputs(){
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v;};
-  set("fname",state.fname);set("lname",state.lname);set("ssn",state.ssn);
-  set("addr",state.addr);set("city",state.city);set("zip",state.zip);
-  set("routing",state.routing);set("account",state.account);
-  document.getElementById("filing").value=state.filing;
-  document.getElementById("estate").value=state.estate;
-  document.getElementById("acctType").value=state.acctType;
+function signIn(){if(signedIn)return;$('signinDialog').showModal();}
+function signOut(){signedIn=false;accountBar();}
+function resetAuthorization(){$('authorize').checked=false;$('signature').value='';$('reviewError').hidden=true;}
+function reviewPayment(){if(firstMissing())return;resetAuthorization();$('reviewDetails').innerHTML=rowsHTML(paymentRows(),'rr');$('submitBtn').textContent=editingPayment?'Save payment changes':'Submit payment';$('reviewDialog').showModal();}
+function canManage(s){let remaining=0;const d=new Date(TODAY+'T12:00:00');while(isoDate(d)<s.paymentDate){d.setDate(d.getDate()+1);if(![0,6].includes(d.getDay()))remaining++;}return remaining>=2;}
+function showConfirmation(){
+ const main=document.querySelector('main.wrap');[...main.children].forEach(el=>el.hidden=true);
+ $('paybar').hidden=true;
+ const view=document.createElement('section');view.id='confirmation';view.className='sec';view.style.marginTop='32px';
+ const future=state.paymentDate>TODAY;
+ view.innerHTML=`<div class="ring">${IC_CHECK}</div><h1 class="page" tabindex="-1">${editingPayment?'Payment updated':future?'Payment scheduled':'Payment submitted'}</h1><p>Confirmation number <b>${esc(lastPayment.confirmation)}</b></p><p>This confirms your payment request was received. It does not confirm that the bank withdrawal has completed.</p>${state.emailOptIn?`<p>A payment confirmation was requested for <b>${esc(state.email)}</b>.</p>`:'<p>Save or print this confirmation for your records.</p>'}${rowsHTML(paymentRows(),'rr')}<div class="actions"><button type="button" class="btn-outline" id="printReceipt">Print confirmation</button>${canManage(state)?'<button type="button" class="btn-outline" id="changePayment">Change payment</button><button type="button" class="btn-outline" id="cancelPayment">Cancel payment</button>':''}<button type="button" class="btn" id="newPayment">Make another payment</button></div>${future?'<p class="hint">Changes and cancellations are available until two business days before the payment date.</p>':''}`;
+ main.append(view);$('printReceipt').addEventListener('click',()=>window.print());$('newPayment').addEventListener('click',()=>location.reload());
+ if($('changePayment'))$('changePayment').addEventListener('click',()=>{editingPayment=true;view.remove();[...main.children].forEach(el=>el.hidden=false);$('paybar').hidden=false;resetAuthorization();$('paymentDate').focus();});
+ if($('cancelPayment'))$('cancelPayment').addEventListener('click',()=>{
+  if($('cancelPayment').dataset.confirm!=='yes'){view.querySelector('h1').textContent='Cancel this scheduled payment?';$('cancelPayment').textContent='Confirm cancellation';$('cancelPayment').dataset.confirm='yes';return;}
+  lastPayment.status='canceled';view.querySelector('h1').textContent='Payment canceled';view.querySelector('h1').focus();$('cancelPayment').remove();$('changePayment').remove();
+ });
+ view.querySelector('h1').focus();window.scrollTo({top:0,behavior:'smooth'});editingPayment=false;
 }
-
-function setUpsells(){
-  const idUp=document.getElementById("idUpsell"),idPf=document.getElementById("idPrefill");
-  const bkUp=document.getElementById("bankUpsell"),bkPf=document.getElementById("bankPrefill");
-  const saveRow=document.getElementById("saveRow");
-  if(signedIn){
-    idUp.hidden=true;bkUp.hidden=true;saveRow.style.display="none";
-    idPf.hidden=false;idPf.querySelector(".pf-lead").innerHTML=`${IC_CHECK} From your IRS Online Account — verified and filled in. Review and continue.`;
-    bkPf.hidden=false;bkPf.querySelector(".pf-lead").innerHTML=`${IC_CHECK} Saved checking account ••••7740 loaded. Just enter the amount.`;
-  }else{
-    idUp.hidden=false;bkUp.hidden=false;saveRow.style.display="";
-    idPf.hidden=true;bkPf.hidden=true;
-  }
-}
-
-function signIn(){
-  if(signedIn)return;
-  signedIn=true;
-  Object.assign(state,{
-    fname:"Jordan",lname:"Rivera",ssn:"400-55-8210",filing:"single",
-    addr:"742 Cedar Hollow Rd",city:"Springfield",estate:"IL",zip:"62704",
-    routing:"071000013",account:"3391827740",acctType:"checking"
-  });
-  const ab=document.getElementById("acctbar");
-  ab.classList.add("in");
-  ab.innerHTML=`<span class="ab-icon" aria-hidden="true">${IC_CHECK}</span>
-    <div class="ab-body"><b>Signed in as Jordan Rivera</b><p>Your identity is verified and a checking account \u20227740 is on file — filled in below.</p></div>
-    <span class="ab-cta"><a id="signoutBtn">Sign out</a></span>`;
-  document.getElementById("signoutBtn").addEventListener("click",signOut);
-  writeInputs();setUpsells();renderReceipt();
-}
-function signOut(){
-  signedIn=false;
-  Object.assign(state,{fname:"",lname:"",ssn:"",filing:"",addr:"",city:"",estate:"",zip:"",routing:"",account:"",acctType:"",saveAcct:false});
-  const ab=document.getElementById("acctbar");
-  ab.classList.remove("in");
-  ab.innerHTML=`<span class="ab-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="3"/><path d="M2.5 14c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5"/></svg></span>
-    <div class="ab-body"><b>You're paying as a guest</b><p>You'll enter your details on this device. Sign in to fill everything from your account instead.</p></div>
-    <span class="ab-cta"><a class="btn-outline" id="signinBtn"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 2.5h6v11h-6M9.5 8H2.5M5 5.5 2.5 8 5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sign in to your Online Account</a></span>`;
-  document.getElementById("signinBtn").addEventListener("click",signIn);
-  writeInputs();setUpsells();renderReceipt();
-}
-
 function submitPayment(){
-  if(!(sectionFilled("tax")&&sectionFilled("id")&&sectionFilled("bank")))return;
-  const amtDisp=money(state.amount)||"$0.00";
-  const acct=state.account?((state.acctType?state.acctType.charAt(0).toUpperCase()+state.acctType.slice(1):"Account")+" ••••"+state.account.slice(-4)):"—";
-  const r=state.reason?REASONS[state.reason].label:"—";
-  const a=state.applyTo?APPLY[state.applyTo]:"—";
-  const main=document.querySelector("main.wrap");
-  document.getElementById("paybar").style.display="none";
-  main.innerHTML=`
-    <div style="text-align:center;padding:40px 0 8px">
-      <div class="ring">${IC_CHECK}</div>
-      <h1 class="page" style="margin:0 0 6px">Payment scheduled</h1>
-      <p class="sub" style="margin:0 auto;max-width:48ch">Confirmation number <b>DP-2026-5527-1180</b>. We emailed a copy of your ${amtDisp} payment confirmation. You can cancel up to two business days before the payment date.</p>
-    </div>
-    <div class="sec" style="max-width:640px;margin:22px auto 0">
-      <div class="rr"><span class="k">Amount</span><span class="v">${amtDisp}</span></div>
-      <div class="rr"><span class="k">Reason for payment</span><span class="v">${r}</span></div>
-      <div class="rr"><span class="k">Apply payment to</span><span class="v">${a}</span></div>
-      <div class="rr"><span class="k">Tax period</span><span class="v">${state.period?("Tax year "+state.period):"—"}</span></div>
-      <div class="rr"><span class="k">Name</span><span class="v">${(state.fname||state.lname)?`${state.fname} ${state.lname}`.trim():"—"}</span></div>
-      <div class="rr"><span class="k">Bank account</span><span class="v">${acct}</span></div>
-    </div>
-    ${signedIn
-      ? `<div class="acct-hero" style="max-width:640px;margin:26px auto 40px;border-color:var(--green)">
-          <span class="ah-icon" style="background:var(--green)" aria-hidden="true">${IC_CHECK}</span>
-          <div>
-            <h3>Saved to your IRS Online Account</h3>
-            <p>This payment is now in your payment history, and your checking account ••••7740 is ready for next time.</p>
-            <div class="ah-actions"><a class="btn" style="width:auto;text-decoration:none">Go to your account</a><a>View payment history</a></div>
-          </div>
-        </div>`
-      : `<div class="acct-hero" style="max-width:640px;margin:26px auto 40px">
-          <span class="ah-icon" aria-hidden="true">${IC_STAR}</span>
-          <div>
-            <h3>Save your information — create your IRS Online Account</h3>
-            <p>You paid as a guest, so nothing was saved. Create a free account and next time you won't have to start from scratch.</p>
-            <ul>
-              <li>Skip identity verification — it's done once</li>
-              <li>Reuse ${state.account?("your "+(state.acctType||"bank")+" account ••••"+state.account.slice(-4)):"your saved bank account"} without re-entering it</li>
-              <li>Track this and past payments, and get reminders before they post</li>
-            </ul>
-            <div class="ah-actions">
-              <a class="btn" style="width:auto;text-decoration:none">Create your Online Account</a>
-              <a>Not now</a>
-            </div>
-          </div>
-        </div>`}`;
-  window.scrollTo({top:0,behavior:"smooth"});
+ if(firstMissing()){$('reviewDialog').close();return;}
+ if(!$('signature').value.trim()||!$('authorize').checked){$('reviewError').hidden=false;(!$('signature').value.trim()?$('signature'):$('authorize')).focus();return;}
+ $('reviewDialog').close();
+ lastPayment={...state,status:'submitted',confirmation:editingPayment?lastPayment.confirmation:'DP-'+YEAR+'-'+Math.random().toString(36).slice(2,10).toUpperCase()};
+ showConfirmation();
+}
+function initialize(){
+ options('applyTo',FORM_ORDER.map(k=>[k,APPLY[k]]),'');options('verifyYear',years(YEAR-1,YEAR-6).map(y=>[y,y]),'');options('filing',FILING,'');options('estate',STATES.map(s=>[s,s]),'');options('acctType',[['checking','Checking'],['savings','Savings']],'');
+ $('paymentDate').min=TODAY;$('paymentDate').max=LAST_DATE;$('dob').max=TODAY;
+ const numeric=['ssn','ein','routing','account','confirmAccount'];
+ Object.keys(state).forEach(key=>{const el=$(key);el.addEventListener(el.tagName==='SELECT'||el.type==='checkbox'?'change':'input',()=>{
+  if(numeric.includes(key)){
+   const bad=/\D/.test(el.value);if(bad)numericErrors.add(key);else numericErrors.delete(key);
+   $(key+'Error').hidden=!bad;$(key+'Error').textContent='Use numbers only.';el.setAttribute('aria-invalid',String(bad));el.value=el.value.replace(/\D/g,'');
+  }
+  state[key]=el.type==='checkbox'?el.checked:el.value;
+  if(identityKeys.includes(key)||key==='payFor')invalidateIdentity();
+  if(key==='applyTo'||key==='reason'){state.period='';if(key==='applyTo')state.reason='';refreshTaxSection();}
+  resetAuthorization();renderIdentity();$('emailFields').hidden=!state.emailOptIn;renderReceipt();
+ });});
+ $('payform').addEventListener('submit',event=>{event.preventDefault();reviewPayment();});
+ $('verifyBtn').addEventListener('click',verifyTaxpayer);$('payBtn').addEventListener('click',reviewPayment);$('payBtnMobile').addEventListener('click',reviewPayment);
+ $('headerSignin').addEventListener('click',()=>signedIn?signOut():signIn());$('cancelSignin').addEventListener('click',()=>$('signinDialog').close());
+ $('finishSignin').addEventListener('click',()=>{signedIn=true;$('signinDialog').close();accountBar();renderReceipt();});
+ $('useIdentity').addEventListener('click',()=>{if(state.payFor!=='self')return;Object.assign(state,SAVED_ID);['ssn','ein'].forEach(k=>{numericErrors.delete(k);$(k+'Error').hidden=true;$(k).removeAttribute('aria-invalid');});invalidateIdentity();resetAuthorization();writeInputs();verifyTaxpayer();});
+ $('useBank').addEventListener('click',()=>{Object.assign(state,SAVED_BANK);['routing','account','confirmAccount'].forEach(k=>{numericErrors.delete(k);$(k+'Error').hidden=true;$(k).removeAttribute('aria-invalid');});resetAuthorization();writeInputs();});
+ $('editBtn').addEventListener('click',()=>$('reviewDialog').close());$('submitBtn').addEventListener('click',submitPayment);
+ document.querySelectorAll('#payform input:not([type="checkbox"]),#payform select').forEach(el=>el.required=true);
+ accountBar();writeInputs();renderVerification();
 }
 
 // gov banner + sticky offsets
@@ -620,11 +587,7 @@ howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");how
 window.addEventListener("resize",syncSticky);
 window.addEventListener("load",syncSticky);
 
-fillSelects();
-refreshTaxSection();
-wire();
-setUpsells();
-renderReceipt();
+initialize();
 syncSticky();
 </script>
 </body>
