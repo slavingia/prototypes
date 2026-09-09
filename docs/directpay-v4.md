@@ -6,7 +6,9 @@ network calls. Do not enter real personal, taxpayer, or bank information.
 
 ## Scope and public references
 
-The issue's corrected target is `directpay-v4/index.html`. The separate
+The issue's corrected target is `directpay-v4/index.html`, which redirects to
+`directpay-v4/v3/index.html`. The concurrent v1/v2 versions remain available
+at their existing paths. The separate
 lien/levy MVP in `third-party-pay/` is unchanged.
 
 The catalog covers all individual Direct Pay form/tax types and payment reasons

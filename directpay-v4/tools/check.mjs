@@ -11,7 +11,7 @@ const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const browser=await chromium.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:1000}});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
-const url=pathToFileURL(resolve(root,'directpay-v4/index.html')).href;
+const url=pathToFileURL(resolve(root,'directpay-v4/v3/index.html')).href;
 const fill=async values=>{for(const [key,value] of Object.entries(values)){const el=page.locator('#'+key);if(!await el.isVisible()||!await el.isEnabled())continue;const tag=await el.evaluate(el=>el.tagName);if(tag==='SELECT')await el.selectOption(value);else await el.fill(value);}};
 const tax=async(form='1040',reason='balance')=>{await page.selectOption('#applyTo',form);await page.selectOption('#reason',reason);const first=await page.locator('#period option').nth(1).getAttribute('value');await page.selectOption('#period',first);};
 const signin=async()=>{await page.click('#signinBtn');await page.click('#finishSignin');};
@@ -19,7 +19,7 @@ const verify=async()=>{await page.click('#verifyBtn');await page.waitForFunction
 const stateValue=()=>page.evaluate(()=>JSON.parse(JSON.stringify(state)));
 const ready=async()=>{await tax();await signin();await page.click('#useIdentity');await page.waitForFunction(()=>verification.status==='verified');await page.click('#useBank');await fill({amount:'123.45',confirmAmount:'123.45'});};
 try{
- await page.goto(url);await page.evaluate(()=>document.fonts.ready);
+ await page.goto(pathToFileURL(resolve(root,'directpay-v4/index.html')).href);await page.waitForURL(url);await page.evaluate(()=>document.fonts.ready);
  assert.equal(await page.locator('#applyTo option').count(),18);
  // Exhaustive catalog integrity and each selectable form/reason route.
  const catalog=await page.evaluate(()=>FORM_ORDER.map(form=>({form,reasons:Object.entries(REASONS).filter(([,r])=>r.forms.includes(form)).map(([id])=>id)})));

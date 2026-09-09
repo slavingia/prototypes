@@ -269,3 +269,6 @@ history keeps them).
   not connected to live systems; see `docs/directpay-v4.md`.
 - Added automated behavior checks and generated current desktop, verified,
   review, dark and mobile screenshots under `.shots/32`; refreshed the gallery.
+
+- Retained the concurrently added `directpay-v4/v1/` and `v2/` unchanged,
+  placed this reviewed update in `v3/`, and pointed the entry URL to v3.
