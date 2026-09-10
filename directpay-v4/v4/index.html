@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" data-gov-banner="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Pay Online — Pay from your bank account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,900&display=swap" rel="stylesheet">
+<style>
+  /* GOV BANNER FLAG: set data-gov-banner="on" on <html> when hosted on an official .gov property */
+  html[data-gov-banner="off"] .gov{display:none}
+  :root{
+    color-scheme:light dark;
+    --irs-blue:#004c97; --irs-navy:#002d5c; --ink:#1b1b1b; --muted:#5c5c5c;
+    --link:#0050a0; --line:#d6d7d9; --green:#1a7f4b; --amber:#8a6d00; --red:#b50909;
+    --teal:#00687d; --violet:#5b3fa0; --bg:#fff; --surface:#fff; --surface-2:#f0f0f0;
+    --tint:#fafcfe; --tint-blue:#eef4fb; --tint-amber:#fdf6e3; --line-amber:#ecdca0;
+    --step-pend:#5B616B; --accent-blue:#004c97;
+    --btn-disabled-bg:#aebccb; --btn-disabled-ink:#fff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14171a; --surface:#1e2328; --surface-2:#262c33;
+      --ink:#e8eaed; --muted:#9aa1a9; --line:#3d4551; --link:#79b4e6;
+      --green:#55b685; --amber:#d9ae4a; --red:#f2857f; --teal:#57bfd4; --violet:#ab96ee;
+      --tint:#20262c;
+      --tint-blue:color-mix(in srgb, var(--irs-blue) 25%, var(--surface));
+      --tint-amber:color-mix(in srgb, var(--amber) 14%, var(--surface));
+      --line-amber:color-mix(in srgb, var(--amber) 40%, var(--surface));
+      --step-pend:#9aa1a9; --accent-blue:#79b4e6;
+      --btn-disabled-bg:#39424c; --btn-disabled-ink:#aeb6bf;
+    }
+  }
+  *{box-sizing:border-box}
+  .ic{width:1em;height:1em;vertical-align:-0.125em;display:inline-block}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3","Source Sans Pro","Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;font-size:16px}
+  a{color:var(--link);text-decoration:underline;cursor:pointer}
+  a:hover{text-decoration:none}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+
+  /* USWDS official government banner */
+  .gov{background:var(--surface-2);font-size:12.5px;position:sticky;top:0;z-index:60}
+  .gov .banner-inner{display:flex;align-items:center;gap:8px;padding:7px 16px;max-width:1024px;margin:0 auto}
+  .gov .flag{width:16px;height:11px;flex:0 0 16px;overflow:hidden;display:inline-grid;place-items:center}
+  .gov .flag svg{width:16px;height:11px;display:block}
+  .gov .txt{color:var(--ink)}
+  .gov .howbtn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit;font-size:12.5px;color:var(--link);text-decoration:underline;cursor:pointer;padding:0}
+  .gov .chev{transition:transform .15s}
+  .gov.open .chev{transform:rotate(180deg)}
+  .gov .guidance{display:none;max-width:1024px;margin:0 auto;padding:8px 16px 16px}
+  .gov.open .guidance{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .gov .gcol{display:flex;gap:10px;font-size:13px;align-items:flex-start}
+  .gov .gi{color:var(--irs-blue);flex:0 0 auto;margin-top:2px}
+  @media(max-width:600px){.gov.open .guidance{grid-template-columns:1fr}}
+
+  .masthead{background:var(--irs-blue);color:#fff;position:sticky;top:var(--gov-h,34px);z-index:55}
+  .masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:26px}
+  .logo .seal{display:flex;align-items:center}
+  .logo .seal img{height:34px;width:auto;display:block}
+  .logo .ctx{font-size:15px;font-weight:600;opacity:.92;padding-left:12px}
+  .util{display:flex;align-items:center;font-size:14.5px}
+  .util > *{padding:0 14px;border-left:1px solid rgba(255,255,255,.35);display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .util > *:first-child{border-left:0}
+  .util a{color:#fff;text-decoration:none}
+  .util a:hover{text-decoration:underline}
+
+  .crumb{font-size:13.5px;color:var(--muted);margin:18px 0 6px}
+  .crumb a{color:var(--link)}
+  h1.page{font-size:34px;font-weight:800;margin:4px 0 8px}
+  .sub{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 18px}
+
+  /* guest / signed-in account bar */
+  .acctbar{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--irs-blue);background:var(--tint-blue);padding:13px 18px;margin:0 0 22px}
+  .acctbar.in{border-left-color:var(--green);background:var(--tint)}
+  .acctbar .ab-icon{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:var(--irs-blue);color:#fff;display:grid;place-items:center}
+  .acctbar.in .ab-icon{background:var(--green)}
+  .acctbar .ab-icon svg{width:18px;height:18px}
+  .acctbar .ab-body{flex:1;min-width:0}
+  .acctbar .ab-body b{font-size:15.5px;display:block}
+  .acctbar .ab-body p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+  .acctbar .ab-cta{white-space:nowrap}
+  .btn-outline{display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:15px;font-weight:600;border:1px solid var(--irs-blue);border-radius:4px;background:var(--surface);color:var(--irs-blue);padding:9px 18px;cursor:pointer;text-decoration:none}
+  .btn-outline:hover{background:var(--tint-blue)}
+
+  /* two-column layout: form + sticky receipt rail */
+  .shell{display:grid;grid-template-columns:1fr 320px;gap:24px;margin-bottom:40px;align-items:start}
+
+  /* section cards on the single page */
+  .sec{border:1px solid var(--line);background:var(--surface);padding:24px 28px;margin:0 0 20px;scroll-margin-top:var(--rail-top,116px)}
+  .sec .sechead{display:flex;gap:12px;align-items:center;margin:0 0 4px}
+  .sec .secnum{width:28px;height:28px;flex:0 0 28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--surface);color:var(--step-pend);border:1px solid var(--step-pend)}
+  .sec.filled .secnum{background:#00599C;color:#fff;border-color:#00599C}
+  .sec h2{font-size:22px;font-weight:800;margin:0}
+  .sec .phint{color:var(--muted);font-size:16px;margin:2px 0 20px 40px}
+  @media(max-width:560px){.sec .phint{margin-left:0}}
+
+  /* fields */
+  .field{margin:0 0 18px;max-width:520px}
+  .field label{display:block;font-size:16px;font-weight:500;margin:0 0 4px}
+  .field .hint{display:block;font-size:14px;color:#5b616b;font-weight:500;margin:0 0 8px}
+  @media (prefers-color-scheme: dark){.field .hint{color:var(--muted)}}
+  .field select,.field input{width:100%;font-family:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:0;background:var(--surface);color:var(--ink)}
+  .field select:focus,.field input:focus{outline:2px solid var(--irs-blue);outline-offset:0}
+  .field .decode{font-size:14px;color:var(--muted);margin:8px 0 0;display:flex;gap:8px;align-items:flex-start}
+  .field .decode[hidden]{display:none}
+  .field[hidden]{display:none}
+  .field .decode .di{color:var(--irs-blue);flex:0 0 auto;margin-top:1px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;max-width:640px}
+  .grid2 .field{max-width:none;display:flex;flex-direction:column}
+  .grid2 .field input,.grid2 .field select{margin-top:auto}
+  .grid2 .col-2{grid-column:1/-1}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+  /* inline upsell / prefill */
+  .upsell{border:1px solid var(--line);background:var(--tint-blue);padding:12px 16px;margin:0 0 20px;display:flex;gap:10px;align-items:center;font-size:14.5px;max-width:640px}
+  .upsell .ui{color:var(--irs-blue);flex:0 0 auto}
+  .upsell a{font-weight:600}
+  .upsell[hidden]{display:none}
+  .prefill{border:1px solid var(--line);border-left:4px solid var(--green);background:var(--tint);padding:14px 18px;margin:0 0 20px;max-width:640px}
+  .prefill .pf-lead{font-size:14px;font-weight:700;color:var(--green);display:flex;gap:7px;align-items:center;margin:0}
+  .prefill .pf-lead svg{width:16px;height:16px}
+
+  /* save-account checkbox */
+  .checkrow{display:flex;gap:11px;align-items:flex-start;max-width:640px;border:1px solid var(--line);background:var(--tint-blue);padding:14px 16px;margin:8px 0 0}
+  .checkrow input{margin-top:2px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--irs-blue)}
+  .checkrow label{font-size:14px;line-height:1.45;color:var(--muted)}
+  .checkrow label b{display:block;font-size:15px;color:var(--ink);margin-bottom:2px;font-weight:600}
+
+  /* sticky receipt rail */
+  .rail{position:sticky;top:var(--rail-top,116px)}
+  .receipt{border:1px solid var(--line);border-top:4px solid var(--irs-blue);background:var(--surface)}
+  .receipt .rhead{padding:14px 18px 12px;border-bottom:1px solid var(--line)}
+  .receipt .rhead .lead{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-blue);margin:0 0 3px}
+  .receipt .rhead .amt{font-size:30px;font-weight:800;margin:0;line-height:1.1}
+  .receipt .rhead .amt.pending{color:var(--muted);font-size:18px;font-weight:600;font-style:italic}
+  .receipt .rbody{padding:6px 18px 12px}
+  .receipt .readrow{display:flex;justify-content:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .receipt .readrow:last-child{border-bottom:0}
+  .receipt .k{color:var(--ink);font-weight:700;width:50%}
+  .receipt .v{text-align:left}
+  .receipt .v.pending{color:var(--muted);font-style:italic}
+  .receipt .rfoot{padding:14px 18px;border-top:1px solid var(--line);background:var(--tint)}
+  .receipt .rfoot .secure{display:flex;gap:7px;align-items:center;font-size:12.5px;color:var(--muted);margin:0}
+  .receipt .rfoot .secure svg{color:var(--green);flex:0 0 auto}
+
+  .btn{font-size:16px;font-weight:500;border-radius:4px;border:0;background:var(--irs-blue);color:#fff;padding:13px 22px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;justify-content:center;width:100%}
+  .btn:hover{background:var(--irs-navy)}
+  .btn:disabled{background:var(--btn-disabled-bg);color:var(--btn-disabled-ink);cursor:not-allowed}
+  .railpay{margin-top:14px}
+  .railmiss{font-size:13px;color:var(--amber);margin:10px 0 0;display:flex;gap:7px;align-items:flex-start}
+  .railmiss[hidden]{display:none}
+  .railmiss svg{flex:0 0 auto;margin-top:1px}
+
+  /* sticky mobile pay bar (hidden on desktop) */
+  .paybar{display:none}
+
+  /* alert */
+  .alert{border:1px solid var(--line-amber);border-left:4px solid var(--amber);background:var(--tint-amber);padding:12px 16px;margin:0 0 20px;display:flex;gap:10px;font-size:15px;align-items:flex-start;max-width:640px}
+  .alert .ai{color:var(--amber);flex:0 0 auto;margin-top:1px}
+
+  /* confirmation */
+  .ring{width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;margin:0 auto 16px}
+  .ring svg{width:30px;height:30px}
+  .rr{display:flex;justify-content:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:16px}
+  .rr:last-child{border-bottom:0}
+  .rr .k{color:var(--ink);font-weight:700;width:50%}
+  .rr .v{text-align:left}
+  .acct-hero{border:1px solid var(--irs-blue);background:var(--tint-blue);padding:22px 24px;margin:26px 0 0;text-align:left;display:flex;gap:16px;align-items:flex-start}
+  .acct-hero .ah-icon{width:46px;height:46px;flex:0 0 46px;border-radius:50%;background:var(--irs-blue);color:#fff;display:grid;place-items:center}
+  .acct-hero .ah-icon svg{width:24px;height:24px}
+  .acct-hero h3{margin:0 0 6px;font-size:19px;font-weight:800}
+  .acct-hero p{margin:0 0 12px;font-size:15px;color:var(--muted);max-width:54ch}
+  .acct-hero ul{margin:0 0 16px;padding-left:20px;font-size:14.5px;color:var(--ink)}
+  .acct-hero ul li{margin:5px 0}
+  .acct-hero .ah-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  @media(max-width:560px){.acct-hero{flex-direction:column}}
+
+  /* ---- responsive ---- */
+  @media(max-width:860px){
+    .shell{grid-template-columns:1fr}
+    .rail{position:static}
+    .receipt{display:none} /* the sticky pay bar takes over on narrow screens */
+    .paybar{display:block;position:sticky;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(0,0,0,.08);padding:12px 16px}
+    .paybar .pb-inner{max-width:1024px;margin:0 auto;display:flex;gap:14px;align-items:center;justify-content:space-between}
+    .paybar .pb-amt{font-size:20px;font-weight:800;white-space:nowrap}
+    .paybar .pb-amt small{display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+    .paybar .btn{width:auto;flex:0 0 auto;padding:12px 20px}
+    .paybar .btn:disabled{opacity:1}
+  }
+  @media(max-width:640px){
+    .wrap{padding:0 14px}
+    .masthead{position:static}
+    .gov{position:static}
+    .masthead .wrap{height:auto;flex-direction:column;align-items:stretch;gap:0}
+    .logo{gap:8px;font-size:22px;padding:12px 0 10px}
+    .logo .seal img{height:28px}
+    .logo .ctx{font-size:13px;padding-left:10px}
+    .util{border-top:1px solid rgba(255,255,255,.35);font-size:14px;flex-wrap:wrap}
+    .util > *{padding:9px 14px 9px 0;border-left:0;margin-right:14px}
+    .util > *:last-child{margin-right:0}
+    h1.page{font-size:26px;line-height:1.15}
+    .sub{font-size:16px}
+    .crumb{font-size:12.5px;line-height:1.4}
+    .acctbar{flex-wrap:wrap;gap:10px;padding:14px 16px}
+    .acctbar .ab-body{flex:1 1 100%;order:2}
+    .acctbar .ab-icon{order:1}
+    .acctbar .ab-cta{flex:1 1 100%;order:3;white-space:normal}
+    .acctbar .btn-outline{width:100%;justify-content:center}
+    .sec{padding:20px 16px}
+    .sec h2{font-size:20px}
+    .field,.grid2,.upsell,.prefill,.checkrow,.alert{max-width:none}
+    .field select,.field input{padding:12px}
+  }
+  [hidden]{display:none!important}
+  .text-btn{border:0;background:none;color:inherit;font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+  .util .text-btn{padding:0 14px}
+  @media(max-width:640px){.util .text-btn{padding:9px 14px 9px 0}}
+  .btn-outline{color:var(--link);border-color:var(--link);font-size:16px;font-weight:500}
+  .hint,.required-note{color:var(--muted);font-size:14px}
+  .validation-status{margin:14px 0 0;padding:12px 14px;border-left:4px solid var(--line);background:var(--tint);font-size:16px}
+  .validation-status.success{border-left-color:var(--green)}
+  .validation-status.error,.field-error{border-left:4px solid var(--red);color:var(--ink)}
+  .field-error{display:block;padding:8px 10px;margin-top:8px;font-size:14px}
+  [aria-invalid="true"]{border:2px solid var(--red)!important}
+  .receipt .k,.rr .k{flex:0 0 50%;padding-right:12px}
+  .receipt .v,.rr .v{overflow-wrap:anywhere;min-width:0}
+  dialog{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:28px;width:calc(100% - 28px);max-width:660px;max-height:90vh;overflow:auto}
+  dialog::backdrop{background:rgba(0,0,0,.55)}
+  dialog h2{margin-top:0}
+  dialog .field input{width:100%}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+  .actions .btn,.actions .btn-outline{width:auto;flex:1}
+  :focus-visible{outline:3px solid var(--link);outline-offset:3px}
+  .prefill p{margin:0 0 12px}
+  .sec h2{font-weight:500}
+  .field .label{display:block;font-size:16px;font-weight:500;margin:0 0 4px}
+  .cal{border:1px solid var(--line);background:var(--surface);max-width:400px}
+  .calhead{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .calmonth{font-size:16px;font-weight:500}
+  .calnav{width:36px;height:36px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--link);display:grid;place-items:center;cursor:pointer;font-size:16px}
+  .calnav:hover{background:var(--tint-blue)}
+  .calnav:disabled{color:var(--muted);cursor:not-allowed;opacity:.5}
+  .calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:10px 12px 6px}
+  .calgrid .dow{font-size:12px;font-weight:700;color:var(--muted);text-align:center;padding:4px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+  .calgrid .day{height:40px;border:1px solid transparent;border-radius:4px;background:none;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer;display:grid;place-items:center}
+  .calgrid .day:hover:not(:disabled){background:var(--tint-blue);border-color:var(--line)}
+  .calgrid .day:disabled{color:var(--muted);opacity:.45;cursor:not-allowed;text-decoration:line-through}
+  .calgrid .day.today{border-color:var(--step-pend)}
+  .calgrid .day[aria-pressed="true"]{background:var(--irs-blue);color:#fff;border-color:var(--irs-blue)}
+  .calgrid .day.holiday{text-decoration:none;opacity:.55}
+  .calpick{margin:0;padding:10px 12px 12px;border-top:1px solid var(--line);font-size:14.5px;color:var(--muted)}
+  .calpick b{color:var(--ink);font-weight:600}
+  @media(max-width:640px){.cal{max-width:none}.calgrid .day{height:44px}}
+  @media print{.masthead,.gov,.actions,footer,.paybar{display:none!important}.sec{border:0}}
+</style>
+</head>
+<body>
+  <section class="gov" id="gov" aria-label="Official website of the United States government">
+    <div class="banner-inner">
+      <span class="flag" aria-hidden="true"><svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="11" fill="#fff"/><g fill="#b22234"><rect width="16" height="0.85" y="0"/><rect width="16" height="0.85" y="1.7"/><rect width="16" height="0.85" y="3.4"/><rect width="16" height="0.85" y="5.1"/><rect width="16" height="0.85" y="6.8"/><rect width="16" height="0.85" y="8.5"/><rect width="16" height="0.85" y="10.2"/></g><rect width="6.4" height="5.95" fill="#3c3b6e"/></svg></span>
+      <span class="txt">An official website of the United States government</span>
+      <button class="howbtn" id="howbtn" aria-controls="gov-guidance" aria-expanded="false">Here's how you know <span class="chev" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.12em"><path d="M4 6l4 4 4-4"/></svg></span></button>
+    </div>
+    <div class="guidance" id="gov-guidance">
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5 8 2.5l5.5 3M3 5.5h10M4.2 8v3.5M8 8v3.5M11.8 8v3.5M2.5 13.5h11"/></g></svg></span><span><b>Official websites use .gov</b><br>A <b>.gov</b> website belongs to an official government organization in the United States.</span></div>
+      <div class="gcol"><span class="gi" aria-hidden="true"><svg class="ic" viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg></span><span><b>Secure .gov websites use HTTPS</b><br>A <b>lock</b> or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.</span></div>
+    </div>
+  </section>
+
+  <div class="masthead">
+    <div class="wrap">
+    <div class="logo"><span class="seal"><img src="../../assets/irs-logo.svg" alt="IRS"></span><span class="ctx">Pay Online</span></div>
+    <div class="util"><button type="button" class="text-btn" id="headerSignin">Sign in</button><a href="https://www.irs.gov/payments" target="_blank" rel="noopener">Help</a></div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <p class="crumb"><a href="https://www.irs.gov/payments">Payments</a> <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Pay from your bank account</p>
+    <h1 class="page">Pay from your bank account</h1>
+    <p class="sub">Pay individual taxes from a U.S. checking or savings account, with no fee. Review your details before authorizing a payment.</p>
+
+    <div class="acctbar" id="acctbar" aria-live="polite"></div>
+    <p class="required-note">All fields are required unless marked optional.</p>
+
+    <div class="shell">
+      <form id="payform" autocomplete="on" novalidate>
+        <section class="sec" id="sec-tax">
+          <div class="sechead"><span class="secnum" id="num-tax">1</span><h2>Tax information</h2></div>
+          <p class="phint">Tell us who the payment is for and what it applies to. Submit a separate payment for each tax period.</p>
+          <div class="field"><label for="entityType">Taxpayer type</label><select id="entityType" name="entityType"><option value="individual">Individual (SSN or ITIN)</option><option value="entity">Estate or other entity (EIN)</option></select></div>
+          <div class="field"><label for="applyTo">Apply payment to</label><span class="hint" id="formHint">Use the form or tax type on the return or notice.</span><select id="applyTo" name="applyTo" aria-describedby="formHint"></select></div>
+          <div class="field" id="reasonField" hidden><label for="reason">Reason for payment</label><select id="reason" name="reason"></select><p class="decode" id="reasonDecode" hidden><span class="di" id="reasonDecodeIc"></span><span id="reasonDecodeTxt"></span></p></div>
+          <div class="field" id="periodField" hidden><label for="period">Tax period</label><span class="hint" id="periodHint">Choose the year this payment applies to.</span><select id="period" name="period" aria-describedby="periodHint"></select></div>
+          <p class="hint">Paying business taxes? <a href="https://www.irs.gov/payments" target="_blank" rel="noopener">See business payment options</a>.</p>
+        </section>
+
+        <section class="sec" id="sec-id">
+          <div class="sechead"><span class="secnum" id="num-id">2</span><h2>Taxpayer information</h2></div>
+          <p class="phint" id="identityHint">Enter the name and taxpayer identification number exactly as they appear on IRS records.</p>
+          <div class="upsell" id="idUpsell">Sign in at any time. The information you enter will stay in this payment.</div>
+          <div class="prefill" id="idPrefill" hidden><p>Your saved details are available. Using them will replace the taxpayer fields below.</p><button type="button" class="btn-outline" id="useIdentity">Use my taxpayer details</button></div>
+          <div class="grid2" id="individualFields">
+            <div class="field"><label for="fname">First name</label><input id="fname" name="fname" autocomplete="section-taxpayer given-name"></div>
+            <div class="field"><label for="lname">Last name</label><input id="lname" name="lname" autocomplete="section-taxpayer family-name"></div>
+            <div class="field"><label for="ssn">SSN or ITIN</label><span class="hint">9 digits, no dashes</span><input id="ssn" name="ssn" inputmode="numeric" autocomplete="off" maxlength="9" aria-describedby="ssnError"><span class="field-error" id="ssnError" hidden></span></div>
+          </div>
+          <div class="grid2" id="entityFields" hidden>
+            <div class="field"><label for="entityName">Legal name on IRS records</label><input id="entityName" name="entityName" autocomplete="off"></div>
+            <div class="field"><label for="ein">EIN</label><span class="hint">9 digits, no dashes</span><input id="ein" name="ein" inputmode="numeric" autocomplete="off" maxlength="9" aria-describedby="einError"><span class="field-error" id="einError" hidden></span></div>
+          </div>
+          <button type="button" class="btn-outline" id="verifyBtn">Verify taxpayer</button>
+          <div class="validation-status" id="verificationStatus" role="status" aria-live="polite">Verify the taxpayer before continuing to payment.</div>
+          <p class="hint">If you filed jointly, use the taxpayer listed first on the return. <a href="https://www.irs.gov/payments" target="_blank" rel="noopener">Get help with verification</a>.</p>
+        </section>
+
+        <section class="sec" id="sec-bank">
+          <div class="sechead"><span class="secnum" id="num-bank">3</span><h2>Payment details</h2></div>
+          <p class="phint">Use a bank account you are authorized to pay from.</p>
+          <div class="prefill" id="bankPrefill" hidden><p>Your saved checking account ending in 7740 is available. Using it will replace the bank details below.</p><button type="button" class="btn-outline" id="useBank">Use saved bank account</button></div>
+          <div class="grid2">
+            <div class="field"><label for="amount">Payment amount</label><span class="hint">From $0.01 to $9,999,999.99</span><input id="amount" name="amount" inputmode="decimal" autocomplete="off" placeholder="0.00"></div>
+            <div class="field"><label for="confirmAmount">Confirm payment amount</label><input id="confirmAmount" name="confirmAmount" inputmode="decimal" autocomplete="off"></div>
+            <div class="field col-2" id="dateField"><span class="label" id="dateLabel">Payment date</span><span class="hint" id="dateHint">Banking days only (Monday through Friday, excluding federal holidays), today or up to 365 days from today.</span>
+              <div class="cal" role="group" aria-labelledby="dateLabel">
+                <div class="calhead"><button type="button" class="calnav" id="calPrev" aria-label="Previous month"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="calmonth" id="calMonth" aria-live="polite"></span><button type="button" class="calnav" id="calNext" aria-label="Next month"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+                <div class="calgrid" id="calGrid"></div>
+                <p class="calpick" id="calPick" aria-live="polite"></p>
+                <input type="hidden" id="paymentDate" name="paymentDate">
+              </div>
+            </div>
+            <div class="field"><label for="payerName">Bank account holder name</label><input id="payerName" name="payerName" autocomplete="section-payer name"></div>
+            <div class="field"><label for="routing">Bank routing number</label><span class="hint">9 digits</span><input id="routing" name="routing" inputmode="numeric" autocomplete="off" maxlength="9" aria-describedby="routingError"><span class="field-error" id="routingError" hidden></span></div>
+            <div class="field"><label for="account">Account number</label><input id="account" name="account" inputmode="numeric" autocomplete="off" maxlength="17" aria-describedby="accountError"><span class="field-error" id="accountError" hidden></span></div>
+            <div class="field"><label for="confirmAccount">Confirm account number</label><input id="confirmAccount" name="confirmAccount" inputmode="numeric" autocomplete="off" maxlength="17" aria-describedby="confirmAccountError"><span class="field-error" id="confirmAccountError" hidden></span></div>
+            <div class="field"><label for="acctType">Account type</label><select id="acctType" name="acctType"></select></div>
+          </div>
+          <div class="checkrow"><input type="checkbox" id="emailOptIn" name="emailOptIn"><label for="emailOptIn"><b>Email me a payment confirmation (optional)</b>Receive the confirmation number for this payment request.</label></div>
+          <div class="grid2" id="emailFields" hidden style="margin-top:18px">
+            <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="section-payer email"></div>
+            <div class="field"><label for="confirmEmail">Confirm email address</label><input id="confirmEmail" name="confirmEmail" type="email" autocomplete="off"></div>
+          </div>
+          <p class="validation-status" id="bankStatus" role="status"></p>
+        </section>
+
+      </form>
+
+      <!-- STICKY RECEIPT RAIL -->
+      <aside class="rail">
+        <div class="receipt" id="receipt">
+          <div class="rhead">
+            <p class="lead">Your payment</p>
+            <p class="amt pending" id="rAmt">Enter an amount</p>
+          </div>
+          <div class="rbody" id="rBody"></div>
+          <div class="rfoot">
+            <button type="button" class="btn railpay" id="payBtn" disabled>Review payment</button>
+            <p class="railmiss" id="rMiss" hidden><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 14.5 13.5H1.5z" fill="none"/><path d="M8 6.8v2.7"/></g><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg><span id="rMissTxt"></span></p>
+            <p class="secure" style="margin-top:12px"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7" width="9" height="6.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></g></svg> Encrypted and processed securely</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- sticky mobile pay bar -->
+  <div class="paybar" id="paybar">
+    <div class="pb-inner">
+      <div class="pb-amt" id="pbAmt"><small>Total</small>$0.00</div>
+      <button type="button" class="btn" id="payBtnMobile" disabled>Review payment</button>
+    </div>
+  </div>
+
+  <footer style="border-top:1px solid var(--line);margin-top:30px">
+    <div class="wrap" style="padding:14px 16px 0;font-size:12.5px"><a href="../../index.html" style="color:var(--link);text-decoration:none"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> All prototypes</a></div>
+    <div class="wrap" style="padding:18px 16px 40px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">
+      Personal hobby project, for fun. Not an official government website and not affiliated with, endorsed by, or representative of the IRS, the U.S. Department of the Treasury, or any agency or official. All names, SSNs, account numbers, and data shown are fictional mock data — no real personal or taxpayer information, and no real money moves. This concept does not reflect any agency's actual or planned systems, roadmap, decisions, policies, or opinions. Provided "as is" for illustrative purposes only.
+    </div>
+  </footer>
+
+<dialog id="signinDialog" aria-labelledby="signinTitle"><h2 id="signinTitle">Sign in to your Online Account</h2><p>Your payment stays here while you sign in. Taxpayer and bank details will only change if you choose to use saved information.</p><p>Continue as <b>Jordan Rivera</b>.</p><div class="actions"><button type="button" class="btn" id="finishSignin">Continue</button><button type="button" class="btn-outline" id="cancelSignin">Return as guest</button></div></dialog>
+<dialog id="reviewDialog" aria-labelledby="reviewTitle"><h2 id="reviewTitle">Review and authorize payment</h2><p>Check the taxpayer, tax period, and bank account before submitting.</p><div id="reviewDetails"></div><div class="field" style="margin-top:20px"><label for="signature">Your full name as the person authorizing payment</label><input id="signature" autocomplete="section-payer name"></div><div class="checkrow"><input id="authorize" type="checkbox"><label for="authorize">I authorize this withdrawal from the bank account shown, on the selected date, for the taxpayer listed above.</label></div><p id="reviewError" class="field-error" role="alert" hidden>Enter your full name and authorize the withdrawal.</p><div class="actions"><button type="button" class="btn" id="submitBtn">Submit payment</button><button type="button" class="btn-outline" id="editBtn">Edit payment</button></div></dialog>
+<script>
+const IC_CHECK=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_INFO=`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.6"/></g><circle cx="8" cy="4.9" r=".9" fill="currentColor"/></svg>`;
+const IC_STAR=`<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.3 4.3 13.3l.7-4.3-3.1-3 4.3-.6z" fill="currentColor"/></svg>`;
+
+// Payment-type catalog is served centrally (UAPI); the entries below are a local snapshot.
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=new Date();
+const YEAR=today.getFullYear();
+function isoDate(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;}
+const TODAY=isoDate(today),lastDate=new Date(today);
+lastDate.setDate(lastDate.getDate()+365);
+const LAST_DATE=isoDate(lastDate);
+const APPLY={
+ '1040':'Form 1040 — Individual income tax',health:'Health care — Form 1040',
+ retirement:'Form 5329 — Retirement plans',favored:'Form 5329 — Tax-favored accounts',civil:'Civil penalty',
+ '706':'Form 706 — U.S. estate tax','706A':'Form 706A — Additional estate tax','706GSD':'Form 706GS(D) — Generation-skipping transfer tax',
+ '709':'Form 709 — Gift tax','926':'Form 926 — Transfer to a foreign corporation','6069':'Form 6069 — Black lung benefit trust excise tax',
+ '8288':'Form 8288 — Withholding on foreign dispositions','8404':'Form 8404 — DISC deferred tax interest',
+ '8697':'Form 8697 — Long-term contract look-back interest','8725':'Form 8725 — Greenmail excise tax',
+ '8876':'Form 8876 — Structured settlement excise tax','CT2':'Form CT-2 — Railroad employee representative tax'
+};
+const FORM_ORDER=['1040','health','retirement','favored','civil','706','706A','706GSD','709','926','6069','8288','8404','8697','8725','8876','CT2'];
+const REASONS={
+ balance:{label:'Balance due',forms:FORM_ORDER.filter(x=>x!=='civil'),hint:'Pay a balance on an original return or a balance-due notice.'},
+ installment:{label:'Payment plan / Installment agreement',forms:['1040','health','civil'],hint:'Use the earliest tax year with an assessed balance covered by your agreement.'},
+ estimated:{label:'Estimated tax',forms:['1040','706','709','8876'],hint:'Pay estimated tax before filing. For individual income tax, this is Form 1040-ES.'},
+ amended:{label:'Amended return',forms:['1040','health','706A','6069','8404','8697','8725','8876'],hint:'Pay additional tax on an amended return. For individual income tax, this is Form 1040-X.'},
+ notice:{label:'Notice CP2000 / CP2501 / CP3219A',forms:['1040','health'],hint:'Use this for a full or initial payment on one of these notices.'},
+ proposed:{label:'Proposed tax assessment / Advance payment',forms:['1040','health','civil','706','706A','706GSD','709','926','6069'],hint:'Pay toward a proposed assessment before it is posted to the tax account.'},
+ other:{label:'Other amount due',forms:['civil'],hint:'Pay a civil penalty balance when you do not have an installment agreement.'},
+ oicFee:{label:'Offer in compromise — Application fee',forms:['1040','civil','706'],hint:'Pay the application fee for an offer in compromise.'},
+ oicInitial:{label:'Offer in compromise — Initial payment',forms:['1040','civil','706'],hint:'Make a 20% lump-sum cash payment or an initial periodic payment.'},
+ oicPeriodic:{label:'Offer in compromise — Subsequent periodic payment',forms:['1040','civil','706'],hint:'Make a subsequent payment while your offer is being considered.'},
+ oicAccepted:{label:'Offer in compromise — Accepted offer',forms:['1040','civil','706'],hint:'Make a payment under the terms of an accepted offer.'},
+ offshore:{label:'Offshore voluntary disclosure',forms:['1040','civil'],hint:'Pay tax or penalties associated with offshore voluntary disclosure.'},
+ streamlined:{label:'Offshore streamlined filing compliance',forms:['1040','civil'],hint:'Pay tax or penalties associated with streamlined filing compliance.'},
+ irc965:{label:'IRC 965 — Transition tax',forms:['1040'],hint:'Choose the tax year for the transition tax liability.'},
+ transferee:{label:'IRC 965 — Transferee',forms:['1040'],hint:'Choose the tax year for the transferred transition tax liability.'},
+ bbaModification:{label:'BBA — Partner payment for modification',forms:['1040'],hint:'Pay with a partner amended return or alternative document for modification.'},
+ bbaPushout:{label:'BBA — AAR / Exam push-out prepayment',forms:['1040'],hint:'Prepay your share of a partnership adjustment.'},
+ bbaShare:{label:'BBA — Proportionate share of imputed underpayment',forms:['1040'],hint:'Pay the assessed partner share of a partnership underpayment.'}
+};
+const identityKeys=['entityType','fname','lname','ssn','entityName','ein'];
+const state={applyTo:'',reason:'',period:'',entityType:'individual',fname:'',lname:'',ssn:'',entityName:'',ein:'',amount:'',confirmAmount:'',paymentDate:TODAY,payerName:'',routing:'',account:'',confirmAccount:'',acctType:'',emailOptIn:false,email:'',confirmEmail:''};
+// Deliberately synthetic fixtures: reserved/invalid TIN ranges; no taxpayer data.
+const SAVED_ID={entityType:'individual',fname:'Jordan',lname:'Rivera',ssn:'900001001',entityName:'',ein:''};
+const ESTATE_ID={entityType:'entity',fname:'',lname:'',ssn:'',entityName:'Estate of Avery Example',ein:'000000001'};
+const SAVED_BANK={payerName:'Jordan Rivera',routing:'071000013',account:'0000007740',confirmAccount:'0000007740',acctType:'checking'};
+let signedIn=false,verification={status:'idle',revision:0},lastPayment=null,editingPayment=false;
+const numericErrors=new Set();
+function options(id,entries,value){$(id).innerHTML='<option value="">— Select —</option>'+entries.map(([k,v])=>`<option value="${esc(k)}">${esc(v)}</option>`).join('');$(id).value=value;}
+function years(from,to){return Array.from({length:Math.max(0,from-to+1)},(_,i)=>String(from-i));}
+function taxPeriods(form=state.applyTo,reason=state.reason,date=today){
+ const year=date.getFullYear();
+ if(!form||!REASONS[reason]?.forms.includes(form))return [];
+ let range;
+ // Only estimated tax may be applied to the current year; every other payment type is for a year that has ended.
+ if(reason==='estimated')range=date.getMonth()===0?[String(year),String(year-1)]:[String(year)];
+ else if(['irc965','transferee'].includes(reason))range=years(year-1,2017);
+ else if(reason.startsWith('bba'))range=years(year-1,2015);
+ else range=years(year-1,year-20);
+ if(form==='CT2')return range.flatMap(y=>[4,3,2,1].filter(q=>Number(y)<year||q<=Math.floor(date.getMonth()/3)+1).map(q=>[`${y}-Q${q}`,`${y} — Quarter ${q}`]));
+ return range.map(y=>[y,y]);
+}
+function taxFormLabel(){if(state.applyTo==='1040')return {estimated:'Form 1040-ES — Estimated tax',amended:'Form 1040-X — Amended return'}[state.reason]||APPLY['1040'];return APPLY[state.applyTo]||'';}
+function refreshTaxSection(){
+ const reasons=Object.entries(REASONS).filter(([,r])=>r.forms.includes(state.applyTo));
+ if(!reasons.some(([id])=>id===state.reason))state.reason='';
+ const periods=taxPeriods();if(!periods.some(([id])=>id===state.period))state.period='';
+ options('reason',reasons.map(([id,r])=>[id,r.label]),state.reason);options('period',periods,state.period);
+ $('reasonField').hidden=!state.applyTo;$('periodField').hidden=!state.reason;
+ $('reasonDecode').hidden=!state.reason;$('reasonDecodeIc').innerHTML=IC_INFO;
+ $('reasonDecodeTxt').textContent=REASONS[state.reason]?.hint||'';
+ $('periodHint').textContent=state.applyTo==='CT2'?'Choose the calendar quarter shown on the return.':state.reason==='estimated'?'Estimated tax is paid for the current tax year.':'Choose the tax year this payment applies to.';
+ $('formHint').textContent=state.applyTo==='1040'?'Includes Forms 1040, 1040-SR, 1040-NR, 1040-PR, 1040 (SP), and prior Forms 1040-A/EZ.':state.applyTo==='706'?'Use the estate’s taxpayer details and the identifier on IRS records.':'Use the form or tax type on the return or notice.';
+}
+function relevantIdentityKeys(s=state){return s.entityType==='individual'?['fname','lname','ssn']:['entityName','ein'];}
+function identityReady(){return relevantIdentityKeys().every(k=>String(state[k]).trim())&&/^\d{9}$/.test(state.entityType==='individual'?state.ssn:state.ein)&&!numericErrors.has(state.entityType==='individual'?'ssn':'ein');}
+function invalidateIdentity(){verification={status:'idle',revision:verification.revision+1};renderVerification();}
+// ITIS integration seam only. No inferred endpoint or undocumented wire contract.
+// A production server must obtain the authoritative ITIS match for the payee.
+const entityValidator={async validateTaxpayer(snapshot){
+ await new Promise(resolve=>setTimeout(resolve,350));
+ const tin=snapshot.entityType==='individual'?snapshot.ssn:snapshot.ein;
+ if(tin==='900009999')return {status:'unavailable'};
+ const normalize=v=>String(v??'').trim().toUpperCase();
+ const match=[SAVED_ID,ESTATE_ID].some(record=>record.entityType===snapshot.entityType&&relevantIdentityKeys(snapshot).every(k=>normalize(record[k])===normalize(snapshot[k])));
+ return {status:match?'verified':'mismatch'};
+}};
+async function verifyTaxpayer(){
+ if(!identityReady()){verification.status='incomplete';renderVerification();renderReceipt();return;}
+ const revision=++verification.revision;verification.status='pending';renderVerification();renderReceipt();
+ try{const result=await entityValidator.validateTaxpayer(Object.fromEntries(identityKeys.map(key=>[key,state[key]])));if(revision!==verification.revision)return;verification.status=['verified','mismatch','unavailable'].includes(result.status)?result.status:'unavailable';}
+ catch{if(revision!==verification.revision)return;verification.status='unavailable';}
+ renderVerification();renderReceipt();
+}
+function renderVerification(){
+ const messages={idle:'Verify the taxpayer before continuing to payment.',incomplete:'Enter the taxpayer name and identification number.',pending:'Checking taxpayer information…',verified:'Taxpayer verified. This payment will be applied to the taxpayer listed here.',mismatch:'We could not match this taxpayer. Check the name and identification number, then try again.',unavailable:'Taxpayer verification is temporarily unavailable. Your entries are still here. Try again later.'};
+ $('verificationStatus').textContent=messages[verification.status];$('verificationStatus').className='validation-status '+(verification.status==='verified'?'success':['mismatch','unavailable','incomplete'].includes(verification.status)?'error':'');
+ $('verifyBtn').disabled=verification.status==='pending';$('verifyBtn').textContent=verification.status==='pending'?'Verifying…':verification.status==='verified'?'Verify again':'Verify taxpayer';
+}
+function cents(value){if(!/^\d+(\.\d{1,2})?$/.test(value))return null;const [whole,fraction='']=value.split('.');const n=Number(whole)*100+Number(fraction.padEnd(2,'0'));return Number.isSafeInteger(n)?n:null;}
+function money(value){const n=cents(value);return n!==null&&n>0?(n/100).toLocaleString('en-US',{style:'currency',currency:'USD'}):'';}
+function validRouting(value){if(!/^\d{9}$/.test(value)||/^0+$/.test(value))return false;const d=[...value].map(Number);return (3*(d[0]+d[3]+d[6])+7*(d[1]+d[4]+d[7])+d[2]+d[5]+d[8])%10===0;}
+function bankError(){
+ const n=cents(state.amount);
+ if(n===null||n<1||n>999999999)return 'Enter an amount from $0.01 to $9,999,999.99, with no more than two decimal places.';
+ if(cents(state.confirmAmount)!==n)return 'The payment amounts must match.';
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(state.paymentDate)||state.paymentDate<TODAY||state.paymentDate>LAST_DATE)return 'Choose a payment date from today through 365 days from today.';
+ if(!isBankingDay(state.paymentDate))return 'Choose a banking day (Monday through Friday, not a federal holiday).';
+ if(!state.payerName.trim())return 'Enter the bank account holder name.';
+ if(!validRouting(state.routing)||numericErrors.has('routing'))return 'Enter a valid 9-digit bank routing number.';
+ if(!/^\d{4,17}$/.test(state.account)||numericErrors.has('account'))return 'Enter an account number with 4 to 17 digits.';
+ if(state.account!==state.confirmAccount||numericErrors.has('confirmAccount'))return 'The bank account numbers must match.';
+ if(!state.acctType)return 'Select checking or savings.';
+ if(state.emailOptIn&&(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)||state.email!==state.confirmEmail))return 'Enter matching, valid email addresses for your confirmation.';
+ return '';
+}
+function sectionFilled(id){if(id==='tax')return !!(REASONS[state.reason]?.forms.includes(state.applyTo)&&taxPeriods().some(([id])=>id===state.period));if(id==='id')return verification.status==='verified'&&identityReady();if(id==='bank')return !bankError();return false;}
+function firstMissing(){return !sectionFilled('tax')?'Choose a tax form, reason, and period.':!sectionFilled('id')?'Verify the taxpayer to continue.':bankError();}
+function taxpayerName(s=state){return s.entityType==='individual'?`${s.fname} ${s.lname}`.trim():s.entityName;}
+function bankLabel(s=state){return s.account?`${s.acctType==='savings'?'Savings':'Checking'} ••••${s.account.slice(-4)}`:'';}
+function dateLabel(value){return new Date(value+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});}
+function paymentRows(){return [['Amount',money(state.amount)],['Apply to',taxFormLabel()],['Reason',REASONS[state.reason]?.label],['Tax period',state.period],['Taxpayer',taxpayerName()],['Taxpayer ID',(state.entityType==='individual'?state.ssn:state.ein)?'•••••'+(state.entityType==='individual'?state.ssn:state.ein).slice(-4):''],['Paid by',state.payerName],['Bank account',bankLabel()],['Payment date',state.paymentDate?dateLabel(state.paymentDate):''],['Email confirmation',state.emailOptIn?state.email:'Not requested']];}
+function rowsHTML(rows,cls='readrow'){return rows.map(([k,v])=>`<div class="${cls}"><span class="k">${esc(k)}</span><span class="v ${v?'':'pending'}">${esc(v||'—')}</span></div>`).join('');}
+function renderReceipt(){
+ const amount=money(state.amount);$('rAmt').textContent=amount||'Enter an amount';$('rAmt').classList.toggle('pending',!amount);
+ $('rBody').innerHTML=rowsHTML(paymentRows().slice(1));$('pbAmt').innerHTML=`<small>Total</small>${esc(amount||'$0.00')}`;
+ ['tax','id','bank'].forEach((key,i)=>{const done=sectionFilled(key);$('sec-'+key).classList.toggle('filled',done);$('num-'+key).innerHTML=done?IC_CHECK:String(i+1);});
+ const missing=firstMissing();$('payBtn').disabled=!!missing;$('payBtnMobile').disabled=!!missing;$('rMiss').hidden=!missing;$('rMissTxt').textContent=missing;
+ $('bankStatus').textContent=bankError()||'Payment details complete. Review your payment before submitting.';
+}
+function renderIdentity(){
+ $('individualFields').hidden=state.entityType!=='individual';$('entityFields').hidden=state.entityType==='individual';
+ $('idPrefill').hidden=!signedIn||state.entityType!=='individual';$('idUpsell').hidden=signedIn;
+ // Inactive alternate identity fields must not participate in validation/autofill.
+ $('individualFields').querySelectorAll('input,select').forEach(el=>el.disabled=state.entityType!=='individual');
+ $('entityFields').querySelectorAll('input,select').forEach(el=>el.disabled=state.entityType==='individual');
+}
+function writeInputs(){Object.entries(state).forEach(([key,value])=>{const el=$(key);if(el){if(el.type==='checkbox')el.checked=value;else el.value=value;}});renderIdentity();refreshTaxSection();renderCalendar();$('emailFields').hidden=!state.emailOptIn;renderReceipt();}
+function accountBar(){
+ $('acctbar').classList.toggle('in',signedIn);
+ $('acctbar').innerHTML=`<div class="ab-body"><b>${signedIn?'Signed in as Jordan Rivera':"You're paying as a guest"}</b><p>${signedIn?'Your payment entries have been kept. Saved details are available to use below.':'Sign in whenever you’re ready. Keep all the information you’ve entered.'}</p></div><span class="ab-cta"><button type="button" class="btn-outline" id="${signedIn?'signoutBtn':'signinBtn'}">${signedIn?'Sign out':'Sign in to your Online Account'}</button></span>`;
+ $(signedIn?'signoutBtn':'signinBtn').addEventListener('click',signedIn?signOut:signIn);
+ $('bankPrefill').hidden=!signedIn;$('headerSignin').textContent=signedIn?'Sign out':'Sign in';renderIdentity();
+}
+function signIn(){if(signedIn)return;$('signinDialog').showModal();}
+function signOut(){signedIn=false;accountBar();}
+function resetAuthorization(){$('authorize').checked=false;$('signature').value='';$('reviewError').hidden=true;}
+function reviewPayment(){if(firstMissing())return;resetAuthorization();$('reviewDetails').innerHTML=rowsHTML(paymentRows(),'rr');$('submitBtn').textContent=editingPayment?'Save payment changes':'Submit payment';$('reviewDialog').showModal();}
+function canManage(s){let remaining=0;const d=new Date(TODAY+'T12:00:00');while(isoDate(d)<s.paymentDate){d.setDate(d.getDate()+1);if(isBankingDay(isoDate(d)))remaining++;}return remaining>=2;}
+// Banking-day calendar: weekdays only, excluding federal holidays (observed).
+function nthWeekday(y,m,dow,n){const d=new Date(y,m,1);let c=0;while(true){if(d.getDay()===dow){c++;if(c===n)return isoDate(d);}d.setDate(d.getDate()+1);}}
+function lastWeekday(y,m,dow){const d=new Date(y,m+1,0);while(d.getDay()!==dow)d.setDate(d.getDate()-1);return isoDate(d);}
+function observed(y,m,day){const d=new Date(y,m,day);if(d.getDay()===6)d.setDate(d.getDate()-1);else if(d.getDay()===0)d.setDate(d.getDate()+1);return isoDate(d);}
+const holidayCache={};
+function federalHolidays(y){if(holidayCache[y])return holidayCache[y];const h={};
+ h[observed(y,0,1)]='New Year’s Day';h[nthWeekday(y,0,1,3)]='Birthday of Martin Luther King, Jr.';h[nthWeekday(y,1,1,3)]='Washington’s Birthday';h[lastWeekday(y,4,1)]='Memorial Day';
+ h[observed(y,5,19)]='Juneteenth National Independence Day';h[observed(y,6,4)]='Independence Day';h[nthWeekday(y,8,1,1)]='Labor Day';h[nthWeekday(y,9,1,2)]='Columbus Day';
+ h[observed(y,10,11)]='Veterans Day';h[nthWeekday(y,10,4,4)]='Thanksgiving Day';h[observed(y,11,25)]='Christmas Day';
+ if(isoDate(new Date(y+1,0,1))!==observed(y+1,0,1)&&observed(y+1,0,1).startsWith(String(y)))h[observed(y+1,0,1)]='New Year’s Day';
+ return holidayCache[y]=h;}
+function holidayName(iso){return federalHolidays(Number(iso.slice(0,4)))[iso]||'';}
+function isBankingDay(iso){const d=new Date(iso+'T12:00:00');return ![0,6].includes(d.getDay())&&!holidayName(iso);}
+function nextBankingDay(iso){const d=new Date(iso+'T12:00:00');while(!isBankingDay(isoDate(d)))d.setDate(d.getDate()+1);return isoDate(d);}
+let calView={y:today.getFullYear(),m:today.getMonth()};
+function renderCalendar(){
+ const {y,m}=calView;const first=new Date(y,m,1),last=new Date(y,m+1,0);
+ $('calMonth').textContent=first.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+ const minYM=TODAY.slice(0,7),maxYM=LAST_DATE.slice(0,7),ym=isoDate(first).slice(0,7);
+ $('calPrev').disabled=ym<=minYM;$('calNext').disabled=ym>=maxYM;
+ let html=['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<span class="dow" aria-hidden="true">${d}</span>`).join('');
+ for(let i=0;i<first.getDay();i++)html+='<span></span>';
+ for(let day=1;day<=last.getDate();day++){
+  const d=new Date(y,m,day),iso=isoDate(d),hol=holidayName(iso),inRange=iso>=TODAY&&iso<=LAST_DATE,ok=inRange&&isBankingDay(iso);
+  const label=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})+(hol?` — ${hol}`:!inRange?'':![1,2,3,4,5].includes(d.getDay())?' — weekend':'');
+  html+=`<button type="button" class="day${iso===TODAY?' today':''}${hol?' holiday':''}" data-date="${iso}" aria-label="${esc(label)}" aria-pressed="${iso===state.paymentDate}"${ok?'':' disabled'}${hol?` title="${esc(hol)}"`:''}>${day}</button>`;
+ }
+ $('calGrid').innerHTML=html;
+ const pickedHol=state.paymentDate&&holidayName(state.paymentDate);
+ $('calPick').innerHTML=state.paymentDate&&isBankingDay(state.paymentDate)?`Payment date: <b>${esc(dateLabel(state.paymentDate))}</b>${state.paymentDate===TODAY?' (today)':''}`:pickedHol?`${esc(pickedHol)} is not a banking day. Choose another date.`:'Choose a banking day.';
+ $('paymentDate').value=state.paymentDate;
+}
+function pickDate(iso){state.paymentDate=iso;resetAuthorization();renderCalendar();renderReceipt();}
+function showConfirmation(){
+ const main=document.querySelector('main.wrap');[...main.children].forEach(el=>el.hidden=true);
+ $('paybar').hidden=true;
+ const view=document.createElement('section');view.id='confirmation';view.className='sec';view.style.marginTop='32px';
+ const future=state.paymentDate>TODAY;
+ view.innerHTML=`<div class="ring">${IC_CHECK}</div><h1 class="page" tabindex="-1">${editingPayment?'Payment updated':future?'Payment scheduled':'Payment submitted'}</h1><p>Confirmation number <b>${esc(lastPayment.confirmation)}</b></p><p>This confirms your payment request was received. It does not confirm that the bank withdrawal has completed.</p>${state.emailOptIn?`<p>A payment confirmation was requested for <b>${esc(state.email)}</b>.</p>`:'<p>Save or print this confirmation for your records.</p>'}${rowsHTML(paymentRows(),'rr')}<div class="actions"><button type="button" class="btn-outline" id="printReceipt">Print confirmation</button>${canManage(state)?'<button type="button" class="btn-outline" id="changePayment">Change payment</button><button type="button" class="btn-outline" id="cancelPayment">Cancel payment</button>':''}<button type="button" class="btn" id="newPayment">Make another payment</button></div>${future?'<p class="hint">Changes and cancellations are available until two business days before the payment date.</p>':''}`;
+ main.append(view);$('printReceipt').addEventListener('click',()=>window.print());$('newPayment').addEventListener('click',()=>location.reload());
+ if($('changePayment'))$('changePayment').addEventListener('click',()=>{editingPayment=true;view.remove();[...main.children].forEach(el=>el.hidden=false);$('paybar').hidden=false;resetAuthorization();$('paymentDate').focus();});
+ if($('cancelPayment'))$('cancelPayment').addEventListener('click',()=>{
+  if($('cancelPayment').dataset.confirm!=='yes'){view.querySelector('h1').textContent='Cancel this scheduled payment?';$('cancelPayment').textContent='Confirm cancellation';$('cancelPayment').dataset.confirm='yes';return;}
+  lastPayment.status='canceled';view.querySelector('h1').textContent='Payment canceled';view.querySelector('h1').focus();$('cancelPayment').remove();$('changePayment').remove();
+ });
+ view.querySelector('h1').focus();window.scrollTo({top:0,behavior:'smooth'});editingPayment=false;
+}
+function submitPayment(){
+ if(firstMissing()){$('reviewDialog').close();return;}
+ if(!$('signature').value.trim()||!$('authorize').checked){$('reviewError').hidden=false;(!$('signature').value.trim()?$('signature'):$('authorize')).focus();return;}
+ $('reviewDialog').close();
+ lastPayment={...state,status:'submitted',confirmation:editingPayment?lastPayment.confirmation:'PAY-'+YEAR+'-'+Math.random().toString(36).slice(2,10).toUpperCase()};
+ showConfirmation();
+}
+function initialize(){
+ options('applyTo',FORM_ORDER.map(k=>[k,APPLY[k]]),'');options('acctType',[['checking','Checking'],['savings','Savings']],'');
+ state.paymentDate=nextBankingDay(TODAY);calView={y:Number(state.paymentDate.slice(0,4)),m:Number(state.paymentDate.slice(5,7))-1};
+ $('calGrid').addEventListener('click',e=>{const b=e.target.closest('button.day');if(b&&!b.disabled)pickDate(b.dataset.date);});
+ $('calPrev').addEventListener('click',()=>{calView.m--;if(calView.m<0){calView.m=11;calView.y--;}renderCalendar();});
+ $('calNext').addEventListener('click',()=>{calView.m++;if(calView.m>11){calView.m=0;calView.y++;}renderCalendar();});
+ const numeric=['ssn','ein','routing','account','confirmAccount'];
+ Object.keys(state).forEach(key=>{const el=$(key);if(key==='paymentDate')return;el.addEventListener(el.tagName==='SELECT'||el.type==='checkbox'?'change':'input',()=>{
+  if(numeric.includes(key)){
+   const bad=/\D/.test(el.value);if(bad)numericErrors.add(key);else numericErrors.delete(key);
+   $(key+'Error').hidden=!bad;$(key+'Error').textContent='Use numbers only.';el.setAttribute('aria-invalid',String(bad));el.value=el.value.replace(/\D/g,'');
+  }
+  state[key]=el.type==='checkbox'?el.checked:el.value;
+  if(identityKeys.includes(key))invalidateIdentity();
+  if(key==='applyTo'||key==='reason'){state.period='';if(key==='applyTo')state.reason='';refreshTaxSection();}
+  resetAuthorization();renderIdentity();$('emailFields').hidden=!state.emailOptIn;renderReceipt();
+ });});
+ $('payform').addEventListener('submit',event=>{event.preventDefault();reviewPayment();});
+ $('verifyBtn').addEventListener('click',verifyTaxpayer);$('payBtn').addEventListener('click',reviewPayment);$('payBtnMobile').addEventListener('click',reviewPayment);
+ $('headerSignin').addEventListener('click',()=>signedIn?signOut():signIn());$('cancelSignin').addEventListener('click',()=>$('signinDialog').close());
+ $('finishSignin').addEventListener('click',()=>{signedIn=true;$('signinDialog').close();accountBar();renderReceipt();});
+ $('useIdentity').addEventListener('click',()=>{if(state.entityType!=='individual')return;Object.assign(state,SAVED_ID);['ssn','ein'].forEach(k=>{numericErrors.delete(k);$(k+'Error').hidden=true;$(k).removeAttribute('aria-invalid');});invalidateIdentity();resetAuthorization();writeInputs();verifyTaxpayer();});
+ $('useBank').addEventListener('click',()=>{Object.assign(state,SAVED_BANK);['routing','account','confirmAccount'].forEach(k=>{numericErrors.delete(k);$(k+'Error').hidden=true;$(k).removeAttribute('aria-invalid');});resetAuthorization();writeInputs();});
+ $('editBtn').addEventListener('click',()=>$('reviewDialog').close());$('submitBtn').addEventListener('click',submitPayment);
+ document.querySelectorAll('#payform input:not([type="checkbox"]):not([type="hidden"]),#payform select').forEach(el=>el.required=true);
+ accountBar();writeInputs();renderVerification();
+}
+
+// gov banner + sticky offsets
+const gov=document.getElementById("gov"),howbtn=document.getElementById("howbtn");
+const mastheadEl=document.querySelector(".masthead");
+function syncSticky(){
+  const govH=gov.offsetHeight,mastH=mastheadEl.offsetHeight;
+  document.documentElement.style.setProperty("--gov-h",govH+"px");
+  document.documentElement.style.setProperty("--rail-top",(govH+mastH+18)+"px");
+}
+howbtn.addEventListener("click",()=>{const open=gov.classList.toggle("open");howbtn.setAttribute("aria-expanded",open?"true":"false");syncSticky();});
+window.addEventListener("resize",syncSticky);
+window.addEventListener("load",syncSticky);
+
+initialize();
+syncSticky();
+</script>
+</body>
+</html>
