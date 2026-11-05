@@ -405,6 +405,28 @@
   function acct(id){return ACCOUNTS.find(function(a){return a.id===id;});}
   var current="individual";
 
+  /* ---------- URL STATE ---------- */
+  /* The chosen persona lives in the URL (?persona=<id>) so it survives reloads,
+     back/forward, and pasting the link into another tab. Everything else in the
+     dashboard is derived from it. */
+  function personaFromUrl(){
+    var m=/[?&]persona=([^&#]*)/.exec(location.search);
+    var id=m?decodeURIComponent(m[1]):"";
+    return (id&&acct(id))?id:null;
+  }
+  function urlFor(id){
+    var q=location.search.replace(/^\?/,"").split("&").filter(function(p){
+      return p&&p.indexOf("persona=")!==0;
+    });
+    if(id) q.push("persona="+encodeURIComponent(id));
+    return location.pathname+(q.length?"?"+q.join("&"):"")+location.hash;
+  }
+  function writeUrl(id,push){
+    var next=urlFor(id), here=location.pathname+location.search+location.hash;
+    if(next===here) return;
+    try{ history[push?"pushState":"replaceState"]({persona:id||null},"",next); }catch(e){}
+  }
+
   /* ---------- ROLE-SCOPED DASHBOARD CONTENT ---------- */
   var DASH={
     individual:{welcome:"Welcome, Jordan",cards:[
@@ -527,7 +549,8 @@
   document.addEventListener("click",function(e){ if(!acctMenu.contains(e.target)&&e.target!==asbtn) closeMenu(); });
 
   /* ===================== ENTER / RENDER DASHBOARD ===================== */
-  function enterAccount(id){
+  function enterAccount(id,fromUrl){
+    if(!acct(id)) return;
     current=id;
     var a=acct(id), d=DASH[id];
     document.getElementById("dashWelcome").textContent=d.welcome;
@@ -546,8 +569,19 @@
     renderSwitcher();
     show("dash");
     resetOmni();
+    writeUrl(id,!fromUrl);
   }
-  document.getElementById("changeRole").addEventListener("click",function(){ show("picker"); });
+  document.getElementById("changeRole").addEventListener("click",function(){ renderPicker(); show("picker"); writeUrl(null,true); });
+  document.getElementById("signoutLink").addEventListener("click",function(){ writeUrl(null,true); show("signin"); });
+
+  /* Back/forward walks the personas you've entered; a URL without ?persona=
+     lands on the picker, exactly where it was left. */
+  window.addEventListener("popstate",function(){
+    var id=personaFromUrl();
+    if(id){ enterAccount(id,true); return; }
+    renderPicker();
+    show("picker");
+  });
 
   /* ===================== OMNI BAR ENGINE ===================== */
   var omni=document.getElementById("omni"),
@@ -654,7 +688,9 @@
   });
 
   /* ---------- init ---------- */
-  show("signin");
+  var linkedPersona=personaFromUrl();
+  if(linkedPersona){ enterAccount(linkedPersona,true); }
+  else { renderPicker(); show("signin"); }
 })();
 </script>
 </body>
